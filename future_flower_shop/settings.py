@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.
 CSRF_TRUSTED_ORIGINS = [
     'https://*.gitpod.io',
     'https://*.herokuapp.com',
-    'https://8000-nlekkerman-pp5dajngotes-xvfc0urh2bs.ws.codeinstitute-ide.net'
+    'https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net'
 ]
 # Application definition
 
@@ -41,6 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'future_flower_shop.urls'
@@ -70,6 +75,13 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+SITE_ID = 1
 
 WSGI_APPLICATION = 'future_flower_shop.wsgi.application'
 
