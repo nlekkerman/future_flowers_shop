@@ -5,17 +5,24 @@ body {
     padding: 0;
     font-family: Arial, sans-serif;
     background: url('/media/images/home-background-one.jpg') no-repeat center center fixed;
-    background-size: cover; /* Optional: covers the whole background */
-}
-/* Header styling */
-header {
-    background-color: #f8f9fa; /* Light background color */
-    border-bottom: 1px solid #dee2e6; /* Border for separation */
+    background-size: cover;
+    /* Optional: covers the whole background */
 }
 
-header .container-fluid {
-    padding: 0 15px; /* Adjust padding */
+/* Header styling */
+.header {
+    color: white !important;
+    width: 100%;
+  font-weight: 700;
+    position: fixed; /* Fixed positioning */
+    top: 0; /* Stick to the top */
+    left: 0; /* Full width */
+    z-index: 1000; /* Ensure it is on top of other content */
+    display: flex;
+    justify-content: flex-end; /* Align children to the right */
+    padding: 10px 20px; /* Add some padding for better spacing */
 }
+
 
 header ul.list-inline {
     margin: 0;
@@ -23,27 +30,41 @@ header ul.list-inline {
 }
 
 header .list-inline-item {
-    margin-right: 15px; /* Space between items */
+    margin-right: 15px;
+    /* Space between items */
+}
+a{
+    color: white !important;
 }
 
-header .nav-link {
+.list-container{
+
+}
+
+.nav-link {
     text-decoration: none;
+    color: white;
 }
 
 header .dropdown-menu {
-    min-width: 200px; /* Adjust dropdown width */
+    min-width: 200px;
+    /* Adjust dropdown width */
 }
 
 header .dropdown-item {
-    padding: 10px 15px; /* Adjust padding for dropdown items */
+    padding: 10px 15px;
+    /* Adjust padding for dropdown items */
 }
+
 
 /* Optional message container styling */
 .message-container {
     margin: 20px;
     padding: 15px;
-    border: 1px solid #ccc; /* Border for message container */
-    background-color: #f9f9f9; /* Light background for messages */
+    border: 1px solid #ccc;
+    /* Border for message container */
+    background-color: #f9f9f9;
+    /* Light background for messages */
 }
 
 /* Page header styling */
@@ -64,7 +85,7 @@ header .dropdown-item {
     border-radius: 50%;
     display: flex;
     justify-content: center;
-    background-image: url('/media/images/menu-icon-rose.webp');
+    background-image: url('/media/images/sunflower.webp');
     background-size: cover;
     background-position: center;
     align-items: center;
@@ -75,14 +96,18 @@ header .dropdown-item {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0);
+    /* Start with the icon scaled down */
+    animation: popOut 1s ease-out forwards;
+    /* Apply the pop-out animation */
 }
+
+
 
 .nav-link-icon {
     width: 90px;
     height: 90px;
     border-radius: 50%;
-    background-color: #2196F3;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -108,6 +133,76 @@ header .dropdown-item {
     opacity: 1;
     transform: scale(1);
     transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Animate header elements*/
+.animate-herder {
+    transform: translate(-50%, -50%) translateX(-100vw); /* Start off-screen */
+    animation: slideFromLeft 1s ease-out forwards; /* Apply animation */
+    
+}
+
+
+/* ANIMATIONS*/
+@keyframes slideFromDown {
+    from {
+        transform: translateY(100vh);
+        /* Start off-screen below */
+    }
+
+    to {
+        transform: translateY(0);
+        /* End at the normal position */
+    }
+}
+
+@keyframes slideFromUp {
+    from {
+        transform: translateY(-100vh);
+        /* Start off-screen above */
+    }
+
+    to {
+        transform: translateY(0);
+        /* End at the normal position */
+    }
+}
+
+@keyframes slideFromRight {
+    from {
+        transform: translateX(100vw);
+        /* Start off-screen to the right */
+    }
+
+    to {
+        transform: translateX(0);
+        /* End at the normal position */
+    }
+}
+
+@keyframes slideFromLeft {
+    from {
+        transform: translateX(-100vw);
+        /* Start off-screen to the left */
+    }
+
+    to {
+        transform: translateX(0);
+        /* End at the normal position */
+    }
+}
+
+/* Define the pop-out animation */
+@keyframes popOut {
+    from {
+        transform: translate(-50%, -50%) scale(0);
+        /* Start with the icon scaled down to 0 */
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        /* End with the icon at its full size */
+    }
 }
 
 /* Media Query */

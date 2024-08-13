@@ -19,6 +19,7 @@
 
     {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
 
     {% endblock %}
 
@@ -41,8 +42,8 @@
     <title>Future Flower Shop {% block extra_title %}{% endblock %}</title>
   </head>
   <body>
-    <header class="container-fluid fixed-top">
-        <div class="col-12 col-lg-4 my-auto py-1 py-lg-0">
+    <div class="header animate-herder">
+        <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 list-container">
             <ul class="list-inline list-unstyled text-center text-lg-right my-0">
                 <li class="list-inline-item dropdown">
                     <a class="text-black nav-link" href="#" id="user-options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -82,7 +83,7 @@
         </div>
     </div>
 
-    </header>
+    </div>
 
     {% if messages %}
         <div class="message-container"></div>

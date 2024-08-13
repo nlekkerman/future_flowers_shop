@@ -29,7 +29,7 @@ $(document).ready(function () {
     function positionNavLinks() {
         var numSmallCircles = $('.nav-link-icon').length;
         var angleStep = 360 / numSmallCircles;
-        var radius = 150; // Distance from the center of the big circle
+        var radius = 200; // Distance from the center of the big circle
 
         $('.nav-link-icon').each(function (index) {
             var angle = angleStep * index;
