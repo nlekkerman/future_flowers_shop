@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+Seed Details
+{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ seed.name }}</h1>
+    <button class="close-button" onclick="window.history.back();">
+        back
+    </button>
+    <p><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
+    <p><strong>Description:</strong> {{ seed.description }}</p>
+    <p><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{ seed.planting_months_to }}</p>
+    <p><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
+    <p><strong>Sun Preference:</strong> {{ seed.sun_preference }}</p>
+    <p><strong>Price:</strong> ${{ seed.price }}</p>
+    {% if seed.has_discount %}
+        <p><strong>Discount:</strong> {{ seed.discount }}%</p>
+        <p><strong>Discounted Price:</strong> ${{ seed.calculate_discounted_price }}</p>
+    {% endif %}
+    <p><strong>In Stock:</strong> {{ seed.in_stock }}</p>
+    
+    
+</div>
+
+
+{% endblock %}

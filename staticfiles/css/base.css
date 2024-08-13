@@ -1,22 +1,28 @@
 /* base.css */
 
-/* Ensure the body has a margin and padding reset */
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: url('/media/images/home-background-one.jpg');
+    background: url('/media/images/home-background-one.jpg') no-repeat center center fixed;
+    background-size: cover;
+    /* Optional: covers the whole background */
 }
 
 /* Header styling */
-header {
-    background-color: #f8f9fa; /* Light background color */
-    border-bottom: 1px solid #dee2e6; /* Border for separation */
+.header {
+    color: white !important;
+    width: 100%;
+  font-weight: 700;
+    position: fixed; /* Fixed positioning */
+    top: 0; /* Stick to the top */
+    left: 0; /* Full width */
+    z-index: 1000; /* Ensure it is on top of other content */
+    display: flex;
+    justify-content: flex-end; /* Align children to the right */
+    
 }
 
-header .container-fluid {
-    padding: 0 15px; /* Adjust padding */
-}
 
 header ul.list-inline {
     margin: 0;
@@ -24,27 +30,55 @@ header ul.list-inline {
 }
 
 header .list-inline-item {
-    margin-right: 15px; /* Space between items */
+    margin-right: 15px;
+    /* Space between items */
+}
+a{
+    color: white !important;
 }
 
-header .nav-link {
+
+.header.animate-herder .list-container ul {
+    display: flex;
+    justify-content: flex-end;
+    animation: swingDownFlip 1.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; /* Duration and easing */
+}
+
+.header.animate-herder .list-container ul li {
+    animation: swingDownFlip 1.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; /* Duration and easing */
+}
+
+.header.animate-herder .list-container ul li:nth-child(1) {
+    animation-delay: 0.1s; /* Optional: Adjust delay for cascading effect */
+}
+
+.header.animate-herder .list-container ul li:nth-child(2) {
+    animation-delay: 0.1s; /* Optional: Adjust delay for cascading effect */
+}
+.nav-link {
     text-decoration: none;
+    color: white;
 }
 
 header .dropdown-menu {
-    min-width: 200px; /* Adjust dropdown width */
+    min-width: 200px;
+    /* Adjust dropdown width */
 }
 
 header .dropdown-item {
-    padding: 10px 15px; /* Adjust padding for dropdown items */
+    padding: 10px 15px;
+    /* Adjust padding for dropdown items */
 }
+
 
 /* Optional message container styling */
 .message-container {
     margin: 20px;
     padding: 15px;
-    border: 1px solid #ccc; /* Border for message container */
-    background-color: #f9f9f9; /* Light background for messages */
+    border: 1px solid #ccc;
+    /* Border for message container */
+    background-color: #f9f9f9;
+    /* Light background for messages */
 }
 
 /* Page header styling */
@@ -58,3 +92,119 @@ header .dropdown-item {
 .content {
     margin: 20px 0;
 }
+
+/* Hide element with animation */
+.hide-animate {
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Show element with animation */
+.show-animate {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+
+
+/* ANIMATIONS*/
+@keyframes slideFromDown {
+    from {
+        transform: translateY(100vh);
+        /* Start off-screen below */
+    }
+
+    to {
+        transform: translateY(0);
+        /* End at the normal position */
+    }
+}
+
+@keyframes slideFromUp {
+    from {
+        transform: translateY(-100vh);
+        /* Start off-screen above */
+    }
+
+    to {
+        transform: translateY(0);
+        /* End at the normal position */
+    }
+}
+@keyframes swingDownFlip {
+    0% {
+        transform: rotateX(-90deg) translateY(-100%);
+        opacity: 0;
+    }
+    60% {
+        transform: rotateX(-20deg) translateY(10%);
+        opacity: 1;
+    }
+    80% {
+        transform: rotateX(10deg) translateY(-5%);
+    }
+    90% {
+        transform: rotateX(-5deg) translateY(2%);
+    }
+    100% {
+        transform: rotateX(0) translateY(0);
+        opacity: 1;
+    }
+}
+
+
+@keyframes slideFromRight {
+    from {
+        transform: translateX(100vw);
+        /* Start off-screen to the right */
+    }
+
+    to {
+        transform: translateX(0);
+        /* End at the normal position */
+    }
+}
+
+@keyframes slideFromLeft {
+    from {
+        transform: translateX(-100vw);
+        /* Start off-screen to the left */
+    }
+
+    to {
+        transform: translateX(0);
+        /* End at the normal position */
+    }
+}
+
+@keyframes swingDown {
+    0% {
+        transform: translateY(-100%) rotate(-10deg); /* Start above the screen and tilted */
+        opacity: 0; /* Start invisible */
+    }
+    50% {
+        transform: translateY(10%) rotate(10deg); /* Swing down and tilt back */
+        opacity: 1; /* Fully visible */
+    }
+    100% {
+        transform: translateY(0) rotate(0); /* End at normal position */
+        opacity: 1; /* Fully visible */
+    }
+}
+
+
+/* Define the pop-out animation */
+@keyframes popOut {
+    from {
+        transform: translate(-50%, -50%) scale(0);
+        /* Start with the icon scaled down to 0 */
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        /* End with the icon at its full size */
+    }
+}
+

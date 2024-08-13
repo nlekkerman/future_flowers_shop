@@ -20,7 +20,7 @@ body {
     z-index: 1000; /* Ensure it is on top of other content */
     display: flex;
     justify-content: flex-end; /* Align children to the right */
-    padding: 10px 20px; /* Add some padding for better spacing */
+    
 }
 
 
@@ -37,10 +37,24 @@ a{
     color: white !important;
 }
 
-.list-container{
 
+.header.animate-herder .list-container ul {
+    display: flex;
+    justify-content: flex-end;
+    animation: swingDownFlip 1.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; /* Duration and easing */
 }
 
+.header.animate-herder .list-container ul li {
+    animation: swingDownFlip 1.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; /* Duration and easing */
+}
+
+.header.animate-herder .list-container ul li:nth-child(1) {
+    animation-delay: 0.1s; /* Optional: Adjust delay for cascading effect */
+}
+
+.header.animate-herder .list-container ul li:nth-child(2) {
+    animation-delay: 0.1s; /* Optional: Adjust delay for cascading effect */
+}
 .nav-link {
     text-decoration: none;
     color: white;
@@ -79,48 +93,6 @@ header .dropdown-item {
     margin: 20px 0;
 }
 
-.menu-icon {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    background-image: url('/media/images/sunflower.webp');
-    background-size: cover;
-    background-position: center;
-    align-items: center;
-    color: white;
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    /* Start with the icon scaled down */
-    animation: popOut 1s ease-out forwards;
-    /* Apply the pop-out animation */
-}
-
-
-
-.nav-link-icon {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: white;
-    cursor: pointer;
-    font-size: 12px;
-    position: absolute;
-    opacity: 0;
-    transform: scale(0);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
 /* Hide element with animation */
 .hide-animate {
     opacity: 0;
@@ -135,12 +107,6 @@ header .dropdown-item {
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Animate header elements*/
-.animate-herder {
-    transform: translate(-50%, -50%) translateX(-100vw); /* Start off-screen */
-    animation: slideFromLeft 1s ease-out forwards; /* Apply animation */
-    
-}
 
 
 /* ANIMATIONS*/
@@ -167,6 +133,27 @@ header .dropdown-item {
         /* End at the normal position */
     }
 }
+@keyframes swingDownFlip {
+    0% {
+        transform: rotateX(-90deg) translateY(-100%);
+        opacity: 0;
+    }
+    60% {
+        transform: rotateX(-20deg) translateY(10%);
+        opacity: 1;
+    }
+    80% {
+        transform: rotateX(10deg) translateY(-5%);
+    }
+    90% {
+        transform: rotateX(-5deg) translateY(2%);
+    }
+    100% {
+        transform: rotateX(0) translateY(0);
+        opacity: 1;
+    }
+}
+
 
 @keyframes slideFromRight {
     from {
@@ -192,6 +179,22 @@ header .dropdown-item {
     }
 }
 
+@keyframes swingDown {
+    0% {
+        transform: translateY(-100%) rotate(-10deg); /* Start above the screen and tilted */
+        opacity: 0; /* Start invisible */
+    }
+    50% {
+        transform: translateY(10%) rotate(10deg); /* Swing down and tilt back */
+        opacity: 1; /* Fully visible */
+    }
+    100% {
+        transform: translateY(0) rotate(0); /* End at normal position */
+        opacity: 1; /* Fully visible */
+    }
+}
+
+
 /* Define the pop-out animation */
 @keyframes popOut {
     from {
@@ -205,21 +208,3 @@ header .dropdown-item {
     }
 }
 
-/* Media Query */
-@media (max-width: 600px) {
-    .header-controls a {
-        font-size: 14px;
-    }
-
-    .menu-icon {
-        width: 200px;
-        height: 200px;
-        font-size: 14px;
-    }
-
-    .nav-link-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 10px;
-    }
-}

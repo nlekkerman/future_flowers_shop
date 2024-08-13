@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+Seed List
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="seeds-title">Seeds</h1>
+
+    {% if seeds %}
+        <ul>
+            {% for seed in seeds %}
+                <li>
+                    <a href="{% url 'seed_details' seed.id %}">
+                        <h2>{{ seed.name }}</h2>
+                        <p><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
+                        <p><strong>Price:</strong> ${{ seed.price }}</p>
+                    </a>
+                   
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No seeds found.</p>
+    {% endif %}
+</div>
+{% endblock %}

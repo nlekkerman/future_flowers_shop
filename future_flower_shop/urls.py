@@ -10,6 +10,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts', include('allauth.urls')),
+    path('seeds/', include('seeds.urls')),
     path('', include('home.urls')),
 ]
 # Serve media files during development
