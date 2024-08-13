@@ -1,0 +1,60 @@
+/* base.css */
+
+/* Ensure the body has a margin and padding reset */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: url('/media/images/home-background-one.jpg');
+}
+
+/* Header styling */
+header {
+    background-color: #f8f9fa; /* Light background color */
+    border-bottom: 1px solid #dee2e6; /* Border for separation */
+}
+
+header .container-fluid {
+    padding: 0 15px; /* Adjust padding */
+}
+
+header ul.list-inline {
+    margin: 0;
+    padding: 0;
+}
+
+header .list-inline-item {
+    margin-right: 15px; /* Space between items */
+}
+
+header .nav-link {
+    text-decoration: none;
+}
+
+header .dropdown-menu {
+    min-width: 200px; /* Adjust dropdown width */
+}
+
+header .dropdown-item {
+    padding: 10px 15px; /* Adjust padding for dropdown items */
+}
+
+/* Optional message container styling */
+.message-container {
+    margin: 20px;
+    padding: 15px;
+    border: 1px solid #ccc; /* Border for message container */
+    background-color: #f9f9f9; /* Light background for messages */
+}
+
+/* Page header styling */
+.page-header {
+    margin: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Content block styling */
+.content {
+    margin: 20px 0;
+}

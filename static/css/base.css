@@ -1,0 +1,130 @@
+/* base.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: url('/media/images/home-background-one.jpg') no-repeat center center fixed;
+    background-size: cover; /* Optional: covers the whole background */
+}
+/* Header styling */
+header {
+    background-color: #f8f9fa; /* Light background color */
+    border-bottom: 1px solid #dee2e6; /* Border for separation */
+}
+
+header .container-fluid {
+    padding: 0 15px; /* Adjust padding */
+}
+
+header ul.list-inline {
+    margin: 0;
+    padding: 0;
+}
+
+header .list-inline-item {
+    margin-right: 15px; /* Space between items */
+}
+
+header .nav-link {
+    text-decoration: none;
+}
+
+header .dropdown-menu {
+    min-width: 200px; /* Adjust dropdown width */
+}
+
+header .dropdown-item {
+    padding: 10px 15px; /* Adjust padding for dropdown items */
+}
+
+/* Optional message container styling */
+.message-container {
+    margin: 20px;
+    padding: 15px;
+    border: 1px solid #ccc; /* Border for message container */
+    background-color: #f9f9f9; /* Light background for messages */
+}
+
+/* Page header styling */
+.page-header {
+    margin: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Content block styling */
+.content {
+    margin: 20px 0;
+}
+
+.menu-icon {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    background-image: url('/media/images/menu-icon-rose.webp');
+    background-size: cover;
+    background-position: center;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.nav-link-icon {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background-color: #2196F3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    position: absolute;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Hide element with animation */
+.hide-animate {
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Show element with animation */
+.show-animate {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Media Query */
+@media (max-width: 600px) {
+    .header-controls a {
+        font-size: 14px;
+    }
+
+    .menu-icon {
+        width: 200px;
+        height: 200px;
+        font-size: 14px;
+    }
+
+    .nav-link-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 10px;
+    }
+}
