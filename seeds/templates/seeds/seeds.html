@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static %}  <!-- Add this line to load the static tag library -->
+
 {% block title %}
 Seed List
 {% endblock %}
@@ -9,20 +11,26 @@ Seed List
     <h1 class="seeds-title">Seeds</h1>
 
     {% if seeds %}
-        <ul>
-            {% for seed in seeds %}
-                <li>
-                    <a href="{% url 'seed_details' seed.id %}">
-                        <h2>{{ seed.name }}</h2>
-                        <p><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
-                        <p><strong>Price:</strong> ${{ seed.price }}</p>
-                    </a>
-                   
-                </li>
-            {% endfor %}
-        </ul>
+    <ul>
+        {% for seed in seeds %}
+        <li>
+            <a href="{% url 'seed_details' seed.id %}">
+                {% if seed.image %}
+                    <img src="{{ seed.image.url }}" alt="{{ seed.name }}" style="max-width: 150px; height: auto;">
+                {% else %}
+                    <img src="{% static 'default_image.jpg' %}" alt="Default Image" style="max-width: 150px; height: auto;">
+                {% endif %}
+                <h2>{{ seed.name }}</h2>
+                <p><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
+                <p><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{ seed.planting_months_to }}</p>
+                <p><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
+                <p><strong>Price:</strong> ${{ seed.price }}</p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
     {% else %}
-        <p>No seeds found.</p>
+    <p>No seeds found.</p>
     {% endif %}
 </div>
 {% endblock %}
