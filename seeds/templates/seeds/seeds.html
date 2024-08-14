@@ -1,13 +1,21 @@
 {% extends "base.html" %}
 
-{% load static %}  <!-- Add this line to load the static tag library -->
+{% load static %}
 
 {% block title %}
 Seed List
 {% endblock %}
 
 {% block content %}
+<!-- Navigation copied from home.html -->
+<div class="navigation-container">
+    {% include 'navigation.html' %}
+
+</div>
+
 <div class="container">
+    <!-- Include the navigation menu -->
+
     <h1 class="seeds-title">Seeds</h1>
 
     {% if seeds %}
@@ -26,6 +34,10 @@ Seed List
                 <p><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
                 <p><strong>Price:</strong> ${{ seed.price }}</p>
             </a>
+            <form method="post" action="{% url 'add_to_cart' seed.id %}">
+                {% csrf_token %}
+                <button type="submit">Add to Cart</button>
+            </form>
         </li>
         {% endfor %}
     </ul>
