@@ -24,3 +24,42 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+
+document.querySelectorAll('.remove-form').forEach(function(form) {
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Get the form action URL
+        var url = this.action;
+
+        // Perform the AJAX request
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.cart_total !== undefined) {
+                // Update the cart total on the page
+                document.querySelector('.cart-total').textContent = data.cart_total;
+
+                // Optionally, you can remove the item from the DOM
+                this.closest('tr.cart-item').remove();
+
+                // If the cart is empty after removing the item, show the empty cart message
+                if (!document.querySelector('.cart-item')) {
+                    document.querySelector('.cart-container').innerHTML = `
+                        <div class="empty-cart-message">
+                            <h3>Your cart is currently empty.</h3>
+                            <a href="{% url 'cart' %}" class="btn btn-shop">Start Shopping</a>
+                        </div>`;
+                }
+            }
+        });
+    });
+});

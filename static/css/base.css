@@ -4,7 +4,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: url('/media/images/home-background-one.jpg') no-repeat center center fixed;
+    background: url('/media/images/home-background-one.webp') no-repeat center center fixed;
     background-size: cover;
     /* Optional: covers the whole background */
 }
@@ -21,6 +21,17 @@ body {
     display: flex;
     justify-content: flex-end; /* Align children to the right */
     
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 100px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white !important;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 
