@@ -74,15 +74,17 @@ $(document).ready(function () {
 
     positionNavLinks();
     $('.home-icon').click(function(event) {
-        event.preventDefault();
+        event.preventDefault(); // Prevent default link behavior
         window.location.href = '/'; // Redirect to the home page
     });
 
     // Handle other category links
     $('.nav-link-click').click(function(event) {
+        // Check if the clicked element has a data-category attribute
         let selectedCategory = $(this).data('category');
         if (selectedCategory) {
-            event.preventDefault();
+            event.preventDefault(); // Prevent default link behavior
+            // Redirect to the seeds page with the category as a query parameter
             window.location.href = '/seeds/?category=' + encodeURIComponent(selectedCategory);
         }
     });

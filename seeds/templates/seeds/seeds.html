@@ -10,37 +10,42 @@ Seed List
 <!-- Navigation copied from home.html -->
 <div class="navigation-container">
     {% include 'navigation.html' %}
-
 </div>
 
-<div class="container">
+<div class="seeds-container mt-4">
     <!-- Include the navigation menu -->
 
-    <h1 class="seeds-title">Seeds</h1>
+    <h1 class="seeds-title mb-4">Seeds</h1>
 
     {% if seeds %}
-    <ul>
+    <div class="row">
         {% for seed in seeds %}
-        <li>
-            <a href="{% url 'seed_details' seed.id %}">
-                {% if seed.image %}
-                    <img src="{{ seed.image.url }}" alt="{{ seed.name }}" style="max-width: 150px; height: auto;">
-                {% else %}
-                    <img src="{% static 'default_image.jpg' %}" alt="Default Image" style="max-width: 150px; height: auto;">
-                {% endif %}
-                <h2>{{ seed.name }}</h2>
-                <p><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
-                <p><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{ seed.planting_months_to }}</p>
-                <p><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
-                <p><strong>Price:</strong> ${{ seed.price }}</p>
-            </a>
-            <form method="post" action="{% url 'add_to_cart' seed.id %}">
-                {% csrf_token %}
-                <button type="submit">Add to Cart</button>
-            </form>
-        </li>
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="seed-card h-100">
+                <a href="{% url 'seed_details' seed.id %}">
+                    {% if seed.image %}
+                        <img src="{{ seed.image.url }}" class="card-img-top" alt="{{ seed.name }}">
+                    {% else %}
+                        <img src="{% static 'default_image.jpg' %}" class="card-img-top" alt="Default Image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h2 class="card-title h5">{{ seed.name }}</h2>
+                        <p class="card-text"><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
+                        <p class="card-text"><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{ seed.planting_months_to }}</p>
+                        <p class="card-text"><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
+                        <p class="card-text"><strong>Price:</strong> ${{ seed.price }}</p>
+                    </div>
+                </a>
+                <div class="card-footer text-center">
+                    <form method="post" action="{% url 'add_to_cart' seed.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
     {% else %}
     <p>No seeds found.</p>
     {% endif %}

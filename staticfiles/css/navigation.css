@@ -19,7 +19,7 @@
 }
 
 .home-icon{
-    background-image: url('/media/images/home-icon.webp');
+    background-image: url('/media/images/cart-icon.webp');
     background-size: cover;
     background-position: center;
     color: black !important;
@@ -114,6 +114,7 @@
     pointer-events: none;
     width: 60px;
     height: 60px;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;

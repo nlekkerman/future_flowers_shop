@@ -22,9 +22,25 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 li a {
-    text-decoration: none; /* Ensure no underline by default */
+    text-decoration: none; 
 }
 
+.seeds-container{
+
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 150px !important;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white !important;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+}
+.seed-card{
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    color: white !important;
+}
 li a:hover {
     text-decoration: none; /* Ensure no underline on hover */
 }
