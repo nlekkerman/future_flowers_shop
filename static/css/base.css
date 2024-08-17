@@ -219,3 +219,70 @@ header .dropdown-item {
     }
 }
 
+
+.search-container {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    background-color: transparent; /* Remove background color */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: none; /* Remove box shadow */
+    z-index: 999;
+    display: flex;
+    align-items: center;
+}
+
+
+/* Adjust search input and button */
+.search-input {
+    flex: 1; /* Allow the input to grow */
+    padding: 1px 10px;
+    border-radius: 20px;
+    outline: none;
+    border: 1px solid #ccc;
+    background-color: rgba(0, 0, 0, 0.7);
+    margin-right: 5px;
+}
+
+.search-button {
+    padding: 5px 4px;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: none !important;
+    justify-content: center;
+}
+
+/* Optional: Adjust button icon size if needed */
+.search-button i {
+    font-size: 16px;
+}
+
+
+.navigation-container {
+    position: fixed; /* Fixed positioning for initial placement in the top right */
+    top: 150px; /* Position at the top initially */
+    right: 70px; /* Position at the right initially */
+    z-index: 1000; /* Ensure it's on top */
+    transition: all 0.5s ease; /* Smooth transition */
+    
+}
+
+.centered-nav {
+    position: absolute; /* Change to absolute when centered */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    right: auto; /* Reset right position */
+    background-color: rgba(0, 0, 0, 0.7);
+    height: 300px;
+    width: 300px;
+    border-radius: 50%;
+}
+

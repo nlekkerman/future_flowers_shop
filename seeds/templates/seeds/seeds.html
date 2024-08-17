@@ -7,14 +7,52 @@ Seed List
 {% endblock %}
 
 {% block content %}
-<!-- Navigation copied from home.html -->
+<!-- Navigation Bar -->
 <div class="navigation-container">
     {% include 'navigation.html' %}
 </div>
 
-<div class="seeds-container mt-4">
-    <!-- Include the navigation menu -->
+<div class="filter-container mb-4">
+    <label class="filter-label" for="categoryDropdown">Filters</label>
+    <form method="get" action="" class="form-filter-search">
+        <!-- Toggle Button for Filters (visible only on small screens) -->
+      
+    
+        <!-- Category Buttons (Visible on large screens) -->
+        <div class="filter-buttons btn-group d-none d-lg-flex" role="group" aria-label="Category Filter">
+            <a href="?category=" class="btn btn-secondary {% if not category %}active{% endif %}">All</a>
+            <a href="?category=rose" class="btn btn-secondary {% if category == 'rose' %}active{% endif %}">Roses</a>
+            <a href="?category=tree" class="btn btn-secondary {% if category == 'tree' %}active{% endif %}">Trees</a>
+            <a href="?category=bush" class="btn btn-secondary {% if category == 'bush' %}active{% endif %}">Bushes</a>
+            <a href="?category=flower" class="btn btn-secondary {% if category == 'flower' %}active{% endif %}">Flowers</a>
+        </div>
+    
+        <!-- Dropdown for small screens -->
+        <div class="dropdown d-lg-none">
 
+            <button class="dropdown-toggle w-100" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {% if category %}
+                    {% if category == 'rose' %}Roses{% elif category == 'tree' %}Trees{% elif category == 'bush' %}Bushes{% elif category == 'flower' %}Flowers{% else %}All{% endif %}
+                {% else %}
+                    All
+                {% endif %}
+            </button>
+            <div class="dropdown-menu w-100" aria-labelledby="categoryDropdown">
+                <a class="dropdown-item {% if not category %}active{% endif %}" href="?category=">All</a>
+                <a class="dropdown-item {% if category == 'rose' %}active{% endif %}" href="?category=rose">Roses</a>
+                <a class="dropdown-item {% if category == 'tree' %}active{% endif %}" href="?category=tree">Trees</a>
+                <a class="dropdown-item {% if category == 'bush' %}active{% endif %}" href="?category=bush">Bushes</a>
+                <a class="dropdown-item {% if category == 'flower' %}active{% endif %}" href="?category=flower">Flowers</a>
+            </div>
+        </div>
+    </form>
+    
+</div>
+
+
+
+<!-- Seed List -->
+<div class="seeds-container mt-4">
     <h1 class="seeds-title mb-4">Seeds</h1>
 
     {% if seeds %}

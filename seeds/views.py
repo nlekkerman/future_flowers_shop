@@ -1,16 +1,23 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Seed
 
+
 def seed_list(request):
     category = request.GET.get('category')
+    search_query = request.GET.get('search', '')
+
     seeds = Seed.objects.all()
 
     if category:
-        seeds = seeds.filter(category__iexact=category)
+        seeds = seeds.filter(category__iexact=category)  # Corrected filter syntax
+
+    if search_query:
+        seeds = seeds.filter(name__icontains=search_query)
 
     context = {
         'seeds': seeds,
         'category': category,
+        'search_query': search_query,
     }
     return render(request, 'seeds/seeds.html', context)
 
