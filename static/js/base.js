@@ -1,9 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const searchButton = document.getElementById('searchButton');
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('searchInput');
 
-    // Handle button click event
-    searchButton.addEventListener('click', function () {
-        // Implement the search functionality or form submission
-        alert('Search button clicked!');
+    console.log('Search form:', searchForm);
+    console.log('Search input:', searchInput);
+
+    searchForm.addEventListener('submit', function(event) {
+        const queryValue = searchInput.value;
+        console.log('Search query:', queryValue);  // Debugging line
+
+        if (!queryValue) {
+            event.preventDefault();  // Prevent form submission if value is not set correctly
+            alert('Search input is empty!');
+        }
     });
 });

@@ -1,5 +1,7 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
+from django.utils import timezone
+
 
 class Seed(models.Model):
     CATEGORY_CHOICES = [
@@ -27,6 +29,7 @@ class Seed(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discount = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     in_stock = models.PositiveIntegerField()
+    created_at = models.DateTimeField(default=timezone.now)
 
     # Cloudinary image field
     image = CloudinaryField('image', blank=True, null=True, help_text="Upload an image of the seed")

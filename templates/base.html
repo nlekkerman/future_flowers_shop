@@ -103,16 +103,24 @@
         </div>
 
     </div>
+    <div class="content-container">
+        <div class="content">
+
+        </div>
+    </div>
 
     </div>
 
-    <!-- Always visible search container -->
     <div class="search-container" id="searchContainer">
-        <input type="text" name="search" id="searchInput" class="search-input" placeholder="Search seeds...">
-        <button type="button" id="searchButton" class="search-button">
-            <i class="fas fa-search"></i> <!-- FontAwesome magnifying glass icon -->
-        </button>
+        <form action="{% url 'search_results' %}" method="get">
+            <input type="search" name="query" placeholder="Search...">
+            <button type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
     </div>
+
+
     {% if messages %}
     <div class="message-container"></div>
     {% endif %}
@@ -120,8 +128,10 @@
     {% block page_header %}
     {% endblock %}
 
-    {% block content %}
 
+
+    {% block content %}
+    <!-- Main content here -->
     {% endblock %}
 
     {% block postloadjs %}

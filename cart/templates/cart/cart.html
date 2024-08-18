@@ -5,7 +5,6 @@
 <!-- Navigation copied from home.html -->
 <div class="navigation-container">
     {% include 'navigation.html' %}
-
 </div>
 
 <!-- Rest of the cart.html content -->
@@ -20,15 +19,21 @@
             <div class="col-12 mb-3 p-3 border-bottom border-1">
                 <div class="row align-items-center">
                     <div class="col-md-2 text-center">
-                        {% if item.seed.image %}
-                        <img src="{{ item.seed.image.url }}" alt="{{ item.seed.name }}" class="cart-item-image"
-                            style="max-width: 150px;">
-                        {% else %}
-                        <img src="{% static 'images/default-image.jpg' %}" alt="Default Image" class="cart-item-image">
-                        {% endif %}
+                        <!-- Link the image to the seed details page -->
+                        <a href="{% url 'seed_details' item.seed.id %}">
+                            {% if item.seed.image %}
+                            <img src="{{ item.seed.image.url }}" alt="{{ item.seed.name }}" class="cart-item-image"
+                                style="max-width: 150px;">
+                            {% else %}
+                            <img src="{% static 'images/default-image.jpg' %}" alt="Default Image" class="cart-item-image">
+                            {% endif %}
+                        </a>
                     </div>
                     <div class="col-md-4">
-                        <h5>{{ item.seed.name }}</h5>
+                        <!-- Link the seed name to the seed details page -->
+                        <a href="{% url 'seed_details' item.seed.id %}">
+                            <h5>{{ item.seed.name }}</h5>
+                        </a>
                         <p class="text-muted">{{ item.seed.description|truncatewords:10 }}</p>
                     </div>
                     <div class="col-md-2">
@@ -41,7 +46,7 @@
                             {% csrf_token %}
                             <input type="number" name="quantity" value="{{ item.quantity }}" min="1"
                                 class="form-control form-control-sm w-75 d-inline">
-                            <button type="submit" class="btn  btn-sm mt-2">Update</button>
+                            <button type="submit" class="btn btn-sm mt-2">Update</button>
                         </form>
                     </div>
                     <div class="col-md-2 text-right">
@@ -73,4 +78,5 @@
         </div>
         {% endif %}
     </div>
-    {% endblock %}
+</div>
+{% endblock %}

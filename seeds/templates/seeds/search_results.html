@@ -1,0 +1,58 @@
+<!-- search_results.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Navigation Bar -->
+<div class="navigation-container">
+    {% include 'navigation.html' %}
+</div>
+    <div class="container">
+        <h1 class="my-4">Search Results for "{{ query }}"</h1>
+
+     
+
+        <div class="row">
+            {% if seeds %}
+                {% for seed in seeds %}
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <div class="seed-card h-100">
+                        <a href="{% url 'seed_details' seed.id %}" class="card-link">
+                            {% if seed.image %}
+                            <div class="card-img-container">
+                                <img src="{{ seed.image.url }}" class="card-img-top" alt="{{ seed.name }}">
+                                {% if seed.discount > 0 %}
+                                <span class="discount-label">Discounted</span>
+                                {% endif %}
+                            </div>
+                            {% else %}
+                            <div class="card-img-container">
+                                <img src="{% static 'default_image.jpg' %}" class="card-img-top" alt="Default Image">
+                                {% if seed.discount > 0 %}
+                                <span class="discount-label">Discounted</span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h2 class="card-title h5">{{ seed.name }}</h2>
+                                <p class="card-text"><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
+                                <p class="card-text"><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{ seed.planting_months_to }}</p>
+                                <p class="card-text"><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
+                                <p class="card-text"><strong>Price:</strong> ${{ seed.price }}</p>
+                            </div>
+                        </a>
+                        <div class="card-footer text-center">
+                            <form method="post" action="{% url 'add_to_cart' seed.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No seeds found matching "{{ query }}".</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

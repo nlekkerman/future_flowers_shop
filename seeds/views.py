@@ -1,24 +1,34 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Seed
+from .forms import SearchForm
+
 
 
 def seed_list(request):
     category = request.GET.get('category')
-    search_query = request.GET.get('search', '')
-
+    sort = request.GET.get('sort')
+    
     seeds = Seed.objects.all()
-
+    
     if category:
-        seeds = seeds.filter(category__iexact=category)  # Corrected filter syntax
-
-    if search_query:
-        seeds = seeds.filter(name__icontains=search_query)
-
+        seeds = seeds.filter(category=category)
+    
+    if sort == 'price_asc':
+        seeds = seeds.order_by('price')
+    elif sort == 'price_desc':
+        seeds = seeds.order_by('-price')
+    elif sort == 'latest':
+        seeds = seeds.order_by('-created_at')  # Assuming there's a 'created_at' field
+    elif sort == 'discount':
+        seeds = seeds.filter(discount=True).order_by('-discount')
+        
+    
     context = {
         'seeds': seeds,
         'category': category,
-        'search_query': search_query,
+        'sort': sort,
     }
+    
     return render(request, 'seeds/seeds.html', context)
 
 
@@ -74,3 +84,24 @@ def seed_details(request, id):
     return render(request, 'seeds/seed_details.html', context)
     seed = get_object_or_404(Seed, id=id)
     return render(request, 'seeds/seed_details.html', {'seed': seed})
+
+def search_results(request):
+    form = SearchForm(request.GET or None)
+    query = form.data.get('query', '')
+
+    if query:
+        seeds = Seed.objects.filter(
+            name__icontains=query
+        ) | Seed.objects.filter(
+            scientific_name__icontains=query
+        ) | Seed.objects.filter(
+            description__icontains=query
+        )
+    else:
+        seeds = Seed.objects.none()
+
+    return render(request, 'seeds/search_results.html', {
+        'seeds': seeds,
+        'form': form,
+        'query': query
+    })

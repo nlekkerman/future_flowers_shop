@@ -7,34 +7,39 @@ Seed List
 {% endblock %}
 
 {% block content %}
+
+
 <!-- Navigation Bar -->
 <div class="navigation-container">
     {% include 'navigation.html' %}
 </div>
 
 <div class="filter-container mb-4">
-    <label class="filter-label" for="categoryDropdown">Filters</label>
+    <label class="filter-label" for="categoryDropdown">Filter by:</label>
     <form method="get" action="" class="form-filter-search">
         <!-- Toggle Button for Filters (visible only on small screens) -->
-      
-    
+
+
         <!-- Category Buttons (Visible on large screens) -->
         <div class="filter-buttons btn-group d-none d-lg-flex" role="group" aria-label="Category Filter">
             <a href="?category=" class="btn btn-secondary {% if not category %}active{% endif %}">All</a>
             <a href="?category=rose" class="btn btn-secondary {% if category == 'rose' %}active{% endif %}">Roses</a>
             <a href="?category=tree" class="btn btn-secondary {% if category == 'tree' %}active{% endif %}">Trees</a>
             <a href="?category=bush" class="btn btn-secondary {% if category == 'bush' %}active{% endif %}">Bushes</a>
-            <a href="?category=flower" class="btn btn-secondary {% if category == 'flower' %}active{% endif %}">Flowers</a>
+            <a href="?category=flower"
+                class="btn btn-secondary {% if category == 'flower' %}active{% endif %}">Flowers</a>
         </div>
-    
+
         <!-- Dropdown for small screens -->
         <div class="dropdown d-lg-none">
 
-            <button class="dropdown-toggle w-100" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="dropdown-toggle w-100" type="button" id="categoryDropdown" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
                 {% if category %}
-                    {% if category == 'rose' %}Roses{% elif category == 'tree' %}Trees{% elif category == 'bush' %}Bushes{% elif category == 'flower' %}Flowers{% else %}All{% endif %}
+                {% if category == 'rose' %}Roses{% elif category == 'tree' %}Trees{% elif category == 'bush' %}Bushes{%
+                elif category == 'flower' %}Flowers{% else %}All{% endif %}
                 {% else %}
-                    All
+                All
                 {% endif %}
             </button>
             <div class="dropdown-menu w-100" aria-labelledby="categoryDropdown">
@@ -42,11 +47,57 @@ Seed List
                 <a class="dropdown-item {% if category == 'rose' %}active{% endif %}" href="?category=rose">Roses</a>
                 <a class="dropdown-item {% if category == 'tree' %}active{% endif %}" href="?category=tree">Trees</a>
                 <a class="dropdown-item {% if category == 'bush' %}active{% endif %}" href="?category=bush">Bushes</a>
-                <a class="dropdown-item {% if category == 'flower' %}active{% endif %}" href="?category=flower">Flowers</a>
+                <a class="dropdown-item {% if category == 'flower' %}active{% endif %}"
+                    href="?category=flower">Flowers</a>
             </div>
         </div>
+
+        <!-- Sorting Options -->
+        <div class="sorting-container mb-4">
+            <label class="sorting-label" for="sortOptions">Sort by:</label>
+
+            <!-- Sorting Buttons (Visible on large screens) -->
+            <div class="sorting-buttons btn-group d-none d-lg-flex" role="group" aria-label="Sort Options">
+                <a href="?sort=" class="btn btn-secondary {% if not sort %}active{% endif %}">Default</a>
+                <a href="?sort=price_asc" class="btn btn-secondary {% if sort == 'price_asc' %}active{% endif %}">Price:
+                    Low to High</a>
+                <a href="?sort=price_desc"
+                    class="btn btn-secondary {% if sort == 'price_desc' %}active{% endif %}">Price: High to Low</a>
+                <a href="?sort=latest" class="btn btn-secondary {% if sort == 'latest' %}active{% endif %}">Latest</a>
+                <a href="?sort=discount"
+                    class="btn btn-secondary {% if sort == 'discount' %}active{% endif %}">Discounted</a>
+            </div>
+
+            <!-- Dropdown for small screens -->
+            <div class="dropdown d-lg-none">
+                <button class="dropdown-toggle w-100" type="button" id="sortDropdown" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    {% if sort %}
+                    {% if sort == 'price_asc' %}Price: Low to High{% elif sort == 'price_desc' %}Price: High to Low{%
+                    elif sort == 'latest' %}Latest{% elif sort == 'discount' %}Discounted{% else %}Default{% endif %}
+                    {% else %}
+                    Default
+                    {% endif %}
+                </button>
+                <div class="dropdown-menu w-100" aria-labelledby="sortDropdown">
+                    <a class="dropdown-item {% if not sort %}active{% endif %}" href="?sort=">Default</a>
+                    <a class="dropdown-item {% if sort == 'price_asc' %}active{% endif %}" href="?sort=price_asc">Price:
+                        Low to High</a>
+                    <a class="dropdown-item {% if sort == 'price_desc' %}active{% endif %}"
+                        href="?sort=price_desc">Price: High to Low</a>
+                    <a class="dropdown-item {% if sort == 'latest' %}active{% endif %}" href="?sort=latest">Latest</a>
+                    <a class="dropdown-item {% if sort == 'discount' %}active{% endif %}"
+                        href="?sort=discount">Discounted</a>
+                </div>
+            </div>
+        </div>
+
+
     </form>
-    
+
+
+
+
 </div>
 
 
@@ -60,17 +111,29 @@ Seed List
         {% for seed in seeds %}
         <div class="col-12 col-md-6 col-lg-4 mb-4">
             <div class="seed-card h-100">
-                <a href="{% url 'seed_details' seed.id %}">
+                <a href="{% url 'seed_details' seed.id %}" class="card-link">
                     {% if seed.image %}
+                    <div class="card-img-container">
                         <img src="{{ seed.image.url }}" class="card-img-top" alt="{{ seed.name }}">
+                        {% if seed.discount > 0 %}
+                        <span class="discount-label">Discounted</span>
+                        {% endif %}
+                    </div>
                     {% else %}
+                    <div class="card-img-container">
                         <img src="{% static 'default_image.jpg' %}" class="card-img-top" alt="Default Image">
+                        {% if seed.discount > 0 %}
+                        <span class="discount-label">Discounted</span>
+                        {% endif %}
+                    </div>
                     {% endif %}
                     <div class="card-body">
                         <h2 class="card-title h5">{{ seed.name }}</h2>
                         <p class="card-text"><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
-                        <p class="card-text"><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{ seed.planting_months_to }}</p>
-                        <p class="card-text"><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
+                        <p class="card-text"><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{
+                            seed.planting_months_to }}</p>
+                        <p class="card-text"><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{
+                            seed.flowering_months_to }}</p>
                         <p class="card-text"><strong>Price:</strong> ${{ seed.price }}</p>
                     </div>
                 </a>
@@ -84,6 +147,53 @@ Seed List
         </div>
         {% endfor %}
     </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-container mt-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="First">
+                        <span aria-hidden="true">&laquo;&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                        <span aria-hidden="true">&raquo;&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    <!-- Loading Indicator -->
+    <div id="loading" style="display: none;">Loading...</div>
     {% else %}
     <p>No seeds found.</p>
     {% endif %}
