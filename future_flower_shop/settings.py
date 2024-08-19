@@ -36,7 +36,7 @@ ALLOWED_HOSTS = ['8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.
 
 CSRF_TRUSTED_ORIGINS = [
     'https://*.gitpod.io',
-    'https://future-flower-shop-7f6f515e140f.herokuapp.com/',
+    'https://*.herokuapp.com',
     'https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net'
 ]
 # Application definition
@@ -113,6 +113,8 @@ DATABASES = {
 }
 # Cloudinary configuration (This is all you need)
 CLOUDINARY_URL = os.getenv('CLOUDINARY_URL')
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
