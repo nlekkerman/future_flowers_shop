@@ -109,7 +109,7 @@ WSGI_APPLICATION = 'future_flower_shop.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 # Cloudinary configuration (This is all you need)
 CLOUDINARY_URL = os.getenv('CLOUDINARY_URL')
