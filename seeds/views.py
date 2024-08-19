@@ -1,12 +1,15 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Seed
 from .forms import SearchForm
+from django.core.paginator import Paginator
+
 
 
 
 def seed_list(request):
     category = request.GET.get('category')
     sort = request.GET.get('sort')
+    page_number = request.GET.get('page', 1)
     
     seeds = Seed.objects.all()
     
@@ -21,10 +24,14 @@ def seed_list(request):
         seeds = seeds.order_by('-created_at')  # Assuming there's a 'created_at' field
     elif sort == 'discount':
         seeds = seeds.filter(discount=True).order_by('-discount')
+
+    # Pagination
+    paginator = Paginator(seeds, 9)  # Show 9 seeds per page
+    page_obj = paginator.get_page(page_number)
         
     
     context = {
-        'seeds': seeds,
+        'page_obj': page_obj,
         'category': category,
         'sort': sort,
     }

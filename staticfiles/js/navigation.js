@@ -12,7 +12,7 @@ $(document).ready(function () {
             }, 1000);
 
             $('.nav-link-icon').each(function (index) {
-                var delay = index * 200; // 0.2 seconds interval
+                let delay = index * 200; // 0.2 seconds interval
                 $(this).stop().css({
                     display: 'flex', // Ensure they are displayed
                     pointerEvents: 'auto' // Allow interactions
@@ -21,6 +21,9 @@ $(document).ready(function () {
                     transform: 'scale(1)'
                 }, 200); // 0.2 seconds for appearance animation
             });
+
+            // Add class to center the navigation container
+            $('.navigation-container').addClass('centered-nav');
         } else {
             // Reset menuIcon size when nav-link-icons are hidden
             $('#menuIcon').stop().animate({
@@ -43,6 +46,9 @@ $(document).ready(function () {
                     });
                 });
             });
+
+            // Remove class to position the navigation container back in the top right
+            $('.navigation-container').removeClass('centered-nav');
         }
     }
 
@@ -55,15 +61,15 @@ $(document).ready(function () {
     });
 
     function positionNavLinks() {
-        var numSmallCircles = $('.nav-link-icon').length;
-        var angleStep = 360 / numSmallCircles;
-        var radius = 100; // Distance from the center of the big circle
+        let numSmallCircles = $('.nav-link-icon').length;
+        let angleStep = 360 / numSmallCircles;
+        let radius = 100; // Distance from the center of the big circle
 
         $('.nav-link-icon').each(function (index) {
-            var angle = angleStep * index;
-            var radians = angle * (Math.PI / 180);
-            var x = radius * Math.cos(radians);
-            var y = radius * Math.sin(radians);
+            let angle = angleStep * index;
+            let radians = angle * (Math.PI / 180);
+            let x = radius * Math.cos(radians);
+            let y = radius * Math.sin(radians);
             $(this).css({
                 top: 'calc(50% + ' + y + 'px)',
                 left: 'calc(50% + ' + x + 'px)',
@@ -76,14 +82,5 @@ $(document).ready(function () {
     $('.home-icon').click(function(event) {
         event.preventDefault();
         window.location.href = '/'; // Redirect to the home page
-    });
-
-    // Handle other category links
-    $('.nav-link-click').click(function(event) {
-        let selectedCategory = $(this).data('category');
-        if (selectedCategory) {
-            event.preventDefault();
-            window.location.href = '/seeds/?category=' + encodeURIComponent(selectedCategory);
-        }
     });
 });

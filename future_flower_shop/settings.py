@@ -36,7 +36,7 @@ ALLOWED_HOSTS = ['8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.
 
 CSRF_TRUSTED_ORIGINS = [
     'https://*.gitpod.io',
-    'https://*.herokuapp.com',
+    'https://future-flower-shop-7f6f515e140f.herokuapp.com/',
     'https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net'
 ]
 # Application definition
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'home',
     'seeds',
     'cart',
+    'custom_accounts',
     
 ]
 
@@ -161,3 +162,20 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Allauth settings
+ACCOUNT_AUTHENTICATION_METHOD = 'username'  # Options: 'username', 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Options: 'optional', 'mandatory', 'none'
+ACCOUNT_USERNAME_REQUIRED = True
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# Social Account Providers
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'CLIENT_ID': os.getenv('GOOGLE_CLIENT_ID'),
+        'SECRET': os.getenv('GOOGLE_SECRET'),
+    },
+
+}

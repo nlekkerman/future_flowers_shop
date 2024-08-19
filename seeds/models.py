@@ -1,6 +1,7 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
 from django.utils import timezone
+from decimal import Decimal
 
 
 class Seed(models.Model):
@@ -37,7 +38,8 @@ class Seed(models.Model):
     def calculate_discounted_price(self):
         """Calculate the price after discount."""
         if self.discount > 0:
-            return self.price - (self.price * (self.discount / 100))
+            discounted_price = self.price - (self.price * (self.discount / 100))
+            return Decimal(discounted_price).quantize(Decimal('0.01'))
         return self.price
 
     def is_in_stock(self):

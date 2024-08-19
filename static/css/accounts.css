@@ -1,0 +1,60 @@
+/* Styles for the registration form */
+.register-form {
+    max-width: 600px; /* Adjust width as needed */
+    margin: 0 auto; /* Center the form */
+    padding: 20px; /* Add padding */
+    background-color: transparent; /* Background color */
+    border: 1px solid #ddd; /* Border */
+    border-radius: 8px; /* Rounded corners */
+}
+.register-form-container{
+    height: 500px;
+}
+.text-white{
+    color: wheat !important;
+}
+.g-signin2{
+    height: 50px;
+    color: red;
+}
+.register-form h2 {
+    text-align: center; /* Center-align heading */
+    color: #333; /* Heading color */
+    margin-bottom: 20px; /* Space below heading */
+}
+
+.register-form form {
+    display: flex;
+    flex-direction: column; /* Stack form elements vertically */
+}
+
+.register-form label {
+    font-size: 1rem; /* Font size for labels */
+    margin-bottom: 5px; /* Space below labels */
+    color: #555; /* Label color */
+}
+
+.register-form input[type="text"],
+.register-form input[type="password"],
+.register-form input[type="email"] {
+    padding: 10px; /* Padding inside input fields */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    margin-bottom: 15px; /* Space between inputs */
+    font-size: 1rem; /* Font size inside inputs */
+}
+
+.register-form button[type="submit"] {
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Button text color */
+    padding: 10px 15px; /* Padding inside button */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 1rem; /* Font size inside button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.register-form button[type="submit"]:hover {
+    background-color: #0056b3; /* Darker color on hover */
+}

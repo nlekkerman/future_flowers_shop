@@ -1,0 +1,21 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Register</h2>
+<div class="register-form-container">
+    <form method="post" class="register-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+    
+    <!-- Google Sign-In Button -->
+    <div id="g-signin2 text-white">sign</div>
+    <div id="g-signin-status"></div>
+</div>
+
+
+
+{% endblock %}

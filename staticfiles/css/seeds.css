@@ -5,22 +5,25 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #f4f4f4;
-}
-
 
 li a {
-    text-decoration: none; 
+    text-decoration: none;
 }
 
-.seeds-container{
+.filter-container {
+    margin-top: 240px !important;
+    position: relative;
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(255, 241, 241, 0.3);
+}
 
+.seeds-container {
     width: 80%;
     margin: 0 auto;
-    margin-top: 150px !important;
+    margin-top: 50px !important;
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.4);
     color: white !important;
@@ -28,13 +31,17 @@ li a {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
 }
-.seed-card{
+
+.seed-card {
     background-color: rgba(0, 0, 0, 0.4) !important;
     color: white !important;
 }
+
 li a:hover {
-    text-decoration: none; /* Ensure no underline on hover */
+    text-decoration: none;
+    /* Ensure no underline on hover */
 }
+
 .seeds-title {
     color: #ffffff;
     margin-bottom: 20px;
@@ -42,40 +49,18 @@ li a:hover {
 
 }
 
-form {
-    margin-bottom: 20px;
+.input-group {
+    width: 50%;
 }
 
-form div {
-    margin-bottom: 15px;
+
+
+.btn-update:hover {
+    background: linear-gradient(145deg, #7a8b9a, #9bb0d4);
+    /* Slightly different gradient on hover */
 }
 
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
 
-select, input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    background-color: #5cb85c;
-    color: #fff;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: #4cae4c;
-}
 
 ul {
     list-style-type: none;
@@ -95,6 +80,26 @@ ul {
     button {
         width: 100%;
     }
+    .sorting-container {
+        margin-bottom: 20px;
+        width: 100%;
+        text-align: left;
+        margin-top: 10px !important;
+
+    }
+
+    .sorting-label {
+        display: none;
+    }
+
+    .dropdown-toggle {
+        display: block;
+    }
+
+    .sorting-buttons {
+        display: none;
+    }
+
 }
 
 
@@ -124,4 +129,53 @@ ul {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 5px;
+}
+
+.dropdown-menu {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.dropdown-toggle {
+    background-color: rgba(255, 0, 0, 0.7) !important;
+    border-radius: 20px;
+    color: white;
+    font-weight: 600;
+
+}
+
+.filter-label {
+    color: white !important;
+    margin: 0px !important;
+    text-align: center;
+    font-weight: 600;
+    width: 100%;
+    margin-bottom: 10px !important;
+}
+
+.form-filter-search {
+    width: 70%;
+    margin: 0px auto;
+}
+
+.sorting-container {
+    margin-bottom: 20px;
+    text-align: center;
+    margin-top: 10px !important;
+
+}
+
+.sorting-label {
+    color: white;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.form-control {
+    display: inline-block;
+    width: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border-radius: 20px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
 }

@@ -106,9 +106,9 @@ Seed List
 <div class="seeds-container mt-4">
     <h1 class="seeds-title mb-4">Seeds</h1>
 
-    {% if seeds %}
+    {% if page_obj.object_list %}
     <div class="row">
-        {% for seed in seeds %}
+        {% for seed in page_obj.object_list %}
         <div class="col-12 col-md-6 col-lg-4 mb-4">
             <div class="seed-card h-100">
                 <a href="{% url 'seed_details' seed.id %}" class="card-link">
@@ -130,10 +130,8 @@ Seed List
                     <div class="card-body">
                         <h2 class="card-title h5">{{ seed.name }}</h2>
                         <p class="card-text"><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
-                        <p class="card-text"><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{
-                            seed.planting_months_to }}</p>
-                        <p class="card-text"><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{
-                            seed.flowering_months_to }}</p>
+                        <p class="card-text"><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{ seed.planting_months_to }}</p>
+                        <p class="card-text"><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
                         <p class="card-text"><strong>Price:</strong> ${{ seed.price }}</p>
                     </div>
                 </a>
@@ -154,14 +152,23 @@ Seed List
             <ul class="pagination">
                 {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page=1" aria-label="First">
+                    <a class="page-link" href="?page=1&category={{ category }}&sort={{ sort }}" aria-label="First">
                         <span aria-hidden="true">&laquo;&laquo;</span>
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <a class="page-link"
+                        href="?page={{ page_obj.previous_page_number }}&category={{ category }}&sort={{ sort }}"
+                        aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;&laquo;</span>
                 </li>
                 {% endif %}
 
@@ -172,30 +179,40 @@ Seed List
                 </li>
                 {% else %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    <a class="page-link" href="?page={{ num }}&category={{ category }}&sort={{ sort }}">{{ num }}</a>
                 </li>
                 {% endif %}
                 {% endfor %}
 
                 {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <a class="page-link"
+                        href="?page={{ page_obj.next_page_number }}&category={{ category }}&sort={{ sort }}"
+                        aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                    <a class="page-link"
+                        href="?page={{ page_obj.paginator.num_pages }}&category={{ category }}&sort={{ sort }}"
+                        aria-label="Last">
                         <span aria-hidden="true">&raquo;&raquo;</span>
                     </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;&raquo;</span>
                 </li>
                 {% endif %}
             </ul>
         </nav>
     </div>
-    <!-- Loading Indicator -->
-    <div id="loading" style="display: none;">Loading...</div>
     {% else %}
     <p>No seeds found.</p>
     {% endif %}
 </div>
+
 {% endblock %}
