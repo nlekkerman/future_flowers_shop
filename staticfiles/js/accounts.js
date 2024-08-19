@@ -57,7 +57,9 @@ function getCsrfToken() {
     return cookieValue;
 }
 
-// Load the Google API and initialize the sign-in button
-gapi.load('auth2', function() {
-    gapi.auth2.init().then(renderGoogleSignInButton);
+// Load the Google API and initialize the sign-in button when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    gapi.load('auth2', function() {
+        gapi.auth2.init().then(renderGoogleSignInButton);
+    });
 });

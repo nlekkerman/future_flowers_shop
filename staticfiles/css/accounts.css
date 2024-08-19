@@ -10,6 +10,9 @@
 .register-form-container{
     height: 500px;
 }
+.text-white{
+    color: wheat !important;
+}
 .g-signin2{
     height: 50px;
     color: red;
