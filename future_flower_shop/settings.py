@@ -27,11 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 DATABASES = {
     'default': dj_database_url.parse(config('DATABASE_URL'))
 }
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-CLOUDINARY_URL = config('CLOUDINARY_URL')
-GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID')
-GOOGLE_SECRET = config('GOOGLE_SECRET')
+
 
 # Log environment variables
 logging.debug(f"SECRET_KEY: {SECRET_KEY}")
