@@ -55,7 +55,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net',  # Your Code Institute URL
-    'https://dashboard.heroku.com/apps/future-flower-shop',  # Replace with your actual Heroku app URL
+    'https://future-flower-shop-7f6f515e140f.herokuapp.com',  # Replace with your actual Heroku app URL
     '.herokuapp.com',  # Allows any subdomain of herokuapp.com
     '.codeinstitute-ide.net'  # Allows any subdomain of codeinstitute-ide.net
 ]
