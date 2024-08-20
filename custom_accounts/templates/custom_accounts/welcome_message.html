@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="welcome-message">
+    <h2 id="welcome-heading">Welcome to Future Flower Seed Shop!</h2>
+    <p id="welcome-text"></p>
+    <p>You will be redirected to the home page shortly.</p>
+</div>
+
+<script>
+    // Typing effect function
+    function typeText(element, text, speed) {
+        let i = 0;
+        const intervalId = setInterval(() => {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+            } else {
+                clearInterval(intervalId);
+            }
+        }, speed);
+    }
+
+    // Text to be typed
+    const headingText = 'Welcome to Future Flower Seed Shop!';
+    const paragraphText = 'Great {{ user.username }}! Your account has been created successfully. We wish you pleasant exploring and shopping!';
+    
+    // Type the heading and paragraph
+    document.addEventListener("DOMContentLoaded", () => {
+        typeText(document.getElementById('welcome-heading'), headingText, 100);
+        setTimeout(() => {
+            typeText(document.getElementById('welcome-text'), paragraphText, 50);
+        }, headingText.length * 100); // Delay to start typing paragraph after heading
+    });
+
+    // Redirect after 5 seconds
+    setTimeout(function() {
+        window.location.href = "{% url 'home' %}";  // Change 'home' to your home page URL name
+    }, 10000); // Redirect after 5 seconds
+</script>
+</div>
+{% endblock %}

@@ -1,11 +1,10 @@
-# cart/models.py
-
 from django.db import models
 from django.contrib.auth.models import User
 from seeds.models import Seed
 
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)  # User can be null for anonymous users
+    session_id = models.CharField(max_length=255, null=True, blank=True)  # Field for anonymous users
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -16,7 +15,9 @@ class Cart(models.Model):
         return sum(item.get_discount_amount() for item in self.items.all())
 
     def __str__(self):
-        return f"Cart {self.id} for {self.user.username}"
+        if self.user:
+            return f"Cart {self.id} for {self.user.username}"
+        return f"Cart {self.id} for session {self.session_id}"
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)

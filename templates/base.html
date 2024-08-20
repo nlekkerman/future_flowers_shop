@@ -116,11 +116,80 @@
             </button>
         </form>
     </div>
-
-
+    
     {% if messages %}
-    <div class="message-container"></div>
-    {% endif %}
+    <div class="message-container" id="message-container">
+        <!-- Close button for the whole message container -->
+        <button class="close-button-container" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                <!-- Directly render the message content -->
+                {{ message|safe }}
+            </div>
+        {% endfor %}
+        
+        <div class="message-cart-container mt-4">
+            {% if cart.items.all %}
+            <!-- Cart items listing -->
+            <div class="row mb-3">
+                {% for item in cart.items.all %}
+                <div class="col-12 mb-3 p-3 border-bottom border-1 message-cart-item">
+                    <div class="row-cart-item align-items-center">
+                        <div class="col-md-2 text-center">
+                            <!-- Seed image -->
+                            <a href="{% url 'seed_details' item.seed.id %}">
+                                {% if item.seed.image %}
+                                <img src="{{ item.seed.image.url }}" alt="{{ item.seed.name }}" class="cart-item-image" style="max-width: 150px;">
+                                {% else %}
+                                <img src="{% static 'images/default-image.jpg' %}" alt="Default Image" class="cart-item-image">
+                                {% endif %}
+                            </a>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <h6>Price</h6>
+                            <!-- Displaying the price with a calculated discounted price -->
+                            <p>${{ item.seed.calculate_discounted_price }}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <h6>Quantity</h6>
+                            <!-- Displaying the quantity of items in the cart -->
+                            <p>${{ item.quantity }}</p>
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <h6>Total</h6>
+                            <!-- Displaying the total price for the cart item -->
+                            <p>${{ item.get_total_price }}</p>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+    
+            <!-- Cart totals and checkout button -->
+            <div class="d-flex justify-content-between mt-4">
+                <div>
+                    <a href="#" class="btn btn-success btn-lg">Proceed to Checkout</a>
+                </div>
+            </div>
+            {% else %}
+            <!-- Message for empty cart -->
+            <div class="text-center">
+                <h3>Your cart is currently empty.</h3>
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg">Start Shopping</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+
+
+    
+
 
     {% block page_header %}
     {% endblock %}

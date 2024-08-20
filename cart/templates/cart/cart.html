@@ -7,19 +7,18 @@
     {% include 'navigation.html' %}
 </div>
 
-<!-- Rest of the cart.html content -->
+<!-- Main content for the cart -->
 <div class="cart-container">
     <h2 class="cart-title">Shopping Cart</h2>
     <div class="container mt-4">
-        <h2 class="mb-4">Shopping Cart</h2>
-
         {% if cart.items.all %}
+        <!-- Cart items listing -->
         <div class="row mb-3">
             {% for item in cart.items.all %}
             <div class="col-12 mb-3 p-3 border-bottom border-1">
                 <div class="row align-items-center">
                     <div class="col-md-2 text-center">
-                        <!-- Link the image to the seed details page -->
+                        <!-- Seed image -->
                         <a href="{% url 'seed_details' item.seed.id %}">
                             {% if item.seed.image %}
                             <img src="{{ item.seed.image.url }}" alt="{{ item.seed.name }}" class="cart-item-image"
@@ -30,7 +29,7 @@
                         </a>
                     </div>
                     <div class="col-md-4">
-                        <!-- Link the seed name to the seed details page -->
+                        <!-- Seed details with a link to seed details page -->
                         <a href="{% url 'seed_details' item.seed.id %}">
                             <h5>{{ item.seed.name }}</h5>
                         </a>
@@ -38,10 +37,12 @@
                     </div>
                     <div class="col-md-2">
                         <h6>Price</h6>
+                        <!-- Displaying the price with a calculated discounted price -->
                         <p>${{ item.seed.calculate_discounted_price }}</p>
                     </div>
                     <div class="col-md-2">
                         <h6>Quantity</h6>
+                        <!-- Form to update the quantity of items in the cart -->
                         <form action="{% url 'update_cart_item' item.seed.id %}" method="post" class="d-inline">
                             {% csrf_token %}
                             <input type="number" name="quantity" value="{{ item.quantity }}" min="1"
@@ -51,7 +52,9 @@
                     </div>
                     <div class="col-md-2 text-right">
                         <h6>Total</h6>
+                        <!-- Displaying the total price for the cart item -->
                         <p>${{ item.get_total_price }}</p>
+                        <!-- Form to remove the item from the cart -->
                         <form action="{% url 'remove_from_cart' item.seed.id %}" method="post" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm">Remove</button>
@@ -62,6 +65,7 @@
             {% endfor %}
         </div>
 
+        <!-- Cart totals and checkout button -->
         <div class="d-flex justify-content-between mt-4">
             <div>
                 <h4>Total: <span class="text-primary">${{ cart.get_total_price }}</span></h4>
@@ -72,9 +76,10 @@
             </div>
         </div>
         {% else %}
+        <!-- Message for empty cart -->
         <div class="text-center">
             <h3>Your cart is currently empty.</h3>
-            <a href="{% url 'cart_detail' %}" class="btn btn-primary btn-lg">Start Shopping</a>
+            <a href="{% url 'home' %}" class="btn btn-primary btn-lg">Start Shopping</a>
         </div>
         {% endif %}
     </div>

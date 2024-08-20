@@ -15,3 +15,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle close button clicks
+    const closeButtons = document.querySelectorAll('.close-button-container');
+    closeButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const message = this.closest('.message-container');
+            if (message) {
+                message.style.display = 'none'; // Hide the message
+            }
+        });
+    });
+    
+
+});

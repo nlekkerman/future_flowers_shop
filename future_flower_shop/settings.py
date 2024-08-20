@@ -9,22 +9,41 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+
 import os
 import dj_database_url
 from pathlib import Path
+from django.contrib import messages
+from decouple import config, Csv
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 
-# Load environment variables from env.py
 if os.path.exists('env.py'):
     import env
 
+# Define environment variables using python-decouple
+SECRET_KEY = config('SECRET_KEY')
+DATABASES = {
+    'default': dj_database_url.parse(config('DATABASE_URL'))
+}
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+CLOUDINARY_URL = config('CLOUDINARY_URL')
+GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID')
+GOOGLE_SECRET = config('GOOGLE_SECRET')
+
+# Log environment variables
+logging.debug(f"SECRET_KEY: {SECRET_KEY}")
+logging.debug(f"DATABASE_URL: {config('DATABASE_URL')}")
+logging.debug(f"EMAIL_HOST_USER: {EMAIL_HOST_USER}")
+logging.debug(f"EMAIL_HOST_PASSWORD: {EMAIL_HOST_PASSWORD}")
+logging.debug(f"CLOUDINARY_URL: {CLOUDINARY_URL}")
+logging.debug(f"GOOGLE_CLIENT_ID: {GOOGLE_CLIENT_ID}")
+logging.debug(f"GOOGLE_SECRET: {GOOGLE_SECRET}")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
@@ -32,14 +51,16 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net','.herokuapp.com']
+ALLOWED_HOSTS = [
+    '8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net',
+    '.herokuapp.com'
+]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://*.gitpod.io',
     'https://*.herokuapp.com',
     'https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net'
 ]
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -48,31 +69,45 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'cloudinary',
-    'cloudinary_storage',
-    'home',
-    'seeds',
-    'cart',
-    'custom_accounts',
     
+    # Third-party apps
+    'django.contrib.sites',            # Required for allauth
+    'allauth',                         # Django allauth for authentication
+    'allauth.account',                 # Allauth for account management
+    'allauth.socialaccount',           # Allauth for social account management
+    'allauth.socialaccount.providers.google',  # Google provider for allauth
+    'cloudinary',                      # Cloudinary for media management
+    'cloudinary_storage',              # Cloudinary storage integration
+    
+    # Custom apps
+    'home',                            # Custom app for home page
+    'seeds',                           # Custom app for seeds management
+    'cart',                            # Custom app for cart management
+    'custom_accounts',                 # Custom app for account management
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # Ensure allauth middleware is included
 ]
+
+
+# Message tags
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'error',
+}
 
 ROOT_URLCONF = 'future_flower_shop.urls'
 
@@ -96,33 +131,47 @@ TEMPLATES = [
         },
     },
 ]
-
+# Social Account Providers Configuration
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_SECRET'),
+            'key': ''
+        }
+    }
+}
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
+
 SITE_ID = 1
 
 WSGI_APPLICATION = 'future_flower_shop.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+# Database configuration
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
-# Cloudinary configuration (This is all you need)
+
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+# Cloudinary configuration
 CLOUDINARY_URL = os.getenv('CLOUDINARY_URL')
-DATABASE_URL = os.environ.get("DATABASE_URL")
-
-
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -138,16 +187,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 # Media files (uploads)
@@ -155,16 +198,13 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
-
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
+# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Allauth settings
@@ -175,11 +215,24 @@ ACCOUNT_USERNAME_REQUIRED = True
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Social Account Providers
+# Social Account Providers Configuration
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'CLIENT_ID': os.getenv('GOOGLE_CLIENT_ID'),
-        'SECRET': os.getenv('GOOGLE_SECRET'),
-    },
-
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_SECRET'),
+            'key': ''
+        }
+    }
 }
+# Log the GOOGLE_CLIENT_ID and GOOGLE_SECRET values
+logging.debug(f"GOOGLE_CLIENT_ID: {os.getenv('GOOGLE_CLIENT_ID')}")
+logging.debug(f"GOOGLE_SECRET: {os.getenv('GOOGLE_SECRET')}")
