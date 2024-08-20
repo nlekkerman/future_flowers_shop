@@ -28,16 +28,6 @@ DATABASES = {
     'default': dj_database_url.parse(config('DATABASE_URL'))
 }
 
-
-# Log environment variables
-logging.debug(f"SECRET_KEY: {SECRET_KEY}")
-logging.debug(f"DATABASE_URL: {config('DATABASE_URL')}")
-logging.debug(f"EMAIL_HOST_USER: {EMAIL_HOST_USER}")
-logging.debug(f"EMAIL_HOST_PASSWORD: {EMAIL_HOST_PASSWORD}")
-logging.debug(f"CLOUDINARY_URL: {CLOUDINARY_URL}")
-logging.debug(f"GOOGLE_CLIENT_ID: {GOOGLE_CLIENT_ID}")
-logging.debug(f"GOOGLE_SECRET: {GOOGLE_SECRET}")
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
