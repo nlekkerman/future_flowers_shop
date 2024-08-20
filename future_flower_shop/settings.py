@@ -51,13 +51,11 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
+https://dashboard.heroku.com/apps/future-flower-shop
 
 ALLOWED_HOSTS = [
-    '8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net',  # Your Code Institute URL
-    'https://future-flower-shop-7f6f515e140f.herokuapp.com',  # Replace with your actual Heroku app URL
-    '.herokuapp.com',  # Allows any subdomain of herokuapp.com
-    '.codeinstitute-ide.net'  # Allows any subdomain of codeinstitute-ide.net
+    '8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net',
+    '.herokuapp.com'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
