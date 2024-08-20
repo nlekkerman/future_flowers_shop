@@ -14,33 +14,13 @@ import os
 import dj_database_url
 from pathlib import Path
 from django.contrib import messages
-from decouple import config, Csv
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+# Load environment variables from env.py if it exists
 if os.path.exists('env.py'):
     import env
-
-# Define environment variables using python-decouple
-SECRET_KEY = config('SECRET_KEY')
-DATABASES = {
-    'default': dj_database_url.parse(config('DATABASE_URL'))
-}
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-CLOUDINARY_URL = config('CLOUDINARY_URL')
-GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID')
-GOOGLE_SECRET = config('GOOGLE_SECRET')
-
-# Log environment variables
-logging.debug(f"SECRET_KEY: {SECRET_KEY}")
-logging.debug(f"DATABASE_URL: {config('DATABASE_URL')}")
-logging.debug(f"EMAIL_HOST_USER: {EMAIL_HOST_USER}")
-logging.debug(f"EMAIL_HOST_PASSWORD: {EMAIL_HOST_PASSWORD}")
-logging.debug(f"CLOUDINARY_URL: {CLOUDINARY_URL}")
-logging.debug(f"GOOGLE_CLIENT_ID: {GOOGLE_CLIENT_ID}")
-logging.debug(f"GOOGLE_SECRET: {GOOGLE_SECRET}")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -49,18 +29,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = [
-    '8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net',
-    '.herokuapp.com'
-]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://*.gitpod.io',
-    'https://*.herokuapp.com',
-    'https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net'
-]
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -69,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # Third-party apps
     'django.contrib.sites',            # Required for allauth
     'allauth',                         # Django allauth for authentication
@@ -131,29 +104,11 @@ TEMPLATES = [
         },
     },
 ]
-# Social Account Providers Configuration
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'OAUTH_PKCE_ENABLED': True,
-        'APP': {
-            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
-            'secret': os.getenv('GOOGLE_SECRET'),
-            'key': ''
-        }
-    }
-}
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
-
 
 SITE_ID = 1
 
@@ -161,11 +116,11 @@ WSGI_APPLICATION = 'future_flower_shop.wsgi.application'
 
 # Database configuration
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
 }
 
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 # Cloudinary configuration
 CLOUDINARY_URL = os.getenv('CLOUDINARY_URL')
@@ -208,12 +163,12 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Allauth settings
-ACCOUNT_AUTHENTICATION_METHOD = 'username'  # Options: 'username', 'email'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Options: 'optional', 'mandatory', 'none'
-ACCOUNT_USERNAME_REQUIRED = True
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_AUTHENTICATION_METHOD = os.getenv('ACCOUNT_AUTHENTICATION_METHOD', 'username')  # Options: 'username', 'email'
+ACCOUNT_EMAIL_REQUIRED = os.getenv('ACCOUNT_EMAIL_REQUIRED', 'True') == 'True'
+ACCOUNT_EMAIL_VERIFICATION = os.getenv('ACCOUNT_EMAIL_VERIFICATION', 'mandatory')  # Options: 'optional', 'mandatory', 'none'
+ACCOUNT_USERNAME_REQUIRED = os.getenv('ACCOUNT_USERNAME_REQUIRED', 'True') == 'True'
+LOGIN_REDIRECT_URL = os.getenv('LOGIN_REDIRECT_URL', '/')
+LOGOUT_REDIRECT_URL = os.getenv('LOGOUT_REDIRECT_URL', '/')
 
 # Social Account Providers Configuration
 SOCIALACCOUNT_PROVIDERS = {
@@ -233,6 +188,7 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
 # Log the GOOGLE_CLIENT_ID and GOOGLE_SECRET values
 logging.debug(f"GOOGLE_CLIENT_ID: {os.getenv('GOOGLE_CLIENT_ID')}")
 logging.debug(f"GOOGLE_SECRET: {os.getenv('GOOGLE_SECRET')}")
