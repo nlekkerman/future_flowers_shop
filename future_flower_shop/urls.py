@@ -20,6 +20,9 @@ urlpatterns = [
     
     # Seeds application URLs
     path('seeds/', include('seeds.urls')),
+
+    # Checkout application URLs
+    path('checkout/', include('checkout.urls')), 
     
     # Cart application URLs
     path('cart/', include('cart.urls')),

@@ -1,6 +1,7 @@
 from django.apps import AppConfig
 
-
 class CustomAccountsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
     name = 'custom_accounts'
+
+    def ready(self):
+        import custom_accounts.signals  # Register the signals

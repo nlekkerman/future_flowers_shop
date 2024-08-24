@@ -25,7 +25,8 @@ if os.path.exists('env.py'):
 # Define environment variables using python-decouple
 SECRET_KEY = config('SECRET_KEY')
 DATABASES = {
-    'default': dj_database_url.parse(config('DATABASE_URL'))
+    'default': dj_database_url.parse(config('DATABASE_URL')),
+    'ATOMIC_REQUESTS': True,
 }
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -63,13 +64,15 @@ INSTALLED_APPS = [
     'allauth.socialaccount',           # Allauth for social account management
     'allauth.socialaccount.providers.google',  # Google provider for allauth
     'cloudinary',                      # Cloudinary for media management
-    'cloudinary_storage',              # Cloudinary storage integration
-    
+    'cloudinary_storage', 
+    'crispy_forms',
+    'crispy_bootstrap4',
     # Custom apps
     'home',                            # Custom app for home page
     'seeds',                           # Custom app for seeds management
     'cart',                            # Custom app for cart management
     'custom_accounts',                 # Custom app for account management
+    'checkout',                        # custom app for checkout management
 ]
 
 
@@ -96,6 +99,8 @@ MESSAGE_TAGS = {
 }
 
 ROOT_URLCONF = 'future_flower_shop.urls'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 
 TEMPLATES = [
     {
@@ -114,9 +119,14 @@ TEMPLATES = [
                 'cart.context_processors.cart_context',
                 'seeds.context_processors.seed_data',
             ],
+            'builtins': [
+                'crispy_forms.templatetags.crispy_forms_tags',
+                'crispy_forms.templatetags.crispy_forms_field',
+            ]
         },
     },
 ]
+
 # Social Account Providers Configuration
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -139,6 +149,9 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
+# settings.py
+FREE_DELIVERY_THRESHOLD = 50
+STANDARD_DELIVERY_PERCENTAGE = 10
 
 
 SITE_ID = 1

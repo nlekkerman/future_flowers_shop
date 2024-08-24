@@ -100,8 +100,6 @@ Seed List
 
 </div>
 
-
-
 <!-- Seed List -->
 <div class="seeds-container mt-4">
     <h1 class="seeds-title mb-4">Seeds</h1>
@@ -133,33 +131,49 @@ Seed List
                         <p class="card-text"><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{ seed.planting_months_to }}</p>
                         <p class="card-text"><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
                         <p class="card-text"><strong>Price:</strong> ${{ seed.price }}</p>
+
+                        <p class="card-text text-danger"><strong>In stock:</strong  > {{ seed.in_stock }}</p>
+
+                        
+                        {% if seed.in_stock < 5 and seed.in_stock > 0 %}
+                        <p class="card-text text-warning"><strong>Hurry! Only {{ seed.in_stock }} left in stock!</strong></p>
+                        {% elif seed.in_stock == 0 %}
+                        <p class="card-text text-danger"><strong>Out of Stock</strong></p>
+                        {% endif %}
                     </div>
                 </a>
                 <div class="card-footer text-center">
                     <form method="post" action="{% url 'add_to_cart' seed.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        <button type="submit" class="btn btn-primary" 
+                                {% if seed.in_stock == 0 %}disabled{% endif %}>
+                            {% if seed.in_stock == 0 %}
+                                Out of Stock
+                            {% else %}
+                                Add to Cart
+                            {% endif %}
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
+    
 
-    <!-- Pagination Controls -->
+
+<!-- Pagination Controls -->
 <div class="pagination-container mt-4">
     <nav aria-label="Page navigation">
         <ul class="pagination">
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page=1&category={{ category }}&sort={{ sort }}" aria-label="First">
+                <a class="page-link" href="?page=1{% if category %}&category={{ category }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" aria-label="First">
                     <span aria-hidden="true">&laquo;&laquo;</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link"
-                    href="?page={{ page_obj.previous_page_number }}&category={{ category }}&sort={{ sort }}"
-                    aria-label="Previous">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if category %}&category={{ category }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -179,23 +193,19 @@ Seed List
             </li>
             {% else %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ num }}&category={{ category }}&sort={{ sort }}">{{ num }}</a>
+                <a class="page-link" href="?page={{ num }}{% if category %}&category={{ category }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">{{ num }}</a>
             </li>
             {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link"
-                    href="?page={{ page_obj.next_page_number }}&category={{ category }}&sort={{ sort }}"
-                    aria-label="Next">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if category %}&category={{ category }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link"
-                    href="?page={{ page_obj.paginator.num_pages }}&category={{ category }}&sort={{ sort }}"
-                    aria-label="Last">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if category %}&category={{ category }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" aria-label="Last">
                     <span aria-hidden="true">&raquo;&raquo;</span>
                 </a>
             </li>

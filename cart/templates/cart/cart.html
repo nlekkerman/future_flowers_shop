@@ -24,7 +24,8 @@
                             <img src="{{ item.seed.image.url }}" alt="{{ item.seed.name }}" class="cart-item-image"
                                 style="max-width: 150px;">
                             {% else %}
-                            <img src="{% static 'images/default-image.jpg' %}" alt="Default Image" class="cart-item-image">
+                            <img src="{% static 'images/default-image.jpg' %}" alt="Default Image"
+                                class="cart-item-image">
                             {% endif %}
                         </a>
                     </div>
@@ -45,10 +46,12 @@
                         <!-- Form to update the quantity of items in the cart -->
                         <form action="{% url 'update_cart_item' item.seed.id %}" method="post" class="d-inline">
                             {% csrf_token %}
-                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1"
-                                class="form-control form-control-sm w-75 d-inline">
-                            <button type="submit" class="btn btn-sm mt-2">Update</button>
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="{{ item.max_quantity }}"
+                                   class="form-control form-control-sm w-75 d-inline" placeholder="Quantity">
+                            <button type="submit" class="btn btn-sm mt-2">Update Quantity</button>
                         </form>
+                        
+
                     </div>
                     <div class="col-md-2 text-right">
                         <h6>Total</h6>
@@ -72,14 +75,14 @@
                 <h4>Discount: <span class="text-danger">${{ cart.get_total_discount }}</span></h4>
             </div>
             <div>
-                <a href="#" class="btn btn-success btn-lg">Proceed to Checkout</a>
+                <a href="{% url 'checkout' %}" class="btn btn-success btn-lg">Proceed to Checkout</a>
             </div>
         </div>
         {% else %}
         <!-- Message for empty cart -->
         <div class="text-center">
             <h3>Your cart is currently empty.</h3>
-            <a href="{% url 'home' %}" class="btn btn-primary btn-lg">Start Shopping</a>
+            <a href="{% url 'seed_list' %}" class="btn btn-primary btn-lg">Start Shopping</a>
         </div>
         {% endif %}
     </div>

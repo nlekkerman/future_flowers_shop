@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
     <link rel="stylesheet" href="{% static 'css/navigation.css' %}">
     <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
 
 
     {% endblock %}
@@ -65,9 +66,12 @@
                 <li class="list-inline-item dropdown">
                     <a class="text-black nav-link" href="#" id="user-options" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                        <div class="text-center">
-                            <div><i class="fas fa-user fa-lg"></i></div>
-                            <p class="my-0">My Account</p>
+                        <div>
+                            <i class="fas fa-user fa-lg"></i>
+                            <!-- Conditionally display username -->
+                            {% if request.user.is_authenticated %}
+                                <span>{{ request.user.username }}</span>
+                            {% endif %}
                         </div>
                     </a>
                     <div class="dropdown-menu border-0" aria-labelledby="user-options">
@@ -86,10 +90,10 @@
                 <li class="list-inline-item">
                     <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link"
                         href="{% url 'cart_detail' %}">
-                        <div class="text-center">
-                            <div><i class="fas fa-shopping-bag fa-lg"></i></div>
+                        <div class="text-center icon-conatainer">
+                            <div><i class="fas mr-1 fa-shopping-bag fa-lg"></i></div>
                             <p class="my-0">
-                                Total: <span class="cart-total">
+                                <span class="cart-total">
                                     ${{ cart.get_total_price|floatformat:2 }}
                                 </span>
                             </p>
@@ -99,7 +103,7 @@
             </ul>
         </div>
     </div>
-
+    
     <div class="content-container">
         <div class="content">
 

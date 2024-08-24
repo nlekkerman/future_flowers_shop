@@ -9,7 +9,14 @@
 li a {
     text-decoration: none;
 }
+.page-link{
+    background-color: rgba(0, 0, 0, 0.7) !important;
+}
 
+.page-item.active .page-link{
+    background-color: rgba(145, 0, 0, 0.7) !important;
+    border-color: white !important;
+}
 .filter-container {
     margin-top: 100px !important;
     position: relative;

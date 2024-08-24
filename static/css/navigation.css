@@ -21,18 +21,17 @@
 }
 
 .centered-nav {
-    position: absolute;
-    /* Change to absolute when centered */
+    position: fixed; /* Changed from absolute to fixed */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    right: auto;
-    /* Reset right position */
     background-color: rgba(67, 111, 0, 0.7);
     height: 400px;
     width: 400px;
     border-radius: 50%;
+    z-index: 1000; /* Optional: Ensures the element is above other content */
 }
+
 
 
 .roses-icon {

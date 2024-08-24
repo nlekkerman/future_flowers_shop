@@ -15,7 +15,7 @@ body {
     width: 100%;
     font-weight: 700;
     position: fixed;
-    /* Fixed positioning */
+    height: 64px;
     top: 0;
     /* Stick to the top */
     left: 0;
@@ -72,9 +72,12 @@ header ul.list-inline {
 
 header .list-inline-item {
     margin-right: 15px;
-    /* Space between items */
+   display: flex;
 }
-
+.icon-conatainer{
+    display: flex;
+    flex-direction: row;
+}
 a {
     color: white !important;
 }
@@ -84,7 +87,7 @@ a {
     display: flex;
     justify-content: flex-end;
     animation: swingDownFlip 1.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-    /* Duration and easing */
+    height: 64px;
 }
 
 .header.animate-herder .list-container ul li {
@@ -328,6 +331,7 @@ header .dropdown-item {
     margin: 0;
     background-color: rgba(0, 0, 0, 0.9);
     box-shadow: 0 5 10px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
     z-index: 444999;
@@ -348,7 +352,7 @@ header .dropdown-item {
 .search-container input[type="number"],
 .search-container input[type="password"],
 .search-container textarea {
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: transparent;
     border-color: transparent !important;
     color: white;
     /* Text color */
@@ -379,13 +383,13 @@ header .dropdown-item {
 
 /* Style for the submit button */
 .search-container button[type="submit"] {
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: transparent !important;
     /* Blue background color */
     color: white;
+    border-bottom-right-radius: 15px;
     /* Text color */
     border: none;
-    /* Remove default border */
-    border-radius: 4px;
+
     /* Optional: Adds rounded corners */
     padding: 10px 20px;
     /* Padding around the text */

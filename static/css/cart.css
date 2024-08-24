@@ -125,9 +125,13 @@
     color: #fff;
 }
 
+.my-0{
+    font-size: 1.2rem;
+}
 /* Cart total and discount */
 .cart-total {
     color: #d9534f;
+    font-size: 1.2rem;
 }
 
 .cart-discount {
