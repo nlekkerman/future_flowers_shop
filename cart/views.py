@@ -8,7 +8,8 @@ from checkout.forms import OrderForm
 from django.utils.html import format_html, mark_safe
 from django.db import transaction
 import logging
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
+from .utils import get_max_possible_quantity
 
 logger = logging.getLogger(__name__)
 
@@ -175,13 +176,14 @@ def update_cart_item(request, seed_id):
 
     return redirect('cart_detail')
 
+# views.py
 def cart_detail(request):
     cart = get_or_create_cart(request)
     cart_items = CartItem.objects.filter(cart=cart).select_related('seed')
-
+    
     for item in cart_items:
-        logger.debug(f"Cart item ID: {item.id}, Quantity: {item.quantity}")
-
+        item.max_possible_quantity = get_max_possible_quantity(request, item.seed.id)
+    
     form = OrderForm()
 
     context = {
@@ -190,11 +192,10 @@ def cart_detail(request):
         'total': cart.get_total_price(),
         'delivery': cart.get_delivery_cost(),
         'grand_total': cart.get_grand_total(),
-        'cart_items': cart_items,  # Pass cart_items to the template
+        'cart_items': cart_items,
     }
 
     return render(request, 'cart/cart.html', context)
-
 
 
 
@@ -239,3 +240,25 @@ def update_checkout_cart_item(request, seed_id):
         messages.error(request, f'{seed.name} was not found in your cart.')
 
     return redirect('checkout')
+
+
+def get_max_possible_quantity(request, seed_id):
+    logger.debug(f"Received request to calculate max possible quantity for seed ID: {seed_id}")
+    
+    seed = get_object_or_404(Seed, id=seed_id)
+    logger.debug(f"Fetched seed: {seed.name} with ID: {seed_id} and current stock: {seed.in_stock}")
+
+    cart = get_or_create_cart(request)
+    logger.debug(f"Cart ID: {cart.id} retrieved for user/session")
+
+    cart_item = CartItem.objects.filter(cart=cart, seed=seed).first()
+    if cart_item:
+        logger.debug(f"Found cart item with quantity: {cart_item.quantity}")
+    else:
+        logger.debug("No cart item found for this seed in the cart")
+
+    current_quantity = cart_item.quantity if cart_item else 0
+    max_quantity = seed.in_stock + current_quantity
+    logger.debug(f"Calculated max possible quantity: {max_quantity} (in stock: {seed.in_stock} + current quantity: {current_quantity})")
+
+    return JsonResponse({'max_quantity': max_quantity})

@@ -11,11 +11,9 @@ Seed Details
     {% include 'navigation.html' %}
 
 </div>
-<div class="container">
+<div class="container" style="background-image: url('{% if seed.image %}{{ seed.image.url }}{% else %}/static/default_image.jpg{% endif %}'); background-size: cover;">
     <h1>{{ seed.name }}</h1>
-    <button class="close-button" onclick="window.history.back();">
-        back
-    </button>
+    <button class="close-button" onclick="window.history.back();">back</button>
     <p><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
     <p><strong>Description:</strong> {{ seed.description }}</p>
     <p><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{ seed.planting_months_to }}</p>
@@ -27,9 +25,21 @@ Seed Details
         <p><strong>Discounted Price:</strong> ${{ seed.calculate_discounted_price }}</p>
     {% endif %}
     <p><strong>In Stock:</strong> {{ seed.in_stock }}</p>
-    
-    
+    <div class="card-footer text-center">
+        <form method="post" action="{% url 'add_to_cart' seed.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" 
+                    {% if seed.in_stock == 0 %}disabled{% endif %}>
+                {% if seed.in_stock == 0 %}
+                    Out of Stock
+                {% else %}
+                    Add to Cart
+                {% endif %}
+            </button>
+        </form>
+    </div>
 </div>
+
 
 
 {% endblock %}

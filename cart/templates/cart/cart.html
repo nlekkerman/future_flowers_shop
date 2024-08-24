@@ -6,63 +6,73 @@
 <div class="navigation-container">
     {% include 'navigation.html' %}
 </div>
-
 <!-- Main content for the cart -->
 <div class="cart-container">
     <h2 class="cart-title">Shopping Cart</h2>
     <div class="container mt-4">
         {% if cart.items.all %}
         <!-- Cart items listing -->
-        <div class="row mb-3">
+        <div class="row">
             {% for item in cart.items.all %}
-            <div class="col-12 mb-3 p-3 border-bottom border-1">
-                <div class="row align-items-center">
+            <div class=" border-bottom border-1 position-relative">
+
+
+                <div class="align-items-center item-row">
+                    <!-- Seed details with name above image -->
+                    <a href="{% url 'seed_details' item.seed.id %}">
+                        <h5>{{ item.seed.name }}</h5>
+                    </a>
                     <div class="col-md-2 text-center">
-                        <!-- Seed image -->
-                        <a href="{% url 'seed_details' item.seed.id %}">
-                            {% if item.seed.image %}
-                            <img src="{{ item.seed.image.url }}" alt="{{ item.seed.name }}" class="cart-item-image"
-                                style="max-width: 150px;">
-                            {% else %}
-                            <img src="{% static 'images/default-image.jpg' %}" alt="Default Image"
-                                class="cart-item-image">
-                            {% endif %}
-                        </a>
+                     
+                        {% if item.seed.image %}
+                        <img src="{{ item.seed.image.url }}" alt="{{ item.seed.name }}" class="cart-item-image"
+                            style="max-width: 150px;">
+                        {% else %}
+                        <img src="{% static 'images/default-image.jpg' %}" alt="Default Image" class="cart-item-image">
+                        {% endif %}
                     </div>
-                    <div class="col-md-4">
-                        <!-- Seed details with a link to seed details page -->
-                        <a href="{% url 'seed_details' item.seed.id %}">
-                            <h5>{{ item.seed.name }}</h5>
-                        </a>
-                        <p class="text-muted">{{ item.seed.description|truncatewords:10 }}</p>
-                    </div>
+                    <!-- Price -->
                     <div class="col-md-2">
                         <h6>Price</h6>
-                        <!-- Displaying the price with a calculated discounted price -->
                         <p>${{ item.seed.calculate_discounted_price }}</p>
                     </div>
+                    <!-- In Stock -->
+                    <div class="row">
+                        
+                        <p
+                            class="card-text {% if item.seed.in_stock > 5 %}text-success{% elif item.seed.in_stock > 0 and item.seed.in_stock <= 5 %}text-warning{% else %}text-danger{% endif %}">
+                            <strong>In stock:</strong> {{ item.seed.in_stock }}
+                        </p>
+                    </div>
+
+
+                    <!-- Quantity and Update Form -->
                     <div class="col-md-2">
                         <h6>Quantity</h6>
-                        <!-- Form to update the quantity of items in the cart -->
-                        <form action="{% url 'update_cart_item' item.seed.id %}" method="post" class="d-inline">
+                        <form id="cart-item-{{ item.seed.id }}" action="{% url 'update_cart_item' item.seed.id %}"
+                            method="post" class="d-inline">
                             {% csrf_token %}
-                            <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="{{ item.max_quantity }}"
-                                   class="form-control form-control-sm w-75 d-inline" placeholder="Quantity">
-                            <button type="submit" class="btn btn-sm mt-2">Update Quantity</button>
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="0"
+                                max="{{ item.max_possible_quantity }}" data-seed-id="{{ item.seed.id }}"
+                                class="form-control form-control-sm w-75 d-inline" placeholder="Quantity">
+                            <button type="submit" class="btn btn-sm mt-2">Update</button>
                         </form>
-                        
-
                     </div>
+
+
+                    <!-- Total -->
                     <div class="col-md-2 text-right">
                         <h6>Total</h6>
-                        <!-- Displaying the total price for the cart item -->
                         <p>${{ item.get_total_price }}</p>
-                        <!-- Form to remove the item from the cart -->
-                        <form action="{% url 'remove_from_cart' item.seed.id %}" method="post" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm">Remove</button>
-                        </form>
                     </div>
+                    <!-- Font Awesome trash bin icon for removing item -->
+                    <form action="{% url 'remove_from_cart' item.seed.id %}" method="post"
+                        class="remove-from-cart-form">
+                        {% csrf_token %}
+                        <button type="submit" class="remove-from-cart-button">
+                            <i class="fas fa-trash"></i> <!-- Font Awesome trash bin icon -->
+                        </button>
+                    </form>
                 </div>
             </div>
             {% endfor %}
@@ -87,4 +97,5 @@
         {% endif %}
     </div>
 </div>
+
 {% endblock %}

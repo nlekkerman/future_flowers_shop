@@ -132,14 +132,15 @@ Seed List
                         <p class="card-text"><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
                         <p class="card-text"><strong>Price:</strong> ${{ seed.price }}</p>
 
-                        <p class="card-text text-danger"><strong>In stock:</strong  > {{ seed.in_stock }}</p>
 
                         
-                        {% if seed.in_stock < 5 and seed.in_stock > 0 %}
-                        <p class="card-text text-warning"><strong>Hurry! Only {{ seed.in_stock }} left in stock!</strong></p>
-                        {% elif seed.in_stock == 0 %}
-                        <p class="card-text text-danger"><strong>Out of Stock</strong></p>
-                        {% endif %}
+                            {% if seed.in_stock > 5 %}
+                            <p class="card-text text-success"><strong>In stock:</strong> {{ seed.in_stock }}</p>
+                            {% elif seed.in_stock <= 5 and seed.in_stock > 0 %}
+                            <p class="card-text text-warning"><strong>Hurry! Only {{ seed.in_stock }} left in stock!</strong></p>
+                            {% else %}
+                            <p class="card-text text-danger"><strong>Out of Stock</strong></p>
+                            {% endif %}
                     </div>
                 </a>
                 <div class="card-footer text-center">
