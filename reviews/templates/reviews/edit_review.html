@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Your Review{% endblock %}
+
+{% block content %}
+<!-- Include Navigation Bar -->
+{% include 'navigation.html' %}
+
+<section class="edit-section">
+    <h2 class="edit-title">Edit Your Review</h2>
+
+    {% if user.is_authenticated %}
+    
+    <div class="edit-form">
+        <h2>Edit Review</h2>
+        <form method="post" action="{% url 'edit_review' review.id %}" id="edit-review-form">
+            {% csrf_token %}
+            <input type="hidden" name="seed_id" value="{{ review.seed.id }}">
+            <div class="rating-input">
+                {% for i in "12345" %}
+                <input type="radio" id="edit-rating-{{ i }}" name="rating" value="{{ i }}" 
+                    {% if form.rating.value == i %}checked{% endif %} required>
+                <label for="edit-rating-{{ i }}" class="fas fa-heart"></label>
+                {% endfor %}
+            </div>
+            {{ form.rating.errors }}
+
+            <textarea name="comment" placeholder="Edit your review..." required>{{ form.comment.value }}</textarea>
+            {{ form.comment.errors }}
+
+            <button type="submit" class="btn btn-primary">Update Review</button>
+        </form>
+    </div>
+    {% else %}
+    <!-- User is not authenticated, show a login message or redirect -->
+    <p>You need to <a href="{% url 'login' %}">login</a> to edit your review.</p>
+    {% endif %}
+
+    <a href="{% url 'seed_details' review.seed.id %}" class="btn btn-secondary">Cancel</a>
+
+    <!-- Back to Details Link -->
+    <a href="{% url 'seed_details' review.seed.id %}" class="edit-btn-back">Back to Seed Details</a>
+</section>
+{% endblock %}

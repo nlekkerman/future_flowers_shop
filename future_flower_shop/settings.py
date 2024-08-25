@@ -72,7 +72,8 @@ INSTALLED_APPS = [
     'seeds',                           # Custom app for seeds management
     'cart',                            # Custom app for cart management
     'custom_accounts',                 # Custom app for account management
-    'checkout',                        # custom app for checkout management
+    'checkout',
+    'reviews',                       # custom app for checkout management
 ]
 
 

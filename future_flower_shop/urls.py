@@ -29,7 +29,11 @@ urlpatterns = [
     
     # Home application URLs
     path('', include('home.urls')),
+
+    # Include reviews app URLs
+    path('reviews/', include('reviews.urls')),  
 ]
+    
 
 # Serve media files during development
 if settings.DEBUG:
