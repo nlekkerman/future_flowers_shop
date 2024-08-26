@@ -10,6 +10,7 @@ from custom_accounts.models import UserProfile
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
+from reviews.models import Review, Comment  
 
 def welcome_message(request):
     return render(request, 'custom_accounts/welcome_message.html')
@@ -83,3 +84,58 @@ def debug_view(request):
         f"Client Secret: {client_secret}"
     )
     return HttpResponse(response, content_type="text/plain")
+
+
+
+
+def admin_dashboard(request):
+    pending_reviews = Review.objects.filter(status='pending')
+    pending_comments = Comment.objects.filter(status='pending')
+    context = {
+        'pending_reviews': pending_reviews,
+        'pending_comments': pending_comments,
+    }
+    return render(request, 'custom_accounts/admin_dashboard.html', context)
+
+
+def approve_review(request, id):
+    review = get_object_or_404(Review, id=id)
+    review.status = 'approved'
+    review.is_approved = True
+    review.save()
+    messages.success(request, "Review has been approved.")
+    return redirect('admin_dashboard')
+
+def reject_review(request, id):
+    review = get_object_or_404(Review, id=id)
+    review.status = 'rejected'
+    review.is_approved = False
+    review.save()
+    messages.success(request, "Review has been rejected.")
+    return redirect('admin_dashboard')
+
+def delete_review(request, id):
+    review = get_object_or_404(Review, id=id)
+    review.delete()
+    messages.success(request, "Review has been deleted.")
+    return redirect('admin_dashboard')
+
+def approve_comment(request, id):
+    comment = get_object_or_404(Comment, id=id)
+    comment.status = 'approved'
+    comment.save()
+    messages.success(request, "Comment has been approved.")
+    return redirect('admin_dashboard')
+
+def reject_comment(request, id):
+    comment = get_object_or_404(Comment, id=id)
+    comment.status = 'rejected'
+    comment.save()
+    messages.success(request, "Comment has been rejected.")
+    return redirect('admin_dashboard')
+
+def delete_comment(request, id):
+    comment = get_object_or_404(Comment, id=id)
+    comment.delete()
+    messages.success(request, "Comment has been deleted.")
+    return redirect('admin_dashboard')

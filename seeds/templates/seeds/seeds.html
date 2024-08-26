@@ -22,12 +22,12 @@ Seed List
 
         <!-- Category Buttons (Visible on large screens) -->
         <div class="filter-buttons btn-group d-none d-lg-flex" role="group" aria-label="Category Filter">
-            <a href="?category=" class="btn btn-secondary {% if not category %}active{% endif %}">All</a>
-            <a href="?category=rose" class="btn btn-secondary {% if category == 'rose' %}active{% endif %}">Roses</a>
-            <a href="?category=tree" class="btn btn-secondary {% if category == 'tree' %}active{% endif %}">Trees</a>
-            <a href="?category=bush" class="btn btn-secondary {% if category == 'bush' %}active{% endif %}">Bushes</a>
+            <a href="?category=" class="custom-buttons {% if not category %}active{% endif %}">All</a>
+            <a href="?category=rose" class="custom-buttons {% if category == 'rose' %}active{% endif %}">Roses</a>
+            <a href="?category=tree" class="custom-buttons {% if category == 'tree' %}active{% endif %}">Trees</a>
+            <a href="?category=bush" class="custom-buttons {% if category == 'bush' %}active{% endif %}">Bushes</a>
             <a href="?category=flower"
-                class="btn btn-secondary {% if category == 'flower' %}active{% endif %}">Flowers</a>
+                class="custom-buttons {% if category == 'flower' %}active{% endif %}">Flowers</a>
         </div>
 
         <!-- Dropdown for small screens -->
@@ -58,14 +58,14 @@ Seed List
 
             <!-- Sorting Buttons (Visible on large screens) -->
             <div class="sorting-buttons btn-group d-none d-lg-flex" role="group" aria-label="Sort Options">
-                <a href="?sort=" class="btn btn-secondary {% if not sort %}active{% endif %}">Default</a>
-                <a href="?sort=price_asc" class="btn btn-secondary {% if sort == 'price_asc' %}active{% endif %}">Price:
+                <a href="?sort=" class="custom-buttons {% if not sort %}active{% endif %}">Default</a>
+                <a href="?sort=price_asc" class="custom-buttons {% if sort == 'price_asc' %}active{% endif %}">Price:
                     Low to High</a>
                 <a href="?sort=price_desc"
-                    class="btn btn-secondary {% if sort == 'price_desc' %}active{% endif %}">Price: High to Low</a>
-                <a href="?sort=latest" class="btn btn-secondary {% if sort == 'latest' %}active{% endif %}">Latest</a>
+                    class="custom-buttons {% if sort == 'price_desc' %}active{% endif %}">Price: High to Low</a>
+                <a href="?sort=latest" class="custom-buttons {% if sort == 'latest' %}active{% endif %}">Latest</a>
                 <a href="?sort=discount"
-                    class="btn btn-secondary {% if sort == 'discount' %}active{% endif %}">Discounted</a>
+                    class="custom-buttons {% if sort == 'discount' %}active{% endif %}">Discounted</a>
             </div>
 
             <!-- Dropdown for small screens -->

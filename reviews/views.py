@@ -19,7 +19,7 @@ def submit_review(request):
                 review = form.save(commit=False)
                 review.seed = seed
                 review.user = request.user
-                review.is_approved = False
+                review.status = 'pending'
                 review.save()
                 messages.success(request, "Review submitted and is awaiting approval.")
                 return redirect('seed_details', id=seed.id)
@@ -47,6 +47,7 @@ def submit_comment(request):
                 comment = form.save(commit=False)
                 comment.review = review
                 comment.user = request.user
+                comment.status = 'pending'
                 comment.save()
                 messages.success(request, "Comment added successfully.")
                 return redirect('seed_details', id=review.seed.id)
@@ -79,7 +80,7 @@ def edit_review(request, review_id):
                 # because the `form.save()` should handle this
 
                 edited_review = form.save(commit=False)
-                edited_review.is_approved = False  # Ensure the review remains unapproved if editing
+                edited_review.status = 'pending'
                 
                 edited_review.save()
                 messages.success(request, "Review updated successfully. It is now awaiting approval.")

@@ -13,6 +13,7 @@ from .utils import get_max_possible_quantity
 
 logger = logging.getLogger(__name__)
 
+
 @require_POST
 def add_to_cart(request, seed_id):
     """ Add a quantity of the specified seed to the cart """
@@ -26,7 +27,11 @@ def add_to_cart(request, seed_id):
         cart_item, created = CartItem.objects.get_or_create(cart=cart, seed=seed)
         
         # Determine the quantity to add from the POST data
-        quantity = int(request.POST.get('quantity', 1))  # Default to 1 if not provided
+        try:
+            quantity = int(request.POST.get('quantity', 1))  # Default to 1 if not provided
+            quantity = max(quantity, 1)  # Ensure quantity is at least 1
+        except ValueError:
+            quantity = 1  # Fallback to default if there’s an error in parsing
 
         # Debugging outputs
         logger.debug(f"Seed ID: {seed_id}")
@@ -70,7 +75,6 @@ def add_to_cart(request, seed_id):
                 cart_item = CartItem.objects.get(cart=cart, seed=seed)
 
     return redirect('seed_list')  # Adjust URL name as needed
-
 def get_or_create_cart(request):
     """ Retrieve or create a cart for the user/session """
     if request.user.is_authenticated:
