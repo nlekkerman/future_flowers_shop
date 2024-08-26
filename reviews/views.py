@@ -75,17 +75,17 @@ def edit_review(request, review_id):
         form = EditReviewForm(request.POST, instance=review)
         if form.is_valid():
             try:
-                seed_id = request.POST.get('seed_id')
-                seed = get_object_or_404(Seed, id=seed_id)
-                
+                # No need to manually get and set the seed here again
+                # because the `form.save()` should handle this
+
                 edited_review = form.save(commit=False)
-                edited_review.seed = seed
-                edited_review.user = request.user
+                edited_review.is_approved = False  # Ensure the review remains unapproved if editing
+                
                 edited_review.save()
-                messages.success(request, "Review updated successfully.")
-                return redirect('seed_details', id=seed.id)
+                messages.success(request, "Review updated successfully. It is now awaiting approval.")
+                return redirect('seed_details', id=review.seed.id)  # Redirect to the seed details page
             except Seed.DoesNotExist:
-                logger.error(f"Seed with id {seed_id} does not exist.")
+                logger.error(f"Seed with id {review.seed.id} does not exist.")
                 messages.error(request, "Seed does not exist.")
             except Exception as e:
                 logger.error(f"Error updating review: {e}")
@@ -97,6 +97,8 @@ def edit_review(request, review_id):
         form = EditReviewForm(instance=review)
     
     return render(request, 'reviews/edit_review.html', {'form': form, 'review': review})
+
+
 @login_required
 def delete_review(request, review_id):
     review = get_object_or_404(Review, id=review_id, user=request.user)

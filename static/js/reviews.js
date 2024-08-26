@@ -1,82 +1,116 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const reviewForm = document.getElementById('review-form');
-    const ratingInputs = reviewForm.querySelectorAll('input[name="rating"]');
-    const ratingLabels = reviewForm.querySelectorAll('label.fas.fa-heart');
+    // Function to handle rating interactions
+    function setupRatingInteraction(formId) {
+        const form = document.getElementById(formId);
+        if (!form) return; // Exit if the form is not found
 
-    function updateHearts(selectedIndex) {
-        ratingLabels.forEach((label, labelIndex) => {
-            // Ensure correct index comparison
-            if (labelIndex < selectedIndex) {
-                label.classList.add('active');
-            } else {
-                label.classList.remove('active');
-            }
+        const ratingInputs = form.querySelectorAll('input[name="rating"]');
+        const ratingLabels = form.querySelectorAll('label.fas.fa-heart');
+
+        function updateHearts(selectedIndex) {
+            ratingLabels.forEach((label, index) => {
+                if (index < selectedIndex) {
+                    label.classList.add('active');
+                } else {
+                    label.classList.remove('active');
+                }
+            });
+        }
+
+        ratingInputs.forEach((input, index) => {
+            input.addEventListener('change', () => {
+                const selectedIndex = index + 1; // Convert zero-based index to one-based
+                updateHearts(selectedIndex);
+            });
+        });
+
+        // Initial display of hearts based on the default selected rating
+        const defaultRating = form.querySelector('input[name="rating"]:checked');
+        if (defaultRating) {
+            const defaultIndex = Array.from(ratingInputs).indexOf(defaultRating) + 1;
+            updateHearts(defaultIndex);
+        }
+    }
+
+    // Setup for the review form
+    setupRatingInteraction('review-form');
+
+    // Setup for the edit review form
+    setupRatingInteraction('edit-review-form');
+
+    // Toggle visibility of rating and review edit forms
+    const editRatingBtn = document.getElementById('edit-rating-btn');
+    const editReviewBtn = document.getElementById('edit-review-btn');
+    const ratingEditForm = document.getElementById('rating-edit-form');
+    const reviewEditForm = document.getElementById('review-edit-form');
+    const updateReviewBtn = document.getElementById('update-review-btn');
+
+    // Toggle rating edit form
+    if (editRatingBtn) {
+        editRatingBtn.addEventListener('click', function() {
+            const isVisible = ratingEditForm.style.display === 'block';
+            ratingEditForm.style.display = isVisible ? 'none' : 'block';
+            reviewEditForm.style.display = 'none'; // Hide review edit form
+            updateReviewBtn.style.display = isVisible ? 'none' : 'block'; // Show update button when editing
         });
     }
 
-    ratingInputs.forEach((input, index) => {
-        input.addEventListener('change', () => {
-            const selectedIndex = Array.from(ratingInputs).indexOf(input) + 1; // Convert zero-based index to one-based
-            console.log(`Selected Index on Change: ${selectedIndex}`);
-            updateHearts(selectedIndex);
+    // Toggle review edit form
+    if (editReviewBtn) {
+        editReviewBtn.addEventListener('click', function() {
+            const isVisible = reviewEditForm.style.display === 'block';
+            reviewEditForm.style.display = isVisible ? 'none' : 'block';
+            ratingEditForm.style.display = 'none'; // Hide rating edit form
+            updateReviewBtn.style.display = isVisible ? 'none' : 'block'; // Show update button when editing
         });
-    });
+    }
 
-    reviewForm.addEventListener('submit', function(event) {
-        const selectedRating = reviewForm.querySelector('input[name="rating"]:checked');
-        if (!selectedRating) {
-            event.preventDefault();
-            alert('Please select a rating.');
-        }
-    });
-
-    // Initial display of hearts based on the default selected rating
-    const defaultRating = reviewForm.querySelector('input[name="rating"]:checked');
-    if (defaultRating) {
-        const defaultIndex = Array.from(ratingInputs).indexOf(defaultRating) + 1;
-        console.log(`Selected Index on Load: ${defaultIndex}`);
-        updateHearts(defaultIndex);
+    // Handle form submission for the review
+    const updateReviewForm = document.getElementById('update-review-form');
+    if (updateReviewForm) {
+        updateReviewForm.addEventListener('submit', function(event) {
+            const selectedRating = updateReviewForm.querySelector('input[name="rating"]:checked');
+            if (!selectedRating) {
+                event.preventDefault();
+                alert('Please select a rating.');
+            }
+        });
     }
 });
-document.addEventListener('DOMContentLoaded', function() {
-    const editReviewForm = document.getElementById('edit-review-form');
-    const ratingInputs = editReviewForm.querySelectorAll('input[name="rating"]');
-    const ratingLabels = editReviewForm.querySelectorAll('label.fas.fa-heart');
 
-    function updateHearts(selectedIndex) {
-        ratingLabels.forEach((label, labelIndex) => {
-            if (labelIndex < selectedIndex) {
-                label.classList.add('active'); // Make the heart golden
-            } else {
-                label.classList.remove('active'); // Remove golden color
+
+document.addEventListener('DOMContentLoaded', function() {
+    function toggleBadgeVisibility() {
+        // Get all review elements
+        var reviewElements = document.querySelectorAll('.review');
+
+        // Iterate over each review element
+        reviewElements.forEach(function(reviewElement) {
+            // Retrieve the data attributes
+            var createdAt = reviewElement.getAttribute('data-original-created-at');
+            var updatedAt = reviewElement.getAttribute('data-original-updated-at');
+            
+            // Log the values to the console for debugging
+            console.log('Created At:', createdAt);
+            console.log('Updated At:', updatedAt);
+
+            // Get the badge-edited element within the current review
+            var badgeEdited = reviewElement.querySelector('.badge-edited');
+            
+            // Log the badge element for debugging
+            console.log('Badge Edited Element:', badgeEdited);
+
+            if (badgeEdited) {
+                // Compare the values and toggle visibility
+                if (createdAt !== updatedAt) {
+                    badgeEdited.style.display = 'block'; // Show if not equal
+                } else {
+                    badgeEdited.style.display = 'none';  // Hide if equal
+                }
             }
         });
     }
 
-    ratingInputs.forEach((input, index) => {
-        input.addEventListener('change', () => {
-            const selectedIndex = Array.from(ratingInputs).indexOf(input) + 1; // Convert zero-based index to one-based
-            console.log(`Selected Index on Change: ${selectedIndex}`);
-            updateHearts(selectedIndex);
-        });
-    });
-
-    editReviewForm.addEventListener('submit', function(event) {
-        const selectedRating = editReviewForm.querySelector('input[name="rating"]:checked');
-        if (!selectedRating) {
-            event.preventDefault();
-            alert('Please select a rating.');
-        }
-    });
-
-    // Initial display of hearts based on the default selected rating
-    const defaultRating = editReviewForm.querySelector('input[name="rating"]:checked');
-    if (defaultRating) {
-        const defaultIndex = Array.from(ratingInputs).indexOf(defaultRating) + 1;
-        console.log(`Selected Index on Load: ${defaultIndex}`);
-        updateHearts(defaultIndex);
-    } else {
-        // If no default rating is selected, ensure hearts are reset
-        updateHearts(0); // No hearts should be active
-    }
+    // Call the function to apply the logic
+    toggleBadgeVisibility();
 });

@@ -203,3 +203,39 @@
     margin-right: 5px;
     cursor: pointer;
 }
+.badge-edited {
+    display: none; /* Initially hidden */
+    background-color: rgba(199, 84, 84, 0.3); /* Red background with 70% opacity */
+    color: white; /* White text color */
+    font-size: 12px; /* Font size 12px */
+    border: 1px solid white; /* 1px white border */
+    border-radius: 10px; /* Optional: rounded corners */
+    padding: 2px 5px; /* Optional: padding to make it look better */
+    text-align: center; /* Center the text */
+    vertical-align: middle; /* Align with surrounding text */
+    width: 90px;
+    right: 10px;
+}
+.review-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+.review-actions .btn .fa {
+    font-size: 16px; /* Adjust size as needed */
+    color: currentColor; /* Inherit text color from button */
+}
+
+.review-actions .btn-secondary {
+    color: #6c757d; /* Secondary button color */
+}
+
+.review-actions .btn-danger {
+    color: #dc3545; /* Danger button color */
+}

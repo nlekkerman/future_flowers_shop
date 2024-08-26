@@ -3,7 +3,7 @@ from .models import Review, Comment
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('seed', 'user', 'rating', 'is_approved', 'created_at')
+    list_display = ('seed', 'user', 'rating', 'is_approved', 'created_at', 'updated_at')
     list_filter = ('is_approved', 'created_at', 'rating')
     search_fields = ('user__username', 'seed__name', 'comment')
     actions = ['approve_reviews']

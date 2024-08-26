@@ -10,7 +10,8 @@ Seed Details
     {% include 'navigation.html' %}
 </div>
 
-<div class="container" style="background-image: url('{% if seed.image %}{{ seed.image.url }}{% else %}/static/default_image.jpg{% endif %}'); background-size: cover;">
+<div class="container"
+    style="background-image: url('{% if seed.image %}{{ seed.image.url }}{% else %}/static/default_image.jpg{% endif %}'); background-size: cover;">
     <h1>{{ seed.name }}</h1>
     <button class="close-button" onclick="window.history.back();">Back</button>
     <p><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
@@ -20,19 +21,18 @@ Seed Details
     <p><strong>Sun Preference:</strong> {{ seed.sun_preference }}</p>
     <p><strong>Price:</strong> ${{ seed.price }}</p>
     {% if seed.has_discount %}
-        <p><strong>Discount:</strong> {{ seed.discount }}%</p>
-        <p><strong>Discounted Price:</strong> ${{ seed.calculate_discounted_price }}</p>
+    <p><strong>Discount:</strong> {{ seed.discount }}%</p>
+    <p><strong>Discounted Price:</strong> ${{ seed.calculate_discounted_price }}</p>
     {% endif %}
     <p><strong>In Stock:</strong> {{ seed.in_stock }}</p>
     <div class="card-footer text-center">
         <form method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary" 
-                    {% if seed.in_stock == 0 %}disabled{% endif %}>
+            <button type="submit" class="btn btn-primary" {% if not seed.in_stock %}disabled{% endif %}>
                 {% if seed.in_stock == 0 %}
-                    Out of Stock
+                Out of Stock
                 {% else %}
-                    Add to Cart
+                Add to Cart
                 {% endif %}
             </button>
         </form>
@@ -43,70 +43,85 @@ Seed Details
 <div class="reviews-section">
     <h2>Reviews</h2>
     {% for review in reviews %}
-        <div class="review">
-            <strong>{{ review.user.username }}</strong>
-            <div class="rating">
-                {% for i in "12345" %}
-                    <!-- Use `forloop.counter` for 1-based index -->
-                    <i class="fas fa-heart {% if review.rating >= forloop.counter %}active{% endif %}"></i>
-                {% endfor %}
-            </div>
-            
-            <p>{{ review.comment }}</p>
-            <p>Posted on: {{ review.created_at }}</p>
+    <div class="review"  data-original-created-at="{{ review.created_at|date:'Y-m-d\\TH:i:s' }}"
+    data-original-updated-at="{{ review.updated_at|date:'Y-m-d\\TH:i:s' }}">
+        <strong>{{ review.user.username }}</strong>
+        <div class="rating">
+            {% for i in "12345" %}
+            <!-- Use `forloop.counter` for 1-based index -->
+            <i class="fas fa-heart {% if review.rating >= forloop.counter %}active{% endif %}"></i>
+            {% endfor %}
+        </div>
 
-            <!-- Edit and Delete Review Buttons -->
-            {% if review.user == user %}
-                <a href="{% url 'edit_review' review.id %}" class="btn btn-secondary">Edit Review</a>
-                <form method="post" action="{% url 'delete_review' review.id %}" style="display:inline;">
+        <p>{{ review.comment }}</p>
+
+
+        <p>{{ review.updated_at|date:"M. d, Y, g:i a" }}</p>
+
+       
+ <!-- Example HTML for a badge -->
+ <div class="badge-edited" style="display: none;">EDITED</div>
+
+
+        <!-- Edit and Delete Review Buttons -->
+        {% if review.user == user %}
+        <div class="review-actions">
+            <a href="{% url 'edit_review' review.id %}" class="btn btn-secondary" title="Edit Review">
+                <i class="fas fa-edit"></i> <!-- FontAwesome Edit Icon -->
+            </a>
+            <form method="post" action="{% url 'delete_review' review.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" title="Delete Review">
+                    <i class="fas fa-trash-alt"></i> <!-- FontAwesome Trash Icon -->
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Comment Icon (FontAwesome) -->
+        <button class="toggle-comments-btn" aria-label="Toggle comments">
+            <i class="fas fa-comments"></i>
+            <span class="toggle-text">Show Comments</span>
+        </button>
+
+        <!-- Comments Section (Initially Hidden) -->
+        <div class="comments-section" style="display: none;">
+            <h4>Comments</h4>
+            {% for comment in review.comments.all %}
+            <div class="comment">
+                <strong>{{ comment.user.username }}</strong>
+                <p>{{ comment.text }}</p>
+                <p>Posted on: {{ comment.created_at }}</p>
+
+                <!-- Edit and Delete Comment Buttons -->
+                {% if comment.user == user %}
+                <a href="{% url 'edit_comment' comment.id %}" class="btn btn-secondary">Edit Comment</a>
+                <form method="post" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete Review</button>
+                    <button type="submit" class="btn btn-danger">Delete Comment</button>
                 </form>
-            {% endif %}
-
-            <!-- Comment Icon (FontAwesome) -->
-            <button class="toggle-comments-btn" aria-label="Toggle comments">
-                <i class="fas fa-comments"></i>
-                <span class="toggle-text">Show Comments</span>
-            </button>
-
-            <!-- Comments Section (Initially Hidden) -->
-            <div class="comments-section" style="display: none;">
-                <h4>Comments</h4>
-                {% for comment in review.comments.all %}
-                    <div class="comment">
-                        <strong>{{ comment.user.username }}</strong>
-                        <p>{{ comment.text }}</p>
-                        <p>Posted on: {{ comment.created_at }}</p>
-
-                        <!-- Edit and Delete Comment Buttons -->
-                        {% if comment.user == user %}
-                            <a href="{% url 'edit_comment' comment.id %}" class="btn btn-secondary">Edit Comment</a>
-                            <form method="post" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Delete Comment</button>
-                            </form>
-                        {% endif %}
-                    </div>
-                {% empty %}
-                    <p>No comments yet.</p>
-                {% endfor %}
-
-                <!-- Comment Form -->
-                {% if user.is_authenticated %}
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="review_id" value="{{ review.id }}">
-                        {{ comment_form.as_p }}
-                        <button type="submit" name="submit_comment" class="btn btn-secondary">Add Comment</button>
-                    </form>
-                {% else %}
-                    <p>You must be <a href="{% url 'login' %}">logged in</a> to comment.</p>
                 {% endif %}
             </div>
+            {% empty %}
+            <p>No comments yet.</p>
+            {% endfor %}
+
+            <!-- Comment Form -->
+            {% if user.is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="review_id" value="{{ review.id }}">
+                {{ comment_form.as_p }}
+                <button type="submit" name="submit_comment" class="btn btn-secondary">Add Comment</button>
+            </form>
+            {% else %}
+            <p>You must be <a href="{% url 'login' %}">logged in</a> to comment.</p>
+            {% endif %}
         </div>
+    </div>
+
     {% empty %}
-        <p>No reviews yet. Be the first to review this seed!</p>
+    <p>No reviews yet. Be the first to review this seed!</p>
     {% endfor %}
 </div>
 
@@ -119,8 +134,8 @@ Seed Details
         <input type="hidden" name="seed_id" value="{{ seed.id }}">
         <div class="rating-input">
             {% for i in "12345" %}
-                <input type="radio" id="rating-{{ i }}" name="rating" value="{{ i }}" required>
-                <label for="rating-{{ i }}" class="fas fa-heart"></label>
+            <input type="radio" id="rating-{{ i }}" name="rating" value="{{ i }}" required>
+            <label for="rating-{{ i }}" class="fas fa-heart"></label>
             {% endfor %}
         </div>
         <textarea name="comment" placeholder="Your review..." required></textarea>
@@ -128,6 +143,6 @@ Seed Details
     </form>
 </div>
 {% else %}
-    <p>You must be <a href="{% url 'login' %}">logged in</a> to submit a review.</p>
+<p>You must be <a href="{% url 'login' %}">logged in</a> to submit a review.</p>
 {% endif %}
 {% endblock %}

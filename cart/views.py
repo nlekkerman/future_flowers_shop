@@ -57,7 +57,7 @@ def add_to_cart(request, seed_id):
 
             # If stock reaches zero
             if seed.in_stock == 0:
-                messages.info(request, f'{seed.name} is now out of stock.')
+                messages.warning(request, f'{seed.name} is now out of stock.')
                 logger.debug(f'{seed.name} is now out of stock.')
 
             # Reduce the remaining quantity to add
