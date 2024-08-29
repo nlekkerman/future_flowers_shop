@@ -14,6 +14,8 @@ Seed List
     {% include 'navigation.html' %}
 </div>
 
+
+
 <div class="filter-container mb-4">
     <label class="filter-label" for="categoryDropdown">Filter by:</label>
     <form method="get" action="" class="form-filter-search">
@@ -108,7 +110,7 @@ Seed List
     <div class="row">
         {% for seed in page_obj.object_list %}
         <div class="col-12 col-md-6 col-lg-4 mb-4">
-            <div class="seed-card h-100">
+            <div class="seed-card h-100" id="seed-card-{{ seed.id }}">
                 <a href="{% url 'seed_details' seed.id %}" class="card-link">
                     {% if seed.image %}
                     <div class="card-img-container">
@@ -131,22 +133,20 @@ Seed List
                         <p class="card-text"><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{ seed.planting_months_to }}</p>
                         <p class="card-text"><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
                         <p class="card-text"><strong>Price:</strong> ${{ seed.price }}</p>
-
-
-                        
-                            {% if seed.in_stock > 5 %}
-                            <p class="card-text text-success"><strong>In stock:</strong> {{ seed.in_stock }}</p>
-                            {% elif seed.in_stock <= 5 and seed.in_stock > 0 %}
-                            <p class="card-text text-warning"><strong>Hurry! Only {{ seed.in_stock }} left in stock!</strong></p>
-                            {% else %}
-                            <p class="card-text text-danger"><strong>Out of Stock</strong></p>
-                            {% endif %}
+    
+                        {% if seed.in_stock > 5 %}
+                        <p class="card-text text-success"><strong>In stock:</strong> {{ seed.in_stock }}</p>
+                        {% elif seed.in_stock <= 5 and seed.in_stock > 0 %}
+                        <p class="card-text text-warning"><strong>Hurry! Only {{ seed.in_stock }} left in stock!</strong></p>
+                        {% else %}
+                        <p class="card-text text-danger"><strong>Out of Stock</strong></p>
+                        {% endif %}
                     </div>
                 </a>
                 <div class="card-footer text-center">
-                    <form method="post" action="{% url 'add_to_cart' seed.id %}">
+                    <form method="post" action="{% url 'add_to_cart' seed.id %}" class="add-to-cart-form" data-seed-id="{{ seed.id }}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary" 
+                        <button type="submit" class="btn" 
                                 {% if seed.in_stock == 0 %}disabled{% endif %}>
                             {% if seed.in_stock == 0 %}
                                 Out of Stock

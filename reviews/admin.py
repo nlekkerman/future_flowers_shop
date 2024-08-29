@@ -9,13 +9,13 @@ class ReviewAdmin(admin.ModelAdmin):
     actions = ['approve_reviews', 'reject_reviews', 'delete_reviews']
 
     def approve_reviews(self, request, queryset):
-        updated_count = queryset.update(status='approved', is_approved=True)
+        updated_count = queryset.update(status='approved')
         self.message_user(request, f"{updated_count} reviews have been approved.")
-    
+
     def reject_reviews(self, request, queryset):
-        updated_count = queryset.update(status='rejected', is_approved=False)
+        updated_count = queryset.update(status='rejected')
         self.message_user(request, f"{updated_count} reviews have been rejected.")
-    
+
     def delete_reviews(self, request, queryset):
         deleted_count, _ = queryset.delete()
         self.message_user(request, f"{deleted_count} reviews have been deleted.")

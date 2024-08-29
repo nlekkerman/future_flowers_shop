@@ -9,7 +9,14 @@
 li a {
     text-decoration: none;
 }
+.page-link{
+    background-color: rgba(0, 0, 0, 0.7) !important;
+}
 
+.page-item.active .page-link{
+    background-color: rgba(145, 0, 0, 0.7) !important;
+    border-color: white !important;
+}
 .filter-container {
     margin-top: 100px !important;
     position: relative;
@@ -19,6 +26,8 @@ li a {
     border-radius: 40px;
     box-shadow: 0 0 10px rgba(255, 241, 241, 0.3);
 }
+
+
 
 .seeds-container {
     width: 80%;
@@ -191,3 +200,5 @@ ul {
     font-weight: 600;
     margin-top: 10px;
 }
+
+

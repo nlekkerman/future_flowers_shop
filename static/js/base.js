@@ -5,28 +5,39 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Search form:', searchForm);
     console.log('Search input:', searchInput);
 
-    searchForm.addEventListener('submit', function(event) {
+    searchForm.addEventListener('submit', function (event) {
         const queryValue = searchInput.value;
-        console.log('Search query:', queryValue);  // Debugging line
+        console.log('Search query:', queryValue); // Debugging line
 
         if (!queryValue) {
-            event.preventDefault();  // Prevent form submission if value is not set correctly
+            event.preventDefault(); // Prevent form submission if value is not set correctly
             alert('Search input is empty!');
         }
     });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Handle close button clicks
     const closeButtons = document.querySelectorAll('.close-button-container');
-    closeButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
+    closeButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
             const message = this.closest('.message-container');
             if (message) {
                 message.style.display = 'none'; // Hide the message
             }
         });
     });
-    
 
+
+});
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    var chatIcon = document.getElementById('chatIcon');
+    if (chatIcon) {
+        chatIcon.addEventListener('click', function(event) {
+            console.log('Chat icon clicked');
+            // Uncomment below line to log href attribute
+            // console.log('Redirecting to:', chatIcon.href);
+        });
+    }
 });

@@ -3,8 +3,8 @@ $(document).ready(function () {
         if (visible) {
             // Resize the menuIcon when nav-link-icons are visible
             $('#menuIcon').stop().animate({
-                width: '140px', // Decrease width
-                height: '140px' // Decrease height
+                width: '100px', // Decrease width
+                height: '100px' // Decrease height
             }, 500); // Duration for resizing animation
 
             $('.menu-icon-span').stop().animate({
@@ -26,8 +26,8 @@ $(document).ready(function () {
         } else {
             // Reset menuIcon size when nav-link-icons are hidden
             $('#menuIcon').stop().animate({
-                width: '180px', // Original width
-                height: '180px' // Original height
+                width: '140px', // Original width
+                height: '140px' // Original height
             }, 500); // Duration for resizing animation
 
             $('.menu-icon-span').stop().animate({
@@ -62,7 +62,7 @@ $(document).ready(function () {
     function positionNavLinks() {
         let numSmallCircles = $('.nav-link-icon').length;
         let angleStep = 360 / numSmallCircles;
-        let radius = 150; // Distance from the center of the big circle
+        let radius = 100; // Distance from the center of the big circle
 
         $('.nav-link-icon').each(function (index) {
             let angle = angleStep * index;

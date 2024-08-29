@@ -81,3 +81,24 @@ $(document).ready(function() {
 });
 
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Event delegation for handling button clicks
+    document.querySelectorAll('.add-to-cart-form').forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission for demo purposes
+
+            // Find the seed card to animate
+            const seedCard = document.getElementById(`seed-card-${this.dataset.seedId}`);
+            if (seedCard) {
+                // Trigger the animation
+                seedCard.classList.add('animate-shake-enlarge');
+
+                // Submit the form after animation
+                setTimeout(() => {
+                    this.submit();
+                }, 1000); // Delay to allow animation to finish
+            }
+        });
+    });
+});

@@ -5,6 +5,7 @@ from reviews.models import Review, Comment
 from reviews.forms import ReviewForm, CommentForm
 from django.core.paginator import Paginator
 from django.contrib import messages
+from django.db.models import Prefetch
 
 
 
@@ -42,46 +43,42 @@ def seed_list(request):
 
 def seed_details(request, id):
     seed = get_object_or_404(Seed, id=id)
-    review_form = ReviewForm()
-    comment_form = CommentForm()
-    
+
     if request.method == 'POST':
-        if request.user.is_authenticated:
-            if 'submit_review' in request.POST:
-                review_form = ReviewForm(request.POST)
-                if review_form.is_valid():
-                    review = review_form.save(commit=False)
-                    review.seed = seed
-                    review.user = request.user
-                    review.is_approved = False  # Requires admin approval
-                    review.save()
-                    messages.success(request, "Review submitted and is awaiting approval.")
-                    return redirect('seed_details', id=seed.id)
+        quantity = int(request.POST.get('quantity', 1))
+        if quantity > 0:
+            # Logic to add the seed to the cart with the specified quantity
+            cart_item, created = CartItem.objects.get_or_create(
+                seed=seed,
+                user=request.user,  # Assuming you have user-specific carts
+                defaults={'quantity': quantity}
+            )
+            if not created:
+                cart_item.quantity += quantity
+                cart_item.save()
+
+            # Store item details in session
+            request.session['last_added_item'] = {
+                'item_name': seed.name,
+                'item_price': str(seed.calculate_discounted_price()),
+                'item_quantity': quantity
+            }
+
+            # Add a success message
+            messages.success(request, "Item added to cart", extra_tags='item_added')
             
-            elif 'submit_comment' in request.POST:
-                comment_form = CommentForm(request.POST)
-                if comment_form.is_valid():
-                    review_id = request.POST.get('review_id')
-                    review = get_object_or_404(Review, id=review_id)
-                    comment = comment_form.save(commit=False)
-                    comment.review = review
-                    comment.user = request.user
-                    comment.save()
-                    messages.success(request, "Comment added successfully.")
-                    return redirect('seed_details', id=seed.id)
-        else:
-            messages.error(request, "You must be logged in to leave a review or comment.")
-            return redirect('login')  # Redirect to the login page if not authenticated
+            return redirect('cart')  # Redirect to the cart or another page
+
+    reviews = seed.reviews.filter(status='approved').order_by('-created_at').prefetch_related(
+        Prefetch('comments', queryset=Comment.objects.filter(status='approved').order_by('-created_at'))
+    )
 
     context = {
         'seed': seed,
-        'review_form': review_form,
-        'comment_form': comment_form,
-        'reviews': seed.reviews.filter(is_approved=True),
+        'reviews': reviews
     }
     
-    return render(request, 'seeds/seed_details.html', context)
-
+    return render(request, 'seeds/seed_details.html', context)   
 def search_results(request):
     form = SearchForm(request.GET or None)
     query = form.data.get('query', '')

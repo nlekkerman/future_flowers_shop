@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'custom_accounts',                 # Custom app for account management
     'checkout',
     'reviews',                       # custom app for checkout management
+    'communications',
 ]
 
 
@@ -119,6 +120,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart_context',
                 'seeds.context_processors.seed_data',
+                'communications.context_processors.chat_context',
+                
             ],
             'builtins': [
                 'crispy_forms.templatetags.crispy_forms_tags',

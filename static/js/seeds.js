@@ -32,3 +32,37 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Show modal when a delete button is clicked
+    document.querySelectorAll('.delete-review-button').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default action
+            const modalId = this.getAttribute('data-modal-id'); // Get modal ID
+            const modal = document.getElementById(modalId);
+
+            if (modal) {
+                modal.style.display = 'block'; // Show the modal
+            } else {
+                console.error(`Modal with ID ${modalId} not found.`);
+            }
+        });
+    });
+
+    // Hide the modal when the cancel button is clicked
+    document.querySelectorAll('.red-border').forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            if (modal) {
+                modal.style.display = 'none'; // Hide the modal
+            }
+        });
+    });
+
+    // Hide the modal if clicking outside the modal content
+    window.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none'; // Hide the modal
+        }
+    });
+});

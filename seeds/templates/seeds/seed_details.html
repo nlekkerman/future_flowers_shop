@@ -31,117 +31,141 @@ Seed Details
             <h6>Quantity</h6>
             <form id="add-to-cart-form" action="{% url 'add_to_cart' seed.id %}" method="post" class="d-inline">
                 {% csrf_token %}
-                <input type="number" name="quantity" value="1" min="1" max="{{ seed.in_stock }}" class="form-control form-control-sm w-75 d-inline" placeholder="Quantity">
+                <input type="number" name="quantity" value="1" min="1" max="{{ seed.in_stock }}"
+                    class="form-control form-control-sm w-75 d-inline" placeholder="Quantity">
                 <button type="submit" class="btn btn-sm mt-2">Add to Cart</button>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Review Section -->
+<!-- Reviews Section -->
 <div class="reviews-section">
     <h2>Reviews</h2>
+    {% if reviews %}
     {% for review in reviews %}
-    <div class="review"  data-original-created-at="{{ review.created_at|date:'Y-m-d\\TH:i:s' }}"
-    data-original-updated-at="{{ review.updated_at|date:'Y-m-d\\TH:i:s' }}">
+    <div class="review">
         <strong>{{ review.user.username }}</strong>
+
+        <!-- Rating Display -->
         <div class="rating">
             {% for i in "12345" %}
-            <!-- Use `forloop.counter` for 1-based index -->
             <i class="fas fa-heart {% if review.rating >= forloop.counter %}active{% endif %}"></i>
             {% endfor %}
         </div>
 
+        <!-- Review Comment -->
         <p>{{ review.comment }}</p>
 
-
+        <!-- Review Date -->
         <p>{{ review.updated_at|date:"M. d, Y, g:i a" }}</p>
 
-       
- <!-- Example HTML for a badge -->
- <div class="badge-edited" style="display: none;">EDITED</div>
+        <!-- Badge for Edited Reviews -->
+        {% if review.updated_at != review.created_at %}
+        <div class="badge-edited">EDITED</div>
+        {% endif %}
 
-
-        <!-- Edit and Delete Review Buttons -->
         {% if review.user == user %}
         <div class="review-actions">
             <a href="{% url 'edit_review' review.id %}" class="btn btn-secondary" title="Edit Review">
                 <i class="fas fa-edit"></i> <!-- FontAwesome Edit Icon -->
             </a>
-            <form method="post" action="{% url 'delete_review' review.id %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger" title="Delete Review">
-                    <i class="fas fa-trash-alt"></i> <!-- FontAwesome Trash Icon -->
-                </button>
-            </form>
+            <!-- Delete Button to Trigger Modal -->
+            <button type="button" class="btn btn-danger delete-review-button" title="Delete Review"
+                id="openDeleteModal{{ review.id }}">
+                <i class="fas fa-trash-alt"></i> <!-- FontAwesome Trash Icon -->
+            </button>
         </div>
         {% endif %}
 
-        <!-- Comment Icon (FontAwesome) -->
-        <button class="toggle-comments-btn" aria-label="Toggle comments">
-            <i class="fas fa-comments"></i>
-            <span class="toggle-text">Show Comments</span>
-        </button>
-
-        <!-- Comments Section (Initially Hidden) -->
-        <div class="comments-section" style="display: none;">
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteModal{{ review.id }}" class="modal">
+            <div class="modal-content">
+                <h2>Confirm Delete</h2>
+                <p>Are you sure you want to delete this review?</p>
+                <div class="modal-actions">
+                    <button id="confirmDelete{{ review.id }}" class="btn green-border">Confirm</button>
+                    <button id="cancelDelete{{ review.id }}" class="btn red-border">Cancel</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hidden Form to be Submitted on Confirmation -->
+        <form id="deleteReviewForm{{ review.id }}" method="post" action="{% url 'delete_review' review.id %}"
+            style="display:none;">
+            {% csrf_token %}
+        </form>
+        <!-- Comments Section for Each Review -->
+        <div class="comments-section">
+            {% if review.comments.exists %}
             <h4>Comments</h4>
             {% for comment in review.comments.all %}
             <div class="comment">
                 <strong>{{ comment.user.username }}</strong>
                 <p>{{ comment.text }}</p>
-                <p>Posted on: {{ comment.created_at }}</p>
-
-                <!-- Edit and Delete Comment Buttons -->
-                {% if comment.user == user %}
-                <a href="{% url 'edit_comment' comment.id %}" class="btn btn-secondary">Edit Comment</a>
-                <form method="post" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete Comment</button>
-                </form>
-                {% endif %}
+                <p>Posted on: {{ comment.created_at|date:"M. d, Y, g:i a" }}</p>
             </div>
-            {% empty %}
-            <p>No comments yet.</p>
             {% endfor %}
-
-            <!-- Comment Form -->
-            {% if user.is_authenticated %}
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="review_id" value="{{ review.id }}">
-                {{ comment_form.as_p }}
-                <button type="submit" name="submit_comment" class="btn btn-secondary">Add Comment</button>
-            </form>
             {% else %}
-            <p>You must be <a href="{% url 'login' %}">logged in</a> to comment.</p>
+            <p>No comments yet.</p>
             {% endif %}
         </div>
-    </div>
 
-    {% empty %}
-    <p>No reviews yet. Be the first to review this seed!</p>
+        <!-- Toggle Comment Form for Authenticated Users -->
+        {% if user.is_authenticated %}
+        <button class="toggle-comments-btn" aria-label="Toggle comments">
+            <i class="fas fa-comments"></i>
+            <span class="toggle-text">Add a Comment</span>
+        </button>
+
+        <!-- Comment Form (Hidden by Default) -->
+        <div class="comment-form" style="display: none;">
+            <form method="post" action="{% url 'submit_comment' %}">
+                {% csrf_token %}
+                <input type="hidden" name="review_id" value="{{ review.id }}">
+                <textarea name="text" placeholder="Your comment..." required></textarea>
+                <button type="submit" class="btn btn-secondary">Submit Comment</button>
+            </form>
+        </div>
+        {% else %}
+        <p>You must be <a href="{% url 'login' %}">logged in</a> to comment.</p>
+        {% endif %}
+    </div>
     {% endfor %}
+    {% else %}
+    <p>No reviews yet. Be the first to review this seed!</p>
+    {% endif %}
 </div>
 
-<!-- Review Form -->
+
+<!-- Review Form for Authenticated Users -->
 {% if user.is_authenticated %}
 <div class="review-form">
     <h2>Write a Review</h2>
-    <form method="post" action="{% url 'submit_review' %}" id="review-form">
-        {% csrf_token %}
-        <input type="hidden" name="seed_id" value="{{ seed.id }}">
-        <div class="rating-input">
-            {% for i in "12345" %}
-            <input type="radio" id="rating-{{ i }}" name="rating" value="{{ i }}" required>
-            <label for="rating-{{ i }}" class="fas fa-heart"></label>
-            {% endfor %}
-        </div>
-        <textarea name="comment" placeholder="Your review..." required></textarea>
-        <button type="submit" class="btn btn-primary">Submit Review</button>
-    </form>
+    <!-- Template code for submitting a review -->
+    <!-- Review Form -->
+    {% if user.is_authenticated %}
+    <div class="review-form">
+        <h2>Write a Review</h2>
+        <form method="post" action="{% url 'submit_review' %}" id="review-form">
+            {% csrf_token %}
+            <input type="hidden" name="seed_id" value="{{ seed.id }}">
+            <div class="rating-input">
+                {% for i in "12345" %}
+                <input type="radio" id="rating-{{ i }}" name="rating" value="{{ i }}" required>
+                <label for="rating-{{ i }}" class="fas fa-heart"></label>
+                {% endfor %}
+            </div>
+            <textarea name="comment" placeholder="Your review..." required></textarea>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+    {% else %}
+    <p>You must be <a href="{% url 'login' %}">logged in</a> to submit a review.</p>
+    {% endif %}
 </div>
 {% else %}
 <p>You must be <a href="{% url 'login' %}">logged in</a> to submit a review.</p>
 {% endif %}
+
 {% endblock %}

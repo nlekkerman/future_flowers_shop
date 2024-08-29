@@ -73,8 +73,32 @@ def add_to_cart(request, seed_id):
                 # Re-fetch the seed and cart item to ensure data is up-to-date
                 seed.refresh_from_db()
                 cart_item = CartItem.objects.get(cart=cart, seed=seed)
+    
+    # Save the cart item data to the session
+    request.session['cart_item'] = {
+        'name': seed.name,
+        'quantity': float(cart_item.quantity),  # Convert to float
+        'price': float(seed.price),  # Convert to float
+        'image': seed.image.url if seed.image else '',
+        'id': seed.id
+    }
 
-    return redirect('seed_list')  # Adjust URL name as needed
+    # Redirect to the page where you want to display the cart message
+    response = redirect('seed_list')
+
+    # Clear the session flag to prevent it from showing on every page load
+    if 'cart_message' in request.session:
+        del request.session['cart_message']
+    
+    return response
+    
+def clear_cart_item(request):
+    if request.method == 'POST':
+        if 'cart_item' in request.session:
+            del request.session['cart_item']
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)
+
 def get_or_create_cart(request):
     """ Retrieve or create a cart for the user/session """
     if request.user.is_authenticated:
@@ -99,6 +123,7 @@ def remove_from_cart(request, seed_id):
         messages.success(request, f'{seed.name} removed from your cart.')
     except CartItem.DoesNotExist:
         messages.error(request, f'{seed.name} was not found in your cart.')
+    
     
     return redirect('cart_detail')
 
@@ -177,18 +202,22 @@ def update_cart_item(request, seed_id):
 
                 messages.success(request, f'Updated {seed.name} quantity to {new_quantity}.')
                 logger.debug(f"Updated quantity of {seed.name} in cart to {new_quantity}. Stock now: {seed.in_stock}")
-
+   
+    
     return redirect('cart_detail')
 
 # views.py
 def cart_detail(request):
     cart = get_or_create_cart(request)
     cart_items = CartItem.objects.filter(cart=cart).select_related('seed')
+    show_cart_message = request.session.get('cart_message', False)
     
     for item in cart_items:
         item.max_possible_quantity = get_max_possible_quantity(request, item.seed.id)
     
     form = OrderForm()
+
+    
 
     context = {
         'cart': cart,
@@ -197,7 +226,11 @@ def cart_detail(request):
         'delivery': cart.get_delivery_cost(),
         'grand_total': cart.get_grand_total(),
         'cart_items': cart_items,
+        'show_cart_message': show_cart_message,
     }
+
+    if show_cart_message:
+        del request.session['cart_message']
 
     return render(request, 'cart/cart.html', context)
 

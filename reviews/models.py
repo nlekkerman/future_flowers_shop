@@ -1,4 +1,3 @@
-# reviews/models.py
 from django.db import models
 from django.contrib.auth.models import User
 from seeds.models import Seed 
@@ -16,11 +15,13 @@ class Review(models.Model):
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    is_approved = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
         return f'Review for {self.seed.name} by {self.user.username}'
+
+    def is_approved(self):
+        return self.status == 'approved'
 
 class Comment(models.Model):
     STATUS_CHOICES = (

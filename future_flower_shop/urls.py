@@ -32,6 +32,9 @@ urlpatterns = [
 
     # Include reviews app URLs
     path('reviews/', include('reviews.urls')),  
+
+    path('communications/', include('communications.urls')),
+
 ]
     
 

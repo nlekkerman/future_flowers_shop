@@ -9,13 +9,23 @@ body {
     /* Optional: covers the whole background */
 }
 
+.custom-buttons{
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    padding: 10px 10px;
+    width: 100%;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+
 /* Header styling */
 .header {
     color: white !important;
     width: 100%;
     font-weight: 700;
     position: fixed;
-    /* Fixed positioning */
+    height: 64px;
     top: 0;
     /* Stick to the top */
     left: 0;
@@ -54,16 +64,39 @@ body {
     flex-direction: row;
     justify-content: space-evenly;
 }
-.message-cart-container{
-    margin: 0 auto;
-    margin-top: 100px;
-    padding: 5px;
-    background-color: rgba(0, 0, 0, 0.4);
-    color: white !important;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.hidden {
+    display: none;
 }
 
+/* More specific selector might override inline styles */
+#cartItemAddedContainer {
+    display: block; /* This would override the inline style if it has higher specificity */
+}
+
+/* Additional styling */
+#itemDetails {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #d4edda; /* Example background color */
+    border: 1px solid #c3e6cb;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+#itemDetails img {
+    width: 80px; /* Adjust size as needed */
+    height: 80px; /* Adjust size as needed */
+    object-fit: cover; /* Ensure the image fits within the box */
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
 
 header ul.list-inline {
     margin: 0;
@@ -72,19 +105,52 @@ header ul.list-inline {
 
 header .list-inline-item {
     margin-right: 15px;
-    /* Space between items */
+   display: flex;
 }
-
+.icon-conatainer{
+    display: flex;
+    flex-direction: row;
+}
 a {
     color: white !important;
 }
 
+.btn-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem; /* Adjust size as needed */
+    color: #000; /* Change color to fit your theme */
+    transition: color 0.3s ease;
+}
+
+.btn-close:hover {
+    color: #ff0000; /* Change color on hover, example red */
+    opacity: 0.8; /* Slightly fade the button on hover */
+}
+
+.btn-close:focus {
+    outline: none; /* Remove default focus outline */
+}
+
+.btn-close::before {
+    content: "×"; /* Unicode character for the close icon */
+    display: inline-block;
+    font-family: Arial, sans-serif;
+    font-size: 1.5rem; /* Match with font-size */
+    line-height: 1;
+}
+.btn{
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    border: 1px solid white;
+    border-radius: 15px;
+}
 
 .header.animate-herder .list-container ul {
     display: flex;
     justify-content: flex-end;
     animation: swingDownFlip 1.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-    /* Duration and easing */
+    height: 64px;
 }
 
 .header.animate-herder .list-container ul li {
@@ -328,6 +394,7 @@ header .dropdown-item {
     margin: 0;
     background-color: rgba(0, 0, 0, 0.9);
     box-shadow: 0 5 10px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
     z-index: 444999;
@@ -348,7 +415,7 @@ header .dropdown-item {
 .search-container input[type="number"],
 .search-container input[type="password"],
 .search-container textarea {
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: transparent;
     border-color: transparent !important;
     color: white;
     /* Text color */
@@ -379,13 +446,13 @@ header .dropdown-item {
 
 /* Style for the submit button */
 .search-container button[type="submit"] {
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: transparent !important;
     /* Blue background color */
     color: white;
+    border-bottom-right-radius: 15px;
     /* Text color */
     border: none;
-    /* Remove default border */
-    border-radius: 4px;
+
     /* Optional: Adds rounded corners */
     padding: 10px 20px;
     /* Padding around the text */

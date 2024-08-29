@@ -4,9 +4,9 @@
     left: 50%;
     transform: translate(-50%, -50%);
     right: auto; /* Reset right position */
-    background-color: rgba(67, 111, 0, 0.4);
-    height: 400px;
-    width: 400px;
+    background-color: rgba(11, 11, 10, 0.3);
+    height: 300px;
+    width: 300px;
     border-radius: 50%;
 }
 
@@ -25,9 +25,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(67, 111, 0, 0.7);
-    height: 400px;
-    width: 400px;
+    background-color: rgba(11, 11, 10, 0.3);
+    height: 300px;
+    width: 300px;
     border-radius: 50%;
     z-index: 1000; /* Optional: Ensures the element is above other content */
 }
@@ -111,8 +111,8 @@
 }
 
 .menu-icon {
-    width: 180px;
-    height: 180px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -145,17 +145,16 @@
 
 .nav-link-icon {
     pointer-events: none;            /* Disables mouse events on the element */
-    width: 80px;                    /* Sets the width of the icon */
-    height: 80px;                   /* Sets the height of the icon */
+                    /* Sets the height of the icon */
     display: flex;                   /* Uses flexbox for layout */
     justify-content: center;         /* Centers content horizontally */
     border-radius: 50%;              /* Makes the element circular */
     align-items: center;             /* Centers content vertically */
-    background-color: rgba(60, 0, 0, 0.5); /* Semi-transparent dark red background */
+    background-color: transparent; /* Semi-transparent dark red background */
     text-align: center;              /* Centers text horizontally */
     color: white;                    /* Sets text color to white */
     cursor: pointer;                 /* Changes cursor to pointer on hover */
-    font-size: 5rem;                 /* Sets font size for the text */
+    font-size: 2.5rem;                 /* Sets font size for the text */
     position: absolute;              /* Positions the element absolutely */
     opacity: 0;                      /* Hides the element initially */
     transform: scale(0);             /* Scales down the element to zero */
