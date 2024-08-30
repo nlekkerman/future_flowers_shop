@@ -13,7 +13,6 @@
     <div class="navigation-container">
         {% include 'navigation.html' %}
     </div>
-  
 
     <section>
         <div class="admin-dashboard-section-title">
@@ -87,6 +86,45 @@
                 {% endfor %}
             </tbody>
         </table>
+    </section>
+
+    <section>
+        <div class="admin-dashboard-section-title">
+            <h3>Conversations</h3>
+        </div>
+        <!-- custom_accounts/admin_dashboard.html -->
+
+        <table class="admin-dashboard-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Recent Message</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for conversation in conversations %}
+                <tr>
+                    <td>{{ conversation.user.username }}</td>
+                    <td>
+                        {% if conversation.latest_message %}
+                        {{ conversation.latest_message.content|truncatewords:10 }}
+                        {% else %}
+                        No messages
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'communications:chat_view' conversation.id %}">View Chat</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="admin-dashboard-no-data">No conversations available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
     </section>
 </div>
 {% endblock %}

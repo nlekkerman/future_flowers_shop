@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Chat with {{ conversation.superuser }}</h2>
+    <div id="chat-messages">
+        {% for chat_message in chat_messages %}
+            <div class="message {% if chat_message.sender == request.user %}sent{% else %}received{% endif %}">
+                <p>
+                    <strong>
+                        {% if chat_message.sender == request.user %}
+                            {{ request.user.username }}:
+                        {% else %}
+                            Chat:
+                        {% endif %}
+                    </strong> 
+                    {{ chat_message.content }}
+                </p>
+                <p class="timestamp">{{ chat_message.sent_at }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h3>Send a new message</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Send</button>
+    </form>
+{% endblock %}

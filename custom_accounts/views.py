@@ -10,7 +10,8 @@ from custom_accounts.models import UserProfile
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-from reviews.models import Review, Comment  
+from reviews.models import Review, Comment 
+from communications.models import ChatConversation, ChatMessage 
 
 def welcome_message(request):
     return render(request, 'custom_accounts/welcome_message.html')
@@ -88,15 +89,22 @@ def debug_view(request):
 
 
 
+
+@login_required
 def admin_dashboard(request):
+    # Fetch pending reviews and comments
     pending_reviews = Review.objects.filter(status='pending')
     pending_comments = Comment.objects.filter(status='pending')
+    
+    # Fetch all chat conversations
+    conversations = ChatConversation.objects.all()  # Adjust filtering if needed
+
     context = {
         'pending_reviews': pending_reviews,
         'pending_comments': pending_comments,
+        'conversations': conversations,  # Add this line
     }
     return render(request, 'custom_accounts/admin_dashboard.html', context)
-
 
 def approve_review(request, id):
     review = get_object_or_404(Review, id=id)
@@ -139,3 +147,13 @@ def delete_comment(request, id):
     comment.delete()
     messages.success(request, "Comment has been deleted.")
     return redirect('admin_dashboard')
+
+
+def conversation_detail_view(request, conversation_id):
+    conversation = get_object_or_404(ChatConversation, id=conversation_id)
+    chat_messages = conversation.messages.all()  # Assuming you have a related name or reverse relationship
+
+    return render(request, 'communications/conversation_detail.html', {
+        'conversation': conversation,
+        'chat_messages': chat_messages
+    })

@@ -1,67 +1,20 @@
 {% extends 'base.html' %}
 
-{% load static %}
+{% block title %}Chat Conversations{% endblock %}
 
 {% block content %}
-<h1>Chat with {{ superuser.username }}</h1>
-
-<!-- Display messages -->
-<div id="messages">
-    {% for chat_message in chat_messages %}
-    <div class="{{ chat_message.sender.username }}">
-        <strong>{{ chat_message.sender.username }}:</strong> {{ chat_message.content }}
-    </div>
-    {% empty %}
-    <p>No messages yet.</p>
-    {% endfor %}
-</div>
-
-<!-- Message form -->
-<form id="messageForm" method="post" action="{% url 'communications:chat_view' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Send</button>
-</form>
-
-<!-- Optional: Add JavaScript for AJAX submission -->
-<script>
-    document.getElementById('messageForm').addEventListener('submit', function (event) {
-        event.preventDefault();  // Prevent the default form submission
-
-        var form = event.target;
-        var formData = new FormData(form);
-
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();  // Parse JSON response
-                } else {
-                    return response.text().then(text => { throw new Error(text); });  // Handle non-JSON responses
-                }
-            })
-            .then(data => {
-                console.log('Message sent:', data);
-                // Clear the form fields
-                form.reset();
-
-                // Update the messages section with the received data
-                var messagesDiv = document.getElementById('messages');
-                messagesDiv.innerHTML = '';  // Clear current messages
-                data.messages.forEach(function (message) {
-                    var messageDiv = document.createElement('div');
-                    messageDiv.className = message.sender;
-                    messageDiv.innerHTML = '<strong>' + message.sender + ':</strong> ' + message.content;
-                    messagesDiv.appendChild(messageDiv);
-                });
-            })
-            .catch(error => console.error('Error:', error));
-    });
-</script>
+    <h1>Chat Conversations</h1>
+    <ul>
+        {% for conversation in conversations %}
+            <li>
+                <a href="{% url 'communications:conversation_detail' conversation.id %}">
+                    <strong>Conversation between:</strong> {{ conversation.user }} and {{ conversation.superuser }}<br>
+                    <strong>Started at:</strong> {{ conversation.started_at }}<br>
+                    <strong>Status:</strong> {% if conversation.is_active %}Active{% else %}Inactive{% endif %}
+                </a>
+            </li>
+        {% empty %}
+            <li>No conversations found.</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

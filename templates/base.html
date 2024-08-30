@@ -63,12 +63,15 @@
     <title>Future Flower Shop {% block extra_title %}{% endblock %}</title>
 </head>
 
-<body>
-    <a class="chat-icon" id="chatIcon" href="{% url 'communications:chat_view' %}">
+{% if request.user.is_superuser %}
+    <a class="chat-icon" id="chatIcon" href="{% url 'communications:chat_list' %}">
         <i class="fas fa-comments"></i>
     </a>
-    
-
+{% else %}
+    <a class="chat-icon" id="chatIcon" href="{% url 'communications:user_chat_messages' %}">
+        <i class="fas fa-comments"></i>
+    </a>
+{% endif %}
 
 
     <div class="header animate-herder">
@@ -159,10 +162,10 @@
 
 
     {% block content %}
-    
+
     <!-- Main content here -->
     {% endblock %}
- <!-- Chat container -->
+    <!-- Chat container -->
 
     {% block postloadjs %}
     {% endblock %}
