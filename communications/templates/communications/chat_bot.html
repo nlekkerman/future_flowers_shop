@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="chat-window">
+    <div id="chat-messages">
+        <!-- Initial message from the chat bot -->
+        <div class="message bot">
+            <p>{{ initial_message }}</p>
+        </div>
+    </div>
+
+    <!-- Chat bot choices -->
+    <div id="chat-options">
+        <form id="chat-options-form" method="post">
+            {% csrf_token %}
+            <button type="button" class="btn" onclick="handleChoice('1')">{{ choices.0.text }}</button>
+            <button type="button" class="btn" onclick="handleChoice('2')">{{ choices.1.text }}</button>
+            <button type="button" class="btn" onclick="handleChoice('3')">{{ choices.2.text }}</button>
+        </form>
+    </div>
+</div>
+<script>
+    function handleChoice(choice) {
+        // Show loader or disable buttons to prevent multiple clicks
+        document.getElementById('chat-options').innerHTML = '<p>Loading...</p>';
+    
+        // Send the selected choice to the server using AJAX
+        fetch("{% url 'communications:chat_bot_handle_choice' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ choice: choice })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.redirect_url) {
+                // Redirect to the URL provided in the response
+                window.location.href = data.redirect_url;
+            } else {
+                // Update the chat window with new messages or options
+                document.getElementById('chat-messages').innerHTML = data.chat_messages;
+                document.getElementById('chat-options').innerHTML = data.chat_options;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+    </script>
+    <script>
+function handleChoice(choice) {
+    // Show loader or disable buttons to prevent multiple clicks
+    document.getElementById('chat-options').innerHTML = '<p>Loading...</p>';
+
+    // Send the selected choice to the server using AJAX
+    fetch("{% url 'communications:chat_bot_handle_choice' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ choice: choice })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.redirect_url) {
+            // Redirect to the URL provided in the response
+            window.location.href = data.redirect_url;
+        } else {
+            // Update the chat window with new messages or options
+            document.getElementById('chat-messages').innerHTML = data.chat_messages;
+            document.getElementById('chat-options').innerHTML = data.chat_options;
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+{% endblock %}

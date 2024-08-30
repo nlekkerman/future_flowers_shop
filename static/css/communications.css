@@ -124,3 +124,80 @@
         margin: 0;
     }
 }
+
+
+
+.chat-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.chat-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.chat-link {
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.chat-info {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.chat-participants {
+    font-weight: bold;
+}
+
+.chat-message {
+    display: block;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.chat-sender {
+    font-style: italic;
+    color: #555;
+}
+
+.chat-details {
+    font-size: 12px;
+    color: #777;
+}
+
+.chat-started,
+.chat-status {
+    display: block;
+}
+
+.no-conversations {
+    text-align: center;
+    font-style: italic;
+    color: #aaa;
+}
+
+.sent {
+    background-color: #d1ffd1; /* Light green for sent messages */
+    text-align: right;
+}
+
+.received {
+    background-color: #f1f1f1; /* Light gray for received messages */
+}
+
+.timestamp {
+    font-size: 0.8em;
+    color: #888;
+}
+
+.hidden {
+    display: none;
+}
+.make-visible {
+    display: block;
+}

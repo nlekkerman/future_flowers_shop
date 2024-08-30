@@ -1,20 +1,66 @@
 {% extends 'base.html' %}
 
-{% block title %}Chat Conversations{% endblock %}
-
 {% block content %}
-    <h1>Chat Conversations</h1>
-    <ul>
-        {% for conversation in conversations %}
-            <li>
-                <a href="{% url 'communications:conversation_detail' conversation.id %}">
-                    <strong>Conversation between:</strong> {{ conversation.user }} and {{ conversation.superuser }}<br>
-                    <strong>Started at:</strong> {{ conversation.started_at }}<br>
-                    <strong>Status:</strong> {% if conversation.is_active %}Active{% else %}Inactive{% endif %}
-                </a>
-            </li>
-        {% empty %}
-            <li>No conversations found.</li>
-        {% endfor %}
-    </ul>
+<h2>Chat with {{ conversation.superuser }}</h2>
+<div id="chat-messages">
+    {% for chat_message in chat_messages %}
+    <div class="message {% if chat_message.sender == request.user %}sent{% else %}received{% endif %}">
+        <p>
+            <strong>
+                {% if request.user.is_superuser %}
+                    {% if chat_message.sender == chat_message.conversation.user %}
+                        {{ chat_message.sender.username }}:
+                    {% else %}
+                        {{ chat_message.sender.username }}:
+                    {% endif %}
+                {% else %}
+                    {% if chat_message.sender == request.user %}
+                        {{ request.user.username }}:
+                    {% else %}
+                        Chat:
+                    {% endif %}
+                {% endif %}
+            </strong>
+            {{ chat_message.content }}
+        </p>
+        <p class="timestamp">{{ chat_message.sent_at }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<div id="chat-bot-options" class="{% if show_chat_bot %}make-visible{% else %}hidden{% endif %}">
+    <h3>Chat Bot Options:</h3>
+    <form method="post">
+        {% csrf_token %}
+        <p><button name="chat_bot_choice" value="1" class="btn">Do you have a question about seeds?</button></p>
+        <p><button name="chat_bot_choice" value="2" class="btn">Do you have a question about delivery?</button></p>
+        <p><button name="chat_bot_choice" value="3" class="btn">Do you want to chat with us?</button></p>
+    </form>
+</div>
+
+<div id="chat-bot-suboptions" class="{% if show_suboptions %}make-visible{% else %}hidden{% endif %}">
+    <h3>Chat Bot Suboptions:</h3>
+    <form method="post">
+        {% csrf_token %}
+        {% if request.session.chat_bot_option == '1' %}
+            <p><button name="subchoice" value="1.1" class="btn">Check out our Q&A page</button></p>
+            <p><button name="subchoice" value="1.2" class="btn">Chat with us</button></p>
+        {% elif request.session.chat_bot_option == '2' %}
+            <p><button name="subchoice" value="2.1" class="btn">Check out our Q&A page</button></p>
+            <p><button name="subchoice" value="2.2" class="btn">Chat with us</button></p>
+        {% endif %}
+    </form>
+</div>
+
+<div id="message-form" class="{% if show_form %}make-visible{% else %}hidden{% endif %}">
+    <h3>Send a new message</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">Send</button>
+    </form>
+</div>
+
+
+
 {% endblock %}
