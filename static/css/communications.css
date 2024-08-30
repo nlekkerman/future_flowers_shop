@@ -160,6 +160,8 @@
     margin: 5px 0;
 }
 
+
+
 .chat-sender {
     font-style: italic;
     color: #555;
@@ -182,12 +184,18 @@
 }
 
 .sent {
-    background-color: #d1ffd1; /* Light green for sent messages */
+    background-color: rgba(65, 189, 7, 0.2); /* Light green for sent messages */
     text-align: right;
 }
 
 .received {
-    background-color: #f1f1f1; /* Light gray for received messages */
+    background-color: rgba(194, 88, 88, 0.2); /* Light gray for received messages */
+}
+
+.message-item-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .timestamp {
@@ -200,4 +208,173 @@
 }
 .make-visible {
     display: block;
+}
+
+#chat-window {
+    background: url('/media/images/buzz-image.png') no-repeat center center fixed;
+    background-size: cover;
+    height: 90vh; /* 90% of the viewport height */
+    width: 90%; /* 90% of the viewport width */
+    margin: 0 auto; /* Center horizontally */
+    position: absolute; /* Allows vertical centering */
+    top: 50%; /* Moves the top edge to the middle of the viewport */
+    left: 50%; /* Moves the left edge to the middle of the viewport */
+    transform: translate(-50%, -50%); /* Shifts the element back to center */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#chat-options-form{
+    width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    justify-content: center;
+}
+
+.width-handler{
+    width: 50% !important;
+    margin: 10px auto;
+}
+#chat-options{
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+  
+    padding: 10px;
+    margin: 0px auto;
+    justify-content: center;
+}
+
+@keyframes popOut {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.bot, .btn {
+    animation: popOut 0.7s ease-out forwards; /* Apply the pop-out animation */
+    opacity: 0; /* Start hidden */
+}
+
+.bot{
+
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.2);
+border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 49%;
+    width: 70%;
+    margin: 10px auto;
+    text-align: center;
+    padding: 40px 0px;
+}
+
+
+
+/* Style the form container */
+.message-form-container {
+    background-color: rgba(0, 0, 0, 0.4); /* Light background for the form container */
+    padding: 20px; /* Space inside the container */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+   height: 100px;
+    margin: 20px auto; /* Center the form horizontally */
+width: 100%;
+justify-content: space-between;
+display: flex;
+}
+
+/* Style for the form heading */
+.message-form-container h3 {
+    font-size: 24px;
+    margin-bottom: 20px; /* Space between the heading and form */
+    color: #ffffff; /* Darker color for the heading */
+    text-align: center; /* Center the heading */
+}
+.message-form-container form {
+    width: 100%;
+display: flex;
+flex-direction: row;
+justify-content: center;
+}
+
+/* Style for the input fields and textarea */
+.message-form-container form input[type="text"],
+.message-form-container form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+    resize: none; /* Disable manual resizing by the user */
+    overflow: hidden; /* Hide scrollbars */
+    height: 50px; /* Automatically adjust the height */
+    min-height: 30px; /* Set the minimum height to one line */
+    line-height: 1.5; /* Set line height to match font size */
+}
+
+/* Focus state for input fields and textarea */
+.message-form-container form input[type="text"]:focus,
+.message-form-container form textarea:focus {
+    outline: none;
+    border-color: #66afe9; /* Light blue border on focus */
+    box-shadow: 0 0 8px rgba(102, 175, 233, 0.6); /* Glowing effect on focus */
+}
+
+/* Style for the submit button */
+.message-form-container .btn {
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px; /* Rounded corners for the button */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Make the button full width */
+    text-align: center; /* Center text inside the button */
+}
+
+/* Hover state for the submit button */
+.message-form-container .btn:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+
+.btn-send {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    color: #007bff; /* Customize icon color */
+    font-size: 24px; /* Adjust icon size */
+}
+
+.btn-send i {
+    margin: 0;
+    padding: 0;
+    margin-left: 10px ;
+    font-size: inherit; /* Inherit the size from the button */
+}
+
+.btn-send:hover {
+    color: #0056b3; /* Change icon color on hover */
+}
+
+.btn-send:focus {
+    outline: none; /* Remove focus outline */
 }

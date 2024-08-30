@@ -5,34 +5,40 @@
 
 <div id="chat-messages">
     {% for chat_message in chat_messages %}
-    <div class="message {% if chat_message.sender == request.user %}sent{% else %}received{% endif %}">
-        <p>
+    <div
+        class="message message-item-container {% if chat_message.sender == request.user %}sent{% else %}received{% endif %}">
+        <p class="username-chat">
             <strong>
                 {% if request.user.is_superuser %}
-                    {% if chat_message.sender == chat_message.conversation.user %}
-                        {{ chat_message.sender.username }}: <!-- Display the username of the user in conversation -->
-                    {% else %}
-                        {{ chat_message.sender.username }}: <!-- Display the username of the superuser -->
-                    {% endif %}
+                {% if chat_message.sender == chat_message.conversation.user %}
+                {{ chat_message.sender.username }}: <!-- Display the username of the user in conversation -->
                 {% else %}
-                    {% if chat_message.sender == request.user %}
-                        {{ request.user.username }}: <!-- Display the logged-in user's username -->
-                    {% else %}
-                        {{ chat_message.sender.username }}: <!-- Display the other user's username -->
-                    {% endif %}
+                {{ chat_message.sender.username }}: <!-- Display the username of the superuser -->
+                {% endif %}
+                {% else %}
+                {% if chat_message.sender == request.user %}
+                {{ request.user.username }}: <!-- Display the logged-in user's username -->
+                {% else %}
+                {{ chat_message.sender.username }}: <!-- Display the other user's username -->
+                {% endif %}
                 {% endif %}
             </strong>
-            {{ chat_message.content }}
+
         </p>
-        <p class="timestamp">{{ chat_message.sent_at|date:"F j, Y, g:i a" }}</p> <!-- Format timestamp -->
+        <p class="chat-message-content"> {{ chat_message.content }}</p>
+        <p class="timestamp text-white">{{ chat_message.sent_at|date:"F j, Y, g:i a" }}</p> <!-- Format timestamp -->
     </div>
     {% endfor %}
 </div>
 
-<h3>Send a new message</h3>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn">Send</button>
-</form>
+<div class="message-form-container">
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-send">
+            <i class="fas fa-paper-plane"></i> 
+    </form>
+
+</div>
 {% endblock %}
