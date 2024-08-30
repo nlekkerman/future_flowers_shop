@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
+<div class="navigation-container">
+    {% include 'navigation.html' %}
+</div>
 <div id="chat-window">
     <div id="chat-messages">
         <!-- Initial message from the chat bot -->

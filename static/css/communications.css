@@ -265,15 +265,15 @@
 }
 
 .bot{
-
+background-color: rgba(0, 0, 0, 0.2);
     color: white;
-    background-color: rgba(0, 0, 0, 0.7);
-    box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.2);
-border: 1px solid rgba(255, 255, 255, 0.7);
-    border-radius: 49%;
+    box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.4);
     width: 70%;
     margin: 10px auto;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    font-size: 3rem;
     padding: 40px 0px;
 }
 
@@ -314,6 +314,7 @@ justify-content: center;
     margin-bottom: 15px;
     font-size: 16px;
     border: 1px solid #ddd;
+    color: white !important;
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 5px;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -382,4 +383,115 @@ justify-content: center;
 #chat-messages{
     margin: 0px auto;
     max-width: 700px;
+}
+
+.customer-service-messages-list {
+    display: flex;
+    flex-direction: column;
+   
+    gap: 15px;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0px 2px 8px rgba(32, 32, 32, 0.3); /* Subtle shadow for depth */
+    max-width: 800px;
+    margin: 0 auto; 
+    margin-top: 150px;
+}
+
+.customer-service-message-item {
+    background-color: rgba(0, 0, 0, 0.2); /* White background for each message item */
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #dee2e6; /* Light border around each item */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05); /* Light shadow for each item */
+    transition: box-shadow 0.3s ease;
+    color: white !important;
+}
+
+.customer-service-message-item:hover {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); /* Increase shadow on hover */
+}
+
+.customer-service-user {
+    font-weight: bold;
+    color: white; /* Dark grey color for the username */
+    margin-bottom: 8px;
+}
+
+.customer-service-recent-message {
+    font-size: 15px;
+    color: white; /* Slightly lighter grey for the message content */
+    margin-bottom: 10px;
+}
+
+.customer-service-actions {
+    text-align: right; /* Align the action button to the right */
+}
+
+.customer-service-actions a {
+    text-decoration: none;
+    color: #007bff; /* Bootstrap's primary blue */
+    font-weight: 600;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.customer-service-actions a:hover {
+    background-color: #007bff; /* Blue background on hover */
+    color: #ffffff; /* White text on hover */
+    border-color: #007bff; /* Blue border on hover */
+}
+
+.customer-service-no-data {
+    font-size: 16px;
+    color: #999999; /* Light grey color for no data message */
+    text-align: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+.customer-service-message-link {
+    text-decoration: none;
+    color: inherit; /* Inherits the color of the text within */
+    display: block; /* Makes the entire item block-level clickable */
+}
+
+.customer-service-message-link:hover .customer-service-message-item {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); /* Same hover effect as before */
+    border: 1px solid rgba(0, 0, 0, 0.2);}
+
+.conversation-username{
+
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px;
+    width: 100%;
+    display: block; 
+}
+
+.customer-service-message-link.unseen {
+    background-color: rgba(255, 0, 0, 0.2); /* Red background for unseen messages */
+}
+
+.customer-service-message-link.seen {
+    background-color: rgba(0, 0, 0, 0.2); /* Grey background for seen messages */
+}
+.seen-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: #fff;
+    margin-left: 10px;
+}
+
+.seen {
+    background-color: rgba(0, 128, 0, 0.2); /* Green background for seen messages */
+}
+
+.not-seen {
+    background-color: rgba(255, 0, 0, 0.2); /* Red background for not seen messages */
 }

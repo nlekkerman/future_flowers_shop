@@ -114,7 +114,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{% url 'communications:chat_view' conversation.id %}">View Chat</a>
+                        <a href="{% url 'communications:admin_user_chat_messages' conversation.id %}">View Chat</a>
                     </td>
                 </tr>
                 {% empty %}

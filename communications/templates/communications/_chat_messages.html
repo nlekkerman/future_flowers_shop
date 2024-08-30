@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<div class="navigation-container">
+    {% include 'navigation.html' %}
+</div>
 <h2>Chat with {{ conversation.superuser.username }}</h2>
 
 <div id="chat-messages">
@@ -24,6 +28,13 @@
                 {% endif %}
             </strong>
 
+            <div class="seen-badge {% if chat_message.seen %}seen{% else %}not-seen{% endif %}">
+                {% if chat_message.seen %}
+                Seen
+                {% else %}
+                Not Seen
+                {% endif %}
+            </div>
         </p>
         <p class="chat-message-content"> {{ chat_message.content }}</p>
         <p class="timestamp text-white">{{ chat_message.sent_at|date:"F j, Y, g:i a" }}</p> <!-- Format timestamp -->

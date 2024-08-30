@@ -2,12 +2,22 @@ import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.urls import reverse
 from .models import ChatConversation, ChatMessage
 from .forms import ChatMessageForm 
 from django.contrib.auth.models import User
 
-
+@require_POST
+def mark_as_seen(request):
+    conversation_id = request.POST.get('conversation_id')
+    conversation = get_object_or_404(ChatConversation, id=conversation_id)
+    
+    # Mark all unseen messages as seen
+    ChatMessage.objects.filter(conversation=conversation, seen=False).update(seen=True)
+    
+    # Redirect to the chat messages view
+    return redirect('communications:admin_user_chat_messages', conversation_id=conversation_id)
 
 def conversation_detail(request, pk):
     conversation = get_object_or_404(ChatConversation, pk=pk)
@@ -31,11 +41,13 @@ def chat_list(request):
             ).order_by('-sent_at').first()
             conversation.latest_message = latest_message
 
-        return render(request, 'communications/chat.html', {'conversations': conversations})
+        return render(request, 'communications/customer_service_messages.html', {'conversations': conversations})
     else:
-        # Redirect to user chat messages
-        # Ensure `some_id` is determined appropriately
-        return redirect('communications:user_chat_messages', conversation_id=some_id)
+        conversation = get_object_or_404(ChatConversation, id=conversation_id, user=request.user)
+        
+        # Mark all unseen messages as seen when the conversation is accessed
+        ChatMessage.objects.filter(conversation=conversation, seen=False).update(seen=True)
+        return redirect('communications:user_chat_messages', conversation_id=conversations.id)
 
 
 @login_required
