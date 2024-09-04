@@ -9,6 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     {% endblock %}
 
     {% block extra_meta %}
@@ -22,15 +23,6 @@
     {% endblock %}
 
     {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <link rel="stylesheet" href="{% static 'css/seeds.css' %}">
-    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
-    <link rel="stylesheet" href="{% static 'css/navigation.css' %}">
-    <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
-    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
-    <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
-    <link rel="stylesheet" href="{% static 'css/communications.css' %}">
 
 
     {% endblock %}
@@ -49,15 +41,24 @@
 
 
     {% block extra_js %}
-    <script src="{% static 'js/home.js' %}"></script>
-    <script src="{% static 'js/base.js' %}"></script>
-    <script src="{% static 'js/cart.js' %}"></script>
-    <script src="{% static 'js/navigation.js' %}"></script>
-    <script src="{% static 'js/seeds.js' %}"></script>
-    <script src="{% static 'js/accounts.js' %}"></script>
-    <script src="{% static 'js/reviews.js' %}"></script>
-    <script src="{% static 'js/communications.js' %}"></script>
+ <!-- Include your scripts as modules -->
+ <script type="module" src="{% static 'js/base.js' %}"></script>
+ <script type="module" src="{% static 'js/home.js' %}"></script>
+ <script type="module" src="{% static 'js/control.js' %}"></script>
+ <script type="module" src="{% static 'js/seeds.js' %}"></script>
+ 
+ <script type="module" src="{% static 'js/cart.js' %}"></script>
+ <script type="module" src="{% static 'js/navigation.js' %}"></script>
 
+ 
+<link rel="stylesheet" href="{% static 'css/navigation.css' %}">
+<link rel="stylesheet" href="{% static 'css/seeds.css' %}">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+<link rel="stylesheet" href="{% static 'css/communications.css' %}">
+
+    
     {% endblock %}
 
     <title>Future Flower Shop {% block extra_title %}{% endblock %}</title>
@@ -75,6 +76,7 @@
 
 
     <div class="header animate-herder">
+       
         <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 list-container">
             <ul class="list-inline list-unstyled text-center text-lg-right my-0">
                 <li class="list-inline-item dropdown">
@@ -103,8 +105,9 @@
                 </li>
                 <li class="list-inline-item">
                     <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link"
-                        href="{% url 'cart_detail' %}">
-                        <div class="text-center icon-conatainer">
+                        id="cart-button"
+                        >
+                        <div class="text-center icon-container">
                             <div><i class="fas mr-1 fa-shopping-bag fa-lg"></i></div>
                             <p class="my-0">
                                 <span class="cart-total">
@@ -118,15 +121,80 @@
         </div>
     </div>
 
-    <div class="content-container">
-        <div class="content">
 
+    <div id="filter-container" class="filter-container mb-4 d-none">
+        <label class="filter-label" for="categoryDropdown">Filter by:</label>
+        <div class="filter-buttons btn-group d-none d-lg-flex" role="group" aria-label="Category Filter">
+            <a href="{% url 'search_results' %}?query={{ query }}&category=" class="custom-buttons {% if not category %}active{% endif %}">All</a>
+            <a href="{% url 'search_results' %}?query={{ query }}&category=rose" class="custom-buttons {% if category == 'rose' %}active{% endif %}">Roses</a>
+            <a href="{% url 'search_results' %}?query={{ query }}&category=tree" class="custom-buttons {% if category == 'tree' %}active{% endif %}">Trees</a>
+            <a href="{% url 'search_results' %}?query={{ query }}&category=bush" class="custom-buttons {% if category == 'bush' %}active{% endif %}">Bushes</a>
+            <a href="{% url 'search_results' %}?query={{ query }}&category=flower" class="custom-buttons {% if category == 'flower' %}active{% endif %}">Flowers</a>
         </div>
-    </div>
+
+        <!-- Sorting Options -->
+        <div class="sorting-container mb-4">
+            <label class="sorting-label" for="sortOptions">Sort by:</label>
+            <div class="sorting-buttons btn-group d-none d-lg-flex" role="group" aria-label="Sort Options">
+                <a href="{% url 'search_results' %}?query={{ query }}&category={{ category }}&sort=" class="custom-buttons {% if not sort %}active{% endif %}">Default</a>
+                <a href="{% url 'search_results' %}?query={{ query }}&category={{ category }}&sort=price_asc" class="custom-buttons {% if sort == 'price_asc' %}active{% endif %}">Price: Low to High</a>
+                <a href="{% url 'search_results' %}?query={{ query }}&category={{ category }}&sort=price_desc" class="custom-buttons {% if sort == 'price_desc' %}active{% endif %}">Price: High to Low</a>
+                <a href="{% url 'search_results' %}?query={{ query }}&category={{ category }}&sort=latest" class="custom-buttons {% if sort == 'latest' %}active{% endif %}">Latest</a>
+                <a href="{% url 'search_results' %}?query={{ query }}&category={{ category }}&sort=discount" class="custom-buttons {% if sort == 'discount' %}active{% endif %}">Discounted</a>
+            </div>
+        </div>
+
+   
+
 
     </div>
+    <div class="row" id="search-results-container">
 
+
+        {% if seeds %}
+            {% for seed in seeds %}
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <div class="seed-card h-100">
+                        <a href="{% url 'seed_details' seed.id %}" class="card-link">
+                            <div class="card-img-container">
+                                <img src="{{ seed.image.url }}" class="card-img-top" alt="{{ seed.name }}">
+                                {% if seed.has_discount %}
+                                    <span class="discount-label">Discounted</span>
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <h2 class="card-title h5">{{ seed.name }}</h2>
+                                <p class="card-text"><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
+                                <p class="card-text"><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{ seed.planting_months_to }}</p>
+                                <p class="card-text"><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
+                                <p class="card-text"><strong>Sun Preference:</strong> {{ seed.sun_preference }}</p>
+                                <p class="card-text"><strong>Height Range:</strong> {{ seed.height_from }}m to {{ seed.height_to }}m</p>
+                                {% if seed.in_stock > 5 %}
+                        <p class="card-text text-success"><strong>In stock:</strong> {{ seed.in_stock }}</p>
+                        {% elif seed.in_stock <= 5 and seed.in_stock > 0 %}
+                        <p class="card-text text-warning"><strong>Hurry! Only {{ seed.in_stock }} left in stock!</strong></p>
+                        {% else %}
+                        <p class="card-text text-danger"><strong>Out of Stock</strong></p>
+                        {% endif %}
+                                <p class="card-text"><strong>Price:</strong> ${{ seed.calculate_discounted_price }}</p>
+                            </div>
+                        </a>
+                        <div class="card-footer text-center">
+                            <form method="post" >
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p id="no-results-message" class="d-none">No seeds found matching "{{ query }}".</p>
+        {% endif %}
+    </div>
     <div class="search-container" id="searchContainer">
+            
+    
         <form action="{% url 'search_results' %}" method="get">
             <input type="search" name="query" placeholder="Search...">
             <button type="submit">
@@ -135,6 +203,13 @@
         </form>
     </div>
 
+    <div id="add-item-messages">
+      svasdfvsdfvsdvdsfvadfvadfvdfv
+    </div>
+    
+    
+    
+  
 
 
     <!-- Display general messages -->
@@ -153,7 +228,6 @@
         {% endfor %}
     </div>
     {% endif %}
-
 
 
     {% block page_header %}

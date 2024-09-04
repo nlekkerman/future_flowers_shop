@@ -1,31 +1,16 @@
-document.getElementById('messageForm').addEventListener('submit', function(event) {
-    event.preventDefault();  // Prevent the default form submission
 
-    var form = event.target;
-    var formData = new FormData(form);
-    
-    // Get the input field value
-    var messageContent = formData.get('content');  // 'content' should match the name attribute of your form input
-    console.log('Message content:', messageContent);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get elements
+        const chatBotOptions = document.getElementById('chat-bot-options');
+        const chatBotSuboptions = document.getElementById('chat-bot-suboptions');
+        const messageForm = document.getElementById('message-form');
 
-    // Send the form data using fetch
-    fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Message sent:', data);
-        // Optionally, update the messages section here
-        // For simplicity, you can redirect to the same page
-         // Clear the form fields
-         form.reset();
-
-        window.location.reload();
-    })
-    .catch(error => console.error('Error:', error));
-});
+        // Handle chat bot suboption clicks
+        chatBotSuboptions.addEventListener('click', function(event) {
+            if (event.target.name === 'subchoice' && event.target.value === '1.2' || event.target.value === '2.2') {
+                chatBotOptions.classList.add('hidden');
+                chatBotSuboptions.classList.add('hidden');
+                messageForm.classList.remove('hidden');
+            }
+        });
+    });

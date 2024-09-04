@@ -5,9 +5,11 @@ from reviews.models import Review, Comment
 from reviews.forms import ReviewForm, CommentForm
 from django.core.paginator import Paginator
 from django.contrib import messages
-from django.db.models import Prefetch
+from django.db.models import Prefetch,F, ExpressionWrapper, DecimalField
 
-
+def seeds_view(request):
+    show_seeds = request.GET.get('show_seeds', 'false') == 'true'
+    return render(request, 'seeds.html', {'show_seeds': show_seeds})
 
 def seed_list(request):
     category = request.GET.get('category')
@@ -79,23 +81,42 @@ def seed_details(request, id):
     }
     
     return render(request, 'seeds/seed_details.html', context)   
+
 def search_results(request):
-    form = SearchForm(request.GET or None)
-    query = form.data.get('query', '')
+    query = request.GET.get('query', '')
+    category = request.GET.get('category', '')
+    sort = request.GET.get('sort', '')
+
+    seeds = Seed.objects.all()
 
     if query:
-        seeds = Seed.objects.filter(
-            name__icontains=query
-        ) | Seed.objects.filter(
-            scientific_name__icontains=query
-        ) | Seed.objects.filter(
-            description__icontains=query
-        )
-    else:
-        seeds = Seed.objects.none()
+        seeds = seeds.filter(name__icontains=query)
 
-    return render(request, 'seeds/search_results.html', {
+    if category:
+        seeds = seeds.filter(category=category)
+
+    # Annotate with discounted price for sorting
+    if sort in ['price_asc', 'price_desc']:
+        seeds = seeds.annotate(
+            discounted_price=ExpressionWrapper(
+                F('price') - (F('price') * F('discount') / 100),
+                output_field=DecimalField()
+            )
+        )
+        if sort == 'price_asc':
+            seeds = seeds.order_by('discounted_price')
+        elif sort == 'price_desc':
+            seeds = seeds.order_by('-discounted_price')
+    elif sort == 'latest':
+        seeds = seeds.order_by('-created_at')
+    elif sort == 'discount':
+        seeds = seeds.filter(discount__gt=0)  # Filter seeds with any discount
+
+    context = {
         'seeds': seeds,
-        'form': form,
-        'query': query
-    })
+        'query': query,
+        'category': category,
+        'sort': sort,
+    }
+
+    return render(request, 'seeds/search_results.html', context)

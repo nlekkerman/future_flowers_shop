@@ -9,6 +9,8 @@ class Cart(models.Model):
     session_id = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    last_modified = models.DateTimeField(auto_now=True)  # Automatically set to the current date/time on save
+    deleted = models.BooleanField(default=False)
 
     def get_total_price(self):
         return sum(item.get_total_price() for item in self.items.all())
@@ -34,6 +36,8 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
     seed = models.ForeignKey(Seed, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    last_modified = models.DateTimeField(auto_now=True)  # Automatically set to the current date/time on save
+    deleted = models.BooleanField(default=False)
 
     def get_total_price(self):
         return self.seed.calculate_discounted_price() * self.quantity

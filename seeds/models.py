@@ -31,6 +31,8 @@ class Seed(models.Model):
     discount = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     in_stock = models.PositiveIntegerField()
     created_at = models.DateTimeField(default=timezone.now)
+    last_modified = models.DateTimeField(auto_now=True)
+    deleted = models.BooleanField(default=False)
 
     # Cloudinary image field
     image = CloudinaryField('image', blank=True, null=True, help_text="Upload an image of the seed")

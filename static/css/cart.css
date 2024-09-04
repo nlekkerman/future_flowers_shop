@@ -242,4 +242,7 @@
     text-align: left;
     background-color: #f0f0f0;
   }
-  
+  .cart-card {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    color: white !important;
+}

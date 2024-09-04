@@ -34,6 +34,8 @@ urlpatterns = [
     path('reviews/', include('reviews.urls')),  
 
     path('communications/', include('communications.urls')),
+    path('human/', include('human.urls')), 
+    path('syncmanager/', include('syncmanager.urls')),
 
 ]
     

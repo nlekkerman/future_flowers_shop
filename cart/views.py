@@ -17,81 +17,81 @@ logger = logging.getLogger(__name__)
 @require_POST
 def add_to_cart(request, seed_id):
     """ Add a quantity of the specified seed to the cart """
-
-    with transaction.atomic():
-        # Get the seed and lock the row to prevent race conditions
-        seed = get_object_or_404(Seed.objects.select_for_update(), id=seed_id)
-        cart = get_or_create_cart(request)
-        
-        # Get or create the cart item
-        cart_item, created = CartItem.objects.get_or_create(cart=cart, seed=seed)
-        
-        # Determine the quantity to add from the POST data
-        try:
-            quantity = int(request.POST.get('quantity', 1))  # Default to 1 if not provided
-            quantity = max(quantity, 1)  # Ensure quantity is at least 1
-        except ValueError:
-            quantity = 1  # Fallback to default if there’s an error in parsing
-
-        # Debugging outputs
-        logger.debug(f"Seed ID: {seed_id}")
-        logger.debug(f"Requested quantity: {quantity}")
-        logger.debug(f"Current stock available: {seed.in_stock}")
-        logger.debug(f"Current quantity in cart: {cart_item.quantity}")
-
-        while quantity > 0 and seed.in_stock > 0:
-            # Calculate the quantity to add, respecting the stock
-            add_quantity = min(quantity, seed.in_stock)
-            
-            # Update the cart item quantity
-            if created:
-                cart_item.quantity = add_quantity  # Set the initial quantity for a new item
-            else:
-                cart_item.quantity += add_quantity  # Increment the quantity for an existing item
-            
-            # Deduct the added quantity from stock
-            seed.in_stock -= add_quantity
-            seed.save()
-            
-            # Save the updated cart item
-            cart_item.save()
-            
-            # Notify the user
-            messages.success(request, f'Added {add_quantity} of {seed.name} to your cart.')
-            logger.debug(f"Added {add_quantity} of {seed.name} to cart. Stock now: {seed.in_stock}")
-
-            # If stock reaches zero
-            if seed.in_stock == 0:
-                messages.warning(request, f'{seed.name} is now out of stock.')
-                logger.debug(f'{seed.name} is now out of stock.')
-
-            # Reduce the remaining quantity to add
-            quantity -= add_quantity
-
-            # Check if there is any quantity left to add
-            if quantity > 0:
-                # Re-fetch the seed and cart item to ensure data is up-to-date
-                seed.refresh_from_db()
-                cart_item = CartItem.objects.get(cart=cart, seed=seed)
     
-    # Save the cart item data to the session
-    request.session['cart_item'] = {
-        'name': seed.name,
-        'quantity': float(cart_item.quantity),  # Convert to float
-        'price': float(seed.price),  # Convert to float
-        'image': seed.image.url if seed.image else '',
-        'id': seed.id
-    }
+    try:
+        with transaction.atomic():
+            # Get the seed and lock the row to prevent race conditions
+            seed = get_object_or_404(Seed.objects.select_for_update(), id=seed_id)
+            cart = get_or_create_cart(request)
+            
+            # Get or create the cart item
+            cart_item, created = CartItem.objects.get_or_create(cart=cart, seed=seed)
+            
+            # Determine the quantity to add from the POST data
+            try:
+                quantity = int(request.POST.get('quantity', 1))  # Default to 1 if not provided
+                quantity = max(quantity, 1)  # Ensure quantity is at least 1
+            except ValueError:
+                quantity = 1  # Fallback to default if there’s an error in parsing
 
-    # Redirect to the page where you want to display the cart message
-    response = redirect('seed_list')
+            # Debugging outputs
+            logger.debug(f"Seed ID: {seed_id}")
+            logger.debug(f"Requested quantity: {quantity}")
+            logger.debug(f"Current stock available: {seed.in_stock}")
+            logger.debug(f"Current quantity in cart: {cart_item.quantity}")
 
-    # Clear the session flag to prevent it from showing on every page load
-    if 'cart_message' in request.session:
-        del request.session['cart_message']
-    
-    return response
-    
+            while quantity > 0 and seed.in_stock > 0:
+                # Calculate the quantity to add, respecting the stock
+                add_quantity = min(quantity, seed.in_stock)
+                
+                # Update the cart item quantity
+                if created:
+                    cart_item.quantity = add_quantity  # Set the initial quantity for a new item
+                else:
+                    cart_item.quantity += add_quantity  # Increment the quantity for an existing item
+                
+                # Deduct the added quantity from stock
+                seed.in_stock -= add_quantity
+                seed.save()
+                
+                # Save the updated cart item
+                cart_item.save()
+                
+                # Notify the user
+                messages.success(request, f'Added {add_quantity} of {seed.name} to your cart.')
+                logger.debug(f"Added {add_quantity} of {seed.name} to cart. Stock now: {seed.in_stock}")
+
+                # If stock reaches zero
+                if seed.in_stock == 0:
+                    messages.warning(request, f'{seed.name} is now out of stock.')
+                    logger.debug(f'{seed.name} is now out of stock.')
+
+                # Reduce the remaining quantity to add
+                quantity -= add_quantity
+
+                # Check if there is any quantity left to add
+                if quantity > 0:
+                    # Re-fetch the seed and cart item to ensure data is up-to-date
+                    seed.refresh_from_db()
+                    cart_item = CartItem.objects.get(cart=cart, seed=seed)
+
+            # Save the cart item data to the session
+            request.session['cart_item'] = {
+                'name': seed.name,
+                'quantity': float(cart_item.quantity),  # Convert to float
+                'price': float(seed.price),  # Convert to float
+                'image': seed.image.url if seed.image else '',
+                'id': seed.id
+            }
+         
+            return JsonResponse({'success': True, 'message': 'Item added to cart successfully'})
+
+    except Exception as e:
+        logger.error(f"Error adding to cart: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
+
 def clear_cart_item(request):
     if request.method == 'POST':
         if 'cart_item' in request.session:
@@ -299,3 +299,9 @@ def get_max_possible_quantity(request, seed_id):
     logger.debug(f"Calculated max possible quantity: {max_quantity} (in stock: {seed.in_stock} + current quantity: {current_quantity})")
 
     return JsonResponse({'max_quantity': max_quantity})
+
+
+
+def cart_view(request):
+    # Just render the cart template
+    return render(request, 'cart/cart.html')

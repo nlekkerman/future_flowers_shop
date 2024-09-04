@@ -9,9 +9,9 @@ body {
     /* Optional: covers the whole background */
 }
 
-.custom-buttons{
+.custom-buttons {
     background-color: rgba(0, 0, 0, 0.5) !important;
-    padding: 10px 10px;
+    padding: 5px 10px;
     width: 100%;
     display: flex;
     text-align: center;
@@ -53,24 +53,80 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.row-cart-item{
+.filter-container {
+    margin-top: 130px !important;
+    position: relative;
+    width: 90%;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(255, 241, 241, 0.3);
+}
+
+.filter-toggle {
+    position: fixed;
+    z-index: 99999999999;
+    left: 20px;
+    top: 5px;
+}
+
+
+.dropdown-menu {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.dropdown-toggle {
+    background-color: rgba(255, 0, 0, 0.7) !important;
+    border-radius: 20px;
+    color: white;
+    font-weight: 600;
+
+}
+
+.filter-label, .sorting-label {
+    color: white !important;
+    margin: 0px !important;
+    
+    font-weight: 300;
+    width: 100%;
+    font-size: 12px;
+    margin-bottom: 0px !important;
+}
+
+.form-filter-search {
+    width: 70%;
+    margin: 0px auto;
+}
+
+.sorting-container {
+    margin-bottom: 20px;
+    margin-top: 10px !important;
+
+}
+
+
+
+.row-cart-item {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-.message-cart-item{
+
+.message-cart-item {
     background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
 }
+
 .hidden {
     display: none;
 }
 
 /* More specific selector might override inline styles */
 #cartItemAddedContainer {
-    display: block; /* This would override the inline style if it has higher specificity */
+    display: block;
+    /* This would override the inline style if it has higher specificity */
 }
 
 /* Additional styling */
@@ -79,16 +135,20 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 1rem;
-    background-color: #d4edda; /* Example background color */
+    background-color: #d4edda;
+    /* Example background color */
     border: 1px solid #c3e6cb;
     border-radius: 0.25rem;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
 #itemDetails img {
-    width: 80px; /* Adjust size as needed */
-    height: 80px; /* Adjust size as needed */
-    object-fit: cover; /* Ensure the image fits within the box */
+    width: 80px;
+    /* Adjust size as needed */
+    height: 80px;
+    /* Adjust size as needed */
+    object-fit: cover;
+    /* Ensure the image fits within the box */
 }
 
 .btn-close {
@@ -105,12 +165,14 @@ header ul.list-inline {
 
 header .list-inline-item {
     margin-right: 15px;
-   display: flex;
+    display: flex;
 }
-.icon-conatainer{
+
+.icon-conatainer {
     display: flex;
     flex-direction: row;
 }
+
 a {
     color: white !important;
 }
@@ -119,28 +181,36 @@ a {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1.5rem; /* Adjust size as needed */
-    color: #000; /* Change color to fit your theme */
+    font-size: 1.5rem;
+    /* Adjust size as needed */
+    color: #000;
+    /* Change color to fit your theme */
     transition: color 0.3s ease;
 }
 
 .btn-close:hover {
-    color: #ff0000; /* Change color on hover, example red */
-    opacity: 0.8; /* Slightly fade the button on hover */
+    color: #ff0000;
+    /* Change color on hover, example red */
+    opacity: 0.8;
+    /* Slightly fade the button on hover */
 }
 
 .btn-close:focus {
-    outline: none; /* Remove default focus outline */
+    outline: none;
+    /* Remove default focus outline */
 }
 
 .btn-close::before {
-    content: "×"; /* Unicode character for the close icon */
+    content: "×";
+    /* Unicode character for the close icon */
     display: inline-block;
     font-family: Arial, sans-serif;
-    font-size: 1.5rem; /* Match with font-size */
+    font-size: 1.5rem;
+    /* Match with font-size */
     line-height: 1;
 }
-.btn{
+
+.btn {
     background-color: rgba(0, 0, 0, 0.9) !important;
     border: 1px solid white;
     border-radius: 15px;
@@ -192,7 +262,8 @@ header .dropdown-item {
     border: 1px solid white;
     overflow-y: auto;
     width: 400px;
-    max-height: 500px; /* Adjust the height as needed */
+    max-height: 500px;
+    /* Adjust the height as needed */
 }
 
 .message {
@@ -200,7 +271,8 @@ header .dropdown-item {
     background-color: #333;
     color: white;
     margin: 5px;
-    margin-bottom: 10px; /* Space between messages */
+    margin-bottom: 10px;
+    /* Space between messages */
     border-radius: 5px;
     padding: 10px;
     display: flex;
@@ -502,31 +574,16 @@ header .dropdown-item {
 
 /* Style for the fixed back arrow */
 .back-arrow-container {
-    position: fixed;
-    top: 10px;
+    position: absolute;
+    top: 5px;
     /* Adjust as needed */
-    left: 10px;
+    left: 130px;
     /* Adjust as needed */
     z-index: 1000;
     /* Ensure it is on top */
 }
 
-.back-arrow {
-    display: flex;
-    align-items: center;
-    background-color: #007bff;
-    /* Button color */
-    color: white;
-    /* Text color */
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    /* Remove default button border */
-    cursor: pointer;
-    /* Pointer cursor on hover */
-    font-size: 1em;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+
 
 .back-arrow i {
     margin-right: 5px;
@@ -534,6 +591,6 @@ header .dropdown-item {
 
 /* Optional: Add hover effect */
 .back-arrow:hover {
-    background-color: #0056b3;
+    background-color: rgba(187, 187, 187, 0.3);
     /* Darker button color on hover */
 }

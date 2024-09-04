@@ -4,7 +4,9 @@ $(document).ready(function () {
             // Resize the menuIcon when nav-link-icons are visible
             $('#menuIcon').stop().animate({
                 width: '100px', // Decrease width
-                height: '100px' // Decrease height
+                height: '100px', // Decrease height
+                top: '33%',
+                left: '34%'
             }, 500); // Duration for resizing animation
 
             $('.menu-icon-span').stop().animate({
@@ -27,7 +29,9 @@ $(document).ready(function () {
             // Reset menuIcon size when nav-link-icons are hidden
             $('#menuIcon').stop().animate({
                 width: '140px', // Original width
-                height: '140px' // Original height
+                height: '140px', // Original height
+                top: '27%',
+                left: '28%'
             }, 500); // Duration for resizing animation
 
             $('.menu-icon-span').stop().animate({
@@ -52,6 +56,8 @@ $(document).ready(function () {
     }
 
     $('#menuIcon').click(function () {
+
+    console.log('Menu icon clicked');
         if ($('.nav-link-icon').first().css('opacity') === '0') {
             toggleNavLinks(true);
         } else {
@@ -82,4 +88,20 @@ $(document).ready(function () {
         event.preventDefault();
         window.location.href = '/'; // Redirect to the home page
     });
+});
+
+
+
+// navigation.js
+console.log('navigation.js loaded'); // Log when this script is loaded
+
+
+// navigation.js
+document.addEventListener('DOMContentLoaded', () => {
+    const viewSeedsButton = document.getElementById('view-seeds-button');
+    if (viewSeedsButton) {
+        viewSeedsButton.addEventListener('click', () => {
+            window.location.href = '/seeds/?show_seeds=true'; // Adjust to the Django URL
+        });
+    }
 });
