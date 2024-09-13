@@ -10,7 +10,7 @@ from django.db import transaction
 import logging
 from django.views.decorators.http import require_POST, require_GET
 from .utils import get_max_possible_quantity
-
+from django.views.decorators.csrf import csrf_exempt
 logger = logging.getLogger(__name__)
 
 
@@ -57,8 +57,6 @@ def add_to_cart(request, seed_id):
                 # Save the updated cart item
                 cart_item.save()
                 
-                # Notify the user
-                messages.success(request, f'Added {add_quantity} of {seed.name} to your cart.')
                 logger.debug(f"Added {add_quantity} of {seed.name} to cart. Stock now: {seed.in_stock}")
 
                 # If stock reaches zero
@@ -128,84 +126,33 @@ def remove_from_cart(request, seed_id):
     return redirect('cart_detail')
 
 
-@require_POST
-def update_cart_item(request, seed_id):
-    """ Update the quantity of the specified seed in the cart """
+@csrf_exempt
+def update_cart(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_id = data.get('user_id')
+        cart_data = data.get('cart_data')
+        seed_data = data.get('seeds_data')
 
-    with transaction.atomic():
-        # Get the seed and lock the row to prevent race conditions
-        seed = get_object_or_404(Seed.objects.select_for_update(), id=seed_id)
-        cart = get_or_create_cart(request)
-        
-        # Get the cart item
-        cart_item = get_object_or_404(CartItem, cart=cart, seed=seed)
-        
-        # Get the quantity from POST data
-        quantity_str = request.POST.get('quantity', '')
-        logger.debug(f"Quantity string from POST: '{quantity_str}'")
-
-        # Convert the quantity to an integer
         try:
-            new_quantity = int(quantity_str)
-        except ValueError:
-            new_quantity = 1  # Default to 1 if conversion fails
-        
-        # Debugging outputs
-        logger.debug(f"Seed ID: {seed_id}")
-        logger.debug(f"Requested new quantity: {new_quantity}")
-        logger.debug(f"Current stock available: {seed.in_stock}")
-        logger.debug(f"Current quantity in cart: {cart_item.quantity}")
-
-        if new_quantity <= 0:
-            # If the new quantity is 0 or less, remove the item from the cart
-            seed.in_stock += cart_item.quantity  # Restock the quantity back
-            seed.save()
-            cart_item.delete()
-            messages.success(request, f'Removed {seed.name} from your cart.')
-            logger.debug(f"Removed {seed.name} from the cart. Stock replenished: {seed.in_stock}")
-        else:
-            # Calculate the stock difference
-            quantity_difference = new_quantity - cart_item.quantity
-            logger.debug(f"Quantity difference: {quantity_difference}")
-
-            if quantity_difference > 0:
-                # Check if there's enough stock for the increase
-                if quantity_difference > seed.in_stock:
-                    messages.error(request, f'Sorry, only {seed.in_stock} more of {seed.name} available in stock.')
-                    logger.debug(f"Insufficient stock to increase quantity of {seed.name} to {new_quantity}.")
-                else:
-                    # Adjust stock accordingly
-                    seed.in_stock -= quantity_difference
-                    seed.save()
-
-                    # Update the cart item quantity
-                    cart_item.quantity = new_quantity
-                    cart_item.save()
-
-                    messages.success(request, f'Updated {seed.name} quantity to {new_quantity}.')
-                    logger.debug(f"Updated quantity of {seed.name} in cart to {new_quantity}. Stock now: {seed.in_stock}")
-
-                    # Notify if stock reaches zero
-                    if seed.in_stock == 0:
-                        messages.error(request, f'{seed.name} is now out of stock.')
-                        logger.debug(f'{seed.name} is now out of stock.')
-
-            elif quantity_difference < 0:
-                # If decreasing the quantity
-                # Increase stock by the quantity we are removing from the cart
-                seed.in_stock -= quantity_difference  # quantity_difference is negative here, so this effectively increases stock
-                seed.save()
-
-                # Update the cart item quantity
-                cart_item.quantity = new_quantity
+            cart = Cart.objects.get(user_id=user_id)
+            for item in cart_data['items']:
+                seed_id = item['seed_id']
+                quantity = item['quantity']
+                seed = Seed.objects.get(id=seed_id)
+                cart_item, created = CartItem.objects.get_or_create(cart=cart, seed=seed)
+                cart_item.quantity = quantity
                 cart_item.save()
+                seed.in_stock -= (quantity - cart_item.quantity)
+                seed.save()
+            return JsonResponse({'status': 'success'})
+        except Cart.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Cart not found'})
+        except Seed.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Seed not found'})
 
-                messages.success(request, f'Updated {seed.name} quantity to {new_quantity}.')
-                logger.debug(f"Updated quantity of {seed.name} in cart to {new_quantity}. Stock now: {seed.in_stock}")
-   
-    
-    return redirect('cart_detail')
-
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})   
+ 
 # views.py
 def cart_detail(request):
     cart = get_or_create_cart(request)

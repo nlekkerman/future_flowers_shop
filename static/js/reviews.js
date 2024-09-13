@@ -116,22 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const toggleButtons = document.querySelectorAll('.toggle-comments-btn');
-
-    toggleButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            const commentsSection = this.nextElementSibling;
-            if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
-                commentsSection.style.display = 'block';
-                this.querySelector('.toggle-text').textContent = 'Hide Comments';
-            } else {
-                commentsSection.style.display = 'none';
-                this.querySelector('.toggle-text').textContent = 'Comments';
-            }
-        });
-    });
-});
 
 
 document.addEventListener('DOMContentLoaded', function() {

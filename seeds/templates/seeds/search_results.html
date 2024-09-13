@@ -1,31 +1,23 @@
+<!-- search_results.html -->
 {% extends "base.html" %}
 {% load static %}
 
 {% block content %}
-<!-- Navigation Bar -->
 <div class="navigation-container">
     {% include 'navigation.html' %}
 </div>
+
 <button id="filter-toggle" class="btn filter-toggle">
     <i id="filter-icon" class="fas fa-filter"></i> Filters
-
-
-
 </button>
-        <!-- Fixed Back Arrow -->
-        <div class="back-arrow-container">
-            <a href="{% url 'search_results' %}" class="btn">
-                <i class="fas fa-arrow-left"></i> Back
-            </a>
-        </div>
 
-<div class="container">
-
-    <div class="row" id="search-results-container">
-        <!-- JavaScript will inject seed cards here -->
-    </div>
-
-    <p id="no-results-message" class="d-none">No seeds found matching "<span id="query-placeholder"></span>".</p>
+<div class="back-arrow-container">
+    <a href="/seeds/?show_seeds=true" class="btn">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
 </div>
 
+
 {% endblock %}
+
+

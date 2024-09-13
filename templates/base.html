@@ -41,208 +41,179 @@
 
 
     {% block extra_js %}
- <!-- Include your scripts as modules -->
- <script type="module" src="{% static 'js/base.js' %}"></script>
- <script type="module" src="{% static 'js/home.js' %}"></script>
- <script type="module" src="{% static 'js/control.js' %}"></script>
- <script type="module" src="{% static 'js/seeds.js' %}"></script>
- 
- <script type="module" src="{% static 'js/cart.js' %}"></script>
- <script type="module" src="{% static 'js/navigation.js' %}"></script>
+    <!-- Include your scripts as modules -->
+    <script type="module" src="{% static 'js/home.js' %}"></script>
+    <script type="module" src="{% static 'js/control.js' %}"></script>
+    <script type="module" src="{% static 'js/seeds.js' %}"></script>
 
- 
-<link rel="stylesheet" href="{% static 'css/navigation.css' %}">
-<link rel="stylesheet" href="{% static 'css/seeds.css' %}">
-<link rel="stylesheet" href="{% static 'css/base.css' %}">
-<link rel="stylesheet" href="{% static 'css/cart.css' %}">
-<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
-<link rel="stylesheet" href="{% static 'css/communications.css' %}">
+    <script type="module" src="{% static 'js/cart.js' %}"></script>
+    <script type="module" src="{% static 'js/navigation.js' %}"></script>
+    <script type="module" src="{% static 'js/checkout.js' %}"></script>
 
-    
+    <script type="module" src="{% static 'js/base.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'css/navigation.css' %}">
+    <link rel="stylesheet" href="{% static 'css/seeds.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+    <link rel="stylesheet" href="{% static 'css/communications.css' %}">
+    <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
+    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+
+
+
+
+
     {% endblock %}
 
     <title>Future Flower Shop {% block extra_title %}{% endblock %}</title>
 </head>
 
 {% if request.user.is_superuser %}
-    <a class="chat-icon" id="chatIcon" href="{% url 'communications:chat_list' %}">
-        <i class="fas fa-comments"></i>
-    </a>
+<a class="chat-icon" id="chatIcon" href="{% url 'communications:chat_list' %}">
+    <i class="fas fa-comments"></i>
+</a>
 {% else %}
-    <a class="chat-icon" id="chatIcon" href="{% url 'communications:chat_bot_view' %}">
-        <i class="fas fa-comments"></i>
-    </a>
+<a class="chat-icon" id="chatIcon" href="{% url 'communications:chat_bot_view' %}">
+    <i class="fas fa-comments"></i>
+</a>
 {% endif %}
 
 
-    <div class="header animate-herder">
-       
-        <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 list-container">
-            <ul class="list-inline list-unstyled text-center text-lg-right my-0">
-                <li class="list-inline-item dropdown">
-                    <a class="text-black nav-link" href="#" id="user-options" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <div>
-                            <i class="fas fa-user fa-lg"></i>
-                            <!-- Conditionally display username -->
-                            {% if request.user.is_authenticated %}
-                            <span>{{ request.user.username }}</span>
-                            {% endif %}
-                        </div>
-                    </a>
-                    <div class="dropdown-menu border-0" aria-labelledby="user-options">
+<div class="header animate-herder">
+
+    <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 list-container">
+        <ul class="list-inline list-unstyled text-center text-lg-right my-0">
+            <li class="list-inline-item dropdown">
+                <a class="text-black nav-link" href="#" id="user-options" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <div>
+                        <i class="fas fa-user fa-lg"></i>
+                        <!-- Conditionally display username -->
                         {% if request.user.is_authenticated %}
-                        {% if request.user.is_superuser %}
-                        <a href="{% url 'admin_dashboard' %}" class="dropdown-item">Product Management</a>
-                        {% endif %}
-                        <a href="{% url 'profile' %}" class="dropdown-item">My Profile</a>
-                        <a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a>
-                        {% else %}
-                        <a href="{% url 'account_signup' %}" class="dropdown-item">Register</a>
-                        <a href="{% url 'account_login' %}" class="dropdown-item">Login</a>
+                        <span>{{ request.user.username }}</span>
                         {% endif %}
                     </div>
-                </li>
-                <li class="list-inline-item">
-                    <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link"
-                        id="cart-button"
-                        >
-                        <div class="text-center icon-container">
-                            <div><i class="fas mr-1 fa-shopping-bag fa-lg"></i></div>
-                            <p class="my-0">
-                                <span class="cart-total">
-                                    ${{ cart.get_total_price|floatformat:2 }}
-                                </span>
-                            </p>
-                        </div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-
-    <div id="filter-container" class="filter-container mb-4 d-none">
-        <label class="filter-label" for="categoryDropdown">Filter by:</label>
-        <div class="filter-buttons btn-group d-none d-lg-flex" role="group" aria-label="Category Filter">
-            <a href="{% url 'search_results' %}?query={{ query }}&category=" class="custom-buttons {% if not category %}active{% endif %}">All</a>
-            <a href="{% url 'search_results' %}?query={{ query }}&category=rose" class="custom-buttons {% if category == 'rose' %}active{% endif %}">Roses</a>
-            <a href="{% url 'search_results' %}?query={{ query }}&category=tree" class="custom-buttons {% if category == 'tree' %}active{% endif %}">Trees</a>
-            <a href="{% url 'search_results' %}?query={{ query }}&category=bush" class="custom-buttons {% if category == 'bush' %}active{% endif %}">Bushes</a>
-            <a href="{% url 'search_results' %}?query={{ query }}&category=flower" class="custom-buttons {% if category == 'flower' %}active{% endif %}">Flowers</a>
-        </div>
-
-        <!-- Sorting Options -->
-        <div class="sorting-container mb-4">
-            <label class="sorting-label" for="sortOptions">Sort by:</label>
-            <div class="sorting-buttons btn-group d-none d-lg-flex" role="group" aria-label="Sort Options">
-                <a href="{% url 'search_results' %}?query={{ query }}&category={{ category }}&sort=" class="custom-buttons {% if not sort %}active{% endif %}">Default</a>
-                <a href="{% url 'search_results' %}?query={{ query }}&category={{ category }}&sort=price_asc" class="custom-buttons {% if sort == 'price_asc' %}active{% endif %}">Price: Low to High</a>
-                <a href="{% url 'search_results' %}?query={{ query }}&category={{ category }}&sort=price_desc" class="custom-buttons {% if sort == 'price_desc' %}active{% endif %}">Price: High to Low</a>
-                <a href="{% url 'search_results' %}?query={{ query }}&category={{ category }}&sort=latest" class="custom-buttons {% if sort == 'latest' %}active{% endif %}">Latest</a>
-                <a href="{% url 'search_results' %}?query={{ query }}&category={{ category }}&sort=discount" class="custom-buttons {% if sort == 'discount' %}active{% endif %}">Discounted</a>
-            </div>
-        </div>
-
-   
-
-
-    </div>
-    <div class="row" id="search-results-container">
-
-
-        {% if seeds %}
-            {% for seed in seeds %}
-                <div class="col-12 col-md-6 col-lg-4 mb-4">
-                    <div class="seed-card h-100">
-                        <a href="{% url 'seed_details' seed.id %}" class="card-link">
-                            <div class="card-img-container">
-                                <img src="{{ seed.image.url }}" class="card-img-top" alt="{{ seed.name }}">
-                                {% if seed.has_discount %}
-                                    <span class="discount-label">Discounted</span>
-                                {% endif %}
-                            </div>
-                            <div class="card-body">
-                                <h2 class="card-title h5">{{ seed.name }}</h2>
-                                <p class="card-text"><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
-                                <p class="card-text"><strong>Planting Months:</strong> {{ seed.planting_months_from }} to {{ seed.planting_months_to }}</p>
-                                <p class="card-text"><strong>Flowering Months:</strong> {{ seed.flowering_months_from }} to {{ seed.flowering_months_to }}</p>
-                                <p class="card-text"><strong>Sun Preference:</strong> {{ seed.sun_preference }}</p>
-                                <p class="card-text"><strong>Height Range:</strong> {{ seed.height_from }}m to {{ seed.height_to }}m</p>
-                                {% if seed.in_stock > 5 %}
-                        <p class="card-text text-success"><strong>In stock:</strong> {{ seed.in_stock }}</p>
-                        {% elif seed.in_stock <= 5 and seed.in_stock > 0 %}
-                        <p class="card-text text-warning"><strong>Hurry! Only {{ seed.in_stock }} left in stock!</strong></p>
-                        {% else %}
-                        <p class="card-text text-danger"><strong>Out of Stock</strong></p>
-                        {% endif %}
-                                <p class="card-text"><strong>Price:</strong> ${{ seed.calculate_discounted_price }}</p>
-                            </div>
-                        </a>
-                        <div class="card-footer text-center">
-                            <form method="post" >
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary">Add to Cart</button>
-                            </form>
-                        </div>
-                    </div>
+                </a>
+                <div class="dropdown-menu border-0" aria-labelledby="user-options">
+                    {% if request.user.is_authenticated %}
+                    {% if request.user.is_superuser %}
+                    <a href="{% url 'admin_dashboard' %}" class="dropdown-item">Product Management</a>
+                    {% endif %}
+                    <a href="{% url 'profile' %}" class="dropdown-item">My Profile</a>
+                    <a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a>
+                    {% else %}
+                    <a href="{% url 'account_signup' %}" class="dropdown-item">Register</a>
+                    <a href="{% url 'account_login' %}" class="dropdown-item">Login</a>
+                    {% endif %}
                 </div>
-            {% endfor %}
-        {% else %}
-            <p id="no-results-message" class="d-none">No seeds found matching "{{ query }}".</p>
-        {% endif %}
+            </li>
+            <li class="list-inline-item">
+                <a class="text-black nav-link" id="cart-button">
+                    <div class="text-center icon-container">
+                        <div><i class="fas mr-1 fa-shopping-bag fa-lg"></i></div>
+                        <p class="my-0">
+                            <span class="cart-total" id="cart-total">
+                                $0.00 <!-- Default value, will be updated by JavaScript -->
+                            </span>
+                        </p>
+                    </div>
+                </a>
+            </li>
+        </ul>
     </div>
-    <div class="search-container" id="searchContainer">
-            
-    
-        <form action="{% url 'search_results' %}" method="get">
-            <input type="search" name="query" placeholder="Search...">
-            <button type="submit">
-                <i class="fas fa-search"></i>
-            </button>
-        </form>
+</div>
+
+<div id="filter-container" class="filter-container mb-4 d-none">
+    <label class="filter-label" for="categoryDropdown">Filter by:</label>
+    <div id="filter-buttons" class="filter-buttons btn-group d-none d-lg-flex" role="group"
+        aria-label="Category Filter">
+        <button data-category="" class="custom-buttons filter-button active">All</button>
+        <button data-category="rose" class="custom-buttons filter-button">Roses</button>
+        <button data-category="tree" class="custom-buttons filter-button">Trees</button>
+        <button data-category="bush" class="custom-buttons filter-button">Bushes</button>
+        <button data-category="flower" class="custom-buttons filter-button">Flowers</button>
     </div>
 
-    <div id="add-item-messages">
-      svasdfvsdfvsdvdsfvadfvadfvdfv
+    <label class="sorting-label" for="sortOptions">Sort by:</label>
+    <div class="sorting-buttons btn-group d-none d-lg-flex" role="group" aria-label="Sort Options">
+        <a href="#" data-sort="" class="custom-buttons active">Default</a>
+        <a href="#" data-sort="price_asc" class="custom-buttons">Price: Low to High</a>
+        <a href="#" data-sort="price_desc" class="custom-buttons">Price: High to Low</a>
+        <a href="#" data-sort="latest" class="custom-buttons">Latest</a>
+        <a href="#" data-sort="discount" class="custom-buttons">Discounted</a>
     </div>
-    
-    
-    
-  
+
+</div>
 
 
-    <!-- Display general messages -->
-    {% if messages %}
-    <div class="message-container" id="message-container">
-        <!-- Close button for the whole message container -->
-        <button class="close-button-container" aria-label="Close">
-            <i class="fas fa-times"></i>
+
+
+
+</div>
+<!-- Search Form -->
+<div class="search-container" id="searchContainer">
+    <form id="seed-search-form">
+        <input type="search" id="seed-search-input" placeholder="Search seeds...">
+        <button type="submit" id="search-button">
+            <i class="fas fa-search search-icon"></i>
         </button>
 
-        {% for message in messages %}
-        <div class="message {{ message.tags }}">
-            <!-- Directly render the message content -->
-            {{ message|safe }}
-        </div>
-        {% endfor %}
+        <p id="search-warning" style="color: red; display: none;">Please enter a search query.</p>
+
+    </form>
+</div>
+
+<!-- Search Results Container -->
+<div class="search-results-container" id="search-results-container">
+
+</div>
+
+<div id="item-added-search-message" style="display: none;"></div>
+
+
+
+<!-- Seed Details Modal -->
+<div id="search-seed-details-modal" style="display: none;">
+    <div id="search-seed-details-content"> <span class="close-button">&times;</span>
     </div>
-    {% endif %}
-
-
-    {% block page_header %}
-    {% endblock %}
+</div>
 
 
 
-    {% block content %}
 
-    <!-- Main content here -->
-    {% endblock %}
-    <!-- Chat container -->
+<!-- Display general messages -->
+{% if messages %}
+<div class="message-container" id="message-container">
+    <!-- Close button for the whole message container -->
+    <button class="close-button-container" aria-label="Close">
+        <i class="fas fa-times"></i>
+    </button>
 
-    {% block postloadjs %}
-    {% endblock %}
+    {% for message in messages %}
+    <div class="message {{ message.tags }}">
+        <!-- Directly render the message content -->
+        {{ message|safe }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+{% block page_header %}
+{% endblock %}
+
+
+
+{% block content %}
+
+<!-- Main content here -->
+{% endblock %}
+<!-- Chat container -->
+
+{% block postloadjs %}
+{% endblock %}
 
 
 </body>

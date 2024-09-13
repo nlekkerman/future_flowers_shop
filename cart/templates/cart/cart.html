@@ -5,24 +5,36 @@
 <div class="navigation-container">
     {% include 'navigation.html' %}
 </div>
+<!-- Seed List -->
+<div class="go-to-checkout-button btn" id="go-to-checkout-button">CHECKOUT</div>
+<div id="update-item-messages">
+    <button class="close-button-cart" aria-label="Close" id="close-update-item-messages">
+        <i class="fas fa-times"></i>
+    </button>
+    <div class="message-text"></div> <!-- The message text will be updated here -->
+</div>
+<div id="delete-item-messages">
+    <button class="close-button-cart" aria-label="Close" id="close-delete-item-messages">
+        <i class="fas fa-times"></i>
+    </button>
+    <div class="message-text"></div> <!-- The message text will be updated here -->
+</div>
+
+
 <div class="cart-container">
     <h2 class="cart-title">Shopping Cart</h2>
     <div class="container mt-4">
+        <!-- Cart items will be dynamically inserted here -->
         <div id="cart-items-container" class="row">
-            <!-- Cart items will be dynamically inserted here -->
+            <!-- Cart items will be rendered here dynamically via JS -->
+        </div>
+        <div class="total-price-cart">
+            <p>Total:</p>
+            <p class="total-cart-price-value"></p>
         </div>
 
-        <!-- Cart totals and checkout button -->
-        <div id="cart-totals" class="d-flex justify-content-between mt-4">
-            <div>
-                <h4>Total: <span id="total-price" class="text-primary">$0.00</span></h4>
-            </div>
-            <div>
-                <a href="{% url 'checkout' %}" class="btn btn-success btn-lg">Proceed to Checkout</a>
-            </div>
-        </div>
-    </div
+    </div>
 
-
+</div>
 
 {% endblock %}

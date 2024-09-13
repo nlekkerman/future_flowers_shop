@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from seeds.models import Seed 
 
 class Review(models.Model):
     STATUS_CHOICES = (
@@ -9,7 +8,6 @@ class Review(models.Model):
         ('rejected', "Rejected"),
     )
 
-    seed = models.ForeignKey(Seed, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])  # 1-5 star ratings
     comment = models.TextField()
@@ -20,10 +18,11 @@ class Review(models.Model):
     deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'Review for {self.seed.name} by {self.user.username}'
+        return f'Review by {self.user.username}'
 
     def is_approved(self):
         return self.status == 'approved'
+
 
 class Comment(models.Model):
     STATUS_CHOICES = (
@@ -42,4 +41,4 @@ class Comment(models.Model):
     deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'Comment by {self.user.username} on {self.review}'
+        return f'Comment by {self.user.username} on review {self.review.id}'

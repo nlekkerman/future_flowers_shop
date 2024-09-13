@@ -9,13 +9,31 @@
     {% include 'navigation.html' %}
 </div>
 
-<!-- Seed List -->
-<div id="add-item-messages" style="display: none;">
-    <div id="item-message"></div>
-    <div id="item-details"></div>
-    <button id="close-message">Close</button>
+
+<button id="filter-toggle" class="btn filter-toggle">
+    <i id="filter-icon" class="fas fa-filter"></i> Filters
+
+
+
+</button>
+<div id="seed-details-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-modal-button">&times;</span>
+        <div id="seed-details-content"></div>
+
+       
+    </div>
 </div>
-<div class="seeds-container mt-4" id="seeds-container">
+
+<!-- Seed List -->
+ <div class="background-container">
+<div id="add-item-messages" style="display: none;">
+  
+</div>
+
+
+</div>
+<div class="seeds-container" id="seeds-container">
     <h1 class="seeds-title mb-4">Seeds</h1>
     <div class="row"></div>
 </div>
@@ -30,5 +48,6 @@
             displaySeeds();
         }
     });
+
 </script>
 {% endblock %}

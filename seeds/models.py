@@ -29,7 +29,7 @@ class Seed(models.Model):
     )
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discount = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
-    in_stock = models.PositiveIntegerField()
+    is_in_stock = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now)
     last_modified = models.DateTimeField(auto_now=True)
     deleted = models.BooleanField(default=False)
@@ -44,9 +44,6 @@ class Seed(models.Model):
             return Decimal(discounted_price).quantize(Decimal('0.01'))
         return self.price
 
-    def is_in_stock(self):
-        """Check if the seed is in stock."""
-        return self.in_stock > 0
 
     def has_discount(self):
         """Check if the seed has a discount."""

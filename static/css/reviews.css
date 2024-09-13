@@ -333,9 +333,7 @@
     /* White background for contrast */
     padding: 20px;
     border: 1px solid #ddd;
-    width: 80%;
-    /* Adjust width */
-    max-width: 500px;
+    height: 100%;
     /* Max width of modal */
     text-align: center;
     /* Center content */

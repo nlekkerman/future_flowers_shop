@@ -16,6 +16,7 @@ from django.http import JsonResponse
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import make_aware
 from seeds.models import Seed
+from reviews.models import Review, Comment
 
 
 
@@ -32,6 +33,8 @@ def get_seeds_to_localstorage(request):
         return JsonResponse({'seeds': seeds_data})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
 def get_seeds_with_last_sync(request):
     last_sync = request.GET.get('last_sync')
     if last_sync:
@@ -46,7 +49,8 @@ def get_seeds_with_last_sync(request):
 
     seeds_data = list(seeds.values())  # Convert to list of dictionaries
     return JsonResponse({'seeds': seeds_data})
-      
+ 
+
 def get_cart(request):
     user = request.user if request.user.is_authenticated else None
     session_id = request.session.session_key
@@ -67,7 +71,7 @@ def get_cart(request):
                 "price": float(item.seed.price),
                 "total_price": float(item.get_total_price()),
                 "image": str(item.seed.image),
-                "in_stock": item.seed.in_stock
+                "is_in_stock": item.seed.is_in_stock  # Changed from in_stock to is_in_stock
             }
             for item in cart_items
         ]

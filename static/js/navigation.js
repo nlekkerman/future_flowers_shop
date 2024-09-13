@@ -105,3 +105,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// navigation.js
+document.addEventListener('DOMContentLoaded', () => {
+    const viewSeedsButton = document.getElementById('back-to-shopping-button');
+    if (viewSeedsButton) {
+        viewSeedsButton.addEventListener('click', () => {
+            window.location.href = '/seeds/?show_seeds=true'; // Adjust to the Django URL
+        });
+    }
+});

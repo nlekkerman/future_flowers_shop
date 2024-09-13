@@ -71,52 +71,15 @@ def seed_details(request, id):
             
             return redirect('cart')  # Redirect to the cart or another page
 
-    reviews = seed.reviews.filter(status='approved').order_by('-created_at').prefetch_related(
-        Prefetch('comments', queryset=Comment.objects.filter(status='approved').order_by('-created_at'))
-    )
+   
 
     context = {
         'seed': seed,
-        'reviews': reviews
     }
     
-    return render(request, 'seeds/seed_details.html', context)   
+    return render(request, 'seeds/seed_details.html', context)
+
 
 def search_results(request):
-    query = request.GET.get('query', '')
-    category = request.GET.get('category', '')
-    sort = request.GET.get('sort', '')
-
-    seeds = Seed.objects.all()
-
-    if query:
-        seeds = seeds.filter(name__icontains=query)
-
-    if category:
-        seeds = seeds.filter(category=category)
-
-    # Annotate with discounted price for sorting
-    if sort in ['price_asc', 'price_desc']:
-        seeds = seeds.annotate(
-            discounted_price=ExpressionWrapper(
-                F('price') - (F('price') * F('discount') / 100),
-                output_field=DecimalField()
-            )
-        )
-        if sort == 'price_asc':
-            seeds = seeds.order_by('discounted_price')
-        elif sort == 'price_desc':
-            seeds = seeds.order_by('-discounted_price')
-    elif sort == 'latest':
-        seeds = seeds.order_by('-created_at')
-    elif sort == 'discount':
-        seeds = seeds.filter(discount__gt=0)  # Filter seeds with any discount
-
-    context = {
-        'seeds': seeds,
-        'query': query,
-        'category': category,
-        'sort': sort,
-    }
-
-    return render(request, 'seeds/search_results.html', context)
+    # Render the search_results.html template
+    return render(request, 'seeds/search_results.html')

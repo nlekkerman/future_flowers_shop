@@ -11,6 +11,8 @@
     cursor: pointer;
     z-index: 1000; /* Ensure it is always on top */
     text-align: center; /* Center icon in button */
+    height: 3rem;
+    width: 3rem;
 }
 
 .chat-icon i {

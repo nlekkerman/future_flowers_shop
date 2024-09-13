@@ -26,27 +26,5 @@ export async function fetchAndStoreSeeds() {
     }
 }
 
-export async function fetchAndStoreCart() {
-    try {
-        const response = await fetch('/syncmanager/api/cart/');
-        if (!response.ok) {
-            const responseBody = await response.text();
-            throw new Error(`Failed to fetch cart: ${response.statusText}. Response body: ${responseBody}`);
-        }
-        const data = await response.json();
-        console.log('Fetched cart from server:', data);
 
-        if (data.cart_id !== null) {
-            localStorage.setItem('cart_data', JSON.stringify(data));
-            console.log('Cart data saved to localStorage.');
-            return data; // Return the cart data for further use
-        } else {
-            console.log('No cart data to save.');
-            return null; // Indicate no data to use
-        }
 
-    } catch (error) {
-        console.error('Error fetching and storing cart:', error);
-        return null; // Return null in case of an error
-    }
-}

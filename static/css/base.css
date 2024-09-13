@@ -16,6 +16,7 @@ body {
     display: flex;
     text-align: center;
     justify-content: center;
+    color: white !important;
 }
 
 
@@ -100,7 +101,13 @@ body {
 
 .sorting-container {
     margin-bottom: 20px;
-    margin-top: 10px !important;
+    margin-top: 10px !important;  
+    position: relative;
+    width: 90%;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(255, 241, 241, 0.3);
 
 }
 
@@ -151,12 +158,6 @@ body {
     /* Ensure the image fits within the box */
 }
 
-.btn-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
 
 header ul.list-inline {
     margin: 0;
@@ -176,39 +177,11 @@ header .list-inline-item {
 a {
     color: white !important;
 }
-
-.btn-close {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-    /* Adjust size as needed */
-    color: #000;
-    /* Change color to fit your theme */
-    transition: color 0.3s ease;
+.search-icon{
+    color: white !important;
 }
 
-.btn-close:hover {
-    color: #ff0000;
-    /* Change color on hover, example red */
-    opacity: 0.8;
-    /* Slightly fade the button on hover */
-}
 
-.btn-close:focus {
-    outline: none;
-    /* Remove default focus outline */
-}
-
-.btn-close::before {
-    content: "×";
-    /* Unicode character for the close icon */
-    display: inline-block;
-    font-family: Arial, sans-serif;
-    font-size: 1.5rem;
-    /* Match with font-size */
-    line-height: 1;
-}
 
 .btn {
     background-color: rgba(0, 0, 0, 0.9) !important;
@@ -457,7 +430,9 @@ header .dropdown-item {
     }
 }
 
-
+.modal-visible {
+    display: block; /* Display the modal */
+}
 .search-container {
     position: fixed;
     top: 64px;
@@ -593,4 +568,26 @@ header .dropdown-item {
 .back-arrow:hover {
     background-color: rgba(187, 187, 187, 0.3);
     /* Darker button color on hover */
+}
+
+#item-added-search-message {
+    position: fixed;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for exact center */
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    display: flex;
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+    transition: opacity 0.4s ease, visibility 0.4s ease; /* Smooth fade-in effect */
+   color: white !important;
+    z-index: 10000; /* Ensure it stays on top */
+    padding: 20px;
+    width: 500px;
+    height: 333px;
+}
+
+#search-seed-details-modal{
+
+    margin-top: 350px;
 }

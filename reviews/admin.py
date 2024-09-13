@@ -3,9 +3,11 @@ from .models import Review, Comment
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('seed', 'user', 'rating', 'status', 'created_at', 'updated_at')
+    # Removed 'seed' from list_display
+    list_display = ('user', 'rating', 'status', 'created_at', 'updated_at')
     list_filter = ('status', 'created_at', 'rating')
-    search_fields = ('user__username', 'seed__name', 'comment')
+    # Removed 'seed__name' from search_fields
+    search_fields = ('user__username', 'comment')
     actions = ['approve_reviews', 'reject_reviews', 'delete_reviews']
 
     def approve_reviews(self, request, queryset):
