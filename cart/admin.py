@@ -1,15 +1,14 @@
 from django.contrib import admin
 from .models import Cart, CartItem
 
-class CartItemInline(admin.TabularInline):
-    model = CartItem
-    extra = 1  # How many blank forms to display initially
-
+@admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
-    list_display = ('user', 'created_at', 'updated_at')
-    inlines = [CartItemInline]
-    search_fields = ('user__username', 'user__email')
-    list_filter = ('created_at', 'updated_at')
+    list_display = ('id', 'user', 'session_id', 'created_at', 'updated_at', 'last_modified', 'deleted')
+    list_filter = ('deleted', 'created_at', 'updated_at')
+    search_fields = ('user__username', 'session_id')
 
-admin.site.register(Cart, CartAdmin)
-admin.site.register(CartItem)
+@admin.register(CartItem)
+class CartItemAdmin(admin.ModelAdmin):
+    list_display = ('cart', 'seed', 'quantity', 'last_modified', 'deleted')
+    list_filter = ('deleted', 'last_modified')
+    search_fields = ('cart__id', 'seed__name')

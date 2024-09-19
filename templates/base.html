@@ -42,15 +42,16 @@
 
     {% block extra_js %}
     <!-- Include your scripts as modules -->
-    <script type="module" src="{% static 'js/home.js' %}"></script>
-    <script type="module" src="{% static 'js/control.js' %}"></script>
-    <script type="module" src="{% static 'js/seeds.js' %}"></script>
-
-    <script type="module" src="{% static 'js/cart.js' %}"></script>
-    <script type="module" src="{% static 'js/navigation.js' %}"></script>
-    <script type="module" src="{% static 'js/checkout.js' %}"></script>
-
     <script type="module" src="{% static 'js/base.js' %}"></script>
+    <script type="module" src="{% static 'js/home.js' %}" defer></script>
+    <script type="module" src="{% static 'js/control.js' %}" defer></script>
+    <script type="module" src="{% static 'js/seeds.js' %}" defer></script>
+    <script type="module" src="{% static 'js/cart.js' %}" defer></script>
+    <script type="module" src="{% static 'js/navigation.js' %}" defer></script>
+    <script type="module" src="{% static 'js/checkout.js' %}" defer></script>
+    <script type="module" src="{% static 'js/utils.js' %}" defer></script>
+    
+
 
     <link rel="stylesheet" href="{% static 'css/navigation.css' %}">
     <link rel="stylesheet" href="{% static 'css/seeds.css' %}">
@@ -71,7 +72,7 @@
 </head>
 
 {% if request.user.is_superuser %}
-<a class="chat-icon" id="chatIcon" href="{% url 'communications:chat_list' %}">
+<a class="chat-icon" id="chatIcon" href="#">
     <i class="fas fa-comments"></i>
 </a>
 {% else %}
@@ -102,7 +103,7 @@
                     <a href="{% url 'admin_dashboard' %}" class="dropdown-item">Product Management</a>
                     {% endif %}
                     <a href="{% url 'profile' %}" class="dropdown-item">My Profile</a>
-                    <a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a>
+                    <a href="{% url 'account_logout' %}" class="dropdown-item" id="logout-button">Logout</a>
                     {% else %}
                     <a href="{% url 'account_signup' %}" class="dropdown-item">Register</a>
                     <a href="{% url 'account_login' %}" class="dropdown-item">Login</a>
@@ -115,7 +116,7 @@
                         <div><i class="fas mr-1 fa-shopping-bag fa-lg"></i></div>
                         <p class="my-0">
                             <span class="cart-total" id="cart-total">
-                                $0.00 <!-- Default value, will be updated by JavaScript -->
+                              1
                             </span>
                         </p>
                     </div>

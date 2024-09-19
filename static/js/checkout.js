@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Retrieve cart data from localStorage
-    const cart = JSON.parse(localStorage.getItem('cart')) || {};
+    const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
     
     console.log('Cart data:', cart); // Log cart data to verify retrieval
 
@@ -25,9 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
     checkoutItemsContainer.innerHTML = '';
 
     // Loop through the cart items and dynamically display them
-    Object.keys(cart).forEach(seedId => {
-        const item = cart[seedId];
-
+    cart.items.forEach(item => {
         // Check if item data is valid
         if (!item || !item.name || !item.price || !item.quantity || !item.image) {
             console.error('Invalid item data:', item);
@@ -56,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <p class="checkout-price mb-1">$${price.toFixed(2)}</p>
                     </div>
                    
-                    <div class=" checkout-cart-item-quantity">
+                    <div class="checkout-cart-item-quantity">
                         <p class="mb-1">Quantity: ${quantity}</p>
                         <p class="mb-1 bg-success">Total: $${itemTotalPrice.toFixed(2)}</p>
                     </div>
@@ -72,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Update cart count, order total, and grand total
-    cartCount.textContent = Object.keys(cart).length;
+    cartCount.textContent = cart.items.length;
     orderTotalElement.textContent = `$${orderTotal.toFixed(2)}`;
     deliveryFeeElement.textContent = `$${deliveryFee.toFixed(2)}`;
     grandTotalElement.textContent = `$${(orderTotal + deliveryFee).toFixed(2)}`;

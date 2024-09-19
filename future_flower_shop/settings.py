@@ -75,7 +75,6 @@ INSTALLED_APPS = [
     'checkout',
     'reviews',                       # custom app for checkout management
     'communications',
-    'human',
     'syncmanager',
 ]
 

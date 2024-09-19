@@ -1,4 +1,7 @@
-// Function to display seeds with filtering and sorting
+
+import { getCartFromLocalStorage } from './utils.js';
+import { sendToCart } from './control.js'; 
+
 export function displaySeeds({ category = '', sort = '', inStock = undefined, discounted = undefined } = {}) {
     const seedsData = JSON.parse(localStorage.getItem('seeds_data')) || [];
     const seedsContainer = document.getElementById('seeds-container');
@@ -8,21 +11,33 @@ export function displaySeeds({ category = '', sort = '', inStock = undefined, di
         return;
     }
 
+    const rowElement = seedsContainer.querySelector('.row');
+    if (!rowElement) {
+        console.error('Element with class "row" not found inside seeds-container.');
+        return;
+    }
+
     seedsContainer.style.display = 'block';
 
     // Apply filters
     let filteredSeeds = seedsData;
 
+    console.log('Initial Seeds Data:', seedsData);
+    console.log('Filters Applied - In Stock:', inStock, 'Discounted:', discounted, 'Category:', category);
+
     if (inStock !== undefined) {
         filteredSeeds = filteredSeeds.filter(seed => seed.is_in_stock === inStock);
+        console.log('Filtered Seeds After inStock Filter:', filteredSeeds);
     }
 
     if (discounted !== undefined) {
         filteredSeeds = filteredSeeds.filter(seed => (seed.discount > 0) === discounted);
+        console.log('Filtered Seeds After Discount Filter:', filteredSeeds);
     }
 
     if (category) {
         filteredSeeds = filteredSeeds.filter(seed => seed.category === category || category === '');
+        console.log('Filtered Seeds After Category Filter:', filteredSeeds);
     }
 
     // Apply sorting
@@ -36,20 +51,19 @@ export function displaySeeds({ category = '', sort = '', inStock = undefined, di
         filteredSeeds.sort((a, b) => b.discount - a.discount);
     }
 
+    console.log('Filtered Seeds After Sorting:', filteredSeeds);
+
     if (filteredSeeds.length === 0) {
-        seedsContainer.querySelector('.row').innerHTML = '<p>No seeds available based on the selected filters.</p>';
+        rowElement.innerHTML = '<p>No seeds available based on the selected filters.</p>';
         return;
     }
 
-    seedsContainer.querySelector('.row').innerHTML = '';
+    rowElement.innerHTML = '';
 
     filteredSeeds.forEach(seed => {
-        console.log(`Seed Name: ${seed.name}, In Stock: ${seed.is_in_stock}, Stock Quantity: ${seed.in_stock}`);
-
         const seedElement = document.createElement('div');
         seedElement.className = 'col-12 col-md-6 col-lg-4 mb-4';
 
-        // Construct the seed HTML
         let seedHTML = `
             <div class="seed-card h-100" id="seed-card-${seed.id}" data-seed-id="${seed.id}">
                 <div class="card-img-container">
@@ -75,133 +89,146 @@ export function displaySeeds({ category = '', sort = '', inStock = undefined, di
         `;
 
         seedElement.innerHTML = seedHTML;
-        seedsContainer.querySelector('.row').appendChild(seedElement);
+        rowElement.appendChild(seedElement);
     });
 
-    // Attach event listeners to the seed cards for viewing details
+    // Attach event listeners
+    attachEventListeners();
+}
+
+function attachEventListeners() {
+    // Attach click event listener to seed cards for viewing details
     document.querySelectorAll('.seed-card').forEach(card => {
         card.addEventListener('click', (event) => {
             const seedId = card.getAttribute('data-seed-id');
             const seed = getSeedFromLocalStorage(seedId);
-            
+
             if (seed) {
+                console.log(`Seed card clicked. Seed ID: ${seedId}`, seed);
                 displaySeedDetails(seed);
                 showModal();
             } else {
-                console.error('Seed not found in local storage.');
+                console.error('Seed not found in local storage.', seedId);
             }
         });
     });
 
-    document.querySelectorAll('.add-to-cart-button').forEach(button => {
-        button.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent triggering the card click event
+    // Attach click event listener to "Add to Cart" buttons
+document.querySelectorAll('.add-to-cart-button').forEach(button => {
+    button.addEventListener('click', async (event) => {
+        event.stopPropagation(); // Prevent triggering the card click event
+        
+        const seedId = button.getAttribute('data-seed-id');
+        const quantity = 1; // Default quantity
+
+        const seedElement = button.closest('.seed-card');
+        const imageUrl = seedElement.querySelector('.card-img-top').getAttribute('src');
+        const seed = getSeedFromLocalStorage(seedId);
+
+        console.log(`Adding Seed ID ${seedId} to cart with quantity ${quantity}`);
+        console.log(`Image URL: ${imageUrl}`);
+        console.log('Seed details:', seed);
+
+        if (seed) {
+            console.log('Before adding to cart:', getCartFromLocalStorage()); // Log cart state before addition
+            addToCart(seed, quantity, imageUrl);
+            updateCartUI(); // Ensure the cart UI is updated after adding the item
+            try {
+                await sendToCart(seedId, quantity); // Send data to the server
+                console.log('Item sent to server successfully.');
+            } catch (error) {
+                console.error('Failed to send item to server:', error);
+            }
             
-            const seedId = button.getAttribute('data-seed-id');
-            const quantity = 1; // Default quantity
-    
-            // Find the seed element to get the image URL
-            const seedElement = button.closest('.seed-card');
-            const imageUrl = seedElement.querySelector('.card-img-top').getAttribute('src');
-    
-            console.log(`Adding Seed ID ${seedId} to cart with quantity ${quantity}`);
-            console.log(`Image URL: ${imageUrl}`);
-            
-            // Call addToCart with the image URL
-            addToCart(seedId, quantity, imageUrl);
-        });
-    });
-
-
-// Handling filter button clicks
-document.querySelectorAll('#filter-buttons .filter-button').forEach(button => {
-    button.addEventListener('click', () => {
-        const category = button.getAttribute('data-category');
-        
-        // Update the active state of filter buttons
-        document.querySelectorAll('#filter-buttons .filter-button').forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        
-        // Retrieve the current sort option (default or active)
-        const sort = document.querySelector('.sorting-buttons .custom-buttons.active').getAttribute('data-sort') || '';
-        
-        // Call displaySeeds with the selected filter and sort options
-        displaySeeds({ category, sort });
-    });
-});
-
-// Handling sort button clicks
-document.querySelectorAll('.sorting-buttons a').forEach(button => {
-    button.addEventListener('click', (event) => {
-        event.preventDefault(); // Prevent the default link behavior
-        
-        const sort = button.getAttribute('data-sort');
-        
-        // Update the active state of sorting buttons
-        document.querySelectorAll('.sorting-buttons a').forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        
-        // Retrieve the selected category (default or active)
-        const category = document.querySelector('#filter-buttons .filter-button.active').getAttribute('data-category') || '';
-        
-        // Call displaySeeds with the selected sort and filter options
-        displaySeeds({ category, sort });
-    });
-});
-}
-
-console.log('Seeds Data:', JSON.parse(localStorage.getItem('seeds_data')));
-
-export function addToCart(seedId, quantity, imageUrl) {
-    try {
-        // Retrieve the seeds data
-        const seedsData = JSON.parse(localStorage.getItem('seeds_data')) || [];
-        const seed = seedsData.find(seed => seed.id === parseInt(seedId, 10));
-
-        if (!seed || !seed.is_in_stock) {
-            console.error('Seed is out of stock or not found.');
-            return;
+           
+            console.log('After adding to cart:', getCartFromLocalStorage()); // Log cart state after addition
+        } else {
+            console.error('Seed not found in local storage.', seedId);
         }
+    });
+});
 
-        // Retrieve the existing cart
-        const cart = JSON.parse(localStorage.getItem('cart')) || {};
+}
+// Add item to cart
+function addToCart(seed, quantity = 1) {
+    let cartData = getCartFromLocalStorage(); // Fetch current cart data
+    
+    // Use the full URL directly if available, otherwise use a fallback image URL
+    let imageUrl = seed.image || '/media/images/wild-flowers-icon.webp';
 
-        // Check if the seed item already exists in the cart
-        if (!cart[seedId]) {
-            // Seed item does not exist in the cart, initialize it
-            cart[seedId] = {
+    // Find if the item already exists in the cart
+    const existingItemIndex = cartData.items.findIndex(item => item.seed.id === seed.id);
+
+    if (existingItemIndex >= 0) {
+        // Item is already in cart, update the quantity and total price
+        cartData.items[existingItemIndex].quantity += quantity;
+        cartData.items[existingItemIndex].total_price = cartData.items[existingItemIndex].quantity * seed.price;
+    } else {
+        // New item, add to cart
+        cartData.items.push({
+            id: Date.now(), // Unique ID for the cart item
+            seed: {
                 id: seed.id,
                 name: seed.name,
-                quantity: 0, // Initialize quantity to 0
-                price: seed.price,
-                image: imageUrl, // Pass the image URL directly
-                is_in_stock: seed.is_in_stock
-            };
-        }
-
-        // Get the existing item from the cart
-        const existingItem = cart[seedId];
-        console.log(`Quantity of ${seed.name} before adding: ${existingItem.quantity}`);
-
-        // Update the quantity
-        existingItem.quantity += quantity;
-
-        // Save the updated cart to local storage
-        localStorage.setItem('cart', JSON.stringify(cart));
-
-        // Log the quantity of the specific item after adding
-        console.log(`Quantity of ${seed.name} after adding: ${existingItem.quantity}`);
-        console.log('Updated cart item:', existingItem);
-
-        // Display message in modal
-        displayMessageInModal(`Added ${quantity} ${seed.name} to the cart.`, existingItem);
-        updateCartTotal();
-
-    } catch (error) {
-        console.error('Error adding to cart:', error);
-        displayMessageInModal('An error occurred while adding the item to the cart.');
+                price: parseFloat(seed.price),
+                image: imageUrl,
+                is_in_stock: seed.is_in_stock // Add stock status
+            },
+            quantity: quantity,
+            total_price: parseFloat(seed.price) * quantity
+        });
     }
+
+    // Calculate total cart price
+    const total_price = cartData.items.reduce((total, item) => total + item.total_price, 0);
+
+    // Prepare updated cart data
+    const updatedCartData = {
+        id: cartData.id || Date.now(), // Generate a new cart ID if it doesn't exist
+        user: 'current_user', // Placeholder for user information
+        created_at: cartData.created_at || new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        total_price: total_price.toFixed(2),
+        items: cartData.items
+    };
+
+    // Save updated cart data to localStorage
+    localStorage.setItem('cart', JSON.stringify(updatedCartData));
+
+    // Optionally, show a success message
+    displayMessageInModal('Item successfully added to your cart!', { image: imageUrl, quantity });
+
+    // Update cart UI to reflect changes
+    updateCartUI();
 }
+
+// Update cart UI elements
+function updateCartUI() {
+    const cartData = getCartFromLocalStorage(); // Fetch the updated cart data
+    const cartCountElement = document.getElementById('cart-count'); // Element for item count
+    const cartTotalElement = document.getElementById('cart-total'); // Element for total price
+
+    // Validate cart data
+    if (!cartData || !cartData.items) {
+        console.warn('No cart data found or cart items are missing.');
+        return;
+    }
+
+    // Update item count in the UI
+    const itemCount = cartData.items.reduce((total, item) => total + item.quantity, 0);
+    if (cartCountElement) {
+        cartCountElement.textContent = itemCount; // Display the total number of items
+    }
+
+    // Update total price in the UI
+    const totalPrice = parseFloat(cartData.total_price) || 0;
+    if (cartTotalElement) {
+        cartTotalElement.textContent = `$${totalPrice.toFixed(2)}`; // Display the total price
+    }
+
+    console.log('Cart UI updated:', { itemCount, totalPrice });
+}
+
 
 // Function to get a seed from local storage
 function getSeedFromLocalStorage(seedId) {
@@ -292,29 +319,9 @@ window.addEventListener('click', (event) => {
     }
 });
 
-function updateCartTotal() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || {};
-    let total = 0;
-
-    // Calculate the total from the cart items
-    for (let seedId in cart) {
-        if (cart.hasOwnProperty(seedId)) {
-            const item = cart[seedId];
-            total += item.price * item.quantity;
-        }
-    }
-
-    // Update the cart total on the page
-    const cartTotalElement = document.getElementById('cart-total');
-    if (cartTotalElement) {
-        cartTotalElement.innerText = `$${total.toFixed(2)}`;
-    } else {
-        console.warn('Element with ID "cart-total" not found.');
-    }
-}
 
 
-// Example displayMessageInModal function
+
 export function displayMessageInModal(message, item) {
     const messagesContainer = document.getElementById('add-item-messages');
     
@@ -326,8 +333,18 @@ export function displayMessageInModal(message, item) {
     // Log the details for debugging
     console.log('Displaying message in modal:', { message, item });
 
-    // Fetch image URL based on item ID
-    const imageUrl = item.image;
+    // Base URL for image
+    const baseImageUrl = 'https://res.cloudinary.com/dg0ssec7u/image/upload/';
+    const defaultImageUrl = '/media/images/wild-flowers-icon.webp'; // Fallback image URL
+
+    // Determine the full image URL
+    const imageUrl = item.image
+        ? (item.image.startsWith('http://') 
+            ? item.image.replace('http://', 'https://') 
+            : (item.image.startsWith('https://') 
+                ? item.image 
+                : baseImageUrl + item.image))
+        : defaultImageUrl;
 
     // Update background image and styles
     messagesContainer.style.backgroundImage = `url('${imageUrl}')`; // Set the background image
@@ -357,6 +374,7 @@ export function displayMessageInModal(message, item) {
         console.log('Message container hidden.');
     }, 5000); // Adjust time as needed
 }
+
 // Function to hide the message container
 export function hideItemAddedMessage() {
     const messagesContainer = document.getElementById('add-item-messages');
@@ -373,3 +391,5 @@ document.addEventListener('click', (event) => {
         hideItemAddedMessage();
     }
 });
+// Make sure the cart UI is updated on page load
+window.onload = updateCartUI;

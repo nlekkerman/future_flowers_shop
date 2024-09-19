@@ -7,15 +7,14 @@ from seeds.models import Seed  # Import Seed model from seeds app
 def cart_context(request):
     cart = None
     bag_items = []
-    total = 0
+    total = Decimal('0.00')  # Initialize total as Decimal
     product_count = 0
+    delivery = Decimal('0.00')
+    free_delivery_delta = Decimal('0.00')
 
     # Handle authenticated users
     if request.user.is_authenticated:
-        try:
-            cart = Cart.objects.get(user=request.user)
-        except Cart.DoesNotExist:
-            cart = None  # Optionally handle missing cart scenario
+        cart = Cart.objects.filter(user=request.user, deleted=False).first()
 
     # Handle anonymous users
     else:
@@ -23,32 +22,32 @@ def cart_context(request):
         if not session_key:
             request.session.create()  # Create a new session if none exists
             session_key = request.session.session_key
-        try:
-            cart = Cart.objects.get(session_id=session_key)
-        except Cart.DoesNotExist:
-            cart = None  # Optionally handle missing cart scenario
+        cart = Cart.objects.filter(session_id=session_key, deleted=False).first()
 
     # Process cart contents if it exists
     if cart:
-        cart_items = CartItem.objects.filter(cart=cart)  # Query related items
+        cart_items = CartItem.objects.filter(cart=cart, deleted=False)  # Query related items
         for cart_item in cart_items:
             seed = cart_item.seed
             quantity = cart_item.quantity
-            total += cart_item.get_total_price()
+            item_total_price = cart_item.get_total_price()  # Use `get_total_price()` to calculate total
+            total += item_total_price
             product_count += quantity
             bag_items.append({
                 'item_id': seed.id,
                 'quantity': quantity,
                 'seed': seed,
-                'total_price': cart_item.get_total_price(),
+                'total_price': item_total_price,
             })
 
-        if total < settings.FREE_DELIVERY_THRESHOLD:
-            delivery = total * Decimal(settings.STANDARD_DELIVERY_PERCENTAGE / 100)
-            free_delivery_delta = settings.FREE_DELIVERY_THRESHOLD - total
+        # Calculate delivery cost and free delivery threshold
+        if total < Decimal(settings.FREE_DELIVERY_THRESHOLD):
+            delivery_percentage = Decimal(settings.STANDARD_DELIVERY_PERCENTAGE) / Decimal('100')
+            delivery = delivery_percentage * total
+            free_delivery_delta = Decimal(settings.FREE_DELIVERY_THRESHOLD) - total
         else:
-            delivery = 0
-            free_delivery_delta = 0
+            delivery = Decimal('0.00')
+            free_delivery_delta = Decimal('0.00')
         
         grand_total = delivery + total
 
@@ -59,7 +58,7 @@ def cart_context(request):
             'product_count': product_count,
             'delivery': delivery,
             'free_delivery_delta': free_delivery_delta,
-            'free_delivery_threshold': settings.FREE_DELIVERY_THRESHOLD,
+            'free_delivery_threshold': Decimal(settings.FREE_DELIVERY_THRESHOLD),
             'grand_total': grand_total,
         }
     else:

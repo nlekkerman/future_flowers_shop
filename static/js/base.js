@@ -1,4 +1,3 @@
-let isSeedDetailsVisible = false; // Flag to track seed details modal visibility
 
 // Function to get all seeds from local storage
 function getAllSeeds() {
@@ -147,49 +146,28 @@ function showSearchDetailsModal() {
 }
 
 
+let isSearchResultsVisible = false;
+
 function toggleSearchResults() {
     const resultsContainer = document.getElementById('search-results-container');
-    const toggleButton = document.getElementById('search-button');
-    const seedDetailsModal = document.getElementById('search-seed-details-modal');
+    const searchButton = document.getElementById('search-button');
 
     if (resultsContainer) {
-        // Toggle visibility based on the current state of the search results container
-        if (resultsContainer.classList.contains('visible')) {
+        if (isSearchResultsVisible) {
             // Hide the results container
-            resultsContainer.classList.remove('visible');
-            resultsContainer.classList.add('hidden');
-            toggleButton.innerHTML = '<i class="fas fa-search"></i>'; // Reset to search icon
-
-            // Hide the seed details modal when hiding results
-            if (seedDetailsModal) {
-                seedDetailsModal.style.display = 'none';
-                isSeedDetailsVisible = false; // Update the flag to indicate the modal is hidden
-            }
+            resultsContainer.style.opacity = '0';
+            resultsContainer.style.visibility = 'hidden';
+            searchButton.innerHTML = '<i class="fas fa-search"></i>';
+            isSearchResultsVisible = false;
         } else {
             // Show the results container
-            resultsContainer.classList.remove('hidden');
-            resultsContainer.classList.add('visible');
-            resultsContainer.style.marginTop = "10px"; // Add margin top
-
-            // Update button text to "Close"
-            toggleButton.innerHTML = 'Close';
-
-            // Show the seed details modal again if it was visible before
-            if (seedDetailsModal && isSeedDetailsVisible) {
-                isSeedDetailsVisible = false;
-                seedDetailsModal.style.display = 'block'; // Show the modal if it was open before
-
-            }
+            resultsContainer.style.opacity = '1';
+            resultsContainer.style.visibility = 'visible';
+            searchButton.textContent = 'Close'; // Update button text
+            isSearchResultsVisible = true;
         }
-    } else {
-        console.error('Results container not found.');
     }
 }
-
-
-
-
-let currentSeedId = null;
 
 function displaySearchResults(seeds) {
     const seedsContainer = document.getElementById('search-results-container');
@@ -232,15 +210,15 @@ function displaySearchResults(seeds) {
         seedsContainer.appendChild(searchSeedElement);
         searchSeedElement.addEventListener('click', () => {
             const modal = document.getElementById('search-seed-details-modal');
-        
+
             if (!modal) {
                 console.error('Modal element not found.');
                 return;
             }
-        
+
             // Toggle the modal visibility using a class
             modal.classList.toggle('modal-visible');
-        
+
             console.log('Modal visibility toggled. Current display style:', modal.style.display);
         });
 
@@ -253,6 +231,7 @@ function displaySearchResults(seeds) {
 
 function displaySearchResultsSeedDetails(seed) {
     const seedDetailsContent = document.getElementById('search-seed-details-content');
+    const seedDetailsModal = document.getElementById('search-seed-details-modal');
 
     if (!seedDetailsContent) {
         console.error('Element with ID "search-seed-details-content" not found.');
@@ -284,6 +263,7 @@ function displaySearchResultsSeedDetails(seed) {
         </div>
     `;
 
+    // Add the event listener for the "Add to Cart" button
     const addToCartButton = seedDetailsContent.querySelector('.add-to-cart-button');
     if (addToCartButton && seed.is_in_stock) {
         addToCartButton.addEventListener('click', function () {
@@ -291,21 +271,23 @@ function displaySearchResultsSeedDetails(seed) {
         });
     }
 
+    // Add the event listener for the "Close" button
     const closeButton = document.getElementById('closeSeedDetails');
-
     if (closeButton) {
         closeButton.addEventListener('click', () => {
-            const seedDetails = document.querySelector('.seed-details');
-            console.log("Jnzsdjkcnsdkjzcnvzkdjnczkjvcnzkjdvcnzdj")
-
-            if (seedDetails) {
-                console.log("Jnzsdjkcnsdkjzcnvzkdjnczkjvcnzkjdvcnzdj")
-                seedDetails.style.display = 'none'; // Hide the seed details card
+            if (seedDetailsModal) {
+                seedDetailsModal.style.display = 'none'; // Hide the seed details card
+                isSeedDetailsVisible = false; // Update the visibility flag
             }
         });
     }
-}
 
+    // Show the seed details modal
+    if (seedDetailsModal) {
+        seedDetailsModal.style.display = 'block'; // Ensure the modal is visible
+        isSeedDetailsVisible = true; // Update the visibility flag
+    }
+}
 
 
 
@@ -453,58 +435,16 @@ document.addEventListener('DOMContentLoaded', function () {
     toggleButton.addEventListener('click', toggleFilterVisibility);
 });
 
-// Handle the cart button click
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded and parsed');
 
+
+
+document.addEventListener('DOMContentLoaded', () => {
     const viewCartButton = document.getElementById('cart-button');
+    
     if (viewCartButton) {
-        console.log('Cart button found:', viewCartButton);
-
-        viewCartButton.addEventListener('click', (event) => {
-            console.log('Cart button clicked');
-            event.preventDefault(); // Prevent default link behavior
-
-            // Check if cart data exists in localStorage
-            const cartData = localStorage.getItem('cart_data');
-            if (cartData) {
-                console.log('Cart data found in localStorage. Redirecting to cart page...');
-                window.location.href = '/cart/'; // Navigate to the cart page
-            } else {
-                console.warn('No cart data found in localStorage. Displaying empty cart message.');
-
-                // Navigate to the cart page
-                window.location.href = '/cart/'; // Navigate to the cart page
-            }
+        viewCartButton.addEventListener('click', () => {
+            window.location.href = '/cart/'; // Redirect to cart page
         });
-    } else {
-        console.warn('Cart button not found in the DOM');
+        console.log("Cart button found, event listener attached.");
     }
 });
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded and parsed. Updating cart total...');
-    updateCartTotal();
-});
-
-function updateCartTotal() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || {};
-    let total = 0;
-
-    // Calculate the total from the cart items
-    for (let seedId in cart) {
-        if (cart.hasOwnProperty(seedId)) {
-            const item = cart[seedId];
-            total += item.price * item.quantity;
-        }
-    }
-
-    // Update the cart total on the page
-    const cartTotalElement = document.getElementById('cart-total');
-    if (cartTotalElement) {
-        cartTotalElement.innerText = `$${total.toFixed(2)}`;
-    } else {
-        console.warn('Element with ID "cart-total" not found.');
-    }
-}

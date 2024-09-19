@@ -1,22 +1,76 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Constants
-    const baseImageUrl = 'https://res.cloudinary.com/dg0ssec7u/image/upload/'; // Base image URL for Cloudinary
-    const defaultImageUrl = '/media/images/wild-flowers-icon.webp'; // Default image URL if hosted on your server
+import { updateQuantityOnServer, deleteCartItemOnServer } from './control.js'; 
+const updateItemMessages = document.getElementById('update-item-messages');
+const showMessage = (flowerInfo, backgroundImage) => {
+    console.log('showMessage called');
+    console.log('Flower Info:', flowerInfo);
+    console.log('Background Image:', backgroundImage);
+
+    // Use getElementById to find the element by ID
+    const updateItemMessages = document.getElementById('update-item-messages');
+    if (!updateItemMessages) {
+        console.error('updateItemMessages element not found.');
+        return;
+    }
+
+    const messageTextElement = updateItemMessages.querySelector('.message-text');
+    if (!messageTextElement) {
+        console.error('Message text element not found within updateItemMessages.');
+        return;
+    }
+
+    const name = flowerInfo?.name || 'Unknown Flower';
+    const price = flowerInfo?.price ? parseFloat(flowerInfo.price).toFixed(2) : '0.00';
+    const quantity = flowerInfo?.quantity || 0;
+    const totalPrice = flowerInfo?.totalPrice ? parseFloat(flowerInfo.totalPrice).toFixed(2) : '0.00';
+
+    console.log('Message text element found:', messageTextElement);
+    console.log('Setting message content:', `
+        <div class="flower-message-content">
+            <p class="flower-name">You updated quantity for <strong>${name}</strong></p>
+            <p class="flower-price">Price: <span>$${price}</span></p>
+            <p class="flower-quantity">Quantity: <span>${quantity}</span></p>
+            <p class="flower-total">Total: <span>$${totalPrice}</span></p>
+        </div>
+    `);
+
+    messageTextElement.innerHTML = `
+        <div class="flower-message-content">
+            <p class="flower-name">You updated quantity for <strong>${name}</strong></p>
+            <p class="flower-price">Price: <span>$${price}</span></p>
+            <p class="flower-quantity">Quantity: <span>${quantity}</span></p>
+            <p class="flower-total">Total: <span>$${totalPrice}</span></p>
+        </div>
+    `;
+
+    if (backgroundImage) {
+        console.log('Setting background image:', backgroundImage);
+        updateItemMessages.style.backgroundImage = `url(${backgroundImage})`;
+    } else {
+        console.log('No background image provided.');
+    }
+
+    updateItemMessages.classList.add('show');
+    console.log('Added "show" class to updateItemMessages.');
+
+    setTimeout(() => {
+        updateItemMessages.classList.remove('show');
+        console.log('Removed "show" class from updateItemMessages after 5 seconds.');
+    }, 3000);
+};
+
+export function loadCart() {
+    const baseImageUrl = 'https://res.cloudinary.com/dg0ssec7u/image/upload/';
+    const defaultImageUrl = '/media/images/wild-flowers-icon.webp';
     const cartContainer = document.getElementById('cart-items-container');
     const totalPriceElement = document.querySelector('.total-cart-price-value');
-    const updateItemMessages = document.getElementById('update-item-messages'); // Message display div
-    const deleteItemMessages = document.getElementById('delete-item-messages'); // Deletion message div
 
-    // Function to determine if a URL is full or relative
-    const isFullUrl = (url) => url.startsWith('http://') || url.startsWith('https://');
+    const deleteItemMessages = document.getElementById('delete-item-messages');
 
-    // Function to hide a message
     const hideMessage = (element) => {
         element.classList.remove('show');
         element.classList.add('hide');
     };
 
-    // Close button event listeners
     document.getElementById('close-update-item-messages').addEventListener('click', () => {
         hideMessage(updateItemMessages);
     });
@@ -26,59 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // Function to show a message with flower info
-    const showMessage = (flowerInfo, backgroundImage) => {
-        const messageTextElement = updateItemMessages.querySelector('.message-text');
-        const name = flowerInfo?.name || 'Unknown Flower';
-        const price = flowerInfo?.price ? parseFloat(flowerInfo.price).toFixed(2) : '0.00';
-        const quantity = flowerInfo?.quantity || 0;
-        const totalPrice = flowerInfo?.totalPrice ? parseFloat(flowerInfo.totalPrice).toFixed(2) : '0.00';
-
-        if (messageTextElement) {
-            messageTextElement.innerHTML = `
-                <div class="flower-message-content">
-                    <p class="flower-name">You Updated quantity for <strong>${name}</strong></p>
-                    <p class="flower-price">Price: <span>$${price}</span></p>
-                    <p class="flower-quantity">Quantity: <span>${quantity}</span></p>
-                    <p class="flower-total">Total: <span>$${totalPrice}</span></p>
-                </div>
-            `;
-        }
-
-        if (backgroundImage) {
-            updateItemMessages.style.backgroundImage = `url(${backgroundImage})`;
-        }
-
-        updateItemMessages.classList.add('show');
-
-        setTimeout(() => {
-            updateItemMessages.classList.remove('show');
-        }, 5000);
-    };
-
-    // Function to show a confirmation message for deletion
-    const showConfirmationMessage = (itemName, backgroundImage) => {
-        const messageTextElement = updateItemMessages.querySelector('.message-text');
-        if (messageTextElement) {
-            messageTextElement.innerHTML = `
-                <div class="confirmation-message-content">
-                    <p><strong>${itemName}</strong> has been successfully deleted from your cart.</p>
-                </div>
-            `;
-        }
-
-        if (backgroundImage) {
-            updateItemMessages.style.backgroundImage = `url(${backgroundImage})`;
-        }
-
-        updateItemMessages.classList.add('show');
-
-        setTimeout(() => {
-            updateItemMessages.classList.remove('show');
-        }, 5000);
-    };
-
-    // Function to show a deletion confirmation message
     const showDeletionMessage = (itemName, backgroundImage, onDelete, onCancel) => {
         const messageTextElement = deleteItemMessages.querySelector('.message-text');
         if (messageTextElement) {
@@ -102,46 +103,56 @@ document.addEventListener('DOMContentLoaded', () => {
         const deleteBtn = deleteItemMessages.querySelector('.delete-btn');
         const cancelBtn = deleteItemMessages.querySelector('.cancel-btn');
 
-        if (deleteBtn && cancelBtn) {
-            deleteBtn.addEventListener('click', () => {
-                deleteItemMessages.classList.remove('show');
-                onDelete(); // Call the delete function
-            });
+        deleteBtn.addEventListener('click', () => {
+            deleteItemMessages.classList.remove('show');
+            onDelete();
+        });
 
-            cancelBtn.addEventListener('click', () => {
-                deleteItemMessages.classList.remove('show');
-                onCancel(); // Call the cancel function
-            });
-        }
+        cancelBtn.addEventListener('click', () => {
+            deleteItemMessages.classList.remove('show');
+            onCancel();
+        });
     };
 
-    // Load cart from local storage
-    const loadCart = () => {
-        const cart = JSON.parse(localStorage.getItem('cart')) || {};
-        let cartItemsHTML = '';
-        let totalPrice = 0;
+    // Fetch and log cart data
+    const cartData = localStorage.getItem('cart');
+    console.log('Fetched cart data from localStorage:', cartData);
 
-        for (const [seedId, cartItem] of Object.entries(cart)) {
-            const seed = cartItem;
-            const name = seed.name || 'Unknown Item';
-            const price = seed.price ? parseFloat(seed.price) : 0;
-            const quantity = seed.quantity || 1;
-            const image = seed.image && !isFullUrl(seed.image) ? `${baseImageUrl}${seed.image}` : seed.image || defaultImageUrl;
-            const itemTotalPrice = price * quantity;
-            totalPrice += itemTotalPrice;
+    if (!cartData) {
+        cartContainer.innerHTML = '<p>Your cart is empty.</p>';
+        return;
+    }
 
-            const stockBadge = seed.is_in_stock
-                ? '<span class="badge badge-success">In Stock</span>'
-                : '<span class="badge badge-danger">Out of Stock</span>';
+    const cart = JSON.parse(cartData);
+    console.log('Parsed cart data:', cart);
+
+    let cartItemsHTML = '';
+    let totalCartPrice = 0;
+
+    cart.items.forEach(item => {
+        if (item && item.seed) {
+            const seedId = item.seed.id; // Use id, not seed_id
+            console.log('Processing item with seed ID:', seedId);
+
+            const name = item.seed.name;
+            const itemQuantity = item.quantity;
+            const itemPrice = parseFloat(item.seed.price);
+            const itemTotalPrice = itemQuantity * itemPrice;
+
+            const itemImage = item.seed.image ?
+                item.seed.image.startsWith('http://') ?
+                item.seed.image.replace('http://', 'https://') :
+                baseImageUrl + item.seed.image :
+                defaultImageUrl;
 
             cartItemsHTML += `
                 <div class="cart-item">
                     <div class="item-info">
-                        <img src="${image}" alt="${name}" class="item-image">
-                        <p><strong>${name}</strong> ${stockBadge}</p>
+                        <img src="${itemImage}" alt="${name}" class="item-image">
+                        <p><strong>${name}</strong></p>
                         <div class="quantity-update-display">
                             <p>Quantity:</p>
-                            <input type="number" class="quantity-input" value="${quantity}" min="1" data-seed-id="${seedId}" />
+                            <input type="number" class="quantity-input" value="${itemQuantity}" min="1" data-seed-id="${seedId}" />
                             <div class="edit-quantity-button-container">
                                 <button class="btn-update-quantity" data-seed-id="${seedId}">
                                     <i class="fas fa-sync-alt"></i>
@@ -151,122 +162,190 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </button>
                             </div>
                         </div>
-                        <p>Price: $${price.toFixed(2)}</p>
+                        <p>Price: $${itemPrice.toFixed(2)}</p>
                         <p>Total: $${itemTotalPrice.toFixed(2)}</p>
                     </div>
                 </div>
             `;
-        }
-        updateCartTotal();
-        cartContainer.innerHTML = cartItemsHTML;
-        totalPriceElement.textContent = `$${totalPrice.toFixed(2)}`;
 
-        console.log('Cart loaded successfully. Total price:', totalPrice.toFixed(2));
-    };
-
-    // Update quantity handler
-    const updateQuantity = (seedId, newQuantity) => {
-        const cart = JSON.parse(localStorage.getItem('cart')) || {};
-        
-        if (cart[seedId]) {
-            const oldQuantity = cart[seedId].quantity;
-            cart[seedId].quantity = parseInt(newQuantity, 10);
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-            
-            const updatedItem = cart[seedId];
-            const flowerInfo = {
-                name: updatedItem.name || 'Unknown Flower',
-                price: updatedItem.price ? parseFloat(updatedItem.price) : 0,
-                quantity: updatedItem.quantity || 0,
-                totalPrice: updatedItem.price ? (parseFloat(updatedItem.price) * updatedItem.quantity).toFixed(2) : '0.00'
-            };
-
-            showMessage(flowerInfo, updatedItem.image);
-
-            console.log(`Updated quantity for seedId ${seedId}: oldQuantity=${oldQuantity}, newQuantity=${newQuantity}`);
-            
-            loadCart(); // Refresh cart display
+            totalCartPrice += itemTotalPrice;
         } else {
-            console.log(`Item with seedId ${seedId} not found in the cart.`);
-        }
-    };
-
-    // Delete item handler
-    const deleteItem = (seedId) => {
-        const cart = JSON.parse(localStorage.getItem('cart')) || {};
-        if (cart[seedId]) {
-            console.log(`Preparing to delete item with seedId ${seedId} from the cart.`);
-            const itemImage = isFullUrl(cart[seedId].image) ? cart[seedId].image : `${baseImageUrl}${cart[seedId].image}`;
-            const itemName = cart[seedId].name || 'Unknown Item';
-
-            // Show deletion confirmation message
-            showDeletionMessage(itemName, itemImage, () => {
-                // Proceed with deletion
-                delete cart[seedId];
-                localStorage.setItem('cart', JSON.stringify(cart));
-
-                // Show confirmation message
-                showConfirmationMessage(itemName, itemImage);
-
-                loadCart(); // Refresh cart display
-            }, () => {
-                console.log('Deletion canceled.');
-            });
-        } else {
-            console.log(`Item with seedId ${seedId} not found in the cart.`);
-        }
-    };
-
-    // Event delegation for update and delete buttons
-    cartContainer.addEventListener('click', (event) => {
-        const target = event.target.closest('[data-seed-id]');
-        if (target) {
-            const seedId = target.getAttribute('data-seed-id');
-            if (target.classList.contains('btn-update-quantity')) {
-                const quantityInput = cartContainer.querySelector(`.quantity-input[data-seed-id="${seedId}"]`);
-                const newQuantity = quantityInput.value;
-                console.log(`Update button clicked for seedId ${seedId}. New quantity: ${newQuantity}`);
-                updateQuantity(seedId, newQuantity);
-                updateCartTotal();
-            } else if (target.classList.contains('btn-delete-item')) {
-                console.log(`Delete button clicked for seedId ${seedId}.`);
-                deleteItem(seedId);
-
-            }
+            console.error("Item or seed is undefined", item);
         }
     });
 
-    // Initial load of the cart
-    loadCart();
-});
+    cartContainer.innerHTML = cartItemsHTML;
+    totalPriceElement.textContent = `$${totalCartPrice.toFixed(2)}`;
 
-function updateCartTotal() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || {};
-    let total = 0;
+    // Attach event listeners for quantity update and item deletion
+    document.querySelectorAll('.btn-update-quantity').forEach(button => {
+        button.addEventListener('click', () => {
+            const seedId = button.getAttribute('data-seed-id');
+            console.log('Update button clicked for seed ID:', seedId);
+            updateCartQuantity(seedId);
 
-    // Calculate the total from the cart items
-    for (let seedId in cart) {
-        if (cart.hasOwnProperty(seedId)) {
-            const item = cart[seedId];
-            total += item.price * item.quantity;
-        }
+        });
+    });
+
+    // Set up event listeners for delete buttons
+    document.querySelectorAll('.btn-delete-item').forEach(button => {
+        button.addEventListener('click', () => {
+            // Fetch seed ID and ensure it's treated as a number
+            const seedId = Number(button.getAttribute('data-seed-id'));
+            console.log('Delete button clicked for seed ID:', seedId);
+
+            // Fetch the current cart data from localStorage
+            const cart = getCartFromLocalStorage();
+
+            if (!cart || !cart.items || cart.items.length === 0) {
+                console.warn('No cart data found or cart is empty.');
+                return;
+            }
+
+            // Find the item to delete by matching the seed ID as a number
+            const itemToDelete = cart.items.find(item => item.seed.id === seedId);
+            console.log('Item found for deletion:', itemToDelete);
+
+            if (itemToDelete) {
+                // Format the image URL correctly
+                const baseImageUrl = 'https://res.cloudinary.com/dg0ssec7u/image/upload/';
+                const imageUrl = itemToDelete.seed.image.startsWith('http') ?
+                    itemToDelete.seed.image :
+                    baseImageUrl + itemToDelete.seed.image;
+
+                // Show deletion message with the correctly formatted URL
+                showDeletionMessage(itemToDelete.seed.name, imageUrl, () => {
+                    deleteCartItem(seedId); // Pass the correct seedId as a number
+                    
+                }, () => {
+                    console.log('Deletion cancelled.');
+                });
+            } else {
+                console.error('Item with seed ID not found in cart:', seedId);
+            }
+        });
+    });
+
+}
+export async function updateCartQuantity(seedId) {
+    let cart = getCartFromLocalStorage();
+
+    const seedIdStr = String(seedId);
+
+    const itemIndex = cart.items.findIndex(item => String(item.seed.id) === seedIdStr);
+    if (itemIndex === -1) {
+        console.warn('Item with seed ID not found in cart:', seedIdStr);
+        return;
     }
 
-    // Update the cart total on the page
-    const cartTotalElement = document.getElementById('cart-total');
-    if (cartTotalElement) {
-        cartTotalElement.innerText = `$${total.toFixed(2)}`;
+    const quantityInput = document.querySelector(`.quantity-input[data-seed-id="${seedId}"]`);
+    if (!quantityInput) {
+        console.error('Quantity input not found for seed ID:', seedIdStr);
+        return;
+    }
+
+    const newQuantity = parseInt(quantityInput.value, 10);
+    if (newQuantity > 0) {
+        const updatedItem = cart.items[itemIndex];
+        updatedItem.quantity = newQuantity;
+        updatedItem.total_price = newQuantity * parseFloat(updatedItem.seed.price);
+
+        const total_price = cart.items.reduce((total, item) => total + (item.total_price || 0), 0);
+        const updatedCartData = {
+            id: cart.id || Date.now(),
+            user: 'current_user',
+            created_at: cart.created_at || new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            total_price: total_price.toFixed(2),
+            items: cart.items
+        };
+
+        localStorage.setItem('cart', JSON.stringify(updatedCartData));
+
+        // Reload the cart UI
+        loadCart();
+
+          // Construct the image URL correctly
+          const baseImageUrl = 'https://res.cloudinary.com/dg0ssec7u/image/upload/';
+          const imagePath = updatedItem.seed.image || '';
+          const imageUrl = imagePath.startsWith('http://') ? imagePath.replace('http://', 'https://') :
+                           imagePath.startsWith('https://') ? imagePath :
+                           baseImageUrl + imagePath;
+  
+          // Prepare flower info
+          const flowerInfo = {
+              name: updatedItem.seed.name || 'Unknown Flower',
+              price: updatedItem.seed.price ? parseFloat(updatedItem.seed.price) : 0,
+              quantity: newQuantity,
+              totalPrice: (parseFloat(updatedItem.seed.price) * newQuantity).toFixed(2)
+          };
+  
+          // Show the message with the correct image URL
+          showMessage(flowerInfo, imageUrl);
+         // Send the updated quantity to the server
+         try {
+            const cartId = cart.id || Date.now(); // Use existing cart ID or generate a new one
+            const result = await updateQuantityOnServer(cartId, seedId, newQuantity);
+            console.log('Server response:', result);
+        } catch (error) {
+            console.error('Failed to update quantity on server:', error);
+            // Optionally handle the error (e.g., show a message to the user)
+        }
     } else {
-        console.warn('Element with ID "cart-total" not found.');
+        console.warn('Quantity must be greater than zero.');
     }
 }
-document.addEventListener('DOMContentLoaded', () => {
-    const checkoutButton = document.getElementById('go-to-checkout-button');
 
-    if (checkoutButton) {
-        checkoutButton.addEventListener('click', () => {
-            window.location.href = '/checkout/';
-        });
+// Helper function to get cart data from localStorage
+function getCartFromLocalStorage() {
+    const cartData = localStorage.getItem('cart');
+    return cartData ? JSON.parse(cartData) : {
+        items: []
+    };
+}
+
+async function deleteCartItem(seedId) {
+    let cart = getCartFromLocalStorage();
+
+    const seedIdInt = parseInt(seedId, 10);
+
+    if (!cart || !cart.items || cart.items.length === 0) {
+        console.warn('No cart found or cart is empty.');
+        return;
     }
+
+    const updatedItems = cart.items.filter(item => item.seed.id !== seedIdInt);
+
+    if (cart.items.length === updatedItems.length) {
+        console.warn('No item found with seed ID:', seedIdInt);
+        return;
+    }
+
+    cart.items = updatedItems;
+
+    const total_price = cart.items.reduce((total, item) => total + (parseFloat(item.total_price) || 0), 0);
+
+    const updatedCartData = {
+        id: cart.id || Date.now(),
+        user: 'current_user',
+        created_at: cart.created_at || new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        total_price: total_price.toFixed(2),
+        items: cart.items
+    };
+
+    localStorage.setItem('cart', JSON.stringify(updatedCartData));
+
+    // Reload the cart UI
+    loadCart();
+    console.log('Item deleted successfully, UI updated.');
+    await deleteCartItemOnServer(seedId);
+    console.log('Item deleted successfully ON SERVER');
+}
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadCart(); // Load and render the cart when the page is loaded
 });

@@ -5,10 +5,7 @@ app_name = 'cart'  # This defines the namespace for this app
 
 urlpatterns = [
     path('', views.cart_view, name='cart'),  # This is the view for the cart page
-    path('add/<int:seed_id>/', views.add_to_cart, name='add_to_cart'),
-    path('remove/<int:seed_id>/', views.remove_from_cart, name='remove_from_cart'),
-    path('update-cart/', views.update_cart, name='update_cart'),
-    path('update-checkout/<int:seed_id>/', views.update_checkout_cart_item, name='update_checkout_cart_item'),
-    path('max_quantity/<int:seed_id>/', views.get_max_possible_quantity, name='max_quantity'),
-    path('clear-cart-item/', views.clear_cart_item, name='clear_cart_item'),
+    path('api/add_to_cart/', views.add_to_cart, name='add_to_cart'),
+    path('api/update_quantity/', views.update_quantity, name='update_quantity'),
+    path('api/delete_item/', views.delete_item, name='delete_item'),
 ]

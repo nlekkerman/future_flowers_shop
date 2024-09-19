@@ -3,7 +3,8 @@ from django.contrib import messages
 from .models import Order, OrderLineItem
 from .forms import OrderForm
 from seeds.models import Seed
-from cart.models import Cart, CartItem  # Adjust the import path if necessary
+from cart.models import Cart, CartItem
+
 
 def get_or_create_cart(request):
     if request.user.is_authenticated:
