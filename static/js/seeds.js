@@ -1,8 +1,16 @@
+import {
+    getCartFromLocalStorage
+} from './utils.js';
+import {
+    sendToCart
+} from './control.js';
 
-import { getCartFromLocalStorage } from './utils.js';
-import { sendToCart } from './control.js'; 
-
-export function displaySeeds({ category = '', sort = '', inStock = undefined, discounted = undefined } = {}) {
+export function displaySeeds({
+    category = '',
+    sort = '',
+    inStock = undefined,
+    discounted = undefined
+} = {}) {
     const seedsData = JSON.parse(localStorage.getItem('seeds_data')) || [];
     const seedsContainer = document.getElementById('seeds-container');
 
@@ -65,8 +73,8 @@ export function displaySeeds({ category = '', sort = '', inStock = undefined, di
         seedElement.className = 'col-12 col-md-6 col-lg-4 mb-4';
 
         let seedHTML = `
-            <div class="seed-card h-100" id="seed-card-${seed.id}" data-seed-id="${seed.id}">
-                <div class="card-img-container">
+        <div class="seed-card h-100" id="seed-card-${seed.id}" data-seed-id="${seed.id}">
+            <div class="card-img-container">
                     <img src="${seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg'}" class="card-img-top" alt="${seed.name}">
                     ${seed.discount > 0 ? '<span class="discount-label">Discounted</span>' : ''}
                 </div>
@@ -75,7 +83,12 @@ export function displaySeeds({ category = '', sort = '', inStock = undefined, di
                     <p class="card-text"><strong>Scientific Name:</strong> ${seed.scientific_name}</p>
                     <p class="card-text"><strong>Planting Months:</strong> ${seed.planting_months_from} to ${seed.planting_months_to}</p>
                     <p class="card-text"><strong>Flowering Months:</strong> ${seed.flowering_months_from} to ${seed.flowering_months_to}</p>
-                    <p class="card-text"><strong>Price:</strong> $${seed.price}</p>
+                    <p class="card-text">
+                        <strong>Price:</strong> 
+                        ${seed.discount > 0 ? 
+                            `<span class="original-price">$${seed.price}</span> <span class="discounted-price">$${seed.discounted_price}</span>` 
+                            : `$${seed.price}`}
+                    </p>
                     ${seed.is_in_stock ? 
                         '<p class="card-text text-success"><strong>In Stock</strong></p>' : 
                         '<p class="card-text text-danger"><strong>Out of Stock</strong></p>'}
@@ -114,55 +127,58 @@ function attachEventListeners() {
     });
 
     // Attach click event listener to "Add to Cart" buttons
-document.querySelectorAll('.add-to-cart-button').forEach(button => {
-    button.addEventListener('click', async (event) => {
-        event.stopPropagation(); // Prevent triggering the card click event
-        
-        const seedId = button.getAttribute('data-seed-id');
-        const quantity = 1; // Default quantity
+    document.querySelectorAll('.add-to-cart-button').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            event.stopPropagation(); // Prevent triggering the card click event
 
-        const seedElement = button.closest('.seed-card');
-        const imageUrl = seedElement.querySelector('.card-img-top').getAttribute('src');
-        const seed = getSeedFromLocalStorage(seedId);
+            const seedId = button.getAttribute('data-seed-id');
+            const quantity = 1; // Default quantity
 
-        console.log(`Adding Seed ID ${seedId} to cart with quantity ${quantity}`);
-        console.log(`Image URL: ${imageUrl}`);
-        console.log('Seed details:', seed);
+            const seedElement = button.closest('.seed-card');
+            const imageUrl = seedElement.querySelector('.card-img-top').getAttribute('src');
+            const seed = getSeedFromLocalStorage(seedId);
 
-        if (seed) {
-            console.log('Before adding to cart:', getCartFromLocalStorage()); // Log cart state before addition
-            addToCart(seed, quantity, imageUrl);
-            updateCartUI(); // Ensure the cart UI is updated after adding the item
-            try {
-                await sendToCart(seedId, quantity); // Send data to the server
-                console.log('Item sent to server successfully.');
-            } catch (error) {
-                console.error('Failed to send item to server:', error);
+            console.log(`Adding Seed ID ${seedId} to cart with quantity ${quantity}`);
+            console.log(`Image URL: ${imageUrl}`);
+            console.log('Seed details:', seed);
+            console.log('PARE PARE:', seed.discounted_price);
+
+            if (seed) {
+                console.log('Before adding to cart:', getCartFromLocalStorage()); // Log cart state before addition
+                addToCart(seed, quantity, imageUrl);
+                updateCartUI(); // Ensure the cart UI is updated after adding the item
+                try {
+                    await sendToCart(seedId, quantity, seed);
+                    console.log('Item sent to server successfully.');
+                } catch (error) {
+                    console.error('Failed to send item to server:', error);
+                }
+
+
+                console.log('After adding to cart:', getCartFromLocalStorage()); // Log cart state after addition
+            } else {
+                console.error('Seed not found in local storage.', seedId);
             }
-            
-           
-            console.log('After adding to cart:', getCartFromLocalStorage()); // Log cart state after addition
-        } else {
-            console.error('Seed not found in local storage.', seedId);
-        }
+        });
     });
-});
 
 }
 // Add item to cart
 function addToCart(seed, quantity = 1) {
     let cartData = getCartFromLocalStorage(); // Fetch current cart data
-    
+
     // Use the full URL directly if available, otherwise use a fallback image URL
     let imageUrl = seed.image || '/media/images/wild-flowers-icon.webp';
 
+    // Calculate the correct price: either discounted or original price
+    let itemPrice = seed.discount > 0 ? parseFloat(seed.discounted_price) : parseFloat(seed.price);
     // Find if the item already exists in the cart
     const existingItemIndex = cartData.items.findIndex(item => item.seed.id === seed.id);
 
     if (existingItemIndex >= 0) {
         // Item is already in cart, update the quantity and total price
         cartData.items[existingItemIndex].quantity += quantity;
-        cartData.items[existingItemIndex].total_price = cartData.items[existingItemIndex].quantity * seed.price;
+        cartData.items[existingItemIndex].total_price = cartData.items[existingItemIndex].quantity * itemPrice;
     } else {
         // New item, add to cart
         cartData.items.push({
@@ -170,12 +186,12 @@ function addToCart(seed, quantity = 1) {
             seed: {
                 id: seed.id,
                 name: seed.name,
-                price: parseFloat(seed.price),
+                price: itemPrice, // Use the correct price
                 image: imageUrl,
                 is_in_stock: seed.is_in_stock // Add stock status
             },
             quantity: quantity,
-            total_price: parseFloat(seed.price) * quantity
+            total_price: itemPrice * quantity
         });
     }
 
@@ -196,10 +212,12 @@ function addToCart(seed, quantity = 1) {
     localStorage.setItem('cart', JSON.stringify(updatedCartData));
 
     // Optionally, show a success message
-    displayMessageInModal('Item successfully added to your cart!', { image: imageUrl, quantity });
+    displayMessageInModal('Item successfully added to your cart!', {
+        image: imageUrl,
+        quantity
+    });
 
-    // Update cart UI to reflect changes
-    updateCartUI();
+  
 }
 
 // Update cart UI elements
@@ -226,7 +244,10 @@ function updateCartUI() {
         cartTotalElement.textContent = `$${totalPrice.toFixed(2)}`; // Display the total price
     }
 
-    console.log('Cart UI updated:', { itemCount, totalPrice });
+    console.log('Cart UI updated:', {
+        itemCount,
+        totalPrice
+    });
 }
 
 
@@ -240,7 +261,7 @@ function getSeedFromLocalStorage(seedId) {
 // Function to display seed details
 function displaySeedDetails(seed) {
     const seedDetailsContent = document.getElementById('seed-details-content');
-    
+
     if (!seedDetailsContent) {
         console.error('Element with ID "seed-details-content" not found.');
         return;
@@ -278,14 +299,14 @@ function displaySeedDetails(seed) {
     if (addToCartButton) {
         addToCartButton.addEventListener('click', (event) => {
             event.stopPropagation(); // Prevent triggering other click events
-            
+
             const seedId = addToCartButton.getAttribute('data-seed-id');
             const quantity = 1; // Default quantity
             const imageUrl = seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg';
 
             console.log(`Adding Seed ID ${seedId} to cart with quantity ${quantity}`);
             console.log(`Image URL: ${imageUrl}`);
-            
+
             // Call addToCart with the image URL
             addToCart(seedId, quantity, imageUrl);
         });
@@ -324,27 +345,30 @@ window.addEventListener('click', (event) => {
 
 export function displayMessageInModal(message, item) {
     const messagesContainer = document.getElementById('add-item-messages');
-    
+
     if (!messagesContainer) {
         console.error('Element with ID "add-item-messages" not found.');
         return;
     }
 
     // Log the details for debugging
-    console.log('Displaying message in modal:', { message, item });
+    console.log('Displaying message in modal:', {
+        message,
+        item
+    });
 
     // Base URL for image
     const baseImageUrl = 'https://res.cloudinary.com/dg0ssec7u/image/upload/';
     const defaultImageUrl = '/media/images/wild-flowers-icon.webp'; // Fallback image URL
 
     // Determine the full image URL
-    const imageUrl = item.image
-        ? (item.image.startsWith('http://') 
-            ? item.image.replace('http://', 'https://') 
-            : (item.image.startsWith('https://') 
-                ? item.image 
-                : baseImageUrl + item.image))
-        : defaultImageUrl;
+    const imageUrl = item.image ?
+        (item.image.startsWith('http://') ?
+            item.image.replace('http://', 'https://') :
+            (item.image.startsWith('https://') ?
+                item.image :
+                baseImageUrl + item.image)) :
+        defaultImageUrl;
 
     // Update background image and styles
     messagesContainer.style.backgroundImage = `url('${imageUrl}')`; // Set the background image
@@ -391,5 +415,7 @@ document.addEventListener('click', (event) => {
         hideItemAddedMessage();
     }
 });
+
+
 // Make sure the cart UI is updated on page load
 window.onload = updateCartUI;

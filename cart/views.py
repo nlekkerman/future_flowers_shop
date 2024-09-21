@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Cart, CartItem
 from seeds.models import Seed
-
+from decimal import Decimal
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 import logging
@@ -21,7 +21,6 @@ logger = logging.getLogger(__name__)
 
 @csrf_exempt
 @require_POST
-@login_required
 def add_to_cart(request):
     try:
         logger.info("Received request to add item to cart")
@@ -69,20 +68,30 @@ def add_to_cart(request):
         }
 
         # Add cart items to the response
+        # Backend response to include discounted price
         for item in cart.items.all():
+            item_price = item.seed.price  # This is likely already a Decimal
+            item_discount = Decimal(item.seed.discount or 0)  # Convert the discount to Decimal
+            discounted_price = item_price - (item_price * (item_discount / Decimal(100)))
+ # Log details for debugging
+            logger.info(
+            f"Processing item: seed ID={item.seed.id}, original price=${item_price:.2f}, "
+            f"discount={item_discount}%, discounted price=${discounted_price:.2f}"
+    )
+
             item_data = {
                 'id': item.id,
                 'seed': {
                     'id': item.seed.id,
                     'name': item.seed.name,
-                    'price': float(item.seed.price),
-                    'image': str(item.seed.image),
+                    'price': float(discounted_price),
                     'is_in_stock': item.seed.is_in_stock
                 },
                 'quantity': item.quantity,
                 'total_price': float(item.get_total_price())
             }
             cart_data['items'].append(item_data)
+
 
         return JsonResponse(cart_data, status=200)
 

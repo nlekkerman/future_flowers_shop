@@ -312,3 +312,23 @@ ul {
     opacity: 1;
     visibility: visible;
 }
+.original-price {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.discounted-price {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.discount-label {
+    background-color: #22aa00;
+    color: #fff;
+    padding: 2px 5px;
+    border-radius: 3px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 12px;
+}

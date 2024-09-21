@@ -1,10 +1,35 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Retrieve cart data from localStorage
-    const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('DOM CONTENT LOADED. STARTING CHECKOUT PROCESS...');
     
-    console.log('Cart data:', cart); // Log cart data to verify retrieval
+    let cart;
 
-    // Select DOM elements
+    try {
+        const response = await fetch('/syncmanager/api/get_cart/');
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        
+        cart = await response.json();
+        console.log('FETCHED CART DATA:', cart);
+
+        // Validate cart data
+        if (!cart || typeof cart !== 'object' || !Array.isArray(cart.items)) {
+            console.error('CART DATA IS NOT IN THE EXPECTED FORMAT:', cart);
+            return;
+        }
+
+    } catch (error) {
+        console.error('ERROR FETCHING CART DATA:', error);
+        return;
+    }
+
+    populateCheckout(cart);
+   
+});
+
+
+
+function populateCheckout(cart) {
     const checkoutItemsContainer = document.getElementById('checkout-items-container');
     const cartCount = document.getElementById('cart-count');
     const orderTotalElement = document.getElementById('order-total');
@@ -14,71 +39,105 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkoutForm = document.getElementById('checkout-form');
 
     if (!checkoutItemsContainer || !cartCount || !orderTotalElement || !deliveryFeeElement || !grandTotalElement || !cartDataInput || !checkoutForm) {
-        console.error('One or more DOM elements are missing.');
+        console.error('ONE OR MORE DOM ELEMENTS ARE MISSING.');
         return;
     }
 
     let orderTotal = 0;
-    const deliveryFee = 5.00; // Example delivery fee
+    const deliveryFee = 5.00; // Default delivery fee
 
-    // Clear current items in the container
     checkoutItemsContainer.innerHTML = '';
 
-    // Loop through the cart items and dynamically display them
     cart.items.forEach(item => {
-        // Check if item data is valid
-        if (!item || !item.name || !item.price || !item.quantity || !item.image) {
-            console.error('Invalid item data:', item);
+        if (!item || !item.seed) {
+            console.error('INVALID ITEM DATA:', item);
             return;
         }
 
-        // Convert price to number and handle invalid values
-        const price = parseFloat(item.price);
-        const quantity = parseInt(item.quantity, 10);
-        
-        if (isNaN(price) || isNaN(quantity)) {
-            console.error('Invalid price or quantity for item:', item);
-            return;
-        }
-
-        // Calculate total price for each item
-        const itemTotalPrice = quantity * price;
-
-        // Create HTML for each item with image as background
-        const itemHtml = `
-            <div class="col-12 mb-3 border-bottom border-1 item-row">
-                <div class="row align-items-center item-container-checkout" style="background-image: url('${item.image}'); background-size: cover; background-position: center; height: 100px;">
-                    
-                    <div class="col-md-4 checkout-item-details">
-                        <h5 class="checkout-name mb-1">${item.name}</h5>
-                        <p class="checkout-price mb-1">$${price.toFixed(2)}</p>
-                    </div>
-                   
-                    <div class="checkout-cart-item-quantity">
-                        <p class="mb-1">Quantity: ${quantity}</p>
-                        <p class="mb-1 bg-success">Total: $${itemTotalPrice.toFixed(2)}</p>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        // Insert the item HTML into the container
-        checkoutItemsContainer.insertAdjacentHTML('beforeend', itemHtml);
-
-        // Update order total
-        orderTotal += itemTotalPrice;
+        checkoutItemsContainer.insertAdjacentHTML('beforeend', renderCartItem(item));
+        orderTotal += item.quantity * parseFloat(item.seed.price);
     });
 
-    // Update cart count, order total, and grand total
     cartCount.textContent = cart.items.length;
     orderTotalElement.textContent = `$${orderTotal.toFixed(2)}`;
-    deliveryFeeElement.textContent = `$${deliveryFee.toFixed(2)}`;
-    grandTotalElement.textContent = `$${(orderTotal + deliveryFee).toFixed(2)}`;
 
-    // Attach the cart data to the form before submission
+    if (orderTotal > 50) {
+        deliveryFeeElement.innerHTML = '<span style="color: green; font-size:16px; font-weight: bold; text-align: left; margin-right: 10px;">FREE</span>';
+        grandTotalElement.textContent = `$${orderTotal.toFixed(2)}`;
+    } else {
+        deliveryFeeElement.textContent = `$${deliveryFee.toFixed(2)}`;
+        grandTotalElement.textContent = `$${(orderTotal + deliveryFee).toFixed(2)}`;
+    }
+
     checkoutForm.addEventListener('submit', function (e) {
         e.preventDefault();
         cartDataInput.value = JSON.stringify(cart);
-        this.submit(); // Proceed with form submission
+        console.log('FORM SUBMITTED WITH CART DATA:', cartDataInput.value);
+        this.submit();
     });
-});
+}
+
+
+function renderCartItem(item) {
+    const baseImageUrl = 'https://res.cloudinary.com/dg0ssec7u/image/upload/';
+    const defaultImageUrl = '/media/images/wild-flowers-icon.webp';
+
+    const seedId = item.seed.id;
+    const name = item.seed.name;
+    const itemQuantity = item.quantity;
+    const itemPrice = parseFloat(item.seed.price);
+    const itemTotalPrice = itemQuantity * itemPrice;
+
+    const itemImage = item.seed.image ? 
+        item.seed.image.startsWith('http://') ? 
+        item.seed.image.replace('http://', 'https://') : 
+        baseImageUrl + item.seed.image : 
+        defaultImageUrl;
+
+    return `
+        <div class="cart-item">
+            <div class="item-info">
+                <img src="${itemImage}" alt="${name}" class="item-image" style="max-width: 70px; max-height: 50px;" />
+                <p class="item-font"><strong>${name}</strong></p>
+                <div class="quantity-update-display">
+                    <p class="item-font">Quantity:</p>
+                    <p class="item-font text-center">${itemQuantity}</p>
+                </div>
+                <p class="item-font">Price: $${itemPrice.toFixed(2)}</p>
+                <p >Total: $${itemTotalPrice.toFixed(2)}</p>
+            </div>
+        </div>
+    `;
+}
+
+function deleteCartItem(cart, seedId) {
+    const cartId = cart.id; // Assuming cart object contains the cart ID
+
+    // Send POST request to the server to delete the item
+    fetch('/cart/api/delete_item/', {  // Update to correct URL
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(), // Ensure CSRF token is included
+        },
+        body: JSON.stringify({
+            cart_id: cartId,
+            seed_id: seedId,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove the item from the cart array
+            cart.items = cart.items.filter(item => item.seed.id !== seedId);
+            
+            // Re-populate the checkout page with the updated cart
+            populateCheckout(cart);
+        } else {
+            console.error('Error deleting item:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}

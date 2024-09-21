@@ -1,4 +1,5 @@
-
+import {getCartFromLocalStorage} from './utils.js';
+import {sendToCart} from './control.js';
 // Function to get all seeds from local storage
 function getAllSeeds() {
     return JSON.parse(localStorage.getItem('seeds_data')) || [];
@@ -31,56 +32,94 @@ export function searchSeeds(query, category = '', sunPreference = '') {
     toggleSearchResults();
 }
 
-export function addToCart(seedId, quantity, imageUrl) {
-    try {
-        // Retrieve the seeds data
-        const seedsData = JSON.parse(localStorage.getItem('seeds_data')) || [];
-        const seed = seedsData.find(seed => seed.id === parseInt(seedId, 10));
+// Add item to cart
+function addToCart(seed, quantity = 1) {
+    let cartData = getCartFromLocalStorage(); // Fetch current cart data
 
-        if (!seed || !seed.is_in_stock) {
-            console.error('Seed is out of stock or not found.');
-            return;
-        }
+    // Use the full URL directly if available, otherwise use a fallback image URL
+    let imageUrl = seed.image || '/media/images/wild-flowers-icon.webp';
 
-        // Retrieve the existing cart
-        const cart = JSON.parse(localStorage.getItem('cart')) || {};
+    // Calculate the correct price: either discounted or original price
+    let itemPrice = seed.discount > 0 ? parseFloat(seed.discounted_price) : parseFloat(seed.price);
+    // Find if the item already exists in the cart
+    const existingItemIndex = cartData.items.findIndex(item => item.seed.id === seed.id);
 
-        // Check if the seed item already exists in the cart
-        if (!cart[seedId]) {
-            // Seed item does not exist in the cart, initialize it
-            cart[seedId] = {
+    if (existingItemIndex >= 0) {
+        // Item is already in cart, update the quantity and total price
+        cartData.items[existingItemIndex].quantity += quantity;
+        cartData.items[existingItemIndex].total_price = cartData.items[existingItemIndex].quantity * itemPrice;
+    } else {
+        // New item, add to cart
+        cartData.items.push({
+            id: Date.now(), // Unique ID for the cart item
+            seed: {
                 id: seed.id,
                 name: seed.name,
-                quantity: 0, // Initialize quantity to 0
-                price: seed.price,
-                image: imageUrl, // Pass the image URL directly
-                is_in_stock: seed.is_in_stock
-            };
-        }
-
-        // Get the existing item from the cart
-        const existingItem = cart[seedId];
-        console.log(`Quantity of ${seed.name} before adding: ${existingItem.quantity}`);
-
-        // Update the quantity
-        existingItem.quantity += quantity;
-
-        // Save the updated cart to local storage
-        localStorage.setItem('cart', JSON.stringify(cart));
-
-        // Log the quantity of the specific item after adding
-        console.log(`Quantity of ${seed.name} after adding: ${existingItem.quantity}`);
-        console.log('Updated cart item:', existingItem);
-
-        // Display message in modal
-        displayMessageInModal(`Added ${quantity} ${seed.name} to the cart.`, existingItem);
-        updateCartTotal();
-
-    } catch (error) {
-        console.error('Error adding to cart:', error);
-        displayMessageInModal('An error occurred while adding the item to the cart.');
+                price: itemPrice, // Use the correct price
+                image: imageUrl,
+                is_in_stock: seed.is_in_stock // Add stock status
+            },
+            quantity: quantity,
+            total_price: itemPrice * quantity
+        });
     }
+
+    // Calculate total cart price
+    const total_price = cartData.items.reduce((total, item) => total + item.total_price, 0);
+
+    // Prepare updated cart data
+    const updatedCartData = {
+        id: cartData.id || Date.now(), // Generate a new cart ID if it doesn't exist
+        user: 'current_user', // Placeholder for user information
+        created_at: cartData.created_at || new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        total_price: total_price.toFixed(2),
+        items: cartData.items
+    };
+
+    // Save updated cart data to localStorage
+    localStorage.setItem('cart', JSON.stringify(updatedCartData));
+
+    // Optionally, show a success message
+    displayMessageInModal('Item successfully added to your cart!', {
+        image: imageUrl,
+        quantity
+    });
+
+
 }
+
+
+// Update cart UI elements
+function updateCartUI() {
+    const cartData = getCartFromLocalStorage(); // Fetch the updated cart data
+    const cartCountElement = document.getElementById('cart-count'); // Element for item count
+    const cartTotalElement = document.getElementById('cart-total'); // Element for total price
+
+    // Validate cart data
+    if (!cartData || !cartData.items) {
+        console.warn('No cart data found or cart items are missing.');
+        return;
+    }
+
+    // Update item count in the UI
+    const itemCount = cartData.items.reduce((total, item) => total + item.quantity, 0);
+    if (cartCountElement) {
+        cartCountElement.textContent = itemCount; // Display the total number of items
+    }
+
+    // Update total price in the UI
+    const totalPrice = parseFloat(cartData.total_price) || 0;
+    if (cartTotalElement) {
+        cartTotalElement.textContent = `$${totalPrice.toFixed(2)}`; // Display the total price
+    }
+
+    console.log('Cart UI updated:', {
+        itemCount,
+        totalPrice
+    });
+}
+
 
 
 // Example displayMessageInModal function
@@ -263,13 +302,8 @@ function displaySearchResultsSeedDetails(seed) {
         </div>
     `;
 
-    // Add the event listener for the "Add to Cart" button
-    const addToCartButton = seedDetailsContent.querySelector('.add-to-cart-button');
-    if (addToCartButton && seed.is_in_stock) {
-        addToCartButton.addEventListener('click', function () {
-            addToCart(seed.id, 1, seed.image);
-        });
-    }
+    attachAddToCartButtonEventListeners();
+
 
     // Add the event listener for the "Close" button
     const closeButton = document.getElementById('closeSeedDetails');
@@ -308,16 +342,38 @@ function attachSeedCardEventListeners() {
 }
 
 function attachAddToCartButtonEventListeners() {
+    // Attach click event listener to "Add to Cart" buttons
     document.querySelectorAll('.add-to-cart-button').forEach(button => {
-        button.addEventListener('click', (event) => {
-            event.stopPropagation();
+        button.addEventListener('click', async (event) => {
+            event.stopPropagation(); // Prevent triggering the card click event
 
-            const seedId = button.getAttribute('data-seed-id');
-            const quantity = 1;
-            const searchSeedElement = button.closest('.search-seed-card');
-            const imageUrl = searchSeedElement.querySelector('.card-img-top').getAttribute('src');
+            const seedId = button.getAttribute('data-seed-id');   
+            const quantity = 1; // Default quantity
 
-            addToCart(seedId, quantity, imageUrl);
+            // Instead of getting seedElement, directly get the seed details from local storage
+            const seed = getSeedFromLocalStorage(seedId);
+            const imageUrl = seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg';
+
+            console.log(`Adding Seed ID ${seedId} to cart with quantity ${quantity}`);
+            console.log(`Image URL: ${imageUrl}`);
+            console.log('Seed details:', seed);
+            console.log('Discounted Price:', seed.discount > 0 ? (seed.price - (seed.price * seed.discount / 100)).toFixed(2) : seed.price);
+
+            if (seed) {
+                console.log('Before adding to cart:', getCartFromLocalStorage()); // Log cart state before addition
+                addToCart(seed, quantity, imageUrl);
+                updateCartUI(); // Ensure the cart UI is updated after adding the item
+                try {
+                    await sendToCart(seedId, quantity, seed);
+                    console.log('Item sent to server successfully.');
+                } catch (error) {
+                    console.error('Failed to send item to server:', error);
+                }
+
+                console.log('After adding to cart:', getCartFromLocalStorage()); // Log cart state after addition
+            } else {
+                console.error('Seed not found in local storage.', seedId);
+            }
         });
     });
 }
