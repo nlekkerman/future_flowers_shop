@@ -400,7 +400,7 @@ export function displayMessageInModal(message, item) {
 }
 
 // Function to hide the message container
-export function hideItemAddedMessage() {
+function hideItemAddedMessage() {
     const messagesContainer = document.getElementById('add-item-messages');
     if (messagesContainer) {
         messagesContainer.style.display = 'none';

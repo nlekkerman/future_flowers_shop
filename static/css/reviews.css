@@ -360,3 +360,128 @@
     background-color: #dc3545;
     color: white;
 }
+.custom-review-row{
+    margin-top: 50px;
+}
+.review-button {
+    background-color: rgba(0, 0, 0, 0.1); /* Semi-transparent background */
+    color: white;                         /* White icon color */
+    border: none;                         /* Remove border */
+    padding: 8px;                         /* Padding around the icon */
+    display: inline-flex;                 /* Center icon within the button */
+    justify-content: center;
+    align-items: center;
+    width: 40px;                          /* Fixed width */
+    height: 40px;
+   position: absolute; top: 0; right: 0;                        /* Fixed height */
+}
+#write-review{
+    background-color: rgba(0, 168, 22, 0.4);
+    margin: 5px;
+    position: absolute; top: 0; left: 0;
+    width: 120px;
+}
+.review-button i {
+    font-size: 18px;                      /* Adjust icon size */
+}
+
+.review-button:hover {
+    background-color: rgba(0, 0, 0, 0.2); /* Darken on hover */
+    cursor: pointer;                      /* Pointer on hover */
+}
+/* Custom Modal Container */
+.custom-review-modal {
+    background-color: rgba(0, 0, 0, 0.9); /* Semi-transparent background */
+    z-index: 999999999999;
+}
+
+/* Center the modal */
+.custom-modal-dialog {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Custom Modal Content */
+.custom-modal-content {
+    background-color: rgba(0, 0, 0, 0.8); /* Slightly transparent content */
+    border: 2px solid white; /* White borders */
+    color: white; /* White text */
+}
+
+/* Header Styling */
+.custom-modal-header {
+    border-bottom: 1px solid white;
+}
+
+.custom-modal-title {
+    color: white;
+}
+
+/* Close Button */
+.custom-close-button {
+    color: white;
+    border: none;
+    background: none;
+}
+
+/* Body Content */
+.custom-modal-body {
+    padding: 20px;
+}
+
+/* Custom Form Group */
+.custom-form-group {
+    margin-bottom: 15px;
+}
+
+.custom-label {
+    color: white;
+}
+
+/* Custom Select */
+.custom-select {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid white;
+    color: white;
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+/* Custom Textarea */
+.custom-textarea {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid white;
+    color: white;
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+/* Submit Button */
+.custom-submit-button {
+    background-color: white;
+    color: black;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Prevent modal from closing when clicking outside */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.custom-modal-dialog .modal {
+    pointer-events: none;
+}
+
+.custom-modal-dialog .modal-content {
+    pointer-events: all;
+}

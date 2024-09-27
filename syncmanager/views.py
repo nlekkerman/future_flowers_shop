@@ -2,7 +2,7 @@
 
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods, require_POST
+from django.views.decorators.http import require_http_methods, require_POST, require_GET
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import make_aware, is_naive
 from django.contrib.auth.decorators import login_required
@@ -21,8 +21,155 @@ from django.contrib.sessions.models import Session
 import uuid
 from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
+from communications.models import ChatMessage, ChatConversation
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+@csrf_exempt
+def send_message(request, conversation_id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            content = data.get('content')
+
+            if content:
+                sender = request.user  # Get the currently logged-in user
+                conversation = ChatConversation.objects.get(id=conversation_id)
+
+                # Create the new message
+                message = ChatMessage.objects.create(
+                    conversation=conversation,
+                    sender=sender,
+                    content=content
+                )
+
+                # Prepare the response data with the new message
+                response_data = {
+                    'success': True,
+                    'message': {
+                        'id': message.id,
+                        'sender': sender.username,  # Include sender's username
+                        'content': message.content,
+                        'sent_at': message.sent_at.isoformat(),  # Use ISO format for datetime
+                    }
+                }
+                return JsonResponse(response_data)
+
+            return JsonResponse({'success': False, 'error': 'Content is required'}, status=400)
+
+        except ChatConversation.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Conversation not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+
+@login_required  # Ensure the user is logged in
+def fetch_messages(request, conversation_id):
+    if request.method == 'GET':
+        try:
+            # Get the conversation by ID
+            conversation = ChatConversation.objects.get(id=conversation_id)
+
+            # Check if the logged-in user is a participant in the conversation
+            if request.user not in conversation.participants.all():  # Assuming participants is a ManyToManyField
+                return JsonResponse({'success': False, 'error': 'You do not have permission to access this conversation.'}, status=403)
+
+            # Fetch messages related to this conversation
+            messages = ChatMessage.objects.filter(conversation=conversation).order_by('sent_at')
+
+            # Prepare messages for response
+            messages_data = [{
+                'id': message.id,
+                'sender': message.sender.username,
+                'content': message.content,
+                'sent_at': message.sent_at.isoformat(),
+            } for message in messages]
+
+            return JsonResponse({'success': True, 'messages': messages_data})
+
+        except ChatConversation.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Conversation not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+
+def get_conversation_messages(request, conversation_id):
+    # Fetch the conversation, ensuring it's not marked as deleted
+    conversation = get_object_or_404(ChatConversation, pk=conversation_id, deleted=False)
+
+    # Fetch messages associated with this conversation, ordered by when they were sent
+    messages = ChatMessage.objects.filter(conversation=conversation).order_by('sent_at')  # Use 'sent_at' instead of 'timestamp'
+
+    # Prepare the response data
+    message_data = []
+    for message in messages:
+        message_data.append({
+            'id': message.id,
+            'sender': message.sender.username,  # Assuming 'sender' is a ForeignKey to User
+            'content': message.content,
+            'sent_at': message.sent_at.isoformat(),  # Use 'sent_at' instead of 'timestamp'
+        })
+
+    return JsonResponse({'messages': message_data})
 
 
+
+def get_user_conversations(request, user_id):
+    # Fetch the user
+    user = get_object_or_404(User, pk=user_id)
+
+    # Fetch conversations where the superuser is involved
+    conversations = ChatConversation.objects.filter(
+        superuser=user
+    ).filter(deleted=False)
+
+    # Prepare the response data
+    conversation_data = []
+    for conversation in conversations:
+        conversation_data.append({
+            'id': conversation.id,
+            'user': conversation.user.username,
+            'superuser': conversation.superuser.username,
+            'started_at': conversation.started_at.isoformat(),
+            # Include any other relevant fields
+        })
+
+    return JsonResponse({'conversations': conversation_data})
+
+@login_required
+def get_user_id(request):
+    user_id = request.user.id  # Get the logged-in user's ID
+    return JsonResponse({'user_id': user_id})
+
+
+@login_required
+def get_user_messages(request):
+    """Fetch messages for the logged-in user."""
+    try:
+        user = request.user
+        
+        # Get all conversations the user is part of
+        conversations = ChatConversation.objects.filter(user=user) | ChatConversation.objects.filter(superuser=user)
+
+        # Fetch messages for those conversations
+        messages = ChatMessage.objects.filter(conversation__in=conversations).select_related('sender')
+
+        # Prepare the message list with the desired format
+        message_list = [{
+            'id': message.id,
+            'content': message.content,
+            'sender': message.sender.username,  # Correctly access the username
+            'sent_at': message.sent_at,
+            'conversation_id': message.conversation.id  # Adjusted field name for clarity
+        } for message in messages]
+
+        return JsonResponse({'messages': message_list})
+
+    except Exception as e:
+        print(f"Error fetching user messages: {str(e)}")
+        return JsonResponse({'error': 'An error occurred while fetching messages.'}, status=500)
 def get_seeds_to_localstorage(request):
     try:
         
@@ -115,3 +262,69 @@ def get_cart_data(request):
 
 
 
+@login_required  # Ensure the user is logged in
+def get_username(request):
+    username = request.user.username
+    return JsonResponse({'username': username})
+
+@login_required
+def check_superuser_status(request):
+    """Check if the user is authenticated and whether they are a superuser."""
+    is_superuser = request.user.is_superuser
+    is_authenticated = request.user.is_authenticated  # Check if the user is authenticated
+    return JsonResponse({'isSuperUser': is_superuser, 'isAuthenticated': is_authenticated})
+
+
+@login_required
+def get_message_counts(request):
+    """View to return message counts for the logged-in user."""
+    try:
+        user = request.user
+
+        # Filter conversations where the user is involved
+        conversations = ChatConversation.objects.filter(user=user)
+
+        # Total messages for the user in all conversations
+        total_messages_count = ChatMessage.objects.filter(conversation__in=conversations).count()
+
+        # Unseen messages count for the user (messages not sent by the user)
+        unseen_messages_count = ChatMessage.objects.filter(conversation__in=conversations, seen=False).exclude(sender=user).count()
+
+        return JsonResponse({
+            'totalMessages': total_messages_count,
+            'unseenMessages': unseen_messages_count
+        })
+    except Exception as e:
+        # Log the exception or print it for debugging purposes
+        print(f"Error occurred while fetching message counts: {e}")
+        return JsonResponse({'error': 'An error occurred while fetching message counts.'}, status=500)
+
+@csrf_exempt
+@require_POST
+def update_message_status(request):
+    try:
+        data = json.loads(request.body)
+        logger.info(f"Received data: {data}")  # Log the incoming data
+        
+        message_ids = data.get('messageIds')  # Get the list of message IDs
+        seen = data.get('isSeen', True)  # Default to True if not specified
+
+        # Validate that message_ids is a list and is not empty
+        if not isinstance(message_ids, list) or not message_ids:
+            return JsonResponse({'error': 'Invalid message IDs provided.'}, status=400)
+
+        # Update the is_seen status of the messages in the database
+        updated_count = ChatMessage.objects.filter(id__in=message_ids).update(seen=seen)
+
+        if updated_count == 0:
+            logger.warning(f"No messages updated for IDs: {message_ids}")  # Log if no messages were updated
+            return JsonResponse({'error': 'No messages updated. Check if message IDs are valid.'}, status=404)
+
+        return JsonResponse({'message': 'Message status updated successfully.'}, status=200)
+
+    except json.JSONDecodeError:
+        logger.error("Invalid JSON received")
+        return JsonResponse({'error': 'Invalid JSON received.'}, status=400)
+    except Exception as e:
+        logger.error(f"Error: {str(e)}")  # Log any other errors
+        return JsonResponse({'error': str(e)}, status=500)

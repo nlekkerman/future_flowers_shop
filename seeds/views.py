@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Seed
-from .forms import SearchForm
+from .forms import SearchForm, SeedForm
 from reviews.models import Review, Comment
 from reviews.forms import ReviewForm, CommentForm
 from django.core.paginator import Paginator
@@ -21,6 +21,63 @@ handler = logging.StreamHandler()  # Use FileHandler to log to a file if needed
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
+from django.http import JsonResponse
+from .models import Seed
+
+def seed_list_api(request):
+    if request.method == 'GET':
+        # Fetch seeds that are not marked as deleted
+        seeds = Seed.objects.filter(deleted=False)  # Adjust as needed
+
+        # Prepare the response data
+        seed_data = []
+        for seed in seeds:
+            seed_data.append({
+                'id': seed.id,
+                'name': seed.name,
+                'scientific_name': seed.scientific_name,
+                'description': seed.description,
+                'planting_months_from': seed.planting_months_from,
+                'planting_months_to': seed.planting_months_to,
+                'flowering_months_from': seed.flowering_months_from,
+                'flowering_months_to': seed.flowering_months_to,
+                'category': seed.category,
+                'height_from': str(seed.height_from),  # Convert to string for JSON serialization
+                'height_to': str(seed.height_to),      # Convert to string for JSON serialization
+                'sun_preference': seed.sun_preference,
+                'price': str(seed.price),               # Convert to string for JSON serialization
+                'discount': str(seed.discount),         # Convert to string for JSON serialization
+                'is_in_stock': seed.is_in_stock,
+                'created_at': seed.created_at.isoformat(),  # Use ISO format for datetime
+                'last_modified': seed.last_modified.isoformat(),  # Use ISO format for datetime
+                'image': seed.image.url if seed.image else None,  # Get image URL
+            })
+
+        return JsonResponse({'success': True, 'seeds': seed_data})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+
+def edit_seed_view(request, id):
+    seed = get_object_or_404(Seed, id=id)
+
+    if request.method == 'POST':
+        form = SeedForm(request.POST, request.FILES, instance=seed)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Seed has been updated successfully!')
+            return redirect('seeds:seed_list')  # Adjust redirect as needed
+    else:
+        form = SeedForm(instance=seed)
+
+    return render(request, 'seeds/edit_seed.html', {'form': form})
+def delete_seed_view(request, id):
+    if request.method == 'DELETE':
+        seed = get_object_or_404(Seed, id=id)
+        seed.delete()
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False}, status=405)
+
 
 def seeds_view(request):
     show_seeds = request.GET.get('show_seeds', 'false') == 'true'
@@ -99,3 +156,40 @@ def search_results(request):
     # Render the search_results.html template
     return render(request, 'seeds/search_results.html')
 
+
+def create_seed_view(request):
+    if request.method == 'POST':
+        logger.debug("POST data received: %s", request.POST)  # Log POST data
+        
+        form = SeedForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            logger.info("Seed added successfully: %s", form.cleaned_data)  # Log successful form save
+            messages.success(request, 'Seed added successfully!') 
+            return redirect('admin_dashboard')  # Redirect to admin page after successful save
+        else:
+            logger.warning("Form submission errors: %s", form.errors)  # Log form errors
+
+    else:
+        form = SeedForm()
+
+    # No need to redirect; instead return to the same page, assuming the context is set in the view
+    return redirect('admin_dashboard') 
+
+def edit_seed_view(request, id):
+    # Retrieve the seed instance by ID
+    seed = get_object_or_404(Seed, id=id)
+
+    if request.method == 'POST':
+        # Bind the form to the submitted data and the instance of the seed
+        form = SeedForm(request.POST, request.FILES, instance=seed)
+
+        if form.is_valid():
+            form.save()
+            return redirect('admin_dashboard')  # Redirect to the seed list after successful edit
+        else:
+            messages.error(request, 'There was an error with your submission.')
+    else:
+        form = SeedForm(instance=seed)  # Create a form instance with the existing seed data
+
+    return redirect('admin_dashboard')

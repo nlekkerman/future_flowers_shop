@@ -1,4 +1,7 @@
 import json
+from rest_framework import permissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -8,6 +11,24 @@ from .models import ChatConversation, ChatMessage
 from .forms import ChatMessageForm 
 from django.contrib.auth.models import User
 
+class NewMessagesCountAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        if user.is_superuser:
+            # Admin sees all new messages
+            count = ChatMessage.objects.filter(seen=False).count()
+        else:
+            # Regular user sees only their related messages
+            count = ChatMessage.objects.filter(
+                conversation__user=user,
+                seen=False
+            ).count()
+
+        return Response({'count': count})
+
+        
 @require_POST
 @login_required
 def mark_as_seen(request):

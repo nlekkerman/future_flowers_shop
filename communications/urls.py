@@ -9,4 +9,6 @@ urlpatterns = [
     path('chat-bot/', views.chat_bot_view, name='chat_bot_view'),
     path('chat-bot/handle-choice/', views.chat_bot_handle_choice, name='chat_bot_handle_choice'),
     path('mark-as-seen/', views.mark_as_seen, name='mark_as_seen'),
+    path('api/new-messages-count/', views.NewMessagesCountAPIView.as_view(), name='new-messages-count'),
+
 ]

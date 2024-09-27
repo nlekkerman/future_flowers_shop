@@ -4,7 +4,6 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
 
 <div class="admin-dashboard-container">
     <div class="admin-dashboard-header">
@@ -14,6 +13,7 @@
         {% include 'navigation.html' %}
     </div>
 
+    <!-- Pending Reviews Section -->
     <section>
         <div class="admin-dashboard-section-title">
             <h3>Pending Reviews</h3>
@@ -51,6 +51,7 @@
         </table>
     </section>
 
+    <!-- Pending Comments Section -->
     <section>
         <div class="admin-dashboard-section-title">
             <h3>Pending Comments</h3>
@@ -87,44 +88,344 @@
             </tbody>
         </table>
     </section>
-
+    <!-- Seed Management Section -->
     <section>
-        <div class="admin-dashboard-section-title">
-            <h3>Conversations</h3>
-        </div>
-        <!-- custom_accounts/admin_dashboard.html -->
-
-        <table class="admin-dashboard-table">
-            <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Recent Message</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for conversation in conversations %}
-                <tr>
-                    <td>{{ conversation.user.username }}</td>
-                    <td>
-                        {% if conversation.latest_message %}
-                        {{ conversation.latest_message.content|truncatewords:10 }}
-                        {% else %}
-                        No messages
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'communications:admin_user_chat_messages' conversation.id %}">View Chat</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="3" class="admin-dashboard-no-data">No conversations available.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
+        <h3>Seed Management</h3>
+        <button id="add-seed-btn" class="btn">Add New Seed</button>
+        <ul id="seed-list">
+            <!-- List of existing seeds can be dynamically populated here -->
+        </ul>
     </section>
+
+    <!-- Add Seed Modal -->
+    <div id="addSeedModal" class="edit-seed-modal" style="overflow-y: scroll;">
+        <div class="modal-content-admin seed-modal-content">
+            <span class="close seed-modal-close">&times;</span>
+            <h3>Add New Seed</h3>
+            <form method="post" action="{% url 'seeds:create_seed' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="custom-form-field">
+                    <label for="seed-name">Name:</label>
+                    <input type="text" name="name" id="seed-name" required>
+                    {% if form.name.errors %}
+                    <div class="custom-error-message">{{ form.name.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="custom-form-field">
+                    <label for="seed-scientific-name">Scientific Name:</label>
+                    <input type="text" name="scientific_name" id="seed-scientific-name" required>
+                    {% if form.scientific_name.errors %}
+                    <div class="custom-error-message">{{ form.scientific_name.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="custom-form-field">
+                    <label for="seed-description">Description:</label>
+                    <textarea name="description" id="seed-description" required></textarea>
+                    {% if form.description.errors %}
+                    <div class="custom-error-message">{{ form.description.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="custom-form-field">
+                    <label for="seed-category">Category:</label>
+                    <select name="category" id="seed-category" required>
+                        <option value="" disabled selected>Select Category</option>
+                        <option value="rose">Rose</option>
+                        <option value="flower">Flower</option>
+                        <option value="tree">Tree</option>
+                        <option value="bush">Bush</option>
+                    </select>
+                    {% if form.category.errors %}
+                    <div class="custom-error-message">{{ form.category.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="custom-form-field">
+                    <label for="seed-price">Price:</label>
+                    <input type="number" step="0.01" name="price" id="seed-price" required>
+                    {% if form.price.errors %}
+                    <div class="custom-error-message">{{ form.price.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="custom-form-field">
+                    <label for="seed-discount">Discount (%):</label>
+                    <input type="number" step="0.01" name="discount" id="seed-discount">
+                    {% if form.discount.errors %}
+                    <div class="custom-error-message">{{ form.discount.errors }}</div>
+                    {% endif %}
+                </div>
+
+
+
+                <!-- New Required Fields -->
+                <div class="custom-form-field">
+                    <label for="planting_months_from">Planting Months From:</label>
+                    <input type="text" name="planting_months_from" id="planting_months_from" required>
+                    {% if form.planting_months_from.errors %}
+                    <div class="custom-error-message">{{ form.planting_months_from.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="custom-form-field">
+                    <label for="planting_months_to">Planting Months To:</label>
+                    <input type="text" name="planting_months_to" id="planting_months_to" required>
+                    {% if form.planting_months_to.errors %}
+                    <div class="custom-error-message">{{ form.planting_months_to.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="custom-form-field">
+                    <label for="flowering_months_from">Flowering Months From:</label>
+                    <input type="text" name="flowering_months_from" id="flowering_months_from" required>
+                    {% if form.flowering_months_from.errors %}
+                    <div class="custom-error-message">{{ form.flowering_months_from.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="custom-form-field">
+                    <label for="flowering_months_to">Flowering Months To:</label>
+                    <input type="text" name="flowering_months_to" id="flowering_months_to" required>
+                    {% if form.flowering_months_to.errors %}
+                    <div class="custom-error-message">{{ form.flowering_months_to.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="custom-form-field">
+                    <label for="height_from">Height From (cm):</label>
+                    <input type="number" name="height_from" id="height_from" required>
+                    {% if form.height_from.errors %}
+                    <div class="custom-error-message">{{ form.height_from.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="custom-form-field">
+                    <label for="height_to">Height To (cm):</label>
+                    <input type="number" name="height_to" id="height_to" required>
+                    {% if form.height_to.errors %}
+                    <div class="custom-error-message">{{ form.height_to.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="custom-form-field">
+                    <label for="sun_preference">Sun Preference:</label>
+                    <select name="sun_preference" id="sun_preference" required>
+                        <option value="" disabled selected>Select Sun Preference</option>
+                        <option value="full_sun">Full Sun</option>
+                        <option value="partly">Partial Shade</option>
+                        <option value="full_shade">Full Shade</option>
+                    </select>
+
+                    {% if form.sun_preference.errors %}
+                    <div class="custom-error-message">{{ form.sun_preference.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="custom-form-field">
+                    <label for="in-stock">In Stock:</label>
+                    <input type="checkbox" name="is_in_stock" id="in-stock" value="1">
+                    <label for="in-stock">Yes</label>
+                    {% if form.is_in_stock.errors %}
+                    <div class="custom-error-message">{{ form.is_in_stock.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="custom-form-field">
+                    <label for="seed-image">Image:</label>
+                    <input type="file" name="image" id="seed-image">
+                    {% if form.image.errors %}
+                    <div class="custom-error-message">{{ form.image.errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit">Add Seed</button>
+            </form>
+        </div>
+    </div>
+<!-- Edit Seed Modal -->
+<div id="editSeedModal" class="edit-seed-modal" style="overflow-y: scroll;">
+    <div class="modal-content-admin seed-modal-content">
+        <span class="close edit-seed-modal-close">&times;</span>
+        <h3>Edit Seed</h3>
+        <form method="post" action="" enctype="multipart/form-data" id="edit-seed-form">
+            {% csrf_token %}
+
+            <input type="hidden" name="id" id="edit-seed-id">  <!-- Hidden input for seed ID -->
+
+            <div class="custom-form-field">
+                <label for="edit-seed-name">Name:</label>
+                <input type="text" name="name" id="edit-seed-name" required>
+                {% if form.name.errors %}
+                <div class="custom-error-message">{{ form.name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-seed-scientific-name">Scientific Name:</label>
+                <input type="text" name="scientific_name" id="edit-seed-scientific-name" required>
+                {% if form.scientific_name.errors %}
+                <div class="custom-error-message">{{ form.scientific_name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-seed-description">Description:</label>
+                <textarea name="description" id="edit-seed-description" required></textarea>
+                {% if form.description.errors %}
+                <div class="custom-error-message">{{ form.description.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-seed-category">Category:</label>
+                <select name="category" id="edit-seed-category" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="rose">Rose</option>
+                    <option value="flower">Flower</option>
+                    <option value="tree">Tree</option>
+                    <option value="bush">Bush</option>
+                </select>
+                {% if form.category.errors %}
+                <div class="custom-error-message">{{ form.category.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-seed-price">Price:</label>
+                <input type="number" step="0.01" name="price" id="edit-seed-price" required>
+                {% if form.price.errors %}
+                <div class="custom-error-message">{{ form.price.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-seed-discount">Discount (%):</label>
+                <input type="number" step="0.01" name="discount" id="edit-seed-discount">
+                {% if form.discount.errors %}
+                <div class="custom-error-message">{{ form.discount.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- New Required Fields -->
+            <div class="custom-form-field">
+                <label for="edit-planting_months_from">Planting Months From:</label>
+                <input type="text" name="planting_months_from" id="edit-planting_months_from" required>
+                {% if form.planting_months_from.errors %}
+                <div class="custom-error-message">{{ form.planting_months_from.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-planting_months_to">Planting Months To:</label>
+                <input type="text" name="planting_months_to" id="edit-planting_months_to" required>
+                {% if form.planting_months_to.errors %}
+                <div class="custom-error-message">{{ form.planting_months_to.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-flowering_months_from">Flowering Months From:</label>
+                <input type="text" name="flowering_months_from" id="edit-flowering_months_from" required>
+                {% if form.flowering_months_from.errors %}
+                <div class="custom-error-message">{{ form.flowering_months_from.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-flowering_months_to">Flowering Months To:</label>
+                <input type="text" name="flowering_months_to" id="edit-flowering_months_to" required>
+                {% if form.flowering_months_to.errors %}
+                <div class="custom-error-message">{{ form.flowering_months_to.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-height_from">Height From (cm):</label>
+                <input type="number" name="height_from" id="edit-height_from" required>
+                {% if form.height_from.errors %}
+                <div class="custom-error-message">{{ form.height_from.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-height_to">Height To (cm):</label>
+                <input type="number" name="height_to" id="edit-height_to" required>
+                {% if form.height_to.errors %}
+                <div class="custom-error-message">{{ form.height_to.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-sun_preference">Sun Preference:</label>
+                <select name="sun_preference" id="edit-sun_preference" required>
+                    <option value="" disabled selected>Select Sun Preference</option>
+                    <option value="full_sun">Full Sun</option>
+                    <option value="partly">Partial Shade</option>
+                    <option value="full_shade">Full Shade</option>
+                </select>
+                {% if form.sun_preference.errors %}
+                <div class="custom-error-message">{{ form.sun_preference.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-in-stock">In Stock:</label>
+                <input type="checkbox" name="is_in_stock" id="edit-in-stock" value="1">
+                <label for="edit-in-stock">Yes</label>
+                {% if form.is_in_stock.errors %}
+                <div class="custom-error-message">{{ form.is_in_stock.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="custom-form-field">
+                <label for="edit-seed-image">Image:</label>
+                <input type="file" name="image" id="edit-seed-image">
+                {% if form.image.errors %}
+                <div class="custom-error-message">{{ form.image.errors }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit">Update Seed</button>
+        </form>
+    </div>
 </div>
+
+{% if messages %}
+    <ul class="modal-box-content">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                {{ message }}
+                <button class="close-message" onclick="this.parentElement.style.display='none';">&times;</button>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+</div>
+
+<script>
+    // Get modal and buttons
+    let modal = document.getElementById("addSeedModal");
+    let addSeedBtn = document.getElementById("add-seed-btn");
+    let closeBtn = document.querySelector(".seed-modal-close");
+
+    // Open modal
+    addSeedBtn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    // Close modal when the user clicks the close button
+    closeBtn.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // Close modal when the user clicks outside the modal content
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
 {% endblock %}

@@ -47,10 +47,12 @@
     <script type="module" src="{% static 'js/control.js' %}" defer></script>
     <script type="module" src="{% static 'js/seeds.js' %}" defer></script>
     <script type="module" src="{% static 'js/cart.js' %}" defer></script>
+    <script type="module" src="{% static 'js/reviews.js' %}" defer></script>
+    <script type="module" src="{% static 'js/accounts.js' %}" defer></script>
     <script type="module" src="{% static 'js/navigation.js' %}" defer></script>
     <script type="module" src="{% static 'js/checkout.js' %}" defer></script>
     <script type="module" src="{% static 'js/utils.js' %}" defer></script>
-    
+
 
 
     <link rel="stylesheet" href="{% static 'css/navigation.css' %}">
@@ -71,15 +73,9 @@
     <title>Future Flower Shop {% block extra_title %}{% endblock %}</title>
 </head>
 
-{% if request.user.is_superuser %}
-<a class="chat-icon" id="chatIcon" href="#">
-    <i class="fas fa-comments"></i>
-</a>
-{% else %}
-<a class="chat-icon" id="chatIcon" href="{% url 'communications:chat_bot_view' %}">
-    <i class="fas fa-comments"></i>
-</a>
-{% endif %}
+
+
+
 
 
 <div class="header animate-herder">
@@ -116,7 +112,7 @@
                         <div><i class="fas mr-1 fa-shopping-bag fa-lg"></i></div>
                         <p class="my-0">
                             <span class="cart-total" id="cart-total">
-                              
+
                             </span>
                         </p>
                     </div>
@@ -148,11 +144,10 @@
 
 </div>
 
-
-
-
-
 </div>
+
+
+
 <!-- Search Form -->
 <div class="search-container" id="searchContainer">
     <form id="seed-search-form">
@@ -182,24 +177,26 @@
 </div>
 
 
-
-
-<!-- Display general messages -->
-{% if messages %}
-<div class="message-container" id="message-container">
-    <!-- Close button for the whole message container -->
-    <button class="close-button-container" aria-label="Close">
-        <i class="fas fa-times"></i>
-    </button>
-
-    {% for message in messages %}
-    <div class="message {{ message.tags }}">
-        <!-- Directly render the message content -->
-        {{ message|safe }}
-    </div>
-    {% endfor %}
+<div id="chat-container" style="display: none;"></div>
+<!-- Messages will be loaded here -->
 </div>
-{% endif %}
+
+<div id="notification-area">
+
+    <div class="admin-message-icon" id="admin-message-icon">
+        <i class="fas fa-envelope"></i>
+    </div>
+    <div>
+        <span>Total Messages: <span id="total-messages-count">0</span></span>
+    </div>
+    <div>
+        <span>New: (<span id="unseen-messages-count">0</span>)</span>
+    </div>
+
+    <button class="messages-icon" id="messagesIcon">
+        <i class="fas fa-comments"></i>
+    </button>
+</div>
 
 
 {% block page_header %}
@@ -209,7 +206,7 @@
 
 {% block content %}
 
-<!-- Main content here -->
+
 {% endblock %}
 <!-- Chat container -->
 

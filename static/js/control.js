@@ -176,3 +176,158 @@ function getCartFromLocalStorage() {
         items: []
     };
 }
+export async function fetchUserMessages(userId) {
+    try {
+        const response = await fetch(`/syncmanager/api/get_user_messages/`);
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        const responseData = await response.json();
+        console.log('Fetched user messages:', responseData);
+
+        if (!Array.isArray(responseData.messages)) {
+            throw new Error('Invalid response format: expected an array of messages');
+        }
+
+        return responseData.messages; // Return the messages array
+    } catch (error) {
+        console.error('Error fetching user messages:', error);
+        return []; // Return an empty array on error
+    }
+}
+
+export async function fetchConversations(userId) {
+    try {
+        const response = await fetch(`/syncmanager/api/get_user_conversations/${userId}/`);
+        const data = await response.json();
+
+        if (response.ok) {
+            // Store conversations in localStorage
+            localStorage.setItem('userConversations', JSON.stringify(data.conversations));
+           
+        } else {
+            console.error('Error fetching conversations:', data.error);
+        }
+    } catch (error) {
+        console.error('Network error while fetching conversations:', error);
+    }
+}
+export async function fetchUserId() {
+    try {
+        const response = await fetch('/syncmanager/api/get_user_id/');
+        const data = await response.json();
+
+        if (response.ok && data.user_id) {
+            localStorage.setItem('userId', data.user_id); // Store user ID in local storage
+            return data.user_id;
+        } else {
+            console.error('Failed to fetch user ID:', data);
+            return null;
+        }
+    } catch (error) {
+        console.error('Network error while fetching user ID:', error);
+        return null;
+    }
+}
+
+
+export async function sendMessage(conversationId, messageContent) {
+    try {
+        const response = await fetch(`/syncmanager/api/send_message/${conversationId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') // If you're using CSRF protection
+            },
+            body: JSON.stringify({ content: messageContent })
+        });
+
+        // Check if the response is okay
+        if (!response.ok) {
+            const errorData = await response.json(); // Try to parse the error message
+            throw new Error(errorData.error || 'Network response was not ok');
+        }
+
+        // Parse the JSON response
+        const data = await response.json();
+        console.log('Message sent successfully:', data);
+        return data; // Return the data for further handling
+    } catch (error) {
+        console.error('Error sending message:', error);
+        return { success: false, error: error.message }; // Return structured error
+    }
+}
+export async function fetchUsername() {
+    const response = await fetch('/syncmanager/api/get_username');
+    const data = await response.json();
+    return data.username;
+}
+export async function fetchMessages(conversationId) {
+    try {
+        const response = await fetch(`/syncmanager/api/get_conversation_messages/${conversationId}/`);
+
+        // Check if the response is OK (status code 200)
+        if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        }
+
+        // Parse the JSON response
+        const data = await response.json();
+
+        // Check for success in the response
+        if (data.success) {
+            console.log('Fetched messages:', data.messages);  // Log messages to the console
+            return data.messages;  // Return the messages for further use
+        } else {
+            alert(`Error: ${data.error}`);  // Alert if there's an error
+            return [];
+        }
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        alert('Failed to fetch messages. Please try again later.');
+        return [];
+    }
+}
+
+export async function checkIfSuperUser() {
+    try {
+        const response = await fetch('/syncmanager/api/check_superuser/');
+        
+        if (!response.ok) {
+            console.error('Failed to check superuser status:', response.status);
+            return null; // Return null to indicate failure
+        }
+
+        const data = await response.json();
+        return {
+            isSuperUser: data.isSuperUser,
+            isAuthenticated: data.isAuthenticated,
+        }; // Return both superuser and authenticated status
+    } catch (error) {
+        console.error('Error checking superuser status:', error);
+        return null; // Return null in case of an error
+    }
+}
+
+export async function fetchMessageCounts() {
+    try {
+        const response = await fetch('/syncmanager/api/message_counts/'); // Adjust the URL to match your app structure
+        const data = await response.json();
+
+        if (response.ok) {
+            const totalMessages = data.totalMessages;
+            const unseenMessages = data.unseenMessages;
+
+            console.log("Total messages: ", totalMessages);
+            console.log("Unseen messages: ", unseenMessages);
+
+            // You can now update the UI based on these counts, e.g.
+            document.getElementById('total-messages-count').innerText = totalMessages;
+            document.getElementById('unseen-messages-count').innerText = unseenMessages;
+        } else {
+            console.error('Failed to fetch message counts:', data);
+        }
+    } catch (error) {
+        console.error('Error fetching message counts:', error);
+    }
+}
+

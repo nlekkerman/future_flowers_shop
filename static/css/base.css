@@ -41,6 +41,21 @@ body {
 
 
 
+
+}
+
+
+
+
+
+#chat-container {
+    top: 120px;
+    position: fixed;
+    left: 50%; /* Center horizontally */
+    width: 50%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white !important;
+    transform: translateX(-50%); /* Shift back by half of its width */
 }
 
 .container {
@@ -590,4 +605,161 @@ header .dropdown-item {
 #search-seed-details-modal{
 
     margin-top: 350px;
+}
+#admin-message-icon, #messagesIcon {
+    display: none;
+    background-color: #f00;
+}
+
+#notification-area {
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 5px 10px;
+    position: fixed;
+    top: 100px;
+    left: 30px;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    border-radius: 5px; 
+    cursor: pointer; /* Changes the cursor to indicate it is clickable */
+    display: none;
+    
+
+}
+
+/* Modal styling */
+.modal-chat {
+    display: none;
+    position: fixed;
+    z-index: 9991000;
+    left: 0;
+    top: 64px;
+    width: 100%;
+    height: 80%; /* Set a specific height */
+    overflow: auto; /* Allow scrolling */
+    padding: 20px; /* Optional: Add some padding */
+}
+/* Styles for each message in the modal */
+#modal-message-list div {
+    padding: 10px;
+    border-bottom: 1px solid white; /* Add a white bottom border between messages */
+    margin-bottom: 10px; /* Space between messages */
+    word-wrap: break-word;
+}
+
+/* Highlighting the sender */
+#modal-message-list strong {
+    color: #00bfff; /* Light blue color for sender name */
+}
+
+/* Styling the timestamp */
+#modal-message-list em {
+    font-size: 0.9em; /* Slightly smaller font size for the timestamp */
+    color: #ccc; /* Light gray color for the timestamp */
+}
+
+/* Optional: Add hover effect for message items */
+#modal-message-list div:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Light background on hover */
+}
+.super-chat-window {
+    background-color: rgba(0, 0, 0, 0.9) !important; 
+    padding: 20px;
+    border-radius: 5px;
+    width: 60%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.message-scroll-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 10px;
+}
+
+.chat-footer-input {
+    width: 60%;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.text-type-box {
+    width: 85%;
+    padding: 10px;
+}
+
+.send-message-action {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.close-chat-window {
+    cursor: pointer;
+    font-size: 24px;
+    color: white;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+
+.close-modal-button {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal-button:hover,
+.close-modal-button:focus {
+    color: #999;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Message item styling */
+.message-item {
+    padding: 10px 0;
+    border-bottom: 1px solid white; /* Add bottom white border between messages */
+    margin-bottom: 10px;
+}
+
+.message-item:last-child {
+    border-bottom: none; /* Remove the border for the last item */
+    flex-grow: 1; /* Takes up all available space before the footer */
+    overflow-y: auto; /* Scrollable message area */
+    margin-bottom: 10px; /* Space between the messages and footer */
+}
+
+
+#message-input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#send-message-button {
+    padding: 10px 15px;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#send-message-button:hover {
+    background-color: #218838;
 }

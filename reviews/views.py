@@ -1,128 +1,84 @@
-from django.http import JsonResponse, HttpResponseForbidden
-from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
-from .models import Review, Comment
-from .forms import ReviewForm, CommentForm, EditReviewForm
-from seeds.models import Seed
-import logging
+from django.contrib.auth.decorators import login_required
+from .models import Review
+from .forms import ReviewForm
 
-# Configure logging
-logger = logging.getLogger(__name__)
-@csrf_exempt
 @login_required
-def submit_review(request):
-    if request.method == 'POST':
-        form = ReviewForm(request.POST)
-        seed_id = request.POST.get('seed_id')
-        seed = get_object_or_404(Seed, id=seed_id)
+@require_POST
+def write_review(request):
+    form = ReviewForm(request.POST)
+    if form.is_valid():
         review = form.save(commit=False)
-        review.seed = seed
+        review.user = request.user
+        review.status = 'pending'
+        review.save()
+        return JsonResponse({
+            'success': True,
+            'message': 'Review submitted successfully and is pending approval.'
+        })
+    return JsonResponse({
+        'success': False,
+        'message': 'Invalid form submission',
+        'errors': form.errors
+    })
 
-        if form.is_valid():
-            try:
-                review.status = 'pending'
-                review.user = request.user
-                review.save()
-                return JsonResponse({'success': True, 'message': "Review submitted and is awaiting approval."})
-            except Exception as e:
-                logger.error(f"Error submitting review for seed {seed_id}: {e}")
-                return JsonResponse({'success': False, 'message': "An error occurred."})
-        else:
-            return JsonResponse({'success': False, 'message': "There was an error with your submission."})
 
-    return JsonResponse({'success': False, 'message': "Invalid request method."})
-
-@csrf_exempt
 @login_required
-def submit_comment(request):
+def fetch_reviews(request):
+    # Fetch all approved reviews with related approved comments
+    reviews = Review.objects.filter(status='approved', deleted=False).prefetch_related('comments')
+
+    # Prepare the data in JSON format
+    data = []
+    for review in reviews:
+        comments = review.comments.filter(status='approved', deleted=False)
+        data.append({
+            'id': review.id,  # Add review ID
+            'user_id': review.user.id,  # Add user ID
+            'user': review.user.username,
+            'rating': review.rating,
+            'comment': review.comment,
+            'created_at': review.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'comments': [
+                {
+                    'user': comment.user.username,
+                    'text': comment.text,
+                    'created_at': comment.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                } for comment in comments
+            ]
+        })
+
+    return JsonResponse({'reviews': data})
+
+
+@csrf_exempt  # Note: Consider adding proper CSRF protection
+@login_required
+def update_review(request):
     if request.method == 'POST':
-        form = CommentForm(request.POST)
         review_id = request.POST.get('review_id')
-        review = get_object_or_404(Review, id=review_id)
-        comment = form.save(commit=False)
-        comment.review = review
-        comment.status = 'pending'
-        comment.user = request.user
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
 
-        if form.is_valid():
-            try:
-                comment.save()
-                return JsonResponse({'success': True, 'message': "Comment added successfully and is pending approval."})
-            except Exception as e:
-                logger.error(f"Error submitting comment for review {review_id}: {e}")
-                return JsonResponse({'success': False, 'message': "An error occurred while submitting your comment."})
-        else:
-            return JsonResponse({'success': False, 'message': "There was an error with your submission."})
+        try:
+            review = Review.objects.get(id=review_id, user=request.user)
+            review.rating = rating
+            review.comment = comment
+            review.status = 'pending'
+            review.save()
+            return JsonResponse({'message': 'Review updated successfully.'}, status=200)
+        except Review.DoesNotExist:
+            return JsonResponse({'error': 'Review not found.'}, status=404)
 
-    return JsonResponse({'success': False, 'message': "Invalid request method."})
+    return JsonResponse({'error': 'Invalid request method.'}, status=400)
 
-@csrf_exempt
-@login_required
-def edit_review(request, review_id):
-    review = get_object_or_404(Review, id=review_id)
-    if request.user != review.user:
-        raise PermissionDenied()
-
-    if request.method == 'POST':
-        form = EditReviewForm(request.POST, instance=review)
-        if form.is_valid():
-            try:
-                review.status = 'pending'
-                form.save()
-                return JsonResponse({'success': True, 'message': "Your review has been updated and is pending approval."})
-            except Exception as e:
-                logger.error(f"Error updating review {review_id}: {e}")
-                return JsonResponse({'success': False, 'message': "An error occurred while updating your review."})
-        else:
-            return JsonResponse({'success': False, 'message': "There was an error with your submission."})
-
-    return JsonResponse({'success': False, 'message': "Invalid request method."})
-
-@csrf_exempt
+@csrf_exempt  # Note: Consider adding proper CSRF protection
 @login_required
 def delete_review(request, review_id):
-    review = get_object_or_404(Review, id=review_id, user=request.user)
-    if request.method == 'POST':
-        try:
-            review.delete()
-            return JsonResponse({'success': True, 'message': "Review deleted successfully."})
-        except Exception as e:
-            logger.error(f"Error deleting review: {e}")
-            return JsonResponse({'success': False, 'message': "An error occurred while deleting your review."})
-
-    return JsonResponse({'success': False, 'message': "Invalid request method."})
-
-@csrf_exempt
-@login_required
-def edit_comment(request, comment_id):
-    comment = get_object_or_404(Comment, id=comment_id, user=request.user)
-    form = CommentForm(request.POST or None, instance=comment)
-
-    if request.method == 'POST':
-        if form.is_valid():
-            try:
-                form.save()
-                return JsonResponse({'success': True, 'message': "Comment updated successfully."})
-            except Exception as e:
-                logger.error(f"Error updating comment {comment_id}: {e}")
-                return JsonResponse({'success': False, 'message': "An error occurred while updating your comment."})
-        else:
-            return JsonResponse({'success': False, 'message': "There was an error with your submission."})
-
-    return JsonResponse({'success': False, 'message': "Invalid request method."})
-
-@csrf_exempt
-@login_required
-def delete_comment(request, comment_id):
-    comment = get_object_or_404(Comment, id=comment_id, user=request.user)
-    if request.method == 'POST':
-        try:
-            comment.delete()
-            return JsonResponse({'success': True, 'message': "Comment deleted successfully."})
-        except Exception as e:
-            logger.error(f"Error deleting comment: {e}")
-            return JsonResponse({'success': False, 'message': "An error occurred while deleting your comment."})
-
-    return JsonResponse({'success': False, 'message': "Invalid request method."})
+    try:
+        review = Review.objects.get(id=review_id, user=request.user)
+        review.delete()
+        return JsonResponse({'message': 'Review deleted successfully.'}, status=200)
+    except Review.DoesNotExist:
+        return JsonResponse({'error': 'Review not found.'}, status=404)
