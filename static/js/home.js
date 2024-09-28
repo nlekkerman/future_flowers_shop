@@ -9,48 +9,50 @@ import {
     checkIfSuperUser,
     fetchMessageCounts
 } from './control.js';
-let loggedInUsername;
+let loggedInUsername,loadingOverlay, loadingText;;
+
 window.onload = async () => {
     try {
         const userId = await fetchUserId(); // Fetch user ID
-const loggedInUsername = await fetchUsername(); // Fetch username here
-await fetchMessageCounts();
+        const loggedInUsername = await fetchUsername(); // Fetch username here
+        await fetchMessageCounts();
+        updateIconsBasedOnSuperUser();
 
-const chatContainer = document.getElementById('chat-container');
-const messagesIcon = document.getElementById('messagesIcon');
-const adminMessagesIcon = document.getElementById('admin-message-icon');
+        const chatContainer = document.getElementById('chat-container');
+        const messagesIcon = document.getElementById('messagesIcon');
+        const adminMessagesIcon = document.getElementById('admin-message-icon');
 
-// Function to toggle visibility of the chat container
-const toggleChatContainerVisibility = () => {
-    if (chatContainer.style.display === "block") {
-        chatContainer.style.display = "none"; // Hide the chat container
-    } else {
-        chatContainer.style.display = "block"; // Show the chat container
-    }
-};
+        // Function to toggle visibility of the chat container
+        const toggleChatContainerVisibility = () => {
+            if (chatContainer.style.display === "block") {
+                chatContainer.style.display = "none"; // Hide the chat container
+            } else {
+                chatContainer.style.display = "block"; // Show the chat container
+            }
+        };
 
-if (adminMessagesIcon) {
-    adminMessagesIcon.addEventListener('click', async () => {
-        toggleChatContainerVisibility(); // Toggle visibility on icon click
-        console.log('Admin Message icon clicked.'); // For debugging
-        await fetchConversations(userId); // Fetch conversations for superuser
-        displayConversationsFromLocalStorage(); // Display conversations
-    });
-} else {
-    console.error('Admin message icon not found.');
-}
+        if (adminMessagesIcon) {
+            adminMessagesIcon.addEventListener('click', async () => {
+                toggleChatContainerVisibility(); // Toggle visibility on icon click
+                console.log('Admin Message icon clicked.'); // For debugging
+                await fetchConversations(userId); // Fetch conversations for superuser
+                displayConversationsFromLocalStorage(); // Display conversations
+            });
+        } else {
+            console.error('Admin message icon not found.');
+        }
 
-// Check if messagesIcon is found
-if (messagesIcon) {
-    messagesIcon.addEventListener('click', async () => {
-        console.log('Message icon clicked.'); // For debugging
-        const userMessages = await fetchUserMessages(userId);
-        displayUserMessages(userMessages, loggedInUsername);
-        toggleChatContainerVisibility(); // Toggle visibility when user messages icon is clicked
-    });
-} else {
-    console.error('Messages icon not found.');
-}
+        // Check if messagesIcon is found
+        if (messagesIcon) {
+            messagesIcon.addEventListener('click', async () => {
+                console.log('Message icon clicked.'); // For debugging
+                const userMessages = await fetchUserMessages(userId);
+                displayUserMessages(userMessages, loggedInUsername);
+                toggleChatContainerVisibility(); // Toggle visibility when user messages icon is clicked
+            });
+        } else {
+            console.error('Messages icon not found.');
+        }
 
         if (userId) {
             const isSuperUser = await checkIfSuperUser(); // Check superuser status
@@ -94,7 +96,7 @@ function updateCartTotalUI() {
 document.addEventListener('DOMContentLoaded', function () {
     updateCartTotalUI(); // Update cart total when the page loads
     // Run the function when the page loads
-    updateIconsBasedOnSuperUser();
+    
 
 });
 
@@ -181,14 +183,39 @@ export function displayConversationsFromLocalStorage() {
         conversationDiv.style.cursor = 'pointer';
         conversationDiv.style.marginBottom = '10px';
 
+        // Check if the conversation has unseen messages
+        if (conversation.unseenMessagesCount > 0) {
+            conversationDiv.style.backgroundColor = 'red'; // Set background color to red if there are unseen messages
+        }
+
         conversationDiv.innerHTML = `
             <strong>User:</strong> ${conversation.user}<br>
             <strong>Superuser:</strong> ${conversation.superuser}<br>
             <strong>Started At:</strong> ${new Date(conversation.started_at).toLocaleString()}
         `;
 
-        conversationDiv.addEventListener('click', () => loadConversationMessages(conversation.id, loggedInUsername));
-
+        conversationDiv.addEventListener('click', async () => {
+            showLoadingAnimation(); // Show loading animation
+            conversationDiv.style.backgroundColor = 'transparent';
+        
+            // Gather the IDs of all unseen messages in this conversation
+            if (Array.isArray(conversation.unseenMessages)) {
+                const unseenMessageIds = conversation.unseenMessages.map(message => message.id);
+        
+                // Call the updateMessageStatus function to mark messages as seen
+                if (unseenMessageIds.length > 0) {
+                    await updateMessageStatus(unseenMessageIds, true); // Mark all unseen messages as seen
+                }
+            } else {
+                console.warn('No unseen messages found or unseenMessages is not an array');
+            }
+        
+            // Load conversation messages
+            await loadConversationMessages(conversation.id, loggedInUsername);
+            hideLoadingAnimation(); // Hide loading animation after loading messages
+            // Fetch updated message counts
+            await fetchMessageCounts(); // Fetch updated message counts after loading messages
+        });
         chatContainer.appendChild(conversationDiv);
     });
 
@@ -474,5 +501,74 @@ async function updateMessageStatus(messageIds, isSeen) {
         }
     } catch (error) {
         console.error('Network error:', error);
+    }
+}
+
+function createLoadingOverlay() {
+    console.log("Creating loading overlay..."); // Log when creating overlay
+    loadingOverlay = document.createElement('div');
+    loadingOverlay.id = 'loading-overlay';
+    loadingOverlay.style.position = 'fixed'; // Fix position to overlay the entire screen
+    loadingOverlay.style.top = '50%'; // Center vertically
+    loadingOverlay.style.left = '50%'; // Center horizontally
+    loadingOverlay.style.width = '300px'; // Set width to 300px
+    loadingOverlay.style.height = '200px'; // Set height to 200px
+    loadingOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.9)'; // Semi-transparent background
+    loadingOverlay.style.display = 'flex'; // Use flexbox to center content
+    loadingOverlay.style.justifyContent = 'center'; // Center content horizontally
+    loadingOverlay.style.alignItems = 'center'; // Center content vertically
+    loadingOverlay.style.zIndex = '9999'; // Ensure it appears on top of other elements
+    loadingOverlay.style.transform = 'translate(-50%, -50%)'; // Center the overlay
+
+    // Create the loading text
+    loadingText = document.createElement('div');
+    loadingText.id = 'loading-text';
+    loadingText.style.color = 'white'; // Set text color to white
+    loadingText.style.fontSize = '24px'; // Set font size
+    loadingText.style.textTransform = 'uppercase'; // Make text uppercase
+    loadingText.style.textAlign = 'center'; // Center the text
+    loadingText.style.margin = '0'; // Remove default margin
+
+    // Append loading text to the overlay
+    loadingOverlay.appendChild(loadingText);
+    
+    // Append the overlay to the body
+    document.body.appendChild(loadingOverlay);
+    console.log("Loading overlay created and added to the body.");
+}
+
+
+function showLoadingAnimation() {
+    console.log("Showing loading animation..."); // Log when showing animation
+    createLoadingOverlay(); // Ensure the overlay is created
+
+    const text = "Loading";
+    let index = 0;
+
+    const intervalId = setInterval(() => {
+        loadingText.textContent = text.slice(0, index) + '.'.repeat(index % 4);
+        console.log(`Loading text updated: ${loadingText.textContent}`); // Log loading text update
+        index++;
+
+        if (index > text.length) {
+            index = text.length; // Limit to the length of the text
+        }
+
+        // Stop the animation after the full text is displayed with dots
+        if (index === text.length && loadingText.textContent.endsWith('...')) {
+            clearInterval(intervalId);
+            console.log("Loading animation completed."); // Log when animation is completed
+        }
+    }, 400); // Change this value to speed up or slow down the animation
+}
+
+function hideLoadingAnimation() {
+    console.log("Hiding loading animation..."); // Log when hiding animation
+    if (loadingOverlay) {
+        document.body.removeChild(loadingOverlay); // Remove the overlay from the body
+        loadingOverlay = null; // Reset to null
+        console.log("Loading overlay removed from the body."); // Log when overlay is removed
+    } else {
+        console.log("No loading overlay found to remove."); // Log if overlay was not found
     }
 }

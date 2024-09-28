@@ -23,6 +23,8 @@ from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from communications.models import ChatMessage, ChatConversation
 from django.contrib.auth import get_user_model
+from django.db.models import Q
+
 
 User = get_user_model()
 @csrf_exempt
@@ -128,12 +130,19 @@ def get_user_conversations(request, user_id):
     # Prepare the response data
     conversation_data = []
     for conversation in conversations:
+        # Fetch unseen messages for this conversation
+        unseen_messages = conversation.messages.filter(seen=False).exclude(sender=user)
+
+        # Prepare unseen messages data (you can adjust fields as needed)
+        unseen_messages_data = [{'id': msg.id, 'content': msg.content} for msg in unseen_messages]
+
         conversation_data.append({
             'id': conversation.id,
             'user': conversation.user.username,
             'superuser': conversation.superuser.username,
             'started_at': conversation.started_at.isoformat(),
-            # Include any other relevant fields
+            'unseenMessagesCount': unseen_messages.count(),
+            'unseenMessages': unseen_messages_data,  # Include unseen messages in the response
         })
 
     return JsonResponse({'conversations': conversation_data})
@@ -170,6 +179,8 @@ def get_user_messages(request):
     except Exception as e:
         print(f"Error fetching user messages: {str(e)}")
         return JsonResponse({'error': 'An error occurred while fetching messages.'}, status=500)
+
+
 def get_seeds_to_localstorage(request):
     try:
         
@@ -274,21 +285,25 @@ def check_superuser_status(request):
     is_authenticated = request.user.is_authenticated  # Check if the user is authenticated
     return JsonResponse({'isSuperUser': is_superuser, 'isAuthenticated': is_authenticated})
 
-
 @login_required
 def get_message_counts(request):
     """View to return message counts for the logged-in user."""
     try:
         user = request.user
 
-        # Filter conversations where the user is involved
-        conversations = ChatConversation.objects.filter(user=user)
+        # Filter conversations where the logged-in user is either the user or the superuser
+        conversations = ChatConversation.objects.filter(
+            Q(user=user) | Q(superuser=user)
+        )
 
-        # Total messages for the user in all conversations
+        # Total messages for the user in all conversations (as either user or superuser)
         total_messages_count = ChatMessage.objects.filter(conversation__in=conversations).count()
 
         # Unseen messages count for the user (messages not sent by the user)
-        unseen_messages_count = ChatMessage.objects.filter(conversation__in=conversations, seen=False).exclude(sender=user).count()
+        unseen_messages_count = ChatMessage.objects.filter(
+            conversation__in=conversations,
+            seen=False
+        ).exclude(sender=user).count()
 
         return JsonResponse({
             'totalMessages': total_messages_count,

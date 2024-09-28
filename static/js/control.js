@@ -314,15 +314,14 @@ export async function fetchMessageCounts() {
         const data = await response.json();
 
         if (response.ok) {
-            const totalMessages = data.totalMessages;
             const unseenMessages = data.unseenMessages;
 
-            console.log("Total messages: ", totalMessages);
+         
             console.log("Unseen messages: ", unseenMessages);
 
-            // You can now update the UI based on these counts, e.g.
-            document.getElementById('total-messages-count').innerText = totalMessages;
-            document.getElementById('unseen-messages-count').innerText = unseenMessages;
+           
+            document.querySelectorAll('unseen-messages-count').innerText = unseenMessages;
+            
         } else {
             console.error('Failed to fetch message counts:', data);
         }

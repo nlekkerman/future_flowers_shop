@@ -20,6 +20,11 @@ class ChatConversation(models.Model):
 
     def __str__(self):
         return f"Conversation between {self.user} and {self.superuser} started at {self.started_at}"
+        
+        # New method to get unseen messages count
+    def get_unseen_messages_count(self, user):
+        """Return the number of unseen messages for the given user in this conversation."""
+        return self.messages.filter(seen=False).exclude(sender=user).count()
 
 class ChatMessage(models.Model):
     conversation = models.ForeignKey(ChatConversation, on_delete=models.CASCADE, related_name='messages')

@@ -360,38 +360,88 @@
     background-color: #dc3545;
     color: white;
 }
-.custom-review-row{
+
+.custom-review-row {
+    max-height: 250px; /* Set height to allow space for arrows */
+    overflow-y: auto; /* Enable vertical scrolling */
+    display: flex; /* Flexbox for aligning items */
+    flex-direction: column; /* Stack items vertically */
+    scroll-behavior: smooth; /* Smooth scrolling */
+    padding: 10px; /* Add some padding */
     margin-top: 50px;
 }
+/* Arrow styles */
+.arrow {
+    position: absolute; /* Positioning arrows */
+    width: 30px; /* Size of arrow buttons */
+    height: 30px; /* Size of arrow buttons */
+    background-color: rgba(0, 0, 0, 0.5); /* White background with transparency */
+    color: rgba(92, 67, 67, 0.9);
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 20px; /* Size of the arrows */
+    z-index: 10; /* Ensure they are above other elements */
+    border-radius: 50%; /* Round arrows */
+}
+
+#scroll-up {
+    top: 10px; /* Positioning up arrow */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Center horizontally */
+}
+
+#scroll-down {
+    bottom: 10px; /* Positioning down arrow */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Center horizontally */
+}
 .review-button {
-    background-color: rgba(0, 0, 0, 0.1); /* Semi-transparent background */
-    color: white;                         /* White icon color */
-    border: none;                         /* Remove border */
-    padding: 8px;                         /* Padding around the icon */
-    display: inline-flex;                 /* Center icon within the button */
+    background-color: rgba(0, 0, 0, 0.1);
+    /* Semi-transparent background */
+    color: white;
+    /* White icon color */
+    border: none;
+    /* Remove border */
+    padding: 8px;
+    /* Padding around the icon */
+    display: inline-flex;
+    /* Center icon within the button */
     justify-content: center;
     align-items: center;
-    width: 40px;                          /* Fixed width */
+    width: 40px;
+    /* Fixed width */
     height: 40px;
-   position: absolute; top: 0; right: 0;                        /* Fixed height */
+    position: absolute;
+    top: 0;
+    right: 0;
+    /* Fixed height */
 }
-#write-review{
-    background-color: rgba(0, 168, 22, 0.4);
+
+#write-review {
+    
     margin: 5px;
-    position: absolute; top: 0; left: 0;
-    width: 120px;
+    position: absolute;
+    top: 0;
+    left: 85px;
+    
 }
+
 .review-button i {
-    font-size: 18px;                      /* Adjust icon size */
+    font-size: 18px;
+    /* Adjust icon size */
 }
 
 .review-button:hover {
-    background-color: rgba(0, 0, 0, 0.2); /* Darken on hover */
-    cursor: pointer;                      /* Pointer on hover */
+    background-color: rgba(0, 0, 0, 0.2);
+    /* Darken on hover */
+    cursor: pointer;
+    /* Pointer on hover */
 }
+
 /* Custom Modal Container */
 .custom-review-modal {
-    background-color: rgba(0, 0, 0, 0.9); /* Semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.9);
+    /* Semi-transparent background */
     z-index: 999999999999;
 }
 
@@ -405,9 +455,12 @@
 
 /* Custom Modal Content */
 .custom-modal-content {
-    background-color: rgba(0, 0, 0, 0.8); /* Slightly transparent content */
-    border: 2px solid white; /* White borders */
-    color: white; /* White text */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Slightly transparent content */
+    border: 2px solid white;
+    /* White borders */
+    color: white;
+    /* White text */
 }
 
 /* Header Styling */
@@ -484,4 +537,67 @@
 
 .custom-modal-dialog .modal-content {
     pointer-events: all;
+}
+
+.review-card-body {
+
+    padding: 5px !important;
+}
+
+.review-username {
+
+    font-size: 1rem !important;
+    text-transform: capitalize;
+    text-decoration: underline;
+}
+
+
+.review-card-text{
+    margin: 0px !important;
+}
+
+.review-chat-icon{
+    margin: 0px !important;
+    font-size: 1rem;
+}
+
+/* Style for each comment item */
+.comment-item {
+    background-color: rgba(255, 255, 255, 0.1); /* Light transparent background */
+    color: #ffffff; /* White text color */
+    margin: 5px 0; /* Space between comments */
+    padding: 10px; /* Padding inside comments */
+    border-radius: 8px; /* Rounded corners */
+    font-size: 0.9rem; /* Font size for comments */
+    border-left: 2px solid #6a85a1; /* Left border for emphasis */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+.review-card-text-content{
+    width: 100%;
+    font-style: italic;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+/* Hover effect for comment items */
+.comment-item:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Darker background on hover */
+}
+
+/* Style for the username within the comment */
+.comment-item span.username {
+    font-weight: bold; /* Bold username */
+    color: #ffcc00; /* Different color for username */
+}
+
+/* Style for the comment text to allow wrapping */
+.comment-text {
+    display: block; /* Make it a block element for full width */
+    word-wrap: break-word; /* Allow words to break onto the next line */
+    overflow-wrap: break-word; /* Additional support for breaking words */
+    white-space: normal; /* Allow text to wrap */
+}
+
+/* Style for the created_at date */
+.comment-item span.created-at {
+    font-size: 0.8rem; /* Smaller font size for date */
+    color: #cccccc; /* Light gray color for date */
 }
