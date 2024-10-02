@@ -514,6 +514,27 @@ header .dropdown-item {
     display: none; /* Initially hidden */
     opacity: 0; /* Initial opacity for transition */
 }
+/* Search icon image styling */
+.search-icon-img {
+    transition: transform 0.3s ease; /* Smooth scaling transition */
+}
+
+/* Define the shake animation */
+@keyframes shake {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2px, 0); }
+    50% { transform: translate(2px, 0); }
+    75% { transform: translate(-2px, 0); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Hover effect for search icon */
+.search-icon-wrapper:hover .search-icon-img {
+    transform: scale(1.2); /* Enlarge the icon */
+    animation: shake 0.5s infinite; /* Continuous shake animation */
+}
+
+
 
 /* Custom focus styles */
 .search-container input[type="search"]:focus,

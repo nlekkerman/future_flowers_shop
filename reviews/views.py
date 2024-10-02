@@ -208,15 +208,33 @@ def update_comment(request, review_id, comment_id):
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 
+@login_required
 def delete_comment(request, review_id, comment_id):
-    try:
-        comment = Comment.objects.get(id=comment_id, review_id=review_id)
-        
-        if request.method == 'DELETE':
+    logger.info(f"Delete request received for comment ID {comment_id} under review ID {review_id} by user {request.user.username}")
+
+    if request.method == 'DELETE':
+        try:
+            # Fetch the comment
+            comment = Comment.objects.get(id=comment_id, review_id=review_id)
+            logger.info(f"Fetched comment ID {comment_id}. Comment belongs to review ID {review_id} and user {comment.user.username}")
+
+            # Check if the user is the owner of the comment
+            if comment.user != request.user:
+                logger.warning(f"User {request.user.username} is not authorized to delete comment ID {comment_id}.")
+                return JsonResponse({'error': 'You are not authorized to delete this comment.'}, status=403)
+
+            # Delete the comment
             comment.delete()
+            logger.info(f"Comment ID {comment_id} deleted successfully.")
             return JsonResponse({'message': 'Comment deleted successfully.'}, status=200)
 
-    except Comment.DoesNotExist:
-        return JsonResponse({'error': 'Comment not found.'}, status=404)
+        except Comment.DoesNotExist:
+            logger.error(f"Comment ID {comment_id} under review ID {review_id} does not exist.")
+            return JsonResponse({'error': 'Comment not found.'}, status=404)
 
-    return JsonResponse({'error': 'Invalid request method.'}, status=400)
+        except Exception as e:
+            logger.exception(f"An unexpected error occurred while deleting comment ID {comment_id} under review ID {review_id}.")
+            return JsonResponse({'error': str(e)}, status=500)
+
+    logger.warning(f"Invalid request method: {request.method} for deleting comment ID {comment_id}.")
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)

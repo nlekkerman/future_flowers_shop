@@ -10,6 +10,6 @@ urlpatterns = [
    path('api/delete_review/<int:review_id>/', views.delete_review, name='delete_review'),  # URL for deleting reviews
    path('api/comment/leave/<int:review_id>/', views.leave_comment, name='leave_comment'),
    path('api/edit_comment/update/<int:review_id>/<int:comment_id>/', views.update_comment, name='update_comment'),  # For updating a comment
-   path('api/delete_comment/<int:review_id>/<int:comment_id>/', views.delete_comment, name='delete_comment'),
+   path('api/comment/delete/<int:review_id>/<int:comment_id>/', views.delete_comment, name='delete_comment'),
 
 ]

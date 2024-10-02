@@ -150,14 +150,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Loop through the reviews and create HTML elements for each
                 data.reviews.forEach(review => {
                     console.log(`Review ID: ${review.id}, Review User ID: ${review.user_id}, Current User ID: ${currentUserID}`);
-                   
+
 
                     // Create a column for each review with Bootstrap responsive classes
                     const reviewElement = document.createElement('div');
                     reviewElement.classList.add('col-12', 'col-md-6', 'col-lg-4', 'col-xl-2', 'd-flex', 'custom-with-fit');
 
                     reviewElement.innerHTML = `
-                                                    <div class="review-card w-100 ml-2 p-1" style="border-right: 2px solid #333; background-color: rgba(0, 0, 0, 0.8);">
+                                                    <div class="review-card w-100 ml-2 p-1" style="border-right: 2px solid #333;">
                                                         <div class="card-body review-card-body">
                                                             <div class="review-header" style="position: relative;">
                                                                 <h2 class="review-username">${review.user}</h2>
@@ -218,7 +218,10 @@ document.addEventListener('DOMContentLoaded', function () {
                                                     <span class="comment-text" id="comment-text-${comment.id}">${comment.text}</span> 
                                                     (<span class="created-at">${comment.created_at}</span>)
                                                     <button class="edit-comment-button" data-comment-id="${comment.id}">
-                                                        <i class="fas fa-edit"></i> Edit
+                                                        <i class="fas fa-edit"></i> 
+                                                    </button>
+                                                    <button class="delete-comment-button" data-comment-id="${comment.id}">
+                                                        <i class="fas fa-trash"></i> 
                                                     </button>
                                                 `;
 
@@ -230,6 +233,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             // Open the edit comment modal dynamically
                             openEditCommentModal(review.id, commentId, comment.text); // Pass review ID, comment ID, and current comment text to the modal
+                        });
+                        // Attach the click event listener to the delete button
+                        const deleteButton = commentElement.querySelector('.delete-comment-button');
+                        deleteButton.addEventListener('click', () => {
+                            const commentId = deleteButton.getAttribute('data-comment-id'); // Retrieve comment ID
+                            console.log(`Delete button clicked for comment ID ${commentId}`);
+
+                            // Store the review ID and comment ID globally
+                            selectedCommentId = commentId;
+                            selectedReviewId = review.id; // Assuming review.id is available in the scope
+
+                            // Open the delete confirmation modal dynamically
+                            createDeleteModal(); // Create the modal if it doesn't exist
+                            $('#deleteModal').modal('show'); // Show the modal to confirm deletion
                         });
 
                         // Append the comment element to the comments list
@@ -247,6 +264,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             openEditReviewModal(review);
                         });
                     }
+
+
                 });
 
             })
@@ -309,7 +328,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Determine the correct API endpoint based on whether we are editing
                 const method = commentId ? 'PUT' : 'POST'; // Use PUT for editing
-                const url = `/reviews/api/comment/${reviewId}/`; // Adjust the endpoint if necessary
+                const url = `/reviews/api/comment/leave/${reviewId}/`;
+
 
                 // Send the request
                 fetch(url, {
@@ -509,6 +529,92 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
+    // Function to delete a comment
+    function deleteComment(reviewId, commentId) {
+        const url = `/reviews/api/comment/delete/${reviewId}/${commentId}/`; // Ensure this matches your Django URL pattern
+        console.log(`Initiating delete request for comment ID ${commentId} of review ID ${reviewId}`);
+
+        fetch(url, {
+                method: 'DELETE', // Use DELETE for deleting comments
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'), // Include CSRF token for Django
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Failed to delete the comment:', response.statusText);
+                    throw new Error('Error deleting the comment.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Comment deleted successfully:', data);
+
+                showMessageReview("Comment deleted!!")
+                loadReviews()
+
+
+            })
+            .catch(error => {
+                console.error('Error deleting comment:', error);
+            });
+    }
+
+    let selectedCommentId = null;
+    let selectedReviewId = null;
+
+    // Function to create the delete confirmation modal dynamically
+    function createDeleteModal() {
+        // Check if modal already exists
+        let existingModal = document.getElementById('deleteModal');
+        if (!existingModal) {
+            const modalHTML = `
+            <div id="deleteModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Confirm Delete</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete this comment?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        // Add event listener for confirm delete button
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+            if (selectedCommentId && selectedReviewId) {
+                console.log(`Confirmed delete for comment ID ${selectedCommentId} under review ID ${selectedReviewId}`);
+                deleteComment(selectedReviewId, selectedCommentId);
+                $('#deleteModal').modal('hide'); // Hide the modal after confirming
+            }
+        });
+    }
+
+    // Add event listener for delete button
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('delete-comment-button')) {
+            selectedCommentId = event.target.getAttribute('data-comment-id');
+            selectedReviewId = event.target.closest('.review').getAttribute('data-review-id'); // Assuming review ID is set in the review element
+            console.log(`Delete button clicked for comment ID ${selectedCommentId} under review ID ${selectedReviewId}`);
+
+            // Create and show the delete confirmation modal
+            createDeleteModal();
+            $('#deleteModal').modal('show'); // Show the modal
+        }
+    });
 
     // Function to open the Edit Review modal dynamically
     function openEditReviewModal(review) {

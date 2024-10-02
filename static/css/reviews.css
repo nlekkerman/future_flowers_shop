@@ -406,6 +406,7 @@
     left: 50%;
     /* Center horizontally */
     transform: translateX(-50%);
+    color: white !important;
     /* Center horizontally */
 }
 
@@ -416,6 +417,8 @@
     /* Center horizontally */
     transform: translateX(-50%);
     /* Center horizontally */
+    color: white !important;
+
 }
 
 .review-button {
@@ -453,21 +456,34 @@
     z-index: 99999999;
 
 }
+
 .custom-comment-modal {
-    display: none; /* Initially hidden */
-    position: fixed; /* Fixed position to stay on the screen */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust for element's width and height */
-    width: 80%; /* Set a width, adjust as necessary */
-    max-width: 600px; /* Maximum width */
-    
-    border: 1px solid #ccc; /* Border around the modal */
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Shadow for depth */
-    z-index: 88888888888; /* Very high z-index */
-    padding: 20px; /* Padding inside the modal */
-   
-    overflow: auto; /* Add scroll if content overflows */
+    display: none;
+    /* Initially hidden */
+    position: fixed;
+    /* Fixed position to stay on the screen */
+    top: 50%;
+    /* Center vertically */
+    left: 50%;
+    /* Center horizontally */
+    transform: translate(-50%, -50%);
+    /* Adjust for element's width and height */
+    width: 80%;
+    /* Set a width, adjust as necessary */
+    max-width: 600px;
+    /* Maximum width */
+
+    border: 1px solid #ccc;
+    /* Border around the modal */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    /* Shadow for depth */
+    z-index: 88888888888;
+    /* Very high z-index */
+    padding: 20px;
+    /* Padding inside the modal */
+
+    overflow: auto;
+    /* Add scroll if content overflows */
 }
 
 /* Optional styles for the close button */
@@ -477,11 +493,13 @@
     right: 15px;
     font-size: 20px;
     cursor: pointer;
-    color: #aaa; /* Color of the close button */
+    color: #aaa;
+    /* Color of the close button */
 }
 
 .custom-comment-modal .close-button:hover {
-    color: #000; /* Change color on hover */
+    color: #000;
+    /* Change color on hover */
 }
 
 .review-button i {
@@ -525,9 +543,11 @@
 .custom-modal-header {
     text-align: center;
 }
-.close{
+
+.close {
     text-align: end;
 }
+
 .custom-modal-title {
     color: white;
 }
@@ -696,9 +716,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-   
+
     /* Optional: make the button circular */
-    background-color:rgba(255, 0, 0, 0.5);
+    background-color: rgba(255, 0, 0, 0.5);
     /* Adjust the color if necessary */
     color: white;
     /* Adjust text color */
@@ -730,7 +750,7 @@
     z-index: 99999909;
     transform: translate(-50%, -50%);
     overflow: hidden;
-
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
     /* Center children horizontally */
     text-align: center;
 }
@@ -769,6 +789,9 @@
 
 .custom-with-fit {
     width: 250px !important;
+    background-color: rgba(0, 0, 0, 0.9);
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    margin-bottom: 10px;
 }
 
 
@@ -808,4 +831,31 @@
     }
 }
 
-#editCommentModal{z-index: 999999999;}
+#editCommentModal {
+    z-index: 999999999;
+}
+
+
+/* Glow effect for the reviews container on hover */
+#reviews-container:hover {
+    box-shadow:
+        0 0 8px rgba(255, 255, 255, 0.6),  /* Inner glow with alpha 0.6 */
+        0 0 15px rgba(255, 255, 255, 0.4),  /* Middle glow with alpha 0.4 */
+        0 0 25px rgba(255, 255, 255, 0.2);  /* Outer glow with alpha 0.2 */
+}
+
+/* Hover effect for buttons and other elements */
+.custom-with-fit:hover,
+#scroll-up:hover,
+#scroll-down:hover,
+#write-review:hover,
+#close-reviews:hover,
+.review-button:hover,
+#notification-area:hover {
+    background-color: rgba(102, 0, 0, 0.9);  /* Background color */
+    box-shadow:
+        0 0 8px rgba(255, 255, 255, 0.6),  /* Inner glow with alpha 0.6 */
+        0 0 15px rgba(255, 255, 255, 0.4),  /* Middle glow with alpha 0.4 */
+        0 0 25px rgba(255, 255, 255, 0.2);  /* Outer glow with alpha 0.2 */
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;  /* Smooth transition */
+}
