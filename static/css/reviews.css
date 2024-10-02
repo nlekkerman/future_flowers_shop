@@ -407,7 +407,8 @@
     /* Center horizontally */
     transform: translateX(-50%);
     color: white !important;
-    /* Center horizontally */
+    transition: filter 0.9s ease, background-color 0.9s ease;
+
 }
 
 #scroll-down {
@@ -418,7 +419,7 @@
     transform: translateX(-50%);
     /* Center horizontally */
     color: white !important;
-
+    transition: filter 0.9s ease, background-color 0.9s ease;
 }
 
 .review-button {
@@ -431,7 +432,7 @@
     padding: 8px;
     /* Padding around the icon */
     display: inline-flex;
-    /* Center icon within the button */
+    transition: filter 0.9s ease, background-color 0.9s ;
     justify-content: center;
     align-items: center;
     width: 40px;
@@ -444,19 +445,34 @@
 }
 
 #write-review {
-
+    transition: filter 0.9s ease, background-color 0.9s ease;
     border-radius: 50%;
     width: 30px;
     height: 30px;
-    background-color: rgba(36, 126, 0, 0.5);
+    background-color: rgba(51, 179, 0, 0.5);
     color: white;
     position: absolute;
     top: 10px;
     left: 85px;
     z-index: 99999999;
-
+    border: 5px solid black; /* Transparent border for gradient */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.6),  /* Inner glow */
+                0 0 15px rgba(255, 255, 255, 0.4), /* Middle glow */
+                0 0 25px rgba(255, 255, 255, 0.2); /* Outer glow */
+   
 }
 
+@keyframes shine-green {
+    0% {
+        border-image: linear-gradient(90deg, #4caf50, #81c784, #c8e6c9) 1; /* Start gradient */
+    }
+    50% {
+        border-image: linear-gradient(90deg, #81c784, #c8e6c9, #4caf50) 1; /* Middle gradient shift */
+    }
+    100% {
+        border-image: linear-gradient(90deg, #c8e6c9, #4caf50, #81c784) 1; /* End gradient cycle */
+    }
+}
 .custom-comment-modal {
     display: none;
     /* Initially hidden */
@@ -714,18 +730,26 @@
     height: 30px;
     /* Set height */
     display: flex;
+    background-color: red;
     justify-content: center;
     align-items: center;
+    border: 5px solid black; /* Transparent border for gradient */
+    background-clip: padding-box; /* Ensures the background does not fill the border */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.6),  /* Inner glow */
+                0 0 15px rgba(255, 255, 255, 0.4), /* Middle glow */
+                0 0 25px rgba(255, 255, 255, 0.2); /* Outer glow */
+}
 
-    /* Optional: make the button circular */
-    background-color: rgba(255, 0, 0, 0.5);
-    /* Adjust the color if necessary */
-    color: white;
-    /* Adjust text color */
-    cursor: pointer;
-    /* Add pointer cursor */
-    font-size: 16px;
-    /* Adjust font size for the 'x' */
+@keyframes shine-green {
+    0% {
+        border-image: linear-gradient(90deg, #4caf50, #81c784, #c8e6c9) 1; /* Start gradient */
+    }
+    50% {
+        border-image: linear-gradient(90deg, #81c784, #c8e6c9, #4caf50) 1; /* Middle gradient shift */
+    }
+    100% {
+        border-image: linear-gradient(90deg, #c8e6c9, #4caf50, #81c784) 1; /* End gradient cycle */
+    }
 }
 
 
@@ -815,6 +839,7 @@
     /* Style for the close button */
     #close-reviews {
         width: 50px;
+        border-radius: 50%;
         height: 50px;
         right: 140px;
         top: 140px;
@@ -844,18 +869,40 @@
         0 0 25px rgba(255, 255, 255, 0.2);  /* Outer glow with alpha 0.2 */
 }
 
-/* Hover effect for buttons and other elements */
+
+/* Apply hover effect */
 .custom-with-fit:hover,
 #scroll-up:hover,
 #scroll-down:hover,
 #write-review:hover,
 #close-reviews:hover,
 .review-button:hover,
-#notification-area:hover {
-    background-color: rgba(102, 0, 0, 0.9);  /* Background color */
-    box-shadow:
-        0 0 8px rgba(255, 255, 255, 0.6),  /* Inner glow with alpha 0.6 */
-        0 0 15px rgba(255, 255, 255, 0.4),  /* Middle glow with alpha 0.4 */
-        0 0 25px rgba(255, 255, 255, 0.2);  /* Outer glow with alpha 0.2 */
-    transition: box-shadow 0.3s ease, background-color 0.3s ease;  /* Smooth transition */
+#notification-area:hover,
+#cart-button:hover,
+.btn:hover {
+    background: none;
+    transition: filter 0.7s ease-in-out; /* Smooth transition */
+    filter: drop-shadow(5px 12px 24px rgba(200, 200, 200, 0.8)) 
+            drop-shadow(0 0 15px rgba(220, 220, 220, 0.6)) 
+            drop-shadow(0 0 25px rgba(240, 240, 240, 0.4));
+    
+}
+
+/* Keyframes for a smooth metallic shine */
+@keyframes metallic-shine {
+    0% {
+        filter: drop-shadow(5px 12px 24px rgba(180, 180, 180, 0.8))  /* Dark Gray */
+                drop-shadow(0 0 15px rgba(220, 220, 220, 0.6)) /* Light Silver */
+                drop-shadow(0 0 25px rgba(255, 255, 255, 0.4)); /* White */
+    }
+    50% {
+        filter: drop-shadow(5px 12px 24px rgba(220, 220, 220, 0.9))  /* Light Silver */
+                drop-shadow(0 0 15px rgba(240, 240, 240, 0.7)) /* Brighter Silver */
+                drop-shadow(0 0 25px rgba(255, 255, 255, 0.5)); /* Bright White */
+    }
+    100% {
+        filter: drop-shadow(5px 12px 24px rgba(200, 200, 200, 0.8))  /* Medium Gray */
+                drop-shadow(0 0 15px rgba(220, 220, 220, 0.6)) /* Light Silver */
+                drop-shadow(0 0 25px rgba(255, 255, 255, 0.4)); /* White */
+    }
 }

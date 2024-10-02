@@ -16,32 +16,9 @@ body.blur {
 
 #cart-button{
     cursor: pointer;
-}
-/* Create the glowing effect through the pseudo-element */
-#cart-button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 150%;
-    height: 150%;
-    background: radial-gradient(circle, rgba(255, 255, 0, 0.6) 20%, rgba(255, 255, 0, 0) 70%); /* Glowing effect */
-    border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0); /* Initially hidden */
-    transition: transform 0.7s ease-in-out, opacity 0.5s ease-in-out;
-    opacity: 0; /* Initially invisible */
-    z-index: -1;
+    transition: filter 0.9s ease-in-out, background-color 0.9s ease-in-out;
 }
 
-#cart-button:hover::before {
-    transform: translate(-50%, -50%) scale(1.2); /* Expand glowing effect */
-    opacity: 1; /* Make the glow visible */
-}
-
-#cart-button:hover {
-    transform: scale(1.05); /* Slightly enlarge the button on hover */
-    color: #000; /* Change text color to black */
-}
 .custom-buttons {
     background-color: rgba(0, 0, 0, 0.5) !important;
     padding: 5px 10px;
@@ -724,6 +701,7 @@ header .dropdown-item {
     text-overflow: ellipsis; 
     cursor: pointer; /* Changes the cursor to indicate it is clickable */
     display: none; /* Initially hidden */
+    transition: filter 0.9s ease-in-out, background-color 0.9s ease-in-out;
 }
 
 /* Show icons on hover over the notification area */
