@@ -11,15 +11,15 @@ class OrderForm(forms.ModelForm):
             'county',
         )
         widgets = {
-            'country': forms.Select(attrs={'class': 'stripe-style-input'}),
-            'full_name': forms.TextInput(attrs={'class': 'stripe-style-input'}),
-            'email': forms.EmailInput(attrs={'class': 'stripe-style-input'}),
-            'phone_number': forms.TextInput(attrs={'class': 'stripe-style-input'}),
-            'street_address1': forms.TextInput(attrs={'class': 'stripe-style-input'}),
-            'street_address2': forms.TextInput(attrs={'class': 'stripe-style-input'}),
-            'town_or_city': forms.TextInput(attrs={'class': 'stripe-style-input'}),
-            'postcode': forms.TextInput(attrs={'class': 'stripe-style-input'}),
-            'county': forms.TextInput(attrs={'class': 'stripe-style-input'}),
+            'country': forms.Select(attrs={'class': 'stripe-style-input form-control'}),
+            'full_name': forms.TextInput(attrs={'class': 'stripe-style-input form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'stripe-style-input form-control'}),
+            'phone_number': forms.TextInput(attrs={'class': 'stripe-style-input form-control'}),
+            'street_address1': forms.TextInput(attrs={'class': 'stripe-style-input form-control'}),
+            'street_address2': forms.TextInput(attrs={'class': 'stripe-style-input form-control'}),
+            'town_or_city': forms.TextInput(attrs={'class': 'stripe-style-input form-control'}),
+            'postcode': forms.TextInput(attrs={'class': 'stripe-style-input form-control'}),
+            'county': forms.TextInput(attrs={'class': 'stripe-style-input form-control'}),
         }
 
     def __init__(self, *args, **kwargs):

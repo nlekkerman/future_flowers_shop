@@ -268,7 +268,7 @@ function displaySeedDetails(seed) {
     }
 
     seedDetailsContent.innerHTML = `
-        <div class="container"
+        <div
             style="background-image: url('${seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg'}'); background-size: cover; width: 100%;" >
             <h1>${seed.name}</h1>
             <p><strong>Scientific Name:</strong> ${seed.scientific_name}</p>
@@ -282,7 +282,7 @@ function displaySeedDetails(seed) {
             ${seed.is_in_stock ? 
                 '<p class="card-text text-success"><strong>In Stock</strong></p>' : 
                 '<p class="card-text text-danger"><strong>Out of Stock</strong></p>'}
-            <div class="row">
+            <div class="details-add-button-container>
                 <div class="col-md-2">
                     <button class="btn btn-sm mt-2 ${!seed.is_in_stock ? 'out-of-stock' : ''}" 
                         data-seed-id="${seed.id}" 
@@ -297,7 +297,7 @@ function displaySeedDetails(seed) {
     // Add event listener for the "Add to Cart" button in seed details
     const addToCartButton = seedDetailsContent.querySelector('button');
     if (addToCartButton) {
-        addToCartButton.addEventListener('click', (event) => {
+        addToCartButton.addEventListener('click', async (event) => {
             event.stopPropagation(); // Prevent triggering other click events
 
             const seedId = addToCartButton.getAttribute('data-seed-id');
@@ -308,7 +308,14 @@ function displaySeedDetails(seed) {
             console.log(`Image URL: ${imageUrl}`);
 
             // Call addToCart with the image URL
-            addToCart(seedId, quantity, imageUrl);
+            addToCart(seed, quantity, imageUrl);
+            updateCartUI();
+                try {
+                    await sendToCart(seedId, quantity, seed);
+                    console.log('Item sent to server successfully.');
+                } catch (error) {
+                    console.error('Failed to send item to server:', error);
+                }
         });
     }
 }

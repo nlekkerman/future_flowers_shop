@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM CONTENT LOADED. STARTING CHECKOUT PROCESS...');
     
@@ -22,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('ERROR FETCHING CART DATA:', error);
         return;
     }
-
+ 
     populateCheckout(cart);
    
 });
@@ -62,7 +63,7 @@ function populateCheckout(cart) {
     orderTotalElement.textContent = `$${orderTotal.toFixed(2)}`;
 
     if (orderTotal > 50) {
-        deliveryFeeElement.innerHTML = '<span style="color: green; font-size:16px; font-weight: bold; text-align: left; margin-right: 10px;">FREE</span>';
+        deliveryFeeElement.innerHTML = '<span style="color: green;  font-weight: bold; text-align: left; margin-right: 10px;">FREE</span>';
         grandTotalElement.textContent = `$${orderTotal.toFixed(2)}`;
     } else {
         deliveryFeeElement.textContent = `$${deliveryFee.toFixed(2)}`;
@@ -97,7 +98,7 @@ function renderCartItem(item) {
     return `
         <div class="cart-item">
             <div class="item-info">
-                <img src="${itemImage}" alt="${name}" class="item-image" style="max-width: 70px; max-height: 50px;" />
+                <img src="${itemImage}" alt="${name}" class="item-image"  />
                 <p class="item-font"><strong>${name}</strong></p>
                 <div class="quantity-update-display">
                     <p class="item-font">Quantity:</p>

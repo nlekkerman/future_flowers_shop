@@ -1,102 +1,93 @@
-$(document).ready(function () {
-    function toggleNavLinks(visible) {
-        if (visible) {
-            // Resize the menuIcon when nav-link-icons are visible
-            $('#menuIcon').stop().animate({
-                width: '100px', // Decrease width
-                height: '100px', // Decrease height
-                top: '33%',
-                left: '34%'
-            }, 500); // Duration for resizing animation
+document.addEventListener("DOMContentLoaded", function() {
+    const menuIcon = document.getElementById("menuIcon");
+    const topRow = document.querySelector(".nav-top-row");
+    const bottomRow = document.querySelector(".nav-bottom-row");
+    const navigationContainer = document.querySelector('.navigation-container');
+    const body = document.body; // Reference to the body element
+    let isOpen = false;
 
-            $('.menu-icon-span').stop().animate({
-                opacity: 0.5 // Reduce opacity of the text inside menuIcon
-            }, 1000);
+    // Function to update menu position based on page
+    function updateMenuPosition() {
+        // Check if the current URL matches the home URL
+        const isHome = window.location.href === "https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net/";
 
-            $('.nav-link-icon').each(function (index) {
-                let delay = index * 200; // 0.2 seconds interval
-                $(this).stop().css({
-                    display: 'flex', // Ensure they are displayed
-                    pointerEvents: 'auto' // Allow interactions
-                }).delay(delay).animate({
-                    opacity: 1,
-                    transform: 'scale(1)'
-                }, 200); // 0.2 seconds for appearance animation
-            });
-            $('.home-container').addClass('centered-nav');
-            $('.navigation-container').addClass('centered-nav');
+        if (isOpen) {
+            // If the menu is open, keep it centered
+            navigationContainer.classList.add('centered');
+            navigationContainer.classList.remove('bottom-right');
+        } else if (!isOpen && !isHome) {
+            // If the menu is closed and it's not the homepage, position the menu in the bottom-right
+            navigationContainer.classList.add('bottom-right');
+            navigationContainer.classList.remove('centered');
         } else {
-            // Reset menuIcon size when nav-link-icons are hidden
-            $('#menuIcon').stop().animate({
-                width: '140px', // Original width
-                height: '140px', // Original height
-                top: '27%',
-                left: '28%'
-            }, 500); // Duration for resizing animation
-
-            $('.menu-icon-span').stop().animate({
-                opacity: 1 // Reset opacity for text inside menuIcon
-            }, 1000);
-
-            $('.nav-link-icon').each(function (index) {
-                $(this).stop().delay(index * 200).animate({
-                    opacity: 0,
-                    transform: 'scale(0)'
-                }, 200, function() {
-                    $(this).css({
-                        display: 'none', // Hide elements after animation completes
-                        pointerEvents: 'none' // Disable interactions
-                    });
-                });
-            });
-
-            // Remove class to position the navigation container back in the top right
-            $('.navigation-container').removeClass('centered-nav');
+            // If it's on the homepage and the menu is closed, keep it centered
+            navigationContainer.classList.add('centered');
+            navigationContainer.classList.remove('bottom-right');
         }
     }
 
-    $('#menuIcon').click(function () {
+    // Initial call to set position
+    updateMenuPosition();
 
-    console.log('Menu icon clicked');
-        if ($('.nav-link-icon').first().css('opacity') === '0') {
-            toggleNavLinks(true);
+    menuIcon.addEventListener("click", function() {
+        isOpen = !isOpen; // Toggle the menu state
+
+        if (isOpen) {
+            topRow.style.display = "flex";
+            bottomRow.style.display = "flex";
+
+            // Always center the menu when opened
+            navigationContainer.classList.add('centered');
+            navigationContainer.classList.remove('bottom-right');
+
+            // Add blur effect
+            body.classList.add('active-blur');
+
+            // Animate the top row icons
+            const topIcons = topRow.querySelectorAll(".nav-link-icon");
+            topIcons.forEach((icon, index) => {
+                setTimeout(() => {
+                    icon.style.opacity = 1;
+                }, index * 300);
+            });
+
+            // Animate the bottom row icons
+            const bottomIcons = bottomRow.querySelectorAll(".nav-link-icon");
+            bottomIcons.forEach((icon, index) => {
+                setTimeout(() => {
+                    icon.style.opacity = 1;
+                }, (index + topIcons.length) * 300);
+            });
+
         } else {
-            toggleNavLinks(false);
+            // Hide the icons when closing the menu
+            const topIcons = topRow.querySelectorAll(".nav-link-icon");
+            const bottomIcons = bottomRow.querySelectorAll(".nav-link-icon");
+
+            [...topIcons, ...bottomIcons].forEach((icon, index) => {
+                setTimeout(() => {
+                    icon.style.opacity = 0; // Hide each icon with a delay
+                }, index * 300);
+            });
+
+            // After all icons are hidden, move the menu and remove the blur effect
+            setTimeout(() => {
+                topRow.style.display = "none"; // Hide the top row
+                bottomRow.style.display = "none"; // Hide the bottom row
+                body.classList.remove('active-blur'); // Remove blur effect
+                updateMenuPosition(); // Update menu position based on the current page
+            }, (topIcons.length + bottomIcons.length) * 300); // Wait until all icons are hidden
         }
     });
 
-    function positionNavLinks() {
-        let numSmallCircles = $('.nav-link-icon').length;
-        let angleStep = 360 / numSmallCircles;
-        let radius = 100; // Distance from the center of the big circle
-
-        $('.nav-link-icon').each(function (index) {
-            let angle = angleStep * index;
-            let radians = angle * (Math.PI / 180);
-            let x = radius * Math.cos(radians);
-            let y = radius * Math.sin(radians);
-            $(this).css({
-                top: 'calc(50% + ' + y + 'px)',
-                left: 'calc(50% + ' + x + 'px)',
-                transform: 'translate(-50%, -50%)'
-            });
-        });
-    }
-
-    positionNavLinks();
-    $('.home-icon').click(function(event) {
-        event.preventDefault();
-        window.location.href = '/'; // Redirect to the home page
-    });
+    // Listen for URL changes (for single-page applications or dynamic URL changes)
+    window.addEventListener('popstate', updateMenuPosition);
 });
-
 
 
 // navigation.js
 console.log('navigation.js loaded'); // Log when this script is loaded
 
-
-// navigation.js
 document.addEventListener('DOMContentLoaded', () => {
     const viewSeedsButton = document.getElementById('view-seeds-button');
     if (viewSeedsButton) {
@@ -105,12 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-// navigation.js
+
 document.addEventListener('DOMContentLoaded', () => {
     const viewSeedsButton = document.getElementById('back-to-shopping-button');
     if (viewSeedsButton) {
         viewSeedsButton.addEventListener('click', () => {
-            window.location.href = '/seeds/?show_seeds=true'; // Adjust to the Django URL
+            window.location.href = '/seeds/?show_seeds=true';
         });
     }
 });

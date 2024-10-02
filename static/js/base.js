@@ -1,9 +1,7 @@
 import {getCartFromLocalStorage} from './utils.js';
 import {sendToCart} from './control.js';
-import { loadCart } from './cart.js';
-console.log('BASE.js loaded'); // Log when this script is loaded
-
 // Function to get all seeds from local storage
+
 function getAllSeeds() {
     return JSON.parse(localStorage.getItem('seeds_data')) || [];
 }
@@ -82,7 +80,7 @@ function addToCart(seed, quantity = 1) {
 
     // Save updated cart data to localStorage
     localStorage.setItem('cart', JSON.stringify(updatedCartData));
-    loadCart();
+
     // Optionally, show a success message
     displayMessageInModal('Item successfully added to your cart!', {
         image: imageUrl,
@@ -98,9 +96,7 @@ function updateCartUI() {
     const cartData = getCartFromLocalStorage(); // Fetch the updated cart data
     const cartCountElement = document.getElementById('cart-count'); // Element for item count
     const cartTotalElement = document.getElementById('cart-total'); // Element for total price
-    console.log('Cart DATA', {
-        cartData
-    });
+
     // Validate cart data
     if (!cartData || !cartData.items) {
         console.warn('No cart data found or cart items are missing.');
@@ -125,19 +121,8 @@ function updateCartUI() {
     });
 }
 
-function updateCartTotalUI() {
-    const cartData = JSON.parse(localStorage.getItem('cart')) || { items: [] };
-    const totalPrice = cartData.items.reduce((total, item) => total + (item.total_price || 0), 0);
 
-    const cartTotalElement = document.getElementById('cart-total');
-    if (cartTotalElement) {
-        cartTotalElement.textContent = totalPrice.toFixed(2);
-    }
-}
-document.addEventListener('DOMContentLoaded', function() {
-    updateCartTotalUI(); // Update cart total when the page loads    displayMessagesFromLocalStorage(); // Load messages when the page loads
 
-});
 // Example displayMessageInModal function
 export function displayMessageInModal(message, item) {
     const messagesContainer = document.getElementById('item-added-search-message');
@@ -206,6 +191,8 @@ let isSearchResultsVisible = false;
 function toggleSearchResults() {
     const resultsContainer = document.getElementById('search-results-container');
     const searchButton = document.getElementById('search-button');
+    const searchIcon = document.getElementById('searchIcon');
+        const searchContainer = document.getElementById('searchContainer');
 
     if (resultsContainer) {
         if (isSearchResultsVisible) {
@@ -214,11 +201,18 @@ function toggleSearchResults() {
             resultsContainer.style.visibility = 'hidden';
             searchButton.innerHTML = '<i class="fas fa-search"></i>';
             isSearchResultsVisible = false;
+
+            // Hide search container when close button is clicked
+            searchContainer.classList.remove('focused');
+            searchContainer.classList.remove('show');
+            searchContainer.style.display = 'none'; // Hides the search container
+            searchIcon.style.opacity = '1'; // Show the icon again
         } else {
             // Show the results container
             resultsContainer.style.opacity = '1';
             resultsContainer.style.visibility = 'visible';
             searchButton.textContent = 'Close'; // Update button text
+            searchContainer.classList.add('focused');
             isSearchResultsVisible = true;
         }
     }
@@ -411,6 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!query) {
                 // Display the warning message
                 warningMessage.style.display = 'block';
+                warningMessage.style.marginTop = '20px';
 
                 // Optionally add a red border around the input to highlight the issue
                 searchInput.style.borderColor = 'red';
@@ -418,7 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     warningMessage.style.display = 'none';
                     searchInput.style.borderColor = ''; // Reset to default
-                }, 1000);
+                }, 2000);
 
                 return; // Exit the function if the query is empty
             }
@@ -446,9 +441,18 @@ document.addEventListener('click', (event) => {
     }
 });
 document.addEventListener('DOMContentLoaded', function () {
-    console.log("DOM fully loaded and parsed.");
+    // Handle close button clicks
+    const closeButtons = document.querySelectorAll('.close-button-container');
+    closeButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const message = this.closest('.message-container');
+            if (message) {
+                message.style.display = 'none'; // Hide the message
+            }
+        });
+    });
 
-   
+
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -464,26 +468,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-
-     // Handle close button clicks
-    const closeButtons = document.querySelectorAll('.close-button');
-    console.log("Number of close buttons found: ", closeButtons.length);
-
-    closeButtons.forEach(function (button) {
-        button.addEventListener('click', function () {
-            console.log("Close button clicked!");
-
-            // Find the closest message to this button and hide it
-            const message = this.closest('.message');
-            console.log("Message: ", message);
-            
-            if (message) {
-                message.style.display = 'none'; // Hide the individual message
-            } else {
-                console.log("No message found.");
-            }
-        });
-    });
     // Handle filtering and sorting without page reload (optional)
     document.querySelectorAll('.filter-buttons a, .sorting-buttons a').forEach(button => {
         button.addEventListener('click', function (e) {
@@ -521,52 +505,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-document.getElementById('logout-button').addEventListener('click', () => {
-    // Set cart total to 0
-    console.log("LOGOUT BUTTON CLICKED: ", query);
-
-    const cartTotalElement = document.getElementById('cart-total');
-    if (cartTotalElement) {
-        cartTotalElement.textContent = `$0.00`; // Reset the cart total display
-    }
-
-    // Optionally, clear the cart data from local storage
-    localStorage.removeItem('cart');
-
-    
-});
-
 document.addEventListener('DOMContentLoaded', () => {
-    const adminMessageIcon = document.getElementById('admin-message-icon');
-    const chatContainer = document.getElementById('chat-container');
-
-    console.log('DOM fully loaded and parsed'); // Log when DOM is ready
-
-    // Check if elements are found
-    if (adminMessageIcon) {
-        console.log('Notification area found');
-    } else {
-        console.error('Notification area not found');
+    const viewCartButton = document.getElementById('cart-button');
+    
+    if (viewCartButton) {
+        viewCartButton.addEventListener('click', () => {
+            window.location.href = '/cart/'; // Redirect to cart page
+        });
+        console.log("Cart button found, event listener attached.");
     }
-
-    if (chatContainer) {
-        console.log('Chat container found');
-    } else {
-        console.error('Chat container not found');
-    }
-
-    // Toggle chat-container visibility on notification click
-    adminMessageIcon.addEventListener('click', () => {
-        console.log('Notification area clicked'); // Log the click event
-
-        // Toggle visibility
-        if (chatContainer.style.display === 'none' || chatContainer.style.display === '') {
-            console.log('Showing chat container'); // Log showing
-            chatContainer.style.display = 'block'; // Show chat-container
-        } else {
-            console.log('Hiding chat container'); // Log hiding
-            chatContainer.style.display = 'none'; // Hide chat-container
-        }
-    });
 });
-

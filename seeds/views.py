@@ -193,3 +193,5 @@ def edit_seed_view(request, id):
         form = SeedForm(instance=seed)  # Create a form instance with the existing seed data
 
     return redirect('admin_dashboard')
+
+    

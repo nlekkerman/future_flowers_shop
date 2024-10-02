@@ -330,3 +330,26 @@ export async function fetchMessageCounts() {
     }
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const searchIcon = document.getElementById('searchIcon');
+    const searchContainer = document.getElementById('searchContainer');
+
+    // Add a click event listener to the search icon
+    searchIcon.addEventListener('click', function() {
+        // Log to console for debugging
+        console.log("SSSSSEEEEEEEAAAAAAARRRRRRCCCCCCCCCHHHHH");
+
+        // Check the current display state and toggle
+        if (searchContainer.style.display === 'none' || searchContainer.style.display === '') {
+            searchContainer.classList.add('show'); // Add class to show
+            searchContainer.style.display = 'block'; // Temporarily set display to block
+            searchIcon.style.opacity = '0'; // Hide the icon
+        } else {
+            searchContainer.classList.remove('show'); // Remove class to hide
+            setTimeout(() => { // Wait for transition to finish before hiding
+                searchContainer.style.display = 'none'; // Set display to none after fade
+                searchIcon.style.opacity = '1'; // Show the icon again
+            }, 300); // Match timeout to CSS transition duration
+        }
+    });
+});

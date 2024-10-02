@@ -304,7 +304,7 @@
     /* Hidden by default */
     position: fixed;
     /* Stay in place */
-    z-index: 1000;
+    z-index: 10009999999;
     /* Sit on top */
     left: 0;
     top: 0;
@@ -362,39 +362,62 @@
 }
 
 .custom-review-row {
-    max-height: 250px; /* Set height to allow space for arrows */
-    overflow-y: auto; /* Enable vertical scrolling */
-    display: flex; /* Flexbox for aligning items */
-    flex-direction: column; /* Stack items vertically */
-    scroll-behavior: smooth; /* Smooth scrolling */
-    padding: 10px; /* Add some padding */
+    max-height: 250px;
+    /* Set height to allow space for arrows */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    display: flex;
+    /* Flexbox for aligning items */
+    flex-direction: column;
+    /* Stack items vertically */
+    scroll-behavior: smooth;
+    /* Smooth scrolling */
+    padding: 10px;
+    /* Add some padding */
     margin-top: 50px;
 }
+
 /* Arrow styles */
 .arrow {
-    position: absolute; /* Positioning arrows */
-    width: 30px; /* Size of arrow buttons */
-    height: 30px; /* Size of arrow buttons */
-    background-color: rgba(0, 0, 0, 0.5); /* White background with transparency */
+    position: absolute;
+    /* Positioning arrows */
+    width: 30px;
+    /* Size of arrow buttons */
+    height: 30px;
+    /* Size of arrow buttons */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* White background with transparency */
     color: rgba(92, 67, 67, 0.9);
-    border: none; /* No border */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 20px; /* Size of the arrows */
-    z-index: 10; /* Ensure they are above other elements */
-    border-radius: 50%; /* Round arrows */
+    border: none;
+    /* No border */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    font-size: 20px;
+    /* Size of the arrows */
+    z-index: 10;
+    /* Ensure they are above other elements */
+    border-radius: 50%;
+    /* Round arrows */
 }
 
 #scroll-up {
-    top: 10px; /* Positioning up arrow */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Center horizontally */
+    top: 10px;
+    /* Positioning up arrow */
+    left: 50%;
+    /* Center horizontally */
+    transform: translateX(-50%);
+    /* Center horizontally */
 }
 
 #scroll-down {
-    bottom: 10px; /* Positioning down arrow */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Center horizontally */
+    bottom: 10px;
+    /* Positioning down arrow */
+    left: 50%;
+    /* Center horizontally */
+    transform: translateX(-50%);
+    /* Center horizontally */
 }
+
 .review-button {
     background-color: rgba(0, 0, 0, 0.1);
     /* Semi-transparent background */
@@ -418,12 +441,47 @@
 }
 
 #write-review {
-    
-    margin: 5px;
+
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(36, 126, 0, 0.5);
+    color: white;
     position: absolute;
-    top: 0;
+    top: 10px;
     left: 85px;
+    z-index: 99999999;
+
+}
+.custom-comment-modal {
+    display: none; /* Initially hidden */
+    position: fixed; /* Fixed position to stay on the screen */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for element's width and height */
+    width: 80%; /* Set a width, adjust as necessary */
+    max-width: 600px; /* Maximum width */
     
+    border: 1px solid #ccc; /* Border around the modal */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+    z-index: 88888888888; /* Very high z-index */
+    padding: 20px; /* Padding inside the modal */
+   
+    overflow: auto; /* Add scroll if content overflows */
+}
+
+/* Optional styles for the close button */
+.custom-comment-modal .close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #aaa; /* Color of the close button */
+}
+
+.custom-comment-modal .close-button:hover {
+    color: #000; /* Change color on hover */
 }
 
 .review-button i {
@@ -465,9 +523,11 @@
 
 /* Header Styling */
 .custom-modal-header {
-    border-bottom: 1px solid white;
+    text-align: center;
 }
-
+.close{
+    text-align: end;
+}
 .custom-modal-title {
     color: white;
 }
@@ -552,52 +612,200 @@
 }
 
 
-.review-card-text{
+.review-card-text {
     margin: 0px !important;
 }
 
-.review-chat-icon{
+.review-chat-icon {
     margin: 0px !important;
     font-size: 1rem;
 }
 
 /* Style for each comment item */
 .comment-item {
-    background-color: rgba(255, 255, 255, 0.1); /* Light transparent background */
-    color: #ffffff; /* White text color */
-    margin: 5px 0; /* Space between comments */
-    padding: 10px; /* Padding inside comments */
-    border-radius: 8px; /* Rounded corners */
-    font-size: 0.9rem; /* Font size for comments */
-    border-left: 2px solid #6a85a1; /* Left border for emphasis */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    background-color: rgba(255, 255, 255, 0.1);
+    /* Light transparent background */
+    color: #ffffff;
+    /* White text color */
+    margin: 5px 0;
+    /* Space between comments */
+    padding: 10px;
+    /* Padding inside comments */
+    border-radius: 8px;
+    /* Rounded corners */
+    font-size: 0.9rem;
+    /* Font size for comments */
+    border-left: 2px solid #6a85a1;
+    /* Left border for emphasis */
+    transition: background-color 0.3s;
+    /* Smooth transition for hover effect */
 }
-.review-card-text-content{
+
+.review-card-text-content {
     width: 100%;
     font-style: italic;
     background-color: rgba(0, 0, 0, 0.1);
 }
+
 /* Hover effect for comment items */
 .comment-item:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Darker background on hover */
+    background-color: rgba(255, 255, 255, 0.2);
+    /* Darker background on hover */
 }
 
 /* Style for the username within the comment */
 .comment-item span.username {
-    font-weight: bold; /* Bold username */
-    color: #ffcc00; /* Different color for username */
+    font-weight: bold;
+    /* Bold username */
+    color: #ffcc00;
+    /* Different color for username */
 }
 
 /* Style for the comment text to allow wrapping */
 .comment-text {
-    display: block; /* Make it a block element for full width */
-    word-wrap: break-word; /* Allow words to break onto the next line */
-    overflow-wrap: break-word; /* Additional support for breaking words */
-    white-space: normal; /* Allow text to wrap */
+    display: block;
+    /* Make it a block element for full width */
+    word-wrap: break-word;
+    /* Allow words to break onto the next line */
+    overflow-wrap: break-word;
+    /* Additional support for breaking words */
+    white-space: normal;
+    /* Allow text to wrap */
 }
 
 /* Style for the created_at date */
 .comment-item span.created-at {
-    font-size: 0.8rem; /* Smaller font size for date */
-    color: #cccccc; /* Light gray color for date */
+    font-size: 0.8rem;
+    /* Smaller font size for date */
+    color: #cccccc;
+    /* Light gray color for date */
 }
+
+/* Style for the close button */
+#close-reviews {
+    position: absolute;
+    width: 30px;
+    right: 90px;
+    /* Adjust to desired position */
+    z-index: 1000;
+    /* Ensure it is above other elements */
+    top: 10px;
+    /* Position from the top */
+    height: 30px;
+    /* Set height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+    /* Optional: make the button circular */
+    background-color:rgba(255, 0, 0, 0.5);
+    /* Adjust the color if necessary */
+    color: white;
+    /* Adjust text color */
+    cursor: pointer;
+    /* Add pointer cursor */
+    font-size: 16px;
+    /* Adjust font size for the 'x' */
+}
+
+
+.review-icon-container {
+
+    position: fixed;
+    top: 20%;
+    left: 10%;
+}
+
+#reviews-container {
+    /* Initially hidden */
+    display: none;
+    top: 50%;
+    left: 50%;
+    margin: 0 auto;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    position: fixed;
+    background-color: rgba(11, 11, 10, 0.7);
+    z-index: 99999909;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+
+    /* Center children horizontally */
+    text-align: center;
+}
+
+/* When visible, apply this class to show the container and center children */
+#reviews-container.show {
+    display: grid;
+    /* Change to 'block' if preferred */
+    place-items: center;
+    /* Centers children both horizontally and vertically */
+}
+
+/* Icon styling */
+.icon {
+    background: url('/media/images/menu-icon-rose.webp');
+    /* Set the path to your icon */
+    background-size: contain;
+    /* Ensure the icon is contained within the div */
+    background-repeat: no-repeat;
+    width: 100px;
+    /* Width of the icon */
+    height: 100px;
+    /* Height of the icon */
+    position: absolute;
+    top: 30%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 15%;
+    cursor: pointer;
+    /* Change the cursor to a pointer */
+    z-index: 2;
+    /* Ensure it's above the reviews container */
+}
+
+.custom-with-fit {
+    width: 250px !important;
+}
+
+
+/* Media Queries for larger screens */
+@media (min-width: 768px) {
+    #reviews-container {
+        width: 700px;
+        height: 700px;
+    }
+
+    .custom-with-fit {
+        min-width: 100% !important;
+    }
+
+    .custom-review-row {
+
+        width: 100%;
+        max-height: 700px;
+    }
+
+    /* Style for the close button */
+    #close-reviews {
+        width: 50px;
+        height: 50px;
+        right: 140px;
+        top: 140px;
+    }
+
+    #write-review {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        left: 140px;
+        top: 140px;
+
+
+    }
+}
+
+#editCommentModal{z-index: 999999999;}

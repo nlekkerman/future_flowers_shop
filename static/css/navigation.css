@@ -1,38 +1,37 @@
 .home-container {
-    position: absolute; /* Change to absolute when centered */
+    position: absolute; /* Keep as absolute when centered */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     right: auto; /* Reset right position */
-    background-color: rgba(11, 11, 10, 0.3);
-    height: 300px;
-    width: 300px;
-    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    z-index: 1001;
 }
-
 .navigation-container {
-    position: fixed;
-    bottom: 150px;
-    right: 150px;
-    z-index: 1000;
-    transition: all 0.5s ease;
-
-
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    position: fixed; /* Fixed position for overlaying */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for actual center */
+    z-index: 1000; /* Ensure it's above other content */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transition */
 }
 
-.centered-nav {
-    position: fixed; /* Changed from absolute to fixed */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(11, 11, 10, 0.3);
-    height: 300px;
-    width: 300px;
-    border-radius: 50%;
-    z-index: 1000; /* Optional: Ensures the element is above other content */
+/* Centered Position */
+.navigation-container.centered {
+    display: flex; /* Ensure it's displayed when centered */
 }
 
-
+/* Bottom Right Position */
+.navigation-container.bottom-right {
+    position: fixed; /* Fix position */
+    bottom: -120px; /* Space from bottom */
+    right: 20px; /* Space from right */
+    transform: translate(0, 0); /* Reset transform */
+}
 
 .roses-icon {
     border-radius: 50%;
@@ -48,169 +47,185 @@
     background-position: center;
 }
 
-.home-icon{
-    border-radius: 50%;
-    height: 90px;
-    background-size: cover;
-    background-position: center;
-    color: black !important;
-    font-weight: 700;
-    font-size: 1rem;
-}
-
-.contact-us-icon{
-    border-radius: 50%;
-    height: 90px;
-    background-size: cover;
-    background-position: center;
-    color: black !important;
-    font-weight: 700;
-    font-size: 1rem;
-    
-}
-
-.trees-icon{
+.icon-style {
     border-radius: 50%;
     height: 90px;
     background-size: cover;
     background-position: center;
     font-weight: 700;
-    font-size: 1rem;
-    
+    font-size: 0.7rem;
+    color: black !important; /* Default color */
 }
 
-.about-us-icon{
-    border-radius: 50%;
-    height: 90px;
-    background-size: cover;
-    background-position: center;
-    font-weight: 700;
-    font-size: 1rem;
-    color: blue !important;
-    
+.home-icon {
+    @extend .icon-style; /* Apply common styles */
 }
 
-.bush-icon{
-    border-radius: 50%;
-    height: 90px;
-    background-size: cover;
-    background-position: center;
-    font-weight: 700;
-    font-size: 1rem;
-    
-    
+.contact-us-icon {
+    @extend .icon-style; /* Apply common styles */
 }
 
-.reviews-icon{
-    background-size: cover;
-    background-position: center;
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: black !important;
-    
+.trees-icon {
+    @extend .icon-style; /* Apply common styles */
 }
 
+.about-us-icon {
+    @extend .icon-style; /* Apply common styles */
+    color: rgb(255, 255, 255) !important; /* Specific color for this icon */
+}
+
+.bush-icon {
+    @extend .icon-style; /* Apply common styles */
+}
+
+.reviews-icon {
+    @extend .icon-style; /* Apply common styles */
+}
+
+.blur-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(8px); /* Apply blur effect */
+    background-color: rgba(0, 0, 0, 0.4); /* Optional dark overlay */
+    z-index: 900; /* Below the navigation container */
+    visibility: hidden; /* Hidden by default */
+    opacity: 0;
+    transition: opacity 0.5s ease; /* Smooth transition */
+}
+
+/* Show blur effect when active */
+.active-blur .blur-overlay {
+    visibility: visible;
+    opacity: 1;
+}
+body.active-blur::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Add a semi-transparent overlay */
+    backdrop-filter: blur(8px); /* Apply blur effect */
+    z-index: 999; /* Make sure it's below the navigation but above other content */
+    pointer-events: none; /* Allow interactions with the navigation menu */
+}
 .menu-icon {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    background-image: url('/media/images/sunflower.webp');
+    background-image: url('/media/images/sunflower.webp'); 
     background-size: cover;
     background-position: center;
-    align-items: center;
-    color: white;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    padding: 15px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    position: absolute;
-    top: 27%;
-    left: 28%;
-    transform: translate(-50%, -50%) scale(0);
-    /* Start with the icon scaled down */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0; /* Space above and below the menu icon */
     animation: popOut 1s ease-out forwards;
     /* Apply the pop-out animation */
 }
-
-
-.menu .icon-text {
-   
-    color: rgb(255, 255, 255) !important;
-    font-size: 0.7rem !important;
-    font-weight: 700 !important;
-   padding: 0px 3px;
+.menu {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the menu icon */
+    transition: all 0.3s ease;
+}
+/* Centered Position */
+.menu.centered {
+    justify-content: center; /* Center the menu vertically */
 }
 
+/* Bottom Right Position */
+.menu.bottom-right {
+    position: fixed; /* Fix position */
+    bottom: 20px; /* Space from bottom */
+    right: 20px; /* Space from right */
+    align-items: flex-end; /* Align items to the end */
+}
+
+.menu-icon-span {
+    display: none; /* Hide the text initially */
+    margin-left: 8px;
+}
+
+.nav-top-row,
+.nav-bottom-row {
+    display: none; /* Hide icon rows initially */
+    flex-direction: row; /* Layout icons in a row */
+    position: relative;
+    transition: transform 0.3s ease;
+}
 
 .nav-link-icon {
-    pointer-events: none;            /* Disables mouse events on the element */
-                    /* Sets the height of the icon */
-    display: flex;                   /* Uses flexbox for layout */
-    justify-content: center;         /* Centers content horizontally */
-    border-radius: 50%;              /* Makes the element circular */
-    align-items: center;             /* Centers content vertically */
-    background-color: transparent; /* Semi-transparent dark red background */
-    text-align: center;              /* Centers text horizontally */
-    color: white;                    /* Sets text color to white */
-    cursor: pointer;                 /* Changes cursor to pointer on hover */
-    font-size: 2.5rem;                 /* Sets font size for the text */
-    position: absolute;              /* Positions the element absolutely */
-    opacity: 0;                      /* Hides the element initially */
-    transform: scale(0);             /* Scales down the element to zero */
-    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transition for opacity and transform */
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+    color: white;
+    padding: 10px;
+    margin: 5px 0;
+    color: white;
+    text-decoration: none !important;
+    opacity: 0;
+    position: relative; /* Required for the pseudo-element */
+    overflow: hidden; /* Hide overflow from the glow */
+    transition: color 0.3s ease; 
+}
+
+/* Create the glowing effect through the pseudo-element */
+.nav-link-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%; /* Increased size for a softer glow */
+    height: 200%; /* Increased for a larger, blurrier glow */
+    background-color: rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%) scale(0); /* Initially hidden */
+    transition: transform 0.5s ease-in, opacity 0.5s ease-out; /* Smooth transition */
+    opacity: 0; /* Initially invisible */
+    filter: blur(15px); /* Apply blur to soften the edges */
+    z-index: -1; /* Behind the icon */
+}
+
+/* Hover effect for the icon */
+.nav-link-icon:hover::before {
+    transform: translate(-50%, -50%) scale(1.5); /* Expand glowing effect */
+    opacity: 1; /* Make the glow visible */
+}
+
+.nav-link-icon {
+   background-color: rgba(0, 0, 0, 0.1);
+    font-size: 24px; /* Base font size (adjust as needed) */
+    transition: font-size 0.3s ease; /* Smooth transition for font size */
 }
 
 .nav-link-icon:hover {
-    opacity: 0.5; /* Reduce opacity to 0.5 on hover */
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    color: #ffcc00; /* Change text color to a vibrant yellow */
+    font-size: 30px; /* Increase font size on hover */
 }
 
-.review-icon-container{
-
-    position: fixed;
-    top: 20%;
-    left: 10%;
-}
-
-#reviews-container{
-    display: none;
-    top: 50%;
-    left: 50%;
-    margin: 0 auto;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    position: fixed;
-    background-color: rgba(11, 11, 10, 0.7);
-    z-index: 99999909;
-    transform:translate(-50%, -50%); 
-    overflow: hidden;
-
-}
-
-/* Icon styling */
-.icon {
-    background: url('/media/images/menu-icon-rose.webp'); /* Set the path to your icon */
-    background-size: contain; /* Ensure the icon is contained within the div */
-    background-repeat: no-repeat;
-    width: 100px; /* Width of the icon */
-    height: 100px; /* Height of the icon */
-    position: absolute;
-    top: 30%;
-    text-align: center;
+.nav-link-icon i {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    left: 15%;
-    cursor: pointer; /* Change the cursor to a pointer */
-    z-index: 2; /* Ensure it's above the reviews container */
+    justify-content: space-evenly;
+    flex-direction: column;
+    border-radius: 50%;
+font-size: 1rem;
+    text-align: center;
 }
 
-/* Media Queries */
-@media (max-width: 768px) {
-    .icon {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%); /* Center the icon on small screens */
-    }
+
+
+.nav-top-row {
+    transform: translateY(-20px); /* Move slightly up when hidden */
+}
+
+.nav-bottom-row {
+    transform: translateY(20px); /* Move slightly down when hidden */
 }

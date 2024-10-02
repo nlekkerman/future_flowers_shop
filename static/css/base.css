@@ -14,7 +14,34 @@ body.blur {
     filter: blur(5px); /* Adjust blur level as needed */
 }
 
+#cart-button{
+    cursor: pointer;
+}
+/* Create the glowing effect through the pseudo-element */
+#cart-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(255, 255, 0, 0.6) 20%, rgba(255, 255, 0, 0) 70%); /* Glowing effect */
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0); /* Initially hidden */
+    transition: transform 0.7s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 0; /* Initially invisible */
+    z-index: -1;
+}
 
+#cart-button:hover::before {
+    transform: translate(-50%, -50%) scale(1.2); /* Expand glowing effect */
+    opacity: 1; /* Make the glow visible */
+}
+
+#cart-button:hover {
+    transform: scale(1.05); /* Slightly enlarge the button on hover */
+    color: #000; /* Change text color to black */
+}
 .custom-buttons {
     background-color: rgba(0, 0, 0, 0.5) !important;
     padding: 5px 10px;
@@ -32,17 +59,17 @@ body.blur {
     width: 100%;
     font-weight: 700;
     position: fixed;
-    height: 64px;
+    height: 100px;
     top: 0;
-    /* Stick to the top */
+  
     left: 0;
-    /* Full width */
+ 
     z-index: 1000;
     /* Ensure it is on top of other content */
     display: flex;
     justify-content: flex-end;
     /* Align children to the right */
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 153, 82, 0.5);
     box-shadow: 0 5 10px rgba(0, 0, 0, 0.5);
 
 
@@ -65,16 +92,30 @@ body.blur {
 }
 
 .container {
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
     margin-top: 100px;
-    padding: 20px;
     background-color: rgba(0, 0, 0, 0.4);
     color: white !important;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.checkout-container {
+    min-height: 100vh;
+   width: 100%;
+    margin: 0 auto;
+    margin-top: 100px;
+    padding: 2px;
+    overflow-x: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white !important;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.container-cart-margin{
+    margin: 5px;
+}
 .filter-container {
     margin-top: 130px !important;
     position: relative;
@@ -201,7 +242,10 @@ a {
 .search-icon{
     color: white !important;
 }
-
+.search-icon-wrapper{
+    cursor: pointer; /* Pointer cursor to show it's clickable */
+    transition: opacity 0.3s ease; /* Transition for the icon */
+}
 
 
 .btn {
@@ -456,20 +500,47 @@ header .dropdown-item {
 }
 .search-container {
     position: fixed;
-    top: 64px;
+    top: 44px;
     left: 50%;
     transform: translateX(-50%);
     margin: 0;
-    background-color: rgba(0, 0, 0, 0.9);
-    box-shadow: 0 5 10px rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
     border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
+    border-radius: 15px;
     z-index: 444999;
     display: flex;
     align-items: center;
+    transition: opacity 0.9s ease;
+    display: none; /* Initially hidden */
+    opacity: 0; /* Initial opacity for transition */
 }
 
+/* Custom focus styles */
+.search-container input[type="search"]:focus,
+.search-container input[type="search"]:active {
+    border: 2px solid rgba(0, 255, 255, 0.8); /* Neon border color */
+    background-color: rgba(0, 255, 255, 0.5); /* Neon background color */
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.6); /* Neon glow effect */
+}
+/* Scale the search container when the input is focused */
+.search-container input[type="search"]:focus {
+    /* This will apply the scale to the parent container when the input is focused */
+    transform: scale(1.1); /* Scale up by 10% */
+}
+.search-wrapper {
+    position: fixed;
+    top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 20px; /* Add padding to give space around content */
+    filter: drop-shadow(16px 4px 9px rgba(43, 54, 1, 0.6));
+    z-index: 1000000; /* Ensure it's above other content */
+    
+}
+.search-container.show {
+    display: block; /* Show the container */
+    opacity: 1; /* Set opacity to fully visible */
+}
 /* Style for the form elements */
 .search-container form {
     display: flex;
@@ -491,8 +562,7 @@ header .dropdown-item {
     /* Rounded corners */
     padding: 2px;
     /* Padding inside the input field */
-    margin-bottom: 5px;
-    margin-left: 5px;
+    margin: 5px;
     font-size: 16px;
     /* Font size */
     box-shadow: none !;
@@ -626,7 +696,7 @@ header .dropdown-item {
     padding: 5px;
     border-radius: 25px;
     position: fixed;
-    top: 100px;
+    top: 115px;
     left: 30px;
     white-space: nowrap;
     overflow: hidden; 

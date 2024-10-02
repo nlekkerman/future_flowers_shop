@@ -5,29 +5,37 @@ import {
     fetchConversations,
     sendMessage,
     fetchUsername,
-    fetchMessages,
     checkIfSuperUser,
     fetchMessageCounts
 } from './control.js';
-let loggedInUsername,loadingOverlay, loadingText;;
+let loggedInUsername, loadingOverlay, loadingText;;
 
 window.onload = async () => {
+
     try {
         const userId = await fetchUserId(); // Fetch user ID
-        const loggedInUsername = await fetchUsername(); // Fetch username here
+        loggedInUsername = await fetchUsername(); // Fetch username here
         await fetchMessageCounts();
         updateIconsBasedOnSuperUser();
-
+        fetchCartData();
         const chatContainer = document.getElementById('chat-container');
         const messagesIcon = document.getElementById('messagesIcon');
         const adminMessagesIcon = document.getElementById('admin-message-icon');
 
-        // Function to toggle visibility of the chat container
+       
+
         const toggleChatContainerVisibility = () => {
+            // Add condition to check if userId is 1
+            if (userId !== 1) {
+                return; // Do nothing if userId is not 1
+            }
+        
             if (chatContainer.style.display === "block") {
+                console.log("CHAT TOGGLE HIDDEN");
                 chatContainer.style.display = "none"; // Hide the chat container
             } else {
                 chatContainer.style.display = "block"; // Show the chat container
+                console.log("CHAT TOGGLE VISIBLE");
             }
         };
 
@@ -73,30 +81,12 @@ window.onload = async () => {
     }
 };
 
-
-function updateCartTotalUI() {
-    const cartTotalElement = document.getElementById('cart-total');
-
-    // Clear the cart total before updating
-    if (cartTotalElement) {
-        cartTotalElement.textContent = '0.00'; // Reset the cart total to zero
-    }
-
-    // Fetch the latest cart data and update the cart total
-    const cartData = JSON.parse(localStorage.getItem('cart')) || {
-        items: []
-    };
-    const totalPrice = cartData.items.reduce((total, item) => total + (item.total_price || 0), 0);
-
-    if (cartTotalElement) {
-        cartTotalElement.textContent = totalPrice.toFixed(2);
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function () {
-    updateCartTotalUI(); // Update cart total when the page loads
+    updateCartTotalUILogin(); // Update cart total when the page loads
     // Run the function when the page loads
-    
+    // Get the elements by their ID
+
+
 
 });
 
@@ -114,18 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('logout-button').addEventListener('click', () => {
     // Clear cart data from localStorage
     localStorage.removeItem('cart');
+    // Set cart total to 0 in localStorage
+    localStorage.setItem('cartTotal', '0.00'); // Store total as a string
 
-    // Set cart total to 0 in the UI
-    const cartTotalElement = document.getElementById('cart-total');
-    if (cartTotalElement) {
-        cartTotalElement.textContent = `$0.00`; // Reset the cart total display
-    }
+
 
     console.log('Cart cleared and total set to $0.00 after logout.');
 
-    // Optionally, proceed with your logout logic here (e.g., redirect or refresh the page)
-    // Example:
-    // window.location.href = '/logout-url/';
 });
 
 document.getElementById('login-button').addEventListener('click', async () => {
@@ -134,6 +119,7 @@ document.getElementById('login-button').addEventListener('click', async () => {
     try {
         // Call fetchCartData() to retrieve the cart data after login
         await fetchCartData();
+        updateCartTotalUILogin()
         console.log('Cart data fetched successfully after login.');
     } catch (error) {
         console.error('Error fetching cart data after login:', error);
@@ -197,11 +183,11 @@ export function displayConversationsFromLocalStorage() {
         conversationDiv.addEventListener('click', async () => {
             showLoadingAnimation(); // Show loading animation
             conversationDiv.style.backgroundColor = 'transparent';
-        
+
             // Gather the IDs of all unseen messages in this conversation
             if (Array.isArray(conversation.unseenMessages)) {
                 const unseenMessageIds = conversation.unseenMessages.map(message => message.id);
-        
+
                 // Call the updateMessageStatus function to mark messages as seen
                 if (unseenMessageIds.length > 0) {
                     await updateMessageStatus(unseenMessageIds, true); // Mark all unseen messages as seen
@@ -209,7 +195,7 @@ export function displayConversationsFromLocalStorage() {
             } else {
                 console.warn('No unseen messages found or unseenMessages is not an array');
             }
-        
+
             // Load conversation messages
             await loadConversationMessages(conversation.id, loggedInUsername);
             hideLoadingAnimation(); // Hide loading animation after loading messages
@@ -286,7 +272,7 @@ async function loadConversationMessages(conversationId, loggedInUsername) {
         // Set up the send button click handler
         const sendButton = document.getElementById('send-message-button');
         sendButton.onclick = () => {
-            console.log('Username before sending message:', loggedInUsername); // Debugging
+            console.log('Username AHAHAHAHAHAHA before sending message:', loggedInUsername); // Debugging
             handleSendMessage(conversationId, loggedInUsername);
         };
 
@@ -331,6 +317,7 @@ async function handleSendMessage(conversationId, loggedInUsername) {
 }
 async function displayUserMessages(messages, loggedInUsername) {
     console.log('Entering displayUserMessages function');
+
     console.log('Logged in username:', loggedInUsername);
     console.log('Messages received:', messages); // Debugging output
 
@@ -403,8 +390,9 @@ async function displayUserMessages(messages, loggedInUsername) {
 
     // Set up the send button click handler
     const sendButton = document.getElementById('send-message-button');
-    sendButton.onclick = () => {
+    sendButton.onclick = async () => {
         if (conversationId) {
+
             console.log('Username before sending message:', loggedInUsername); // Debugging
             handleSendMessage(conversationId, loggedInUsername);
         } else {
@@ -531,7 +519,7 @@ function createLoadingOverlay() {
 
     // Append loading text to the overlay
     loadingOverlay.appendChild(loadingText);
-    
+
     // Append the overlay to the body
     document.body.appendChild(loadingOverlay);
     console.log("Loading overlay created and added to the body.");
