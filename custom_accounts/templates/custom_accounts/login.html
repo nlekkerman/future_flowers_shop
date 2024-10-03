@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% load socialaccount %}
+{% load static %}
 {% block content %}
+<div class="navigation-container">
+    {% include 'navigation.html' %}
+    </div>
 <h2 class="login-heading">Login</h2>
 <div class="form-container">
+
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
@@ -11,9 +16,5 @@
 
     <p class="registration-link">Don't have an account? <a href="{% url 'account_signup' %}">Register here</a></p>
 
-    <div class="social-login">
-        <a href="{% provider_login_url 'google' %}" class="google-login-button">
-            <i class="fab fa-google"></i> Login with Google
-        </a>
-    </div>
+    
 {% endblock %}

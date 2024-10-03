@@ -1,9 +1,5 @@
-import {
-    getCartFromLocalStorage
-} from './utils.js';
-import {
-    sendToCart
-} from './control.js';
+import { getCartFromLocalStorage } from './utils.js';
+import { sendToCart } from './control.js';
 
 export function displaySeeds({
     category = '',
@@ -108,6 +104,44 @@ export function displaySeeds({
     // Attach event listeners
     attachEventListeners();
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Handle filtering and sorting
+    // For filter buttons
+    document.querySelectorAll('.filter-buttons .filter-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const category = this.dataset.category;
+
+            // Update active class for filter buttons
+            document.querySelectorAll('.filter-buttons .filter-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            // Call displaySeeds with the selected category
+            displaySeeds({ category });
+        });
+    });
+
+    // For sorting buttons
+    document.querySelectorAll('.sorting-buttons a').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent default link behavior
+
+            const sort = this.dataset.sort;
+
+            // Update active class for sorting links
+            document.querySelectorAll('.sorting-buttons a').forEach(l => {
+                l.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            // Call displaySeeds with the selected sort option
+            displaySeeds({ sort });
+        });
+    });
+});
+
 
 function attachEventListeners() {
     // Attach click event listener to seed cards for viewing details

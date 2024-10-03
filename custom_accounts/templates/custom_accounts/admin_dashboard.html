@@ -4,15 +4,14 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-
+<div class="navigation-container">
+    {% include 'navigation.html' %}
+    </div>
 <div class="admin-dashboard-container">
     <div class="admin-dashboard-header">
         <h2>Admin Dashboard</h2>
     </div>
-    <div class="navigation-container">
-        {% include 'navigation.html' %}
-    </div>
-
+  
     <!-- Pending Reviews Section -->
     <section>
         <div class="admin-dashboard-section-title">
@@ -24,10 +23,10 @@
                     <div class="review-card">
                         <div class="card-body">
                             <h5 class="card-title">{{ review.user.username }}</h5>
-                            <p class="card-text">{{ review.comment }}</p>
+                            <p class="card-text font-italic">" {{ review.comment }} "</p>
                             <p class="card-text"><small class="text-muted">Created At: {{ review.created_at }}</small></p>
                             <p class="card-text"><small class="text-muted">Updated At: {{ review.updated_at }}</small></p>
-                            <div class="d-flex justify-content-center">
+                            <div class="d-flex justify-content-around">
                                 <a href="{% url 'approve_review' review.id %}" class="btn btn-success btn-sm mr-2">Approve</a>
                                 <a href="{% url 'reject_review' review.id %}" class="btn btn-warning btn-sm mr-2">Reject</a>
                                 <a href="{% url 'delete_review' review.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
@@ -54,7 +53,7 @@
                     <div class="review-card">
                         <div class="card-body">
                             <h5 class="card-title">{{ comment.user.username }}</h5>
-                            <p class="card-text">{{ comment.text }}</p>
+                            <p class="card-text font-italic">" {{ comment.text }} "</p>
                             <p class="card-text"><small class="text-muted">Created At: {{ comment.created_at }}</small></p>
                             <p class="card-text"><small class="text-muted">Updated At: {{ comment.updated_at }}</small></p>
                             <div class="d-flex justify-content-between">
@@ -75,7 +74,7 @@
 
     <!-- Seed Management Section -->
     <section>
-        <h3>Seed Management</h3>
+        <h3 class="admin-dashboard-section-title">Seed Management</h3>
         <button id="add-seed-btn" class="btn btn-primary mb-3">Add New Seed</button>
         <ul id="seed-list">
             <!-- List of existing seeds can be dynamically populated here -->

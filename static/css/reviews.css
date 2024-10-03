@@ -86,7 +86,14 @@
     color: #ffffff;
     /* White text */
 }
-
+.close-conversations-button {
+    position: sticky;
+    top: 0;  /* Start the sticky position at the middle */
+    transform: translateY(-50%); /* Adjust the position to center it vertically */
+    left: 40%; /* Adjust this as needed */
+    width: 50px;
+    border: none !important;
+}
 .comment-text {
     margin: 5px 0;
     font-size: 14px;
@@ -338,6 +345,7 @@
     text-align: center;
     /* Center content */
     border-radius: 5px;
+    margin-top: 100px;
     /* Rounded corners */
 }
 
@@ -375,6 +383,12 @@
     padding: 10px;
     /* Add some padding */
     margin-top: 50px;
+    
+}
+
+/* For WebKit browsers (Chrome, Safari, etc.) */
+.custom-review-row::-webkit-scrollbar {
+    width: 0; /* Removes the scrollbar's width */
 }
 
 /* Arrow styles */
@@ -462,17 +476,7 @@
    
 }
 
-@keyframes shine-green {
-    0% {
-        border-image: linear-gradient(90deg, #4caf50, #81c784, #c8e6c9) 1; /* Start gradient */
-    }
-    50% {
-        border-image: linear-gradient(90deg, #81c784, #c8e6c9, #4caf50) 1; /* Middle gradient shift */
-    }
-    100% {
-        border-image: linear-gradient(90deg, #c8e6c9, #4caf50, #81c784) 1; /* End gradient cycle */
-    }
-}
+
 .custom-comment-modal {
     display: none;
     /* Initially hidden */
@@ -862,7 +866,8 @@
 
 
 /* Glow effect for the reviews container on hover */
-#reviews-container:hover {
+#reviews-container:hover, #chat-container:hover,
+.seed-card:hover  {
     box-shadow:
         0 0 8px rgba(255, 255, 255, 0.6),  /* Inner glow with alpha 0.6 */
         0 0 15px rgba(255, 255, 255, 0.4),  /* Middle glow with alpha 0.4 */
@@ -871,6 +876,7 @@
 
 
 /* Apply hover effect */
+
 .custom-with-fit:hover,
 #scroll-up:hover,
 #scroll-down:hover,
@@ -879,7 +885,12 @@
 .review-button:hover,
 #notification-area:hover,
 #cart-button:hover,
-.btn:hover {
+.btn:hover,
+.dropdown-menu:hover,
+#send-message-button:hover,
+.nav-link:hover,
+.custom-buttons:hover{
+    text-decoration: none;
     background: none;
     transition: filter 0.7s ease-in-out; /* Smooth transition */
     filter: drop-shadow(5px 12px 24px rgba(200, 200, 200, 0.8)) 

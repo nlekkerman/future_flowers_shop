@@ -153,6 +153,17 @@ export function displayConversationsFromLocalStorage() {
     }
 
     chatContainer.innerHTML = '';
+     // Add a close button to chat-container
+     const closeButton = document.createElement('button');
+     closeButton.classList.add('btn', 'close-conversations-button');
+     closeButton.innerHTML = 'X'; // Add an 'X' or any close icon you prefer
+     chatContainer.appendChild(closeButton);
+ 
+     // Add event listener to close button to hide the chat-container
+     closeButton.addEventListener('click', () => {
+         console.info('Close button clicked. Hiding chat container.');
+         chatContainer.style.display = 'none';
+     });
 
     if (conversations.length === 0) {
         console.warn('No conversations to display.');
@@ -175,9 +186,8 @@ export function displayConversationsFromLocalStorage() {
         }
 
         conversationDiv.innerHTML = `
-            <strong>User:</strong> ${conversation.user}<br>
-            <strong>Superuser:</strong> ${conversation.superuser}<br>
-            <strong>Started At:</strong> ${new Date(conversation.started_at).toLocaleString()}
+            <span>Conversation with </span> <strong>${conversation.user}</strong><br>
+            <span>Started At:</span> <strong> ${new Date(conversation.started_at).toLocaleString()}</strong>
         `;
 
         conversationDiv.addEventListener('click', async () => {
@@ -195,7 +205,7 @@ export function displayConversationsFromLocalStorage() {
             } else {
                 console.warn('No unseen messages found or unseenMessages is not an array');
             }
-
+            chatContainer.style.display = 'none'
             // Load conversation messages
             await loadConversationMessages(conversation.id, loggedInUsername);
             hideLoadingAnimation(); // Hide loading animation after loading messages
@@ -234,7 +244,7 @@ async function loadConversationMessages(conversationId, loggedInUsername) {
                 </div>
                 <div class="chat-footer-input">
                     <input type="text" id="message-input" class="text-type-box" placeholder="Type your message..." />
-                    <button id="send-message-button" class="send-message-action">Send</button>
+                    <button id="send-message-button" class="btn">Send</button>
                 </div>
             `;
             document.body.appendChild(messageModal);
@@ -505,7 +515,7 @@ function createLoadingOverlay() {
     loadingOverlay.style.display = 'flex'; // Use flexbox to center content
     loadingOverlay.style.justifyContent = 'center'; // Center content horizontally
     loadingOverlay.style.alignItems = 'center'; // Center content vertically
-    loadingOverlay.style.zIndex = '9999'; // Ensure it appears on top of other elements
+    loadingOverlay.style.zIndex = '999999999999999999999'; // Ensure it appears on top of other elements
     loadingOverlay.style.transform = 'translate(-50%, -50%)'; // Center the overlay
 
     // Create the loading text

@@ -399,6 +399,7 @@
     text-align: center;
     border-radius: 5px;
     margin-bottom: 30px;
+    margin-top: 300px;
 }
 
 .seed-list {
@@ -528,4 +529,23 @@
     float: right;
     font-size: 28px;
     font-weight: bold;
+}
+
+.card-title {
+    background-color: rgba(94, 0, 0, 0.6);
+}
+
+.admin-dashboard-section-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background-color: rgba(0, 22, 94, 0.6);
+   
+}
+
+.outlined-text {
+    font-family: 'Bebas Neue', sans-serif;
+color: white;
+   
 }

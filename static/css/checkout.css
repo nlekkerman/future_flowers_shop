@@ -150,6 +150,7 @@ button[type="submit"]:hover {
     margin: 5px;
 }
 
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .item-container-checkout {
@@ -161,9 +162,70 @@ button[type="submit"]:hover {
     .checkout-cart-item-quantity {
         margin-bottom: 10px;
     }
+
 }
 
+@media screen and (min-width: 768px) {
+    .filter-container {
+       
+        width: 65%; 
+        }
+    #chat-container {
+      
+        width: 515px;
+        height: 515px;
+    }
+
+
+    .search-wrapper {
+        position: fixed;
+        left: 50%
+    }
+
+    #filter-toggle {
+        top: 0px;
+        width: 150px;
+        top: 0px;
+    }
+
+    .navigation-container.bottom-right {
+
+        top: 75%;
+        left: 80%;
+    }
+
+
+}
+@media screen and (min-width: 1023px) {
+    .filter-container {
+        top: 150px !important;
+      
+        width: 40%;}
+        
+    }
+
+
 @media screen and (min-width: 1800px) {
+    .filter-container {
+        top: 150px !important;
+      
+        width: 40%;}
+        
+   
+    .custom-buttons {
+        font-size: 1.2rem; /* Make button font smaller */
+       
+    }
+    .chat-message {
+       
+        font-size: 1.5rem;
+      
+    }
+    .modal-content {
+    
+        max-width: 1000px;}
+
+
     .cart-item {
         display: flex;
         justify-content: space-between;
@@ -180,7 +242,7 @@ button[type="submit"]:hover {
     .item-info {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: space-evenly;
         align-items: center;
         width: 100%;
         height: 100%;
@@ -188,17 +250,16 @@ button[type="submit"]:hover {
     }
 
     .item-image {
-        min-width: 250px;
+        min-width: 220px;
         /* Larger image size for bigger screens */
         min-height: 150px;
         /* Larger image size for bigger screens */
         height: auto;
-        margin-right: 20px;
+        margin-right: 5px;
     }
 
     .item-font {
         font-size: 1.2rem;
-        /* Increase the font size for better readability */
         margin-right: 15px;
     }
 
@@ -261,20 +322,183 @@ button[type="submit"]:hover {
         font-size: 2rem;
         width: 250px;
     }
-    .form-check-label, .form-check-input {
+
+    .form-check-label,
+    .form-check-input {
         font-size: 1.5rem;
     }
+
     .order-summary {
         font-size: 2rem;
     }
+
     #cart-count {
         font-size: 2rem;
-      
+
     }
-    .edit-cart-button{
+
+    .edit-cart-button {
         font-size: 2rem !important;
     }
-    .admin-message-icon{
+
+    .admin-message-icon {
         font-size: 2rem !important;
     }
+
+    .admin-dashboard-header h2 {
+        font-size: 3.25rem;
+        /* Increased by 30% */
+    }
+
+    .admin-dashboard-section-title h3 {
+        font-size: 2.6rem;
+        /* Increased by 30% */
+    }
+
+    .review-card .card-title {
+        font-size: 2.55rem;
+        /* Increased by 30% */
+    }
+
+    .review-card .card-text {
+        font-size: 1.56rem;
+        /* Increased by 30% */
+    }
+
+    .review-card .text-muted {
+        font-size: 1.17rem;
+        /* Increased by 30% */
+    }
+
+
+    .modal-content-admin h3 {
+        font-size: 2.6rem;
+        /* Increased by 30% */
+    }
+
+    .form-group label {
+        font-size: 1.56rem;
+        /* Increased by 30% */
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        font-size: 1.56rem;
+        /* Increased by 30% */
+    }
+
+    .alert {
+        font-size: 1.56rem;
+        /* Increased by 30% */
+    }
+
+    .modal-box-content li {
+        font-size: 1.56rem;
+        /* Increased by 30% */
+    }
+
+    /* Increase font size for modal message */
+    .modal-box-content p {
+        font-size: 24px;
+        /* Adjust size as needed */
+    }
+
+    /* Increase font size for the close button */
+    .button-close-modal {
+        font-size: 20px;
+        /* Adjust size as needed */
+    }
+
+    /* Increase font size for seed list items */
+    .seed-list-item {
+        font-size: 20px;
+        /* Adjust size as needed */
+    }
+
+    /* Increase font size for seed name */
+    .seed-name {
+        font-size: 2rem;
+        /* Adjust size as needed */
+    }
+
+    /* Increase font size for edit link */
+    .edit-link {
+        font-size: 2rem;
+        /* Adjust size as needed */
+    }
+
+    /* Increase font size for delete link */
+    .delete-link {
+        font-size: 2rem;
+        /* Adjust size as needed */
+    }
+
+    .admin-dashboard-section-title {
+        font-size: 3rem;
+
+
+    }
+
+    /* Increase font size for modal input labels */
+    label {
+        font-size: 20px;
+        /* Adjust size as needed */
+    }
+
+    /* Increase font size for modal input fields */
+    input[type="text"],
+    input[type="number"],
+    textarea {
+        font-size: 20px;
+        /* Adjust size as needed */
+    }
+
+    /* Increase font size for any form buttons */
+    button {
+        font-size: 20px;
+        /* Adjust size as needed */
+    }
+
+    .btn {
+        font-size: 1.5rem;
+    }
+
+    .menu-icon {
+        width: 350px;
+        height: 350px;
+    }
+
+    .nav-link-icon {
+
+        width: 170px;
+    }
+
+    .menu-icon-span {
+
+        font-size: 3rem;
+    }
+
+    .super-chat-window {
+        width: 60%;
+    }
+
+    .navigation-container.bottom-right {
+
+        top: 85%;
+        left: 85%;
+
+    }
+
+    .chat-footer-input {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    #chat-container {
+        font-size: 1.5rem;
+        width: 715px;
+        height: 715px;
+    }
+
 }

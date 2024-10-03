@@ -20,6 +20,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     {% endblock %}
 
     {% block extra_css %}
@@ -49,8 +50,9 @@
     <script type="module" src="{% static 'js/cart.js' %}" defer></script>
     <script type="module" src="{% static 'js/reviews.js' %}" defer></script>
     <script type="module" src="{% static 'js/accounts.js' %}" defer></script>
-    <script type="module" src="{% static 'js/navigation.js' %}" defer></script>
     <script type="module" src="{% static 'js/checkout.js' %}" defer></script>
+    <script type="module" src="{% static 'js/navigation.js' %}" defer></script>
+
     <script type="module" src="{% static 'js/utils.js' %}" defer></script>
 
 
@@ -86,17 +88,16 @@
                 <a class="text-black nav-link" href="#" id="user-options" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                     <div>
-                        <i class="fas fa-user fa-lg"></i>
-                        <!-- Conditionally display username -->
+                        <img src="/media/images/user-icon.png" alt="User Icon" class="user-icon" style="width: 40px; height: 40px;"/>                         <!-- Conditionally display username -->
                         {% if request.user.is_authenticated %}
                         <span>{{ request.user.username }}</span>
                         {% endif %}
                     </div>
                 </a>
-                <div class="dropdown-menu border-0" aria-labelledby="user-options">
+                <div class="dropdown-menu" aria-labelledby="user-options">
                     {% if request.user.is_authenticated %}
                     {% if request.user.is_superuser %}
-                    <a href="{% url 'admin_dashboard' %}" class="dropdown-item">Product Management</a>
+                    <a href="{% url 'admin_dashboard' %}" class="dropdown-item">Admin</a>
                     {% endif %}
                     <a href="{% url 'profile' %}" class="dropdown-item">My Profile</a>
                     <a href="{% url 'account_logout' %}" class="dropdown-item" id="logout-button">Logout</a>
@@ -109,8 +110,7 @@
             <li class="list-inline-item">
                 <a class="text-black nav-link" id="cart-button">
                     <div class="text-center icon-container">
-                        <div><i class="fas mr-1 fa-shopping-bag fa-lg"></i></div>
-                      
+                        <img src="/media/images/shopping-icon.png" alt="User Icon" class="user-icon" style="width: 60px; height: 60px; "/>                          
                     </div>
                 </a>
             </li>
@@ -137,23 +137,21 @@
 </div>
 
 <div id="filter-container" class="filter-container mb-4 d-none">
-    <label class="filter-label" for="categoryDropdown">Filter by:</label>
-    <div id="filter-buttons" class="filter-buttons btn-group d-none d-lg-flex" role="group"
+    <div id="filter-buttons" class="filter-buttons btn-group " role="group"
         aria-label="Category Filter">
-        <button data-category="" class="custom-buttons filter-button active">All</button>
-        <button data-category="rose" class="custom-buttons filter-button">Roses</button>
-        <button data-category="tree" class="custom-buttons filter-button">Trees</button>
-        <button data-category="bush" class="custom-buttons filter-button">Bushes</button>
-        <button data-category="flower" class="custom-buttons filter-button">Flowers</button>
+        <button data-category="" class="custom-buttons active">All</button>
+        <button data-category="rose" class="custom-buttons ">Roses</button>
+        <button data-category="tree" class="custom-buttons ">Trees</button>
+        <button data-category="bush" class="custom-buttons ">Bushes</button>
+        <button data-category="flower" class="custom-buttons ">Flowers</button>
     </div>
 
-    <label class="sorting-label" for="sortOptions">Sort by:</label>
-    <div class="sorting-buttons btn-group d-none d-lg-flex" role="group" aria-label="Sort Options">
-        <a href="#" data-sort="" class="custom-buttons active">Default</a>
-        <a href="#" data-sort="price_asc" class="custom-buttons">Price: Low to High</a>
-        <a href="#" data-sort="price_desc" class="custom-buttons">Price: High to Low</a>
-        <a href="#" data-sort="latest" class="custom-buttons">Latest</a>
-        <a href="#" data-sort="discount" class="custom-buttons">Discounted</a>
+    <div class="sorting-buttons btn-group" role="group" aria-label="Sort Options">
+        <button href="#" data-sort="" class="custom-buttons active">Default</button>
+        <button href="#" data-sort="price_asc" class="custom-buttons">L/High</button>
+        <button href="#" data-sort="price_desc" class="custom-buttons">H/Low</button>
+        <button href="#" data-sort="latest" class="custom-buttons">Latest</button>
+        <button href="#" data-sort="discount" class="custom-buttons">Discounted</button>
     </div>
 
 </div>

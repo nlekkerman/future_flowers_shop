@@ -467,15 +467,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Handle filtering and sorting without page reload (optional)
-    document.querySelectorAll('.filter-buttons a, .sorting-buttons a').forEach(button => {
-        button.addEventListener('click', function (e) {
-            e.preventDefault();
-            window.location.href = this.href;
-        });
-    });
-});
 
 
 

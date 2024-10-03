@@ -11,22 +11,28 @@ body {
 }
 
 body.blur {
-    filter: blur(5px); /* Adjust blur level as needed */
+    filter: blur(5px);
+    /* Adjust blur level as needed */
 }
 
-#cart-button{
+#cart-button {
     cursor: pointer;
     transition: filter 0.9s ease-in-out, background-color 0.9s ease-in-out;
 }
 
 .custom-buttons {
-    background-color: rgba(0, 0, 0, 0.5) !important;
-    padding: 5px 10px;
-    width: 100%;
-    display: flex;
-    text-align: center;
-    justify-content: center;
+    font-size: 0.8rem;
+    /* Make button font smaller */
+    margin: 0 2px;
+    /* Margin between buttons */
+    border-radius: 1.5rem;
+    /* Round button corners */
+    background-color: transparent;
     color: white !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9),
+        0 0 25px rgba(0, 0, 0, 0.7),
+        0 0 5px rgba(7, 7, 7, 0.7);
+    /* Text shadow */
 }
 
 
@@ -38,9 +44,9 @@ body.blur {
     position: fixed;
     height: 100px;
     top: 0;
-  
+
     left: 0;
- 
+
     z-index: 1000;
     /* Ensure it is on top of other content */
     display: flex;
@@ -54,18 +60,56 @@ body.blur {
 
 }
 
-
-
+.conversation {
+    border-bottom: 2px solid white;
+    /* Bottom border */
+    display: flex;
+    /* Use flexbox for layout */
+    align-self: center;
+    /* Center the container */
+    flex-direction: column;
+    /* Stack items vertically */
+    margin-bottom: 5px;
+    /* Space below the container */
+    width: 100%;
+    /* Ensure it takes full width */
+    background-color: rgba(28, 25, 58, 0.7);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
 
 
 #chat-container {
-    top: 120px;
     position: fixed;
-    left: 50%; /* Center horizontally */
-    width: 50%;
+    top: 50%;
+    left: 50%;
+    width: 315px;
+    height: 315px;
+    border: 5px solid black;
+    border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.7);
     color: white !important;
-    transform: translateX(-50%); /* Shift back by half of its width */
+    transform: translate(-50%, -50%);
+    overflow: auto;
+    z-index: 999999999999999;
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.conversation:hover {
+    /* Larger box shadow on hover */
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.6);
+    background-color: rgba(0, 0, 0, 0.2);
+    /* Optional: subtle movement */
+    transform: translateY(-2px);
+}
+
+#chat-container::-webkit-scrollbar,
+.message-scroll-container::-webkit-scrollbar {
+    width: 0;
+    /* Removes the scrollbar's width */
 }
 
 .container {
@@ -80,7 +124,7 @@ body.blur {
 
 .checkout-container {
     min-height: 100vh;
-   width: 100%;
+    width: 100%;
     margin: 0 auto;
     margin-top: 100px;
     padding: 2px;
@@ -90,17 +134,52 @@ body.blur {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-.container-cart-margin{
+
+#filter-buttons,
+#sorting-buttons {
+    width: 100%;
+}
+
+.container-cart-margin {
     margin: 5px;
 }
+
+.btn-group {
+    display: flex;
+    /* Use flexbox for centering */
+    justify-content: center;
+    /* Center the buttons within the group */
+    margin-bottom: 10px;
+    /* Add some space below button groups */
+}
+
 .filter-container {
-    margin-top: 130px !important;
+    top: 170px !important;
     position: relative;
-    width: 90%;
+    left: 0;
+    /* Align to the left edge */
+    right: 0;
+    /* Align to the right edge */
+    width: 95%;
+    /* Set width */
     margin: 0 auto;
-    padding: 30px;
+    /* Center horizontally */
+    padding: 15px;
     border-radius: 40px;
-    box-shadow: 0 0 10px rgba(255, 241, 241, 0.3);
+    z-index: 99;
+    background: url('/media/images/background.jpg') no-repeat center center fixed;
+}
+
+/* Hover effect on filter container */
+.filter-container:hover {
+    box-shadow:
+        0 0 8px rgba(255, 255, 255, 0.6),
+        /* Inner glow with alpha 0.6 */
+        0 0 15px rgba(255, 255, 255, 0.4),
+        /* Middle glow with alpha 0.4 */
+        0 0 25px rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+
 }
 
 .filter-toggle {
@@ -111,8 +190,48 @@ body.blur {
 }
 
 
+
 .dropdown-menu {
-    background-color: rgba(0, 0, 0, 0.7) !important;
+    position: absolute;
+    width: 300px;
+
+    z-index: 1000000000000000000000000000;
+
+    /* Position from the top */
+    height: 300px;
+    /* Set height */
+    display: none;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    justify-content: center;
+    align-items: center;
+    border: 5px solid black;
+    /* Transparent border for gradient */
+    background-clip: padding-box;
+    /* Ensures the background does not fill the border */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.6),
+        /* Inner glow */
+        0 0 15px rgba(255, 255, 255, 0.4),
+        /* Middle glow */
+        0 0 25px rgba(255, 255, 255, 0.2);
+    /* Outer glow */
+}
+
+@keyframes shine-green {
+    0% {
+        border-image: linear-gradient(90deg, #4caf50, #81c784, #c8e6c9) 1;
+        /* Start gradient */
+    }
+
+    50% {
+        border-image: linear-gradient(90deg, #81c784, #c8e6c9, #4caf50) 1;
+        /* Middle gradient shift */
+    }
+
+    100% {
+        border-image: linear-gradient(90deg, #c8e6c9, #4caf50, #81c784) 1;
+        /* End gradient cycle */
+    }
 }
 
 .dropdown-toggle {
@@ -123,10 +242,11 @@ body.blur {
 
 }
 
-.filter-label, .sorting-label {
+.filter-label,
+.sorting-label {
     color: white !important;
     margin: 0px !important;
-    
+
     font-weight: 300;
     width: 100%;
     font-size: 12px;
@@ -140,7 +260,7 @@ body.blur {
 
 .sorting-container {
     margin-bottom: 20px;
-    margin-top: 10px !important;  
+    margin-top: 10px !important;
     position: relative;
     width: 90%;
     margin: 0 auto;
@@ -216,15 +336,24 @@ header .list-inline-item {
 a {
     color: white !important;
 }
-.search-icon{
+
+.search-icon {
     color: white !important;
 }
-.search-icon-wrapper{
-    cursor: pointer; /* Pointer cursor to show it's clickable */
-    transition: opacity 0.3s ease; /* Transition for the icon */
+
+.search-icon-wrapper {
+    cursor: pointer;
+    /* Pointer cursor to show it's clickable */
+    transition: opacity 0.3s ease;
+    /* Transition for the icon */
 }
 
-
+.user-icon{
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50%;
+    padding: 5px;
+}
 .btn {
     background-color: rgba(0, 0, 0, 0.9) !important;
     border: 1px solid white;
@@ -233,9 +362,11 @@ a {
 
 .header.animate-herder .list-container ul {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
     animation: swingDownFlip 1.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-    height: 64px;
+    align-self: end;
+    float: right;
+  
 }
 
 .header.animate-herder .list-container ul li {
@@ -256,6 +387,7 @@ a {
 .nav-link {
     text-decoration: none;
     color: white;
+    padding: 0 !important;
 }
 
 header .dropdown-menu {
@@ -265,6 +397,12 @@ header .dropdown-menu {
 
 header .dropdown-item {
     padding: 10px 15px;
+    /* Adjust padding for dropdown items */
+}
+
+.dropdown-item:hover {
+    background-color: black;
+    color: white;
     /* Adjust padding for dropdown items */
 }
 
@@ -473,8 +611,10 @@ header .dropdown-item {
 }
 
 .modal-visible {
-    display: block; /* Display the modal */
+    display: block;
+    /* Display the modal */
 }
+
 .search-container {
     position: fixed;
     top: 44px;
@@ -488,27 +628,47 @@ header .dropdown-item {
     display: flex;
     align-items: center;
     transition: opacity 0.9s ease;
-    display: none; /* Initially hidden */
-    opacity: 0; /* Initial opacity for transition */
+    display: none;
+    /* Initially hidden */
+    opacity: 0;
+    /* Initial opacity for transition */
 }
+
 /* Search icon image styling */
 .search-icon-img {
-    transition: transform 0.3s ease; /* Smooth scaling transition */
+    transition: transform 0.3s ease;
+    /* Smooth scaling transition */
 }
 
 /* Define the shake animation */
 @keyframes shake {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(-2px, 0); }
-    50% { transform: translate(2px, 0); }
-    75% { transform: translate(-2px, 0); }
-    100% { transform: translate(0, 0); }
+    0% {
+        transform: translate(0, 0);
+    }
+
+    25% {
+        transform: translate(-2px, 0);
+    }
+
+    50% {
+        transform: translate(2px, 0);
+    }
+
+    75% {
+        transform: translate(-2px, 0);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
 }
 
 /* Hover effect for search icon */
 .search-icon-wrapper:hover .search-icon-img {
-    transform: scale(1.2); /* Enlarge the icon */
-    animation: shake 0.5s infinite; /* Continuous shake animation */
+    transform: scale(1.2);
+    /* Enlarge the icon */
+    animation: shake 0.5s infinite;
+    /* Continuous shake animation */
 }
 
 
@@ -516,29 +676,41 @@ header .dropdown-item {
 /* Custom focus styles */
 .search-container input[type="search"]:focus,
 .search-container input[type="search"]:active {
-    border: 2px solid rgba(0, 255, 255, 0.8); /* Neon border color */
-    background-color: rgba(0, 255, 255, 0.5); /* Neon background color */
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.6); /* Neon glow effect */
+    border: 2px solid rgba(0, 255, 255, 0.8);
+    /* Neon border color */
+    background-color: rgba(0, 255, 255, 0.5);
+    /* Neon background color */
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.6);
+    /* Neon glow effect */
 }
+
 /* Scale the search container when the input is focused */
 .search-container input[type="search"]:focus {
     /* This will apply the scale to the parent container when the input is focused */
-    transform: scale(1.1); /* Scale up by 10% */
+    transform: scale(1.1);
+    /* Scale up by 10% */
 }
+
 .search-wrapper {
     position: fixed;
     top: 0px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 20px; /* Add padding to give space around content */
+    padding: 20px;
+    /* Add padding to give space around content */
     filter: drop-shadow(16px 4px 9px rgba(43, 54, 1, 0.6));
-    z-index: 1000000; /* Ensure it's above other content */
-    
+    z-index: 1000000;
+    /* Ensure it's above other content */
+
 }
+
 .search-container.show {
-    display: block; /* Show the container */
-    opacity: 1; /* Set opacity to fully visible */
+    display: block;
+    /* Show the container */
+    opacity: 1;
+    /* Set opacity to fully visible */
 }
+
 /* Style for the form elements */
 .search-container form {
     display: flex;
@@ -661,32 +833,44 @@ header .dropdown-item {
 
 #item-added-search-message {
     position: fixed;
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust for exact center */
-    background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    top: 50%;
+    /* Center vertically */
+    left: 50%;
+    /* Center horizontally */
+    transform: translate(-50%, -50%);
+    /* Adjust for exact center */
+    background: rgba(0, 0, 0, 0.8);
+    /* Semi-transparent background */
     display: flex;
-    align-items: center; /* Center content vertically */
-    justify-content: center; /* Center content horizontally */
-    transition: opacity 0.4s ease, visibility 0.4s ease; /* Smooth fade-in effect */
-   color: white !important;
-    z-index: 10000; /* Ensure it stays on top */
+    align-items: center;
+    /* Center content vertically */
+    justify-content: center;
+    /* Center content horizontally */
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    /* Smooth fade-in effect */
+    color: white !important;
+    z-index: 10000;
+    /* Ensure it stays on top */
     padding: 20px;
     width: 500px;
     height: 333px;
 }
 
-#search-seed-details-modal{
+#search-seed-details-modal {
 
     margin-top: 350px;
 }
-#admin-message-icon, #messagesIcon {
-    display: none; /* Initially hidden */
+
+#admin-message-icon,
+#messagesIcon {
+    display: none;
+    /* Initially hidden */
     background-color: rgba(255, 0, 0, 0.8);
     padding: 10px;
     border-radius: 20px;
     color: white;
-    transition: opacity 0.3s ease; /* Smooth transition for opacity */
+    transition: opacity 0.3s ease;
+    /* Smooth transition for opacity */
 }
 
 #notification-area {
@@ -697,29 +881,34 @@ header .dropdown-item {
     top: 115px;
     left: 30px;
     white-space: nowrap;
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    cursor: pointer; /* Changes the cursor to indicate it is clickable */
-    display: none; /* Initially hidden */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    /* Changes the cursor to indicate it is clickable */
+    display: none;
+    /* Initially hidden */
     transition: filter 0.9s ease-in-out, background-color 0.9s ease-in-out;
 }
 
 /* Show icons on hover over the notification area */
-#notification-area:hover + #admin-message-icon,
-#notification-area:hover + #messagesIcon {
-    display: block; /* Show the icons */
+#notification-area:hover+#admin-message-icon,
+#notification-area:hover+#messagesIcon {
+    display: block;
+    /* Show the icons */
 }
 
 /* Hover effect to blur background when hovering over icons */
-#admin-message-icon:hover, 
+#admin-message-icon:hover,
 #messagesIcon:hover {
-    display: block; /* Ensure icons are displayed on hover */
+    display: block;
+    /* Ensure icons are displayed on hover */
 }
 
 /* This is to blur the background when hovering over the icons */
-#admin-message-icon:hover ~ body, 
-#messagesIcon:hover ~ body {
-    filter: blur(5px); /* Adjust blur level as needed */
+#admin-message-icon:hover~body,
+#messagesIcon:hover~body {
+    filter: blur(5px);
+    /* Adjust blur level as needed */
 }
 
 
@@ -727,42 +916,59 @@ header .dropdown-item {
 .modal-chat {
     display: none;
     position: fixed;
-    z-index: 9991000;
+    z-index: 9991000999999;
     left: 0;
     top: 64px;
     width: 100%;
-    height: 80%; /* Set a specific height */
-    overflow: auto; /* Allow scrolling */
-    padding: 20px; /* Optional: Add some padding */
+    height: 80%;
+    /* Set a specific height */
+    overflow: auto;
+    /* Allow scrolling */
+    padding: 20px;
+    /* Optional: Add some padding */
 }
+
+#filter-toggle {
+    position: fixed;
+    top: 90px;
+    width: 100px;
+}
+
 /* Styles for each message in the modal */
 #modal-message-list div {
     padding: 10px;
-    border-bottom: 1px solid white; /* Add a white bottom border between messages */
-    margin-bottom: 10px; /* Space between messages */
+    border-bottom: 1px solid white;
+    /* Add a white bottom border between messages */
+    margin-bottom: 10px;
+    /* Space between messages */
     word-wrap: break-word;
 }
 
 /* Highlighting the sender */
 #modal-message-list strong {
-    color: #00bfff; /* Light blue color for sender name */
+    color: #00bfff;
+    /* Light blue color for sender name */
 }
 
 /* Styling the timestamp */
 #modal-message-list em {
-    font-size: 0.9em; /* Slightly smaller font size for the timestamp */
-    color: #ccc; /* Light gray color for the timestamp */
+    font-size: 0.9em;
+    /* Slightly smaller font size for the timestamp */
+    color: #ccc;
+    /* Light gray color for the timestamp */
 }
 
 /* Optional: Add hover effect for message items */
 #modal-message-list div:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Light background on hover */
+    background-color: rgba(255, 255, 255, 0.1);
+    /* Light background on hover */
 }
+
 .super-chat-window {
-    background-color: rgba(0, 0, 0, 0.9) !important; 
+    background-color: rgba(0, 0, 0, 0.9) !important;
     padding: 20px;
     border-radius: 5px;
-    width: 60%;
+    width: 100%;
     height: 80%;
     display: flex;
     flex-direction: column;
@@ -778,16 +984,28 @@ header .dropdown-item {
 }
 
 .chat-footer-input {
-    width: 60%;
+
+    display: none;
+    /* Initially hidden */
+    z-index: 9991000;
+    /* High z-index to appear above other elements */
+    left: 0;
+    /* Align left */
+    right: 0;
+    /* Align right */
+    overflow: auto;
+    /* Allow scrolling if content exceeds height */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Optional: Add shadow for depth */
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: space-between;
+    flex-direction: row;
     align-items: center;
     position: fixed;
     bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+
 }
 
 .text-type-box {
@@ -798,6 +1016,11 @@ header .dropdown-item {
 .send-message-action {
     padding: 10px 20px;
     cursor: pointer;
+}
+
+#send-message-button {
+    width: 80px;
+    margin-left: 10px;
 }
 
 .close-chat-window {
@@ -828,15 +1051,20 @@ header .dropdown-item {
 /* Message item styling */
 .message-item {
     padding: 10px 0;
-    border-bottom: 1px solid white; /* Add bottom white border between messages */
+    border-bottom: 1px solid white;
+    /* Add bottom white border between messages */
     margin-bottom: 10px;
 }
 
 .message-item:last-child {
-    border-bottom: none; /* Remove the border for the last item */
-    flex-grow: 1; /* Takes up all available space before the footer */
-    overflow-y: auto; /* Scrollable message area */
-    margin-bottom: 10px; /* Space between the messages and footer */
+    border-bottom: none;
+    /* Remove the border for the last item */
+    flex-grow: 1;
+    /* Takes up all available space before the footer */
+    overflow-y: auto;
+    /* Scrollable message area */
+    margin-bottom: 10px;
+    /* Space between the messages and footer */
 }
 
 
@@ -845,17 +1073,4 @@ header .dropdown-item {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
-}
-
-#send-message-button {
-    padding: 10px 15px;
-    background-color: rgba(0, 0, 0, 0.9);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#send-message-button:hover {
-    background-color: #218838;
 }
