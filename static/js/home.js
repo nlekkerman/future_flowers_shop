@@ -9,17 +9,18 @@ import {
     fetchMessageCounts,
     fetchAndStoreSeeds
 } from './control.js';
-let loggedInUsername, loadingOverlay, loadingText;;
+let loggedInUsername, loadingOverlay, loadingText;
 
 window.onload = async () => {
 
     try {
+        
         const userId = await fetchUserId(); // Fetch user ID
         loggedInUsername = await fetchUsername(); // Fetch username here
         await fetchMessageCounts();
         updateIconsBasedOnSuperUser();
         fetchCartData();
-        fetchAndStoreSeeds();
+        await fetchAndStoreSeeds();
         const chatContainer = document.getElementById('chat-container');
         const messagesIcon = document.getElementById('messagesIcon');
         const adminMessagesIcon = document.getElementById('admin-message-icon');
@@ -618,6 +619,7 @@ function hideLoadingAnimation() {
 
 
 document.addEventListener("DOMContentLoaded", function () {
+    
 
     // Create the message modal container
   const messageModal = document.createElement('div');
