@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - My Website{% endblock %}
+
+{% block content %}
+<div class="navigation-container">
+    {% include 'navigation.html' %}
+</div>
+
+<div class="contact-section">
+    <div class="contact-content">
+        <h1 class="contact-title">Contact Us</h1>
+        <div class="contact-info">
+            <p class="contact-item">
+                <strong class="contact-label">Phone:</strong> 
+                <a href="tel:+353830945102" class="contact-link">+353 83 094 5102</a>
+            </p>
+            <p class="contact-item">
+                <strong class="contact-label">Email:</strong> 
+                <a href="mailto:nlekkerman@gmail.com" class="contact-link">nlekkerman@gmail.com</a>
+            </p>
+            <p class="contact-item">
+                <strong class="contact-label">Address:</strong> 
+                31 Arbutus Grove, Killarney, Ireland
+            </p>
+        </div>
+
+        <!-- Social Media Links -->
+        <div class="social-media-links mt-4">
+            <h2 class="social-media-title">Follow Us</h2>
+            <a href="https://www.facebook.com/yourpage" class="social-link" target="_blank">
+                <img src="/media/images/facebook-icon.png" alt="Facebook" class="social-icon">
+            </a>
+            <a href="https://www.instagram.com/yourprofile" class="social-link" target="_blank">
+                <img src="/media/images/instagram-icon.png" alt="Instagram" class="social-icon">
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

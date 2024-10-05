@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<h2>Register</h2>
+
 
 <!-- Display form errors -->
 {% if form.errors %}
@@ -29,14 +29,19 @@
 
 
 <div class="register-form-container">
+    <div class="form-wrapper">
+        <h2 class="register-title">Register</h2>
+
     <form method="post" class="register-form">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Register</button>
+        <button type="submit" class="login-button">Register</button>
     </form>
 
     <!-- Google Sign-In Button -->
     <div id="g-signin2 text-white">sign</div>
     <div id="g-signin-status"></div>
+
+</div>
 </div>
 {% endblock %}

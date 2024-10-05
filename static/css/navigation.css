@@ -265,6 +265,7 @@ body.active-blur::before {
     font-size: 2rem; /* Adjust icon size */
     color: white; /* Icon color */
     transition: opacity 2.3s ease; /* Smooth transition for icon */
+    opacity: 0.4;
 }
 
 .icon-text-style {
@@ -273,19 +274,31 @@ body.active-blur::before {
     top: 50%; /* Center vertically */
     left: 50%; /* Center horizontally */
     transform: translate(-50%, -50%); /* Adjust positioning */
-    transition: opacity 1.3s ease; /* Smooth transition for opacity */
+    animation: blink-animation 2s infinite; /* Trigger animation every 2 seconds */
     color: white; /* Text color */
     font-size: 1.2rem; /* Text size */
     text-shadow: 0 0 3px black; /* Initial outline effect */
 }
-
+/* Animation to show and hide the element */
+@keyframes blink-animation {
+    0% {
+        opacity: 0; /* Hidden */
+    }
+    25% {
+        opacity: 0.4; /* Visible for a portion of the time */
+    }
+    50% {
+        opacity: 0; /* Hidden again */
+    }
+}
 /* Filter shadow effect on hover */
 .nav-link-icon:hover .icon-image {
-    transform: rotate(15deg);
+    transform: rotate(5deg);
+    opacity: 1;
 }
 /* Show the text when hovering over the link */
 .nav-link-icon:hover .icon-text-style {
-    opacity: 1
+    opacity: 1;
     
 }
 

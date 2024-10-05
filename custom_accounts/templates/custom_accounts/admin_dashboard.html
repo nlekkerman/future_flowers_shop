@@ -26,10 +26,10 @@
                             <p class="card-text font-italic">" {{ review.comment }} "</p>
                             <p class="card-text"><small class="text-muted">Created At: {{ review.created_at }}</small></p>
                             <p class="card-text"><small class="text-muted">Updated At: {{ review.updated_at }}</small></p>
-                            <div class="d-flex justify-content-around">
-                                <a href="{% url 'approve_review' review.id %}" class="btn btn-success btn-sm mr-2">Approve</a>
-                                <a href="{% url 'reject_review' review.id %}" class="btn btn-warning btn-sm mr-2">Reject</a>
-                                <a href="{% url 'delete_review' review.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
+                            <div class="d-flex justify-content-center">
+                                <a href="{% url 'approve_review' review.id %}" class="btn-success btn-sm mr-1">Approve</a>
+                                <a href="{% url 'reject_review' review.id %}" class=" btn-warning btn-sm mr-1">Reject</a>
+                                <a href="{% url 'delete_review' review.id %}" class=" btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
                             </div>
                         </div>
                     </div>
@@ -56,10 +56,10 @@
                             <p class="card-text font-italic">" {{ comment.text }} "</p>
                             <p class="card-text"><small class="text-muted">Created At: {{ comment.created_at }}</small></p>
                             <p class="card-text"><small class="text-muted">Updated At: {{ comment.updated_at }}</small></p>
-                            <div class="d-flex justify-content-between">
-                                <a href="{% url 'approve_comment' comment.id %}" class="btn btn-success btn-sm">Approve</a>
-                                <a href="{% url 'reject_comment' comment.id %}" class="btn btn-warning btn-sm">Reject</a>
-                                <a href="{% url 'delete_comment' comment.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
+                            <div class="d-flex justify-content-center">
+                                <a href="{% url 'approve_comment' comment.id %}" class="btn-success btn-sm mr-1">Approve</a>
+                                <a href="{% url 'reject_comment' comment.id %}" class="btn-warning btn-sm mr-1">Reject</a>
+                                <a href="{% url 'delete_comment' comment.id %}" class="btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
                             </div>
                         </div>
                     </div>

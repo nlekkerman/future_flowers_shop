@@ -310,18 +310,20 @@ export async function checkIfSuperUser() {
 
 export async function fetchMessageCounts() {
     try {
-        const response = await fetch('/syncmanager/api/message_counts/'); // Adjust the URL to match your app structure
+        const response = await fetch('/syncmanager/api/message_counts/');
         const data = await response.json();
 
         if (response.ok) {
             const unseenMessages = data.unseenMessages;
 
-         
             console.log("Unseen messages: ", unseenMessages);
 
-           
-            document.querySelectorAll('unseen-messages-count').innerText = unseenMessages;
-            
+            // Ensure you are selecting the correct class or ID.
+            // If it's a class, use `.unseen-messages-count`, if an ID, use `#unseen-messages-count`.
+            document.querySelectorAll('.unseen-messages-count').forEach(element => {
+                element.innerText = unseenMessages;  // Update innerText for each matched element
+            });
+
         } else {
             console.error('Failed to fetch message counts:', data);
         }
@@ -329,6 +331,7 @@ export async function fetchMessageCounts() {
         console.error('Error fetching message counts:', error);
     }
 }
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const searchIcon = document.getElementById('searchIcon');
@@ -353,3 +356,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+

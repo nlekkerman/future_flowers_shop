@@ -8,12 +8,14 @@
 <h2 class="login-heading">Login</h2>
 <div class="form-container">
 
+    <div class="form-login">
+
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="login-button">Login</button>
+        <button type="submit" class="btn login-button">Login</button>
     </form>
-
+</div>
     <p class="registration-link">Don't have an account? <a href="{% url 'account_signup' %}">Register here</a></p>
 
     

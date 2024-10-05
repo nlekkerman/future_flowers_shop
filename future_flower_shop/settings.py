@@ -61,8 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',            # Required for allauth
     'allauth',                         # Django allauth for authentication
     'allauth.account',                 # Allauth for account management
-    'allauth.socialaccount',           # Allauth for social account management
-    'allauth.socialaccount.providers.google',  # Google provider for allauth
+
     'cloudinary',                      # Cloudinary for media management
     'cloudinary_storage', 
     'crispy_forms',
@@ -88,7 +87,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # Ensure allauth middleware is included
 ]
 
 
@@ -132,27 +130,9 @@ TEMPLATES = [
     },
 ]
 
-# Social Account Providers Configuration
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'OAUTH_PKCE_ENABLED': True,
-        'APP': {
-            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
-            'secret': os.getenv('GOOGLE_SECRET'),
-            'key': ''
-        }
-    }
-}
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 )
 # settings.py
 FREE_DELIVERY_THRESHOLD = 50
@@ -219,24 +199,4 @@ ACCOUNT_USERNAME_REQUIRED = True
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Social Account Providers Configuration
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'OAUTH_PKCE_ENABLED': True,
-        'APP': {
-            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
-            'secret': os.getenv('GOOGLE_SECRET'),
-            'key': ''
-        }
-    }
-}
-# Log the GOOGLE_CLIENT_ID and GOOGLE_SECRET values
-logging.debug(f"GOOGLE_CLIENT_ID: {os.getenv('GOOGLE_CLIENT_ID')}")
-logging.debug(f"GOOGLE_SECRET: {os.getenv('GOOGLE_SECRET')}")
+

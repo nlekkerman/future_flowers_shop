@@ -170,14 +170,15 @@ document.addEventListener('DOMContentLoaded', function () {
                                                             <p class="review-card-text">Rating: ${review.rating} stars</p>
                                                             <p class="review-card-text-content"> "${review.comment}"</p>
                                                             <p class="review-card-text"><small>Posted on: ${review.created_at}</small></p>
-
+                                                            <div class="comments-icons-container">
                                                             <h3 class="review-chat-icon" id="comment-icon-${review.id}" style="cursor:pointer;">
                                                                 <i class="fas fa-comments"></i> 
                                                                 <span class="comment-count">(${review.comments.length})</span>
                                                             </h3>  
                                                             <h3 class="review-chat-icon" id="leave-comment-icon-${review.id}" style="cursor:pointer; display: inline-block; margin-left: 10px;">
                                                                 <i class="fas fa-pencil-alt"></i>
-                                                            </h3>                      
+                                                            </h3>     
+                                                            </div>                 
                                                             <ul id="comment-list-${review.id}" style="display:none;"></ul>
                                                         </div>
                                                     </div>
@@ -195,7 +196,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     const leaveCommentIcon = reviewElement.querySelector(`#leave-comment-icon-${review.id}`);
                     leaveCommentIcon.addEventListener('click', () => {
                         openCommentModal(review.id); // Function to open the modal for leaving a comment
-                        console.log("MODA ID " + review.id);
                     });
 
                     // Loop through comments and add them to the review
@@ -260,7 +260,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     const editButton = document.getElementById(`edit-review-${review.id}`);
                     if (editButton) {
                         editButton.addEventListener('click', function () {
-                            showMessageReview(`Edit Review clicked for review ID: ${review.id}`);
                             openEditReviewModal(review);
                         });
                     }
@@ -276,21 +275,22 @@ document.addEventListener('DOMContentLoaded', function () {
         function openCommentModal(reviewId, commentId = null) {
             const modalHTML = `
                     <div class="modal fade custom-comment-modal" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="commentModalLabel">${commentId ? 'Edit Comment' : 'Leave a Comment'}</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <div class="modal-dialog custom-modal-dialog" role="document">
+                            <div class="modal-content custom-modal-content">
+                                <div class="custom-modal-header">
+                                    <h5 class="custom-modal-title" id="commentModalLabel">${commentId ? 'Edit Comment' : 'Leave a Comment'}</h5>
+                                    
+                                </div>
+                                <div class="modal-body custom-modal-body">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
-                                </div>
-                                <div class="modal-body">
                                     <form id="comment-form">
                                         <div class="form-group">
-                                            <label for="comment">Comment</label>
-                                            <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+                                            <label class="custom-label" for="comment">Comment</label>
+                                            <textarea class="custom-textarea" id="comment" name="comment" rows="3" required></textarea>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">${commentId ? 'Update Comment' : 'Submit Comment'}</button>
+                                        <button type="submit" class="btn ">${commentId ? 'Update Comment' : 'Submit Comment'}</button>
                                     </form>
                                 </div>
                             </div>
@@ -365,11 +365,12 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="modal-content custom-modal-content">
             <div class="modal-header custom-modal-header">
                 <h5 class="modal-title custom-modal-title" id="reviewModalLabel">Write a Review</h5>
+                
+            </div>
+            <div class="modal-body custom-modal-body">
                 <button type="button" class="close custom-close-button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-            </div>
-            <div class="modal-body custom-modal-body">
                 <form id="dynamic-review-form" class="custom-review-form">
                     <div class="form-group custom-form-group">
                         <label for="rating" class="custom-label">Rating</label>
@@ -385,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <label for="comment" class="custom-label">Comment</label>
                         <textarea class="custom-textarea" id="comment" name="comment" rows="3"></textarea>
                     </div>
-                    <button type="submit" class="custom-submit-button">Submit Review</button>
+                    <button type="submit" class="btn">Submit Review</button>
                 </form>
             </div>
         </div>
@@ -434,24 +435,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         function openEditCommentModal(reviewId, commentId, currentText) {
+            console.log("Opening edit modal for review ID: inside function");
+
             // Create modal HTML
             const modalHTML = `
-                <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+                <div class="modal fade" id="editCommentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="commentModalLabel">Edit Comment</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <div class="modal-content custom-modal-content">
+                            <div class="modal-header custom-modal-header">
+                                <h5 class="modal-title custom-modal-title" id="commentModalLabel">Edit Comment</h5>
+                            </div>
+                            <div class="modal-body custom-modal-body">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
-                            </div>
-                            <div class="modal-body">
                                 <form id="comment-form">
                                     <div class="form-group">
-                                        <label for="comment">Comment</label>
-                                        <textarea class="form-control" id="comment" name="comment" rows="3" required>${currentText}</textarea>
+                                        <label  class="custom-label" for="comment">Comment</label>
+                                        <textarea class="form-control custom-textarea" id="comment" name="comment" rows="3" required>${currentText}</textarea>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Update Comment</button>
+                                    <button type="submit" class="btn">Update Comment</button>
                                 </form>
                             </div>
                         </div>
@@ -463,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.body.insertAdjacentHTML('beforeend', modalHTML);
 
             // Show the modal using Bootstrap
-            $('#commentModal').modal('show');
+            $('#editCommentModal').modal('show');
 
             // Handle form submission
             const commentForm = document.getElementById('comment-form');
@@ -493,7 +496,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     })
                     .then(data => {
                         console.log('Comment updated successfully:', data);
-                        $('#commentModal').modal('hide'); // Hide modal after submission
+                        $('#editCommentModal').modal('hide'); // Hide modal after submission
 
                         loadReviews();
                     })
@@ -502,7 +505,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     })
                     .finally(() => {
                         // Remove the modal from the DOM after hiding
-                        $('#commentModal').on('hidden.bs.modal', function () {
+                        $('#editCommentModal').on('hidden.bs.modal', function () {
                             $(this).remove();
                         });
                     });
@@ -616,109 +619,112 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Function to open the Edit Review modal dynamically
-    function openEditReviewModal(review) {
-        const modalHTML = `
-                        <div class="modal fade custom-review-modal" id="editReviewModal" tabindex="-1" role="dialog" aria-labelledby="editReviewModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editReviewModalLabel">Edit Review</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id="edit-review-form">
-                                            <div class="form-group">
-                                                <label for="edit-rating">Rating</label>
-                                                <select name="rating" id="edit-rating" class="form-control">
-                                                    <option value="1" ${review.rating === 1 ? 'selected' : ''}>1 Star</option>
-                                                    <option value="2" ${review.rating === 2 ? 'selected' : ''}>2 Stars</option>
-                                                    <option value="3" ${review.rating === 3 ? 'selected' : ''}>3 Stars</option>
-                                                    <option value="4" ${review.rating === 4 ? 'selected' : ''}>4 Stars</option>
-                                                    <option value="5" ${review.rating === 5 ? 'selected' : ''}>5 Stars</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="edit-comment">Comment</label>
-                                                <textarea class="form-control" id="edit-comment" name="comment" rows="3">${review.comment}</textarea>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Update Review</button>
-                                            <button type="button" class="btn btn-danger" id="delete-review" data-review-id="${review.id}">Delete Review</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+ // Function to open the Edit Review modal dynamically
+function openEditReviewModal(review) {
+    const modalHTML = `
+        <div class="modal fade custom-review-modal" id="editReviewModal" tabindex="-1" role="dialog" aria-labelledby="editReviewModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"> <!-- modal-content to wrap the modal structure -->
+                    <div class="custom-modal-content">
+                        <div class="custom-modal-header">
+                            <h5 class="custom-modal-title" id="editReviewModalLabel">Edit Review</h5>
+                            <!-- Correct close button, ensure it's inside modal-header -->
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        `;
+                        <div class="modal-body">
+                            <form id="edit-review-form">
+                                <div class="form-group">
+                                    <label class="custom-label" for="edit-rating">Rating</label>
+                                    <select name="rating" id="edit-rating" class="form-control custom-select">
+                                        <option value="1" ${review.rating === 1 ? 'selected' : ''}>1 Star</option>
+                                        <option value="2" ${review.rating === 2 ? 'selected' : ''}>2 Stars</option>
+                                        <option value="3" ${review.rating === 3 ? 'selected' : ''}>3 Stars</option>
+                                        <option value="4" ${review.rating === 4 ? 'selected' : ''}>4 Stars</option>
+                                        <option value="5" ${review.rating === 5 ? 'selected' : ''}>5 Stars</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="custom-label" for="edit-comment">Comment</label>
+                                    <textarea class="form-control custom-textarea" id="edit-comment" name="comment" rows="3">${review.comment}</textarea>
+                                </div>
+                                <button type="submit" class="btn">Update Review</button>
+                                <button type="button" class="btn" id="delete-review" data-review-id="${review.id}">Delete Review</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 
-        // Append modal to the body
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    // Append modal to the body
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-        // Show the modal
-        $('#editReviewModal').modal('show');
+    // Show the modal
+    $('#editReviewModal').modal('show');
 
-        // Handle form submission for updating the review
-        const editForm = document.getElementById('edit-review-form');
-        editForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            const formData = new FormData(editForm);
-            formData.append('review_id', review.id); // Add the review ID for the update
+    // Handle form submission for updating the review
+    const editForm = document.getElementById('edit-review-form');
+    editForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(editForm);
+        formData.append('review_id', review.id); // Add the review ID for the update
 
-            // Submit the form via AJAX
-            fetch('/reviews/api/update_review/', {
-                    method: 'POST',
+        // Submit the form via AJAX
+        fetch('/reviews/api/update_review/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Error updating the review.');
+                }
+            })
+            .then(data => {
+                showMessageReview('Review updated successfully!');
+                $('#editReviewModal').modal('hide');
+                location.reload(); // Reload to refresh the reviews
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessageReview('There was an error updating your review. Please try again.');
+            });
+    });
+
+    // Handle delete review button
+    document.getElementById('delete-review').addEventListener('click', function () {
+        const reviewId = this.dataset.reviewId;
+
+        if (confirm('Are you sure you want to delete this review?')) {
+            fetch(`/reviews/api/delete_review/${reviewId}/`, {
+                    method: 'DELETE',
                     headers: {
                         'X-CSRFToken': getCookie('csrftoken'),
                     },
-                    body: formData
                 })
                 .then(response => {
                     if (response.ok) {
-                        return response.json();
+                        showMessageReview('Review deleted successfully!');
+                        $('#editReviewModal').modal('hide');
+                        location.reload(); // Reload to refresh the reviews
                     } else {
-                        throw new Error('Error updating the review.');
+                        throw new Error('Error deleting the review.');
                     }
-                })
-                .then(data => {
-                    showMessageReview('Review updated successfully!');
-                    $('#editReviewModal').modal('hide');
-                    location.reload(); // Reload to refresh the reviews
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    showMessageReview('There was an error updating your review. Please try again.');
+                    showMessageReview('There was an error deleting your review. Please try again.');
                 });
-        });
-
-        // Handle delete review button
-        document.getElementById('delete-review').addEventListener('click', function () {
-            const reviewId = this.dataset.reviewId;
-
-            if (confirm('Are you sure you want to delete this review?')) {
-                fetch(`/reviews/api/delete_review/${reviewId}/`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRFToken': getCookie('csrftoken'),
-                        },
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            showMessageReview('Review deleted successfully!');
-                            $('#editReviewModal').modal('hide');
-                            location.reload(); // Reload to refresh the reviews
-                        } else {
-                            throw new Error('Error deleting the review.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showMessageReview('There was an error deleting your review. Please try again.');
-                    });
-            }
-        });
-    }
+        }
+    });
+}
 
     // Helper function to get the CSRF token
     function getCookie(name) {

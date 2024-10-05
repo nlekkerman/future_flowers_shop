@@ -166,6 +166,17 @@ button[type="submit"]:hover {
 }
 
 @media screen and (min-width: 768px) {
+
+    .about-container {
+        height: 500px;
+        width: 500px;}
+
+    .header.animate-herder .list-container ul {
+      
+        top: 30px;
+        right: 10px;
+       
+    }
     .filter-container {
        
         width: 65%; 
@@ -175,7 +186,12 @@ button[type="submit"]:hover {
         width: 515px;
         height: 515px;
     }
+    .search-wrapper {
+    
+        left: 50%;
 
+       
+    }
 
     .search-wrapper {
         position: fixed;
@@ -197,6 +213,11 @@ button[type="submit"]:hover {
 
 }
 @media screen and (min-width: 1023px) {
+
+    .about-container {
+        height: 600px;
+        width: 600px;}
+
     .filter-container {
         top: 150px !important;
       
@@ -204,8 +225,25 @@ button[type="submit"]:hover {
         
     }
 
+@media screen and (min-width: 1439px) {
 
+    .about-container {
+        height: 700px;
+        width: 700px;}
+        .filter-container {
+            top: 150px !important;
+          
+            width: 40%;}
+            
+        }
+    
 @media screen and (min-width: 1800px) {
+
+    
+    .about-container {
+        height: 700px;
+        width: 700px;}
+
     .filter-container {
         top: 150px !important;
       
@@ -471,7 +509,7 @@ button[type="submit"]:hover {
 
     .nav-link-icon {
 
-        width: 170px;
+        width: 130px;
     }
 
     .menu-icon-span {
@@ -499,6 +537,30 @@ button[type="submit"]:hover {
         font-size: 1.5rem;
         width: 715px;
         height: 715px;
+    }
+    .about-description,.vision-description,.values-description,.community-description,.testimonial {
+        font-size: 1.5rem;
+        
+    }
+    .contact-content {
+        width: 700px;
+        height: 700px;
+        text-align: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-size: xx-large;
+    }
+
+    .social-icon {
+        width: 80px;
+        /* Adjust icon size */
+        height: 80px;
+        /* Adjust icon size */
+        transition: transform 0.3s;
+        /* Smooth scale effect */
+    
     }
 
 }

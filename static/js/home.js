@@ -22,14 +22,14 @@ window.onload = async () => {
         const messagesIcon = document.getElementById('messagesIcon');
         const adminMessagesIcon = document.getElementById('admin-message-icon');
 
-       
+
 
         const toggleChatContainerVisibility = () => {
             // Add condition to check if userId is 1
             if (userId !== 1) {
                 return; // Do nothing if userId is not 1
             }
-        
+
             if (chatContainer.style.display === "block") {
                 console.log("CHAT TOGGLE HIDDEN");
                 chatContainer.style.display = "none"; // Hide the chat container
@@ -153,17 +153,17 @@ export function displayConversationsFromLocalStorage() {
     }
 
     chatContainer.innerHTML = '';
-     // Add a close button to chat-container
-     const closeButton = document.createElement('button');
-     closeButton.classList.add('btn', 'close-conversations-button');
-     closeButton.innerHTML = 'X'; // Add an 'X' or any close icon you prefer
-     chatContainer.appendChild(closeButton);
- 
-     // Add event listener to close button to hide the chat-container
-     closeButton.addEventListener('click', () => {
-         console.info('Close button clicked. Hiding chat container.');
-         chatContainer.style.display = 'none';
-     });
+    // Add a close button to chat-container
+    const closeButton = document.createElement('button');
+    closeButton.classList.add('btn', 'close-conversations-button');
+    closeButton.innerHTML = 'X'; // Add an 'X' or any close icon you prefer
+    chatContainer.appendChild(closeButton);
+
+    // Add event listener to close button to hide the chat-container
+    closeButton.addEventListener('click', () => {
+        console.info('Close button clicked. Hiding chat container.');
+        chatContainer.style.display = 'none';
+    });
 
     if (conversations.length === 0) {
         console.warn('No conversations to display.');
@@ -210,7 +210,7 @@ export function displayConversationsFromLocalStorage() {
             await loadConversationMessages(conversation.id, loggedInUsername);
             hideLoadingAnimation(); // Hide loading animation after loading messages
             // Fetch updated message counts
-            await fetchMessageCounts(); // Fetch updated message counts after loading messages
+            await fetchMessageCounts();
         });
         chatContainer.appendChild(conversationDiv);
     });
@@ -255,19 +255,42 @@ async function loadConversationMessages(conversationId, loggedInUsername) {
 
         // Display existing messages
         messages.forEach((message) => {
+
             const messageDiv = document.createElement('div');
             const messageClass = message.sender === loggedInUsername ? 'message-right' : 'message-left';
             messageDiv.className = `chat-message ${messageClass}`;
+            const formatMessageDate = (date) => {
+                const options = { day: '2-digit', month: 'short' }; // Day and month in short form (e.g., "05 Oct")
+                const dateString = date.toLocaleDateString(undefined, options);
+                const timeString = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }); // Time in HH:MM format
+                return `${dateString}, ${timeString}`; // Combine date and time
+            };              
+
             messageDiv.innerHTML = `
-                <strong>${message.sender}:</strong> ${message.content}<br>
-                <em>${new Date(message.sent_at).toLocaleString()}</em>
+                                    <div class="message-header">
+                                        <strong>${message.sender}</strong>
+                                        
+                                    </div>
+                                    <div class="message-body">
+                                        <p>${message.content}</p>
+                                    </div>
+
+                                    <div class="message-footer">
+                                        
+                                        <span class="message-time">${formatMessageDate(new Date())}</span>
+                                    </div>
             `;
             modalMessageList.appendChild(messageDiv);
         });
 
-        modalMessageList.scrollTop = modalMessageList.scrollHeight; // Scroll to bottom
         messageModal.style.display = 'block';
-
+        // Delay the scroll to allow the messages to render
+        setTimeout(() => {
+            // Use requestAnimationFrame to ensure DOM updates
+            requestAnimationFrame(() => {
+                modalMessageList.scrollTop = modalMessageList.scrollHeight; // Scroll to bottom
+            });
+        }, 100);
         // Close modal functionality
         document.querySelector('.close-chat-window').onclick = () => {
             messageModal.style.display = 'none';
@@ -295,6 +318,7 @@ async function handleSendMessage(conversationId, loggedInUsername) {
     const messageInput = document.getElementById('message-input');
     const messageContent = messageInput.value.trim();
 
+    
     if (messageContent) {
         console.log(`Message sent: ${messageContent}`); // Log the message content
 
@@ -308,10 +332,27 @@ async function handleSendMessage(conversationId, loggedInUsername) {
         if (data && data.success) {
             const modalMessageList = document.getElementById('modal-message-list');
             const newMessageDiv = document.createElement('div');
-            newMessageDiv.className = `chat-message message-right`; // Assuming sent messages go to the right
+            newMessageDiv.className = `chat-message message-right message-right`; // Assuming sent messages go to the right
+            const formatMessageDate = (date) => {
+                const options = { day: '2-digit', month: 'short' }; // Day and month in short form (e.g., "05 Oct")
+                const dateString = date.toLocaleDateString(undefined, options);
+                const timeString = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }); // Time in HH:MM format
+                return `${dateString}, ${timeString}`; // Combine date and time
+            };
+            
+            // Example usage for creating a new message div
             newMessageDiv.innerHTML = `
-                <strong>${loggedInUsername}:</strong> ${messageContent}<br>
-                <em>${new Date().toLocaleString()}</em>
+                <div class="message-header">
+                    <strong>${loggedInUsername}</strong>
+                   
+                </div>
+                <div class="message-body">
+                    <p>${messageContent}</p>
+                </div>
+                <div class="message-footer">
+                   
+                    <span class="message-time">${formatMessageDate(new Date())}</span>
+                </div>
             `;
             modalMessageList.appendChild(newMessageDiv);
             modalMessageList.scrollTop = modalMessageList.scrollHeight; // Scroll to bottom
@@ -384,9 +425,11 @@ async function displayUserMessages(messages, loggedInUsername) {
         modalMessageList.appendChild(messageDiv);
     });
 
-    modalMessageList.scrollTop = modalMessageList.scrollHeight; // Scroll to bottom
-    messageModal.style.display = 'block'; // Show the modal
 
+    messageModal.style.display = 'block'; // Show the modal
+    requestAnimationFrame(() => {
+        modalMessageList.scrollTop = modalMessageList.scrollHeight; // Scroll to bottom after rendering messages
+    });
     // Close modal functionality
     document.querySelector('.close-chat-window').onclick = () => {
         messageModal.style.display = 'none';

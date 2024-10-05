@@ -194,21 +194,16 @@ body.blur {
 .dropdown-menu {
     position: absolute;
     width: 300px;
-
     z-index: 1000000000000000000000000000;
-
-    /* Position from the top */
-    height: 300px;
-    /* Set height */
     display: none;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.9);
     justify-content: center;
     align-items: center;
     border: 5px solid black;
-    /* Transparent border for gradient */
+    margin-top: 100px;
+    border-radius: 10px;
     background-clip: padding-box;
-    /* Ensures the background does not fill the border */
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.6),
         /* Inner glow */
         0 0 15px rgba(255, 255, 255, 0.4),
@@ -345,7 +340,7 @@ a {
     cursor: pointer;
     /* Pointer cursor to show it's clickable */
     transition: opacity 0.3s ease;
-    /* Transition for the icon */
+    background: none;
 }
 
 .user-icon{
@@ -362,10 +357,12 @@ a {
 
 .header.animate-herder .list-container ul {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     animation: swingDownFlip 1.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
     align-self: end;
-    float: right;
+    position: fixed;
+    top: 100px;
+    right: 2px;
   
 }
 
@@ -691,8 +688,10 @@ header .dropdown-item {
     /* Scale up by 10% */
 }
 
+
 .search-wrapper {
     position: fixed;
+    background: none;
     top: 0px;
     left: 50%;
     transform: translateX(-50%);
@@ -700,6 +699,7 @@ header .dropdown-item {
     /* Add padding to give space around content */
     filter: drop-shadow(16px 4px 9px rgba(43, 54, 1, 0.6));
     z-index: 1000000;
+    
     /* Ensure it's above other content */
 
 }
@@ -865,10 +865,10 @@ header .dropdown-item {
 #messagesIcon {
     display: none;
     /* Initially hidden */
-    background-color: rgba(255, 0, 0, 0.8);
+    background-color: rgba(255, 0, 0, 0.3);
     padding: 10px;
-    border-radius: 20px;
     color: white;
+    border: 3px solid transparent;
     transition: opacity 0.3s ease;
     /* Smooth transition for opacity */
 }
@@ -876,7 +876,6 @@ header .dropdown-item {
 #notification-area {
     background-color: rgba(0, 0, 0, 0.9);
     padding: 5px;
-    border-radius: 25px;
     position: fixed;
     top: 115px;
     left: 30px;
@@ -937,8 +936,7 @@ header .dropdown-item {
 /* Styles for each message in the modal */
 #modal-message-list div {
     padding: 10px;
-    border-bottom: 1px solid white;
-    /* Add a white bottom border between messages */
+   
     margin-bottom: 10px;
     /* Space between messages */
     word-wrap: break-word;

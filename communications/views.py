@@ -151,3 +151,10 @@ def chat_bot_view(request):
         'initial_message': initial_message,
         'choices': choices
     })
+
+def contact_view(request):
+    return render(request, 'communications/contact.html')
+
+def about(request):
+    return render(request, 'communications/about.html')
+

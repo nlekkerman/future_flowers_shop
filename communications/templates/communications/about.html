@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="navigation-container">
+    {% include 'navigation.html' %}
+</div>
+<!-- Main Container for all content -->
+<div class="about-container">
+    <div class="container-fluid">
+
+        <!-- About Us Section -->
+        <div class="about-section mt-4 rounded">
+            <div class="about-content text-center">
+                <h2 class="about-title display-4">About Us</h2>
+                <p class="about-description lead">
+                    Future Flower Shop is your go-to online destination for top-quality seeds, based in beautiful County
+                    Kerry, Ireland.
+                    We provide a wide range of premium seeds for flowers, vegetables, herbs, and more—catering to home
+                    gardeners, hobbyists, and professional growers alike.
+                </p>
+            </div>
+        </div>
+
+        <!-- Our Vision Section -->
+        <div class="vision-section mt-4 rounded">
+            <div class="vision-overlay">
+                <h3 class="vision-title">Our Vision</h3>
+                <p class="vision-description">
+                    Our vision is to inspire and empower individuals to reconnect with nature by cultivating their own
+                    gardens. We aim to create a future where everyone has access to sustainable, homegrown produce and
+                    beautiful flowers, contributing to a greener and healthier world.
+                </p>
+            </div>
+        </div>
+
+        <!-- Our Values Section -->
+        <div class="values-section mt-4 rounded">
+            <div class="values-overlay">
+                <h3 class="values-title">Our Values</h3>
+                <p class="values-description">
+                    At Future Flower Shop, we value sustainability, quality, and customer satisfaction. We believe in
+                    environmentally-friendly practices and work to source our seeds responsibly, ensuring the health of
+                    our planet.
+                </p>
+            </div>
+        </div>
+
+        <!-- Join Our Community Section -->
+        <div class="community-section mt-4 rounded">
+            <div class="community-overlay">
+                <h3 class="community-title">Join Our Community</h3>
+                <p class="community-description">
+                    We encourage you to join our gardening community! Share your gardening stories, tips, and successes
+                    with us on social media, and let's grow together. Together, we can create a thriving network of
+                    plant lovers and nature enthusiasts.
+                </p>
+            </div>
+        </div>
+
+        <!-- Customer Testimonials Section -->
+        <div class="testimonials-section p-5 mt-4 rounded">
+            <div class="testimonials-overlay">
+                <h3 class="testimonials-title">What Our Customers Say</h3>
+                <blockquote class="testimonial">
+                    "Future Flower Shop has the best selection of seeds I've ever come across! Their customer service is
+                    exceptional, and my garden has never looked better."
+                    <cite>– Mary O'Brien</cite>
+                </blockquote>
+                <blockquote class="testimonial">
+                    "I've been buying from Future Flower Shop for the last 5 years, and I love their commitment to
+                    sustainability and quality."
+                    <cite>– Liam Murphy</cite>
+                </blockquote>
+            </div>
+        </div>
+
+    </div>
+</div> <!-- End of Main Container -->
+{% endblock %}
