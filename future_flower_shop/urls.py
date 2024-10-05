@@ -5,7 +5,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from custom_accounts.views import welcome_message
+from django.conf.urls import handler404
+from syncmanager.views import custom_404_view
 
+handler404 = 'syncmanager.views.custom_404_view'
 urlpatterns = [
     path('admin/', admin.site.urls),
     

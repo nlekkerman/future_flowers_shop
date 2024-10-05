@@ -118,7 +118,7 @@ body.active-blur::before {
     pointer-events: none; /* Allow interactions with the navigation menu */
 }
 .menu-icon {
-    background-image: url('/media/images/sunflower.webp'); 
+    background-image: url('/static/media/images/sunflower.webp'); 
     background-size: cover;
     background-position: center;
     width: 150px;

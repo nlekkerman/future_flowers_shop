@@ -87,8 +87,7 @@
             <li class="list-inline-item">
                 <a class="text-black nav-link" id="cart-button">
                     <div class="text-center icon-container">
-                        <img src="/media/images/shopping-icon.png" alt="User Icon" class="user-icon" style="width: 60px; height: 60px; "/>                          
-                    </div>
+                        <img src="{% static 'media/images/shopping-icon.png' %}" alt="User Icon" class="user-icon" style="width: 60px; height: 60px;"/>                    </div>
                 </a>
             </li>
             
@@ -96,7 +95,7 @@
                 <a class="text-black nav-link" href="#" id="user-options" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                     <div>
-                        <img src="/media/images/user-icon.png" alt="User Icon" class="user-icon" style="width: 40px; height: 40px;"/>                         <!-- Conditionally display username -->
+                        <img src="{% static 'media/images/user-icon.png' %}" alt="User Icon" class="user-icon" style="width: 40px; height: 40px;"/>                         <!-- Conditionally display username -->
                         {% if request.user.is_authenticated %}
                         <span>{{ request.user.username }}</span>
                         {% endif %}
@@ -169,7 +168,8 @@
  
 <div class="search-wrapper">
     <div class="search-icon-wrapper" id="searchIcon">
-        <img src="https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net/media/images/search-icon-img.png" alt="Search Icon" class="search-icon-img">
+        <img src="{% static 'media/images/search-icon-img.png' %}" alt="Search Icon" class="search-icon-img"/>
+
     </div>
     <div class="search-container" id="searchContainer" style="display: none;">
         <form id="seed-search-form">

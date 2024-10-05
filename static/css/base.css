@@ -4,7 +4,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: url('/media/images/home-background-one.webp') no-repeat center center fixed;
+    background: url('/static/media/images/home-background-one.webp') no-repeat center center fixed;
     background-size: cover;
     transition: filter 0.3s ease;
     /* Optional: covers the whole background */
@@ -167,7 +167,7 @@ body.blur {
     padding: 15px;
     border-radius: 40px;
     z-index: 99;
-    background: url('/media/images/background.jpg') no-repeat center center fixed;
+    background: url('static/media/images/background.jpg') no-repeat center center fixed;
 }
 
 /* Hover effect on filter container */

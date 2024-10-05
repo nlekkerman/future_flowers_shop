@@ -25,7 +25,14 @@ from communications.models import ChatMessage, ChatConversation
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 
+def custom_404_view(request, exception=None):
+    """
+    Custom view to handle 404 errors (Page Not Found).
+    The 'exception' parameter is required for Django to pass the error details.
+    """
+    return render(request, 'custom_accounts/404.html', status=404)
 
+    
 User = get_user_model()
 @csrf_exempt
 def send_message(request, conversation_id):
@@ -273,7 +280,6 @@ def get_cart_data(request):
 
 
 
-@login_required  # Ensure the user is logged in
 def get_username(request):
     username = request.user.username
     return JsonResponse({'username': username})

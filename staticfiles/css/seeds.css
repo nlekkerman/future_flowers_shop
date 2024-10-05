@@ -1,3 +1,4 @@
+
 /* Basic Reset */
 * {
     margin: 0;
@@ -5,36 +6,88 @@
     box-sizing: border-box;
 }
 
-
 li a {
     text-decoration: none;
 }
-.page-link{
+
+.page-link {
     background-color: rgba(0, 0, 0, 0.7) !important;
 }
 
-.page-item.active .page-link{
+.page-item.active .page-link {
     background-color: rgba(145, 0, 0, 0.7) !important;
     border-color: white !important;
 }
+.seed-details{
+    transition: all 0.3s ease;  
+    z-index: 9999 ;
+    position: absolute;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    
+}
+.close-search-button{
+    position: absolute;
+    right: 20px;
+    top: 70px;
+}
+.seed-details p {
+    text-align: center;
+}
+.search-details-general-data{
+    background-color: rgba(145, 0, 0, 0.4);
+   
+}
+#search-results-container {
+    display: flex;
+    flex-direction: row;
+    z-index: 99999;
 
-#search-results-container{
-    margin-top: 150px !important;
+    overflow-y: auto;
+    max-height: 200px;
+    position: fixed;
+    top: 150px; /* or any specific position */
+    left: 0; /* or any specific position */
+    width: 100%; /* or a specific width */
+    transition: opacity 0.9s ease, visibility 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    background-color: rgba(27, 224, 116, 0.5);
+    padding-top: 30px;
+}
+#search-results-container.visible {
+    opacity: 1;
+    visibility: visible;
 }
 
+#search-results-container.hidden {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+}
 
+.close-modal-button{
+    text-align: end;
+}
 .seeds-container {
     width: 80%;
     margin: 0 auto;
-    margin-top: 10px !important;
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.4);
     color: white !important;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
+    margin-top: 170px;
 }
-
+.background-container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+}
 .seed-card {
     background-color: rgba(0, 0, 0, 0.4) !important;
     color: white !important;
@@ -42,33 +95,25 @@ li a {
 
 li a:hover {
     text-decoration: none;
-    /* Ensure no underline on hover */
 }
 
 .seeds-title {
     color: #ffffff;
     margin-bottom: 20px;
     background-color: rgba(0, 0, 0, 0.7);
-
 }
 
 .input-group {
     width: 50%;
 }
 
-
-
 .btn-update:hover {
     background: linear-gradient(145deg, #7a8b9a, #9bb0d4);
-    /* Slightly different gradient on hover */
 }
-
-
 
 ul {
     list-style-type: none;
 }
-
 
 .price {
     font-weight: bold;
@@ -83,12 +128,12 @@ ul {
     button {
         width: 100%;
     }
+
     .sorting-container {
         margin-bottom: 20px;
         width: 100%;
         text-align: left;
         margin-top: 10px !important;
-
     }
 
     .sorting-label {
@@ -99,12 +144,8 @@ ul {
         display: block;
     }
 
-    .sorting-buttons {
-        display: none;
-    }
-
+   
 }
-
 
 .quantity-controls {
     display: flex;
@@ -134,22 +175,23 @@ ul {
     padding: 5px;
 }
 
-
 .form-control {
     display: inline-block;
-    width: auto;
+    width: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
     border-radius: 20px;
     padding: 5px 10px;
+    text-align: center;
     border: 1px solid #ccc;
 }
-.pagination-container{
+
+.pagination-container {
     display: flex;
     justify-content: center;
 }
 
-.checkout-button{
+.checkout-button {
     background-color: rgba(255, 0, 0, 0.7);
     width: 100%;
     color: white;
@@ -157,10 +199,10 @@ ul {
     margin-top: 10px;
 }
 
-/*NEW STYLES*/
+/* NEW STYLES */
 
-.add-to-cart{
-    background-color:transparent;
+.add-to-cart {
+    background-color: transparent;
     border: 1px solid rgba(165, 163, 163, 0.4);
     border-radius: 15px;
     color: white;
@@ -168,56 +210,146 @@ ul {
     padding: 5px 10px;
 }
 
+.alert-success {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    border: none !important;
+    color: white !important;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0px !important;
+}
+
+.details-quantity-button-container {
+    min-width: 100% !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+@keyframes scale-up {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.add-to-cart-button.scaled-up {
+    animation: scale-up 0.3s ease;
+}
+
+/* Common Modal Content Styles */
+.modal-content {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 500px; /* Adjust as needed */
+    width: 95%;
+    margin: 0 auto;
+    position: relative; /* To position the close button */
+}
+
+/* Modal Background Styles */
+.seed-details-modal{
+    position: fixed;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for exact center */
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    display: flex;
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+    transition: opacity 0.4s ease, visibility 0.4s ease; /* Smooth fade-in effect */
+    opacity: 0; /* Initially invisible */
+    visibility: hidden; /* Initially hidden */
+    z-index: 1000; /* Ensure it stays on top */
+    padding: 20px;
+}
 #add-item-messages {
-    display: none;
+    position: fixed;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for exact center */
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    display: flex;
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+    transition: opacity 0.4s ease, visibility 0.4s ease; /* Smooth fade-in effect */
+   color: white !important;
+    z-index: 10000; /* Ensure it stays on top */
+    padding: 20px;
+    width: 500px;
+    height: 333px;
+}
+.btn-close-message{
+    width: 30%;
+    margin: 10px auto;
+}
+
+.message-added{
+    background-color: rgba(191, 245, 106, 0.2);
+    padding: 10px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.7);
+    font-size: 1.3rem;
+}
+.message-content{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+}
+/* To show the modal */
+.show {
+    opacity: 1;
+    visibility: visible;
+}
+.original-price {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.discounted-price {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.discount-label {
+    background-color: #22aa00;
+    color: #fff;
+    padding: 2px 5px;
+    border-radius: 3px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 12px;
+}
+
+#seed-details-modal {
+    height: 100% !important;
+    width: 100%;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(42, 110, 0, 0.8);
-    border: 1px solid white;
-    color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 400px;
     z-index: 1000;
-    /* Ensure it's centered and not affected by relative positioning */
-    position: fixed;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-
-#close-message {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 20px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-#close-message:hover {
-    color: #ff0000; /* Change color on hover */
-}
-
-#item-message {
-    margin-bottom: 10px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-#item-details {
-    display: none;
-    background-color: rgba(0, 0, 0, 0.5);
-
-}
-
-#item-image {
-    max-width: 100px;
-    border-radius: 4px;
-    margin-bottom: 10px;
+.details-add-button-container{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
 }

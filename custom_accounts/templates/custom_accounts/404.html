@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('/static/media/images/home-background-one.webp') no-repeat center center fixed;
+
+        }
+
+        /* Main Container with Background Image */
+        .error-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            background: url('/static/media/images/404-error-background.png') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            background-color: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            text-align: center;
+        }
+
+        /* Heading */
+        .error-heading {
+            font-size: 48px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Subheading */
+        .error-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        /* Back to homepage button */
+        .error-link {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #ff6b6b;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .error-link:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .error-heading {
+                font-size: 32px;
+            }
+
+            .error-message {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="error-container">
+        <h1 class="error-heading">Oops! Page not found</h1>
+        <p class="error-message">Sorry, but the page you're looking for doesn't exist. It may have been moved or deleted.</p>
+        <a href="/" class="error-link">Return to homepage</a>
+    </div>
+
+</body>
+</html>

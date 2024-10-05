@@ -1,13 +1,14 @@
 /* styles.css */
 
 /* Chat Icon Styles */
-.chat-icon {
+.messages-icon {
     position: fixed;
     bottom: 20px;
     left: 20px;
     font-size: 24px;
     cursor: pointer;
     z-index: 1000;
+    display: none;
 }
 
 /* Chat Window Styles */
