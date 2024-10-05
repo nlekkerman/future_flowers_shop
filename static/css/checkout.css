@@ -563,4 +563,17 @@ button[type="submit"]:hover {
     
     }
 
+    /* Right-aligned messages (sent messages) */
+.message-right {
+   
+    margin-left: 300px !important;
+}
+
+/* Left-aligned messages (received messages) */
+.message-left {
+ 
+    margin-right: 300px !important;
+
+}
+
 }

@@ -106,7 +106,7 @@
     /* Metallic gradient */
     text-align: center;
     border-radius: 0px;
-    background-color: rgba(67, 57, 88, 0.5) !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
     text-decoration: none;
     border: 5px solid transparent; /* Transparent border for gradient */
     background-clip: padding-box; /* Ensures the background does not fill the border */

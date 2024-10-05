@@ -341,23 +341,15 @@
 /* Modal Content Box */
 .modal-content {
     position: absolute;
-    /* Absolute positioning */
     top: 50%;
-    /* Center vertically */
     left: 50%;
-    /* Center horizontally */
     transform: translate(-50%, -50%);
-
     background-color: rgba(0, 0, 0, 0.5);
-
     padding: 20px;
     border: 1px solid #ddd;
-
     text-align: center;
-    /* Center content */
     border-radius: 5px;
-    margin-top: 100px;
-    /* Rounded corners */
+  
 }
 
 /* Modal Actions */
