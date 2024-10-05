@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',            # Required for allauth
     'allauth',                         # Django allauth for authentication
     'allauth.account',                 # Allauth for account management
-
+    'allauth.socialaccount',           # Allauth for social account management
     'cloudinary',                      # Cloudinary for media management
     'cloudinary_storage', 
     'crispy_forms',
