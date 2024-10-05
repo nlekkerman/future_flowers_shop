@@ -83,6 +83,11 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             const seedListContainer = document.getElementById('seed-list');
+            if (!seedListContainer) {
+                console.error('Element with ID "seed-list" not found in the DOM.');
+                return; // Exit if the element doesn't exist
+            }
+            
             seedListContainer.innerHTML = ''; // Clear any existing content
 
             if (data.success) {

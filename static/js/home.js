@@ -6,7 +6,8 @@ import {
     sendMessage,
     fetchUsername,
     checkIfSuperUser,
-    fetchMessageCounts
+    fetchMessageCounts,
+    fetchAndStoreSeeds
 } from './control.js';
 let loggedInUsername, loadingOverlay, loadingText;;
 
@@ -18,6 +19,7 @@ window.onload = async () => {
         await fetchMessageCounts();
         updateIconsBasedOnSuperUser();
         fetchCartData();
+        fetchAndStoreSeeds();
         const chatContainer = document.getElementById('chat-container');
         const messagesIcon = document.getElementById('messagesIcon');
         const adminMessagesIcon = document.getElementById('admin-message-icon');
