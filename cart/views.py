@@ -36,8 +36,18 @@ def add_to_cart(request):
             return HttpResponseBadRequest("Invalid input")
 
         # Get or create the cart for the user
-        cart, created = Cart.objects.get_or_create(user=request.user)
-        logger.info(f"Cart {'created' if created else 'retrieved'} for user: {request.user.username}")
+        if request.user.is_authenticated:
+            cart, created = Cart.objects.get_or_create(user=request.user)
+            logger.info(f"Cart {'created' if created else 'retrieved'} for user: {request.user.username}")
+        else:
+            # Create a cart for anonymous users using session ID or other unique identifier
+            session_key = request.session.session_key
+            if not session_key:
+                request.session.save()  # Ensure a session is created
+                session_key = request.session.session_key
+            
+            cart, created = Cart.objects.get_or_create(session_id=session_key)
+            logger.info(f"Cart {'created' if created else 'retrieved'} for anonymous user: {session_key}")
 
         # Get the seed object
         try:
@@ -68,16 +78,10 @@ def add_to_cart(request):
         }
 
         # Add cart items to the response
-        # Backend response to include discounted price
         for item in cart.items.all():
             item_price = item.seed.price  # This is likely already a Decimal
-            item_discount = Decimal(item.seed.discount or 0)  # Convert the discount to Decimal
+            item_discount = Decimal(item.seed.discount or 0)
             discounted_price = item_price - (item_price * (item_discount / Decimal(100)))
- # Log details for debugging
-            logger.info(
-            f"Processing item: seed ID={item.seed.id}, original price=${item_price:.2f}, "
-            f"discount={item_discount}%, discounted price=${discounted_price:.2f}"
-    )
 
             item_data = {
                 'id': item.id,
@@ -91,7 +95,6 @@ def add_to_cart(request):
                 'total_price': float(item.get_total_price())
             }
             cart_data['items'].append(item_data)
-
 
         return JsonResponse(cart_data, status=200)
 

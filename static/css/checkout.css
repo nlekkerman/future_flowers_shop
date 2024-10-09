@@ -12,7 +12,7 @@ body {
 /* Checkout Items Container */
 #checkout-items-container {
     padding: 20px;
-    margin: 0;
+    margin: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -151,6 +151,55 @@ button[type="submit"]:hover {
 }
 
 
+.StripeElement,
+.stripe-style-input {
+  box-sizing: border-box;
+  height: 40px;
+  padding: 10px 12px;
+  border: 2px solid transparent;
+  background-color: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.4),
+  /* Inner glow */
+  0 0 10px rgba(255, 255, 255, 0.3),
+  /* Middle glow */
+  0 0 15px rgba(255, 255, 255, 0.1);
+/* Outer glow */  -webkit-transition: box-shadow 150ms ease;
+  transition: box-shadow 150ms ease;
+  border-radius: 20px;
+}
+
+.StripeElement--focus,
+.stripe-style-input:focus,
+.stripe-style-input:active,
+#card-element:focus {
+  box-shadow: 0 1px 3px 0 #97d30c;
+  color: white;
+}
+.custom-select{
+    text-align: center;
+}
+
+.StripeElement--webkit-autofill, StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
+
+.stripe-style-input::placeholder {
+    color: #aab7c4;
+}
+
+.fieldset-label {
+    position: relative;
+    right: .5rem;
+}
+
+#payment-form .form-control,
+#card-element {
+    color: #ffffff;
+    border: 1px solid #000;
+}
+
+
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .item-container-checkout {
@@ -274,7 +323,6 @@ button[type="submit"]:hover {
         border: 1px solid #ddd;
         border-radius: 10px;
         max-width: 1200px;
-        flex: 1;
     }
 
     .item-info {

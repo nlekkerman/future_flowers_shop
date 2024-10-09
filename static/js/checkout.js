@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-
 function populateCheckout(cart) {
     const checkoutItemsContainer = document.getElementById('checkout-items-container');
     const cartCount = document.getElementById('cart-count');
@@ -37,8 +36,18 @@ function populateCheckout(cart) {
     const deliveryFeeElement = document.getElementById('delivery-fee');
     const grandTotalElement = document.getElementById('grand-total');
     const cartDataInput = document.getElementById('cart-data');
-    const checkoutForm = document.getElementById('checkout-form');
+    const checkoutForm = document.getElementById('payment-form');
 
+    // Check for missing DOM elements
+    if (!checkoutItemsContainer) console.error('Missing: checkout-items-container');
+    if (!cartCount) console.error('Missing: cart-count');
+    if (!orderTotalElement) console.error('Missing: order-total');
+    if (!deliveryFeeElement) console.error('Missing: delivery-fee');
+    if (!grandTotalElement) console.error('Missing: grand-total');
+    if (!cartDataInput) console.error('Missing: cart-data');
+    if (!checkoutForm) console.error('Missing: checkout-form');
+
+    // Return early if any elements are missing
     if (!checkoutItemsContainer || !cartCount || !orderTotalElement || !deliveryFeeElement || !grandTotalElement || !cartDataInput || !checkoutForm) {
         console.error('ONE OR MORE DOM ELEMENTS ARE MISSING.');
         return;
@@ -47,8 +56,9 @@ function populateCheckout(cart) {
     let orderTotal = 0;
     const deliveryFee = 5.00; // Default delivery fee
 
-    checkoutItemsContainer.innerHTML = '';
+    checkoutItemsContainer.innerHTML = ''; // Clear previous items
 
+    // Iterate over cart items
     cart.items.forEach(item => {
         if (!item || !item.seed) {
             console.error('INVALID ITEM DATA:', item);
@@ -59,17 +69,19 @@ function populateCheckout(cart) {
         orderTotal += item.quantity * parseFloat(item.seed.price);
     });
 
-    cartCount.textContent = cart.items.length;
-    orderTotalElement.textContent = `$${orderTotal.toFixed(2)}`;
+    cartCount.textContent = cart.items.length; // Update cart count
+    orderTotalElement.textContent = `$${orderTotal.toFixed(2)}`; // Update order total
 
+    // Update delivery fee and grand total based on order total
     if (orderTotal > 50) {
-        deliveryFeeElement.innerHTML = '<span style="color: green;  font-weight: bold; text-align: left; margin-right: 10px;">FREE</span>';
+        deliveryFeeElement.innerHTML = '<span style="color: green; font-weight: bold; text-align: left; margin-right: 10px;">FREE</span>';
         grandTotalElement.textContent = `$${orderTotal.toFixed(2)}`;
     } else {
         deliveryFeeElement.textContent = `$${deliveryFee.toFixed(2)}`;
         grandTotalElement.textContent = `$${(orderTotal + deliveryFee).toFixed(2)}`;
     }
 
+    // Handle form submission
     checkoutForm.addEventListener('submit', function (e) {
         e.preventDefault();
         cartDataInput.value = JSON.stringify(cart);
