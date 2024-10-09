@@ -560,7 +560,7 @@
 /* Custom Modal Content */
 .custom-modal-content {
     background-color: rgba(0, 0, 0, 0.8);
-    background: url('/media/images/modal-background-one.png') no-repeat center center fixed;
+    background: url('/static/media/images/modal-background-one.png') no-repeat center center fixed;
     background-size: contain;
     border: 2px solid white;
     color: white;
@@ -851,7 +851,7 @@
 
 /* Icon styling */
 .icon {
-    background: url('/media/images/menu-icon-rose.webp');
+    background: url('/static/media/images/menu-icon-rose.webp');
     /* Set the path to your icon */
     background-size: contain;
     /* Ensure the icon is contained within the div */

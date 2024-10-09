@@ -3,7 +3,8 @@ from django.db.models import Sum
 from django.conf import settings
 from django_countries.fields import CountryField
 from seeds.models import Seed
-from custom_accounts.models import UserProfile  # Adjust import path
+from custom_accounts.models import UserProfile 
+import uuid
 
 class Order(models.Model):
     order_number = models.CharField(max_length=32, null=False, editable=False)

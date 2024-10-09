@@ -35,7 +35,7 @@ card.addEventListener('change', function (event) {
     var errorDiv = document.getElementById('card-errors');
     if (event.error) {
         var html = `
-            <span class="icon" role="alert">
+            <span class="checkout-icon" role="alert">
                 <i class="fas fa-times"></i>
             </span>
             <span>${event.error.message}</span>
@@ -81,7 +81,7 @@ form.addEventListener('submit', function(ev) {
         if (result.error) {
             var errorDiv = document.getElementById('card-errors');
             var html = `
-                <span class="icon" role="alert">
+                <span class="checkout-icon" role="alert">
                 <i class="fas fa-times"></i>
                 </span>
                 <span>${result.error.message}</span>`;
