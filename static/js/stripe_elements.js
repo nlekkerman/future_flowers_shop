@@ -56,63 +56,33 @@ var form = document.getElementById('payment-form');
 
 form.addEventListener('submit', function(ev) {
     ev.preventDefault();
-    
-    console.log('Form submitted. Preparing to confirm payment...');
 
     card.update({ 'disabled': true });
     $('#submit-cart-button').attr('disabled', true);
 
-    // Log the payment method details being sent to Stripe
-    console.log('Payment method details:', {
-        card: card
-    });
-
-    // Log the client secret to confirm the correct secret is being used
-    console.log('Client secret:', clientSecret);
-
     stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-            card: card,
-        }
+        payment_method: { card: card }
     }).then(function(result) {
-        // Log the full result object for further inspection
-        console.log('Payment confirmation response:', result);
-
         if (result.error) {
-            var errorDiv = document.getElementById('card-errors');
-            var html = `
-                <span class="checkout-icon" role="alert">
-                <i class="fas fa-times"></i>
-                </span>
-                <span>${result.error.message}</span>`;
-            $(errorDiv).html(html);
-            
             console.error('Payment confirmation error:', result.error.message);
-            
-            // Log the full error object for more details
-            console.error('Full error object:', result.error);
-
+            $('#card-errors').html(`<span class="checkout-icon" role="alert"><i class="fas fa-times"></i></span><span>${result.error.message}</span>`);
             card.update({ 'disabled': false });
             $('#submit-cart-button').attr('disabled', false);
+        } else if (result.paymentIntent.status === 'succeeded') {
+            form.submit();
+        } else if (result.paymentIntent.status === 'requires_action') {
+            stripe.handleCardAction(result.paymentIntent.client_secret).then(function(result) {
+                if (result.error) {
+                    console.error('3D Secure authentication failed:', result.error.message);
+                } else if (result.paymentIntent.status === 'succeeded') {
+                    form.submit();
+                }
+            });
         } else {
-            console.log('Payment confirmation result:', result);
-            console.log('Payment intent status:', result.paymentIntent.status);
-
-            if (result.paymentIntent.status === 'succeeded') {
-                console.log('Payment successful! Submitting form now...');
-                form.submit();
-            } else {
-                console.warn('Payment status is not succeeded:', result.paymentIntent.status);
-                // Log the entire paymentIntent object for further diagnosis
-                console.warn('PaymentIntent details:', result.paymentIntent);
-            }
+            console.warn('Unhandled payment status:', result.paymentIntent.status);
         }
     }).catch(function(error) {
-        console.error('Error during payment confirmation:', error);
-
-        // Log additional error details if available
-        if (error && error.response) {
-            console.error('Stripe API error response:', error.response);
-        }
+        console.error('Unexpected error:', error);
     });
 });
+

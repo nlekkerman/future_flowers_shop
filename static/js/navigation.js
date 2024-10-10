@@ -98,6 +98,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    const viewSeedsButton = document.getElementById('close-order-success-button');
+    if (viewSeedsButton) {
+        viewSeedsButton.addEventListener('click', () => {
+            console.log("CILIKICIAKSADA"); // This should be logged when clicked
+            window.location.href = '/seeds/?show_seeds=true'; // Adjust to your URL or route
+        });
+    } else {
+        console.log("Button not found");
+    }
+});
+document.addEventListener('DOMContentLoaded', () => {
     const viewSeedsButton = document.getElementById('back-to-shopping-button');
     if (viewSeedsButton) {
         viewSeedsButton.addEventListener('click', () => {

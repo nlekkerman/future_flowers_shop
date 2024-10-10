@@ -154,9 +154,15 @@ def get_user_conversations(request, user_id):
 
     return JsonResponse({'conversations': conversation_data})
 
-@login_required
+# Define a constant for the anonymous user ID
+ANONYMOUS_USER_ID = 0  # Adjust this as needed
+
 def get_user_id(request):
-    user_id = request.user.id  # Get the logged-in user's ID
+    if request.user.is_authenticated:
+        user_id = request.user.id  # Get the logged-in user's ID
+    else:
+        user_id = ANONYMOUS_USER_ID  # Handle as an anonymous user
+
     return JsonResponse({'user_id': user_id})
 
 

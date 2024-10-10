@@ -154,3 +154,4 @@ function deleteCartItem(cart, seedId) {
         console.error('Error:', error);
     });
 }
+

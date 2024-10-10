@@ -20,7 +20,6 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # Configure logging
 logger = logging.getLogger(__name__)
-
 def checkout(request):
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
@@ -150,6 +149,8 @@ def checkout(request):
             
             try:
                 payment_intent = stripe.PaymentIntent.retrieve(intent_id)
+                logger.info('AT TOPE ID', intent_id)
+
 
                 # Check if the payment has already been processed
                 if payment_intent.status == 'succeeded':
@@ -157,10 +158,18 @@ def checkout(request):
                     messages.success(request, "Your payment was already successful!")
                     return redirect('cart:cart')  # Redirect if payment is already succeeded
 
-                # Process the payment
+                # Check if the payment requires further confirmation (improved handling)
                 if payment_intent.status == 'requires_confirmation':
+                    logger.info("Payment requires confirmation.")
                     # Confirm the payment if it requires confirmation
+                    logger.info('Attempting to confirm PaymentIntent with ID: %s', intent_id)
+
                     stripe.PaymentIntent.confirm(intent_id)
+
+                # Suggestion: Add handling for requires_action status (e.g., 3D Secure)
+                elif payment_intent.status == 'requires_action':
+                    logger.warning('Payment requires additional action (e.g., 3D Secure).')
+                    messages.warning(request, 'Additional authentication is required. Please complete the process.')
 
                 # Check again after confirmation
                 payment_intent = stripe.PaymentIntent.retrieve(intent_id)
@@ -179,9 +188,12 @@ def checkout(request):
                     messages.error(request, 'Payment was not successful.')
                     return redirect('checkout')
 
-            except Exception as e:
-                logger.error("Failed to process payment: %s", str(e))
-                messages.error(request, 'There was an error processing your payment.')
+            # Suggested: Stripe-specific error handling
+            except stripe.error.StripeError as e:
+                body = e.json_body
+                err = body.get('error', {})
+                logger.error("Stripe error: %s", err.get('message'))
+                messages.error(request, f"There was an issue processing your payment: {err.get('message')}")
                 return redirect('checkout')
 
         else:
