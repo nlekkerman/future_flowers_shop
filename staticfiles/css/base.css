@@ -18,6 +18,7 @@ body.blur {
 #cart-button {
     cursor: pointer;
     transition: filter 0.9s ease-in-out, background-color 0.9s ease-in-out;
+    display: none;
 }
 
 .custom-buttons {
@@ -128,7 +129,6 @@ body.blur {
     margin: 0 auto;
     margin-top: 100px;
     padding: 2px;
-    overflow-x: hidden;
     background-color: rgba(0, 0, 0, 0.8);
     color: white !important;
     border-radius: 8px;

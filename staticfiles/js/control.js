@@ -44,11 +44,11 @@ export function getCookie(name) {
 export async function fetchCartData() {
     try {
         console.log('Fetching cart data...');
-        
+
         // Fetch cart data from server
         const response = await fetch('/syncmanager/api/get_cart/');
         const data = await response.json();
-        
+
         // Log the raw response
         console.log('Raw cart data:', data);
 
@@ -58,6 +58,12 @@ export async function fetchCartData() {
             // Store cart data in local storage
             localStorage.setItem('cart', JSON.stringify(data));
             console.log('Cart data saved to local storage:', data);
+            // User is logged in, set cart button visibility to visible
+            const cartButton = document.getElementById('cart-button');
+            if (cartButton) {
+                cartButton.style.display = 'block'; // Show cart button
+                console.log('Cart button is now visible.');
+            }
         }
     } catch (error) {
         // Log any error that occurred during the fetch
@@ -69,11 +75,11 @@ export async function fetchCartData() {
 // Function to send an item to the cart
 export async function sendToCart(seedId, quantity) {
     try {
-        const response = await fetch('/cart/api/add_to_cart/', {  // Adjust URL based on your Django configuration
+        const response = await fetch('/cart/api/add_to_cart/', { // Adjust URL based on your Django configuration
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken()  // Function to get CSRF token
+                'X-CSRFToken': getCsrfToken() // Function to get CSRF token
             },
             body: JSON.stringify({
                 seed_id: seedId,
@@ -95,11 +101,11 @@ export async function sendToCart(seedId, quantity) {
 
 export async function updateQuantityOnServer(cartId, seedId, newQuantity) {
     try {
-        const response = await fetch('/cart/api/update_quantity/', {  // Adjust URL based on your Django configuration
+        const response = await fetch('/cart/api/update_quantity/', { // Adjust URL based on your Django configuration
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken()  // Function to get CSRF token
+                'X-CSRFToken': getCsrfToken() // Function to get CSRF token
             },
             body: JSON.stringify({
                 cart_id: cartId,
@@ -203,7 +209,7 @@ export async function fetchConversations(userId) {
         if (response.ok) {
             // Store conversations in localStorage
             localStorage.setItem('userConversations', JSON.stringify(data.conversations));
-           
+
         } else {
             console.error('Error fetching conversations:', data.error);
         }
@@ -214,20 +220,42 @@ export async function fetchConversations(userId) {
 export async function fetchUserId() {
     try {
         const response = await fetch('/syncmanager/api/get_user_id/');
+
+        // Check if the response is okay (HTTP status in the range 200-299)
+        if (!response.ok) {
+            console.error('Failed to fetch user ID, redirecting to login or another error occurred:', response.status);
+            // Optionally handle specific status codes
+            if (response.status === 401) {
+                // User is not authenticated, redirect to login
+                window.location.href = '/accounts/login/';
+            }
+            return null; // Exit function if response is not okay
+        }
+
         const data = await response.json();
 
-        if (response.ok && data.user_id) {
+        if (data.user_id !== undefined) {
             localStorage.setItem('userId', data.user_id); // Store user ID in local storage
+
+            if (data.user_id === 0) { // Anonymous user check
+                console.log('User is anonymous');
+                // Handle anonymous user logic here if needed
+            } else {
+                console.log('User is logged in with ID:', data.user_id);
+                // Handle logged-in user logic here if needed
+            }
+
             return data.user_id;
         } else {
             console.error('Failed to fetch user ID:', data);
-            return null;
+            return null; // Handle unexpected data format
         }
     } catch (error) {
         console.error('Network error while fetching user ID:', error);
-        return null;
+        return null; // Handle network error
     }
 }
+
 
 
 export async function sendMessage(conversationId, messageContent) {
@@ -238,7 +266,9 @@ export async function sendMessage(conversationId, messageContent) {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken') // If you're using CSRF protection
             },
-            body: JSON.stringify({ content: messageContent })
+            body: JSON.stringify({
+                content: messageContent
+            })
         });
 
         // Check if the response is okay
@@ -253,7 +283,10 @@ export async function sendMessage(conversationId, messageContent) {
         return data; // Return the data for further handling
     } catch (error) {
         console.error('Error sending message:', error);
-        return { success: false, error: error.message }; // Return structured error
+        return {
+            success: false,
+            error: error.message
+        }; // Return structured error
     }
 }
 export async function fetchUsername() {
@@ -275,10 +308,10 @@ export async function fetchMessages(conversationId) {
 
         // Check for success in the response
         if (data.success) {
-            console.log('Fetched messages:', data.messages);  // Log messages to the console
-            return data.messages;  // Return the messages for further use
+            console.log('Fetched messages:', data.messages); // Log messages to the console
+            return data.messages; // Return the messages for further use
         } else {
-            alert(`Error: ${data.error}`);  // Alert if there's an error
+            alert(`Error: ${data.error}`); // Alert if there's an error
             return [];
         }
     } catch (error) {
@@ -291,7 +324,7 @@ export async function fetchMessages(conversationId) {
 export async function checkIfSuperUser() {
     try {
         const response = await fetch('/syncmanager/api/check_superuser/');
-        
+
         if (!response.ok) {
             console.error('Failed to check superuser status:', response.status);
             return null; // Return null to indicate failure
@@ -321,7 +354,7 @@ export async function fetchMessageCounts() {
             // Ensure you are selecting the correct class or ID.
             // If it's a class, use `.unseen-messages-count`, if an ID, use `#unseen-messages-count`.
             document.querySelectorAll('.unseen-messages-count').forEach(element => {
-                element.innerText = unseenMessages;  // Update innerText for each matched element
+                element.innerText = unseenMessages; // Update innerText for each matched element
             });
 
         } else {
@@ -333,12 +366,12 @@ export async function fetchMessageCounts() {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const searchIcon = document.getElementById('searchIcon');
     const searchContainer = document.getElementById('searchContainer');
 
     // Add a click event listener to the search icon
-    searchIcon.addEventListener('click', function() {
+    searchIcon.addEventListener('click', function () {
         // Log to console for debugging
         console.log("SSSSSEEEEEEEAAAAAAARRRRRRCCCCCCCCCHHHHH");
 
@@ -356,4 +389,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-

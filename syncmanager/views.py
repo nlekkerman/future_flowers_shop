@@ -326,6 +326,10 @@ def get_message_counts(request):
         print(f"Error occurred while fetching message counts: {e}")
         return JsonResponse({'error': 'An error occurred while fetching message counts.'}, status=500)
 
+
+
+
+
 @csrf_exempt
 @require_POST
 def update_message_status(request):

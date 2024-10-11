@@ -1,8 +1,8 @@
 import stripe
 import logging
 from django.conf import settings
-
-from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib import messages
 from .models import Order, OrderLineItem
 from .forms import OrderForm
@@ -11,15 +11,63 @@ from custom_accounts.models import UserProfile
 from cart.models import Cart, CartItem
 from django.urls import reverse
 from django.http import JsonResponse
+import json
+
 
 from cart.context_processors import cart_context
 # Set up Stripe with secret key
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+@require_POST
+def cache_checkout_data(request):
+    logger.info("Started cache_checkout_data function")
 
+    try:
+        # Extract payment intent ID from client secret
+        client_secret = request.POST.get('client_secret')
+        logger.debug(f"Received client_secret: {client_secret}")
+
+        # Extract payment intent ID
+        pid = client_secret.split('_secret')[0]
+        logger.debug(f"Extracted PaymentIntent ID: {pid}")
+
+        # Retrieve cart data and other info from request
+        cart = json.dumps(request.session.get('cart', {}))
+        save_info = request.POST.get('save_info')
+        username = request.user
+        logger.debug(f"Cart data: {cart}")
+        logger.debug(f"Save info: {save_info}, Username: {username}")
+
+        # Modify the PaymentIntent in Stripe with metadata
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        logger.info(f"Modifying PaymentIntent with ID: {pid}")
+        stripe.PaymentIntent.modify(
+            pid,
+            metadata={
+                'cart': cart,
+                'save_info': save_info,
+                'username': str(username),
+            }
+        )
+        logger.info(f"PaymentIntent {pid} modified successfully")
+        return HttpResponse(status=200)
+
+    except stripe.error.StripeError as e:
+        # Catching Stripe-specific errors
+        logger.error(f"StripeError occurred: {str(e)}", exc_info=True)
+        messages.error(request, 'Sorry, there was a problem with the payment processing. Please try again later.')
+        return HttpResponse(content=str(e), status=400)
+
+    except Exception as e:
+        # General exception logging
+        logger.error(f"An error occurred in cache_checkout_data: {str(e)}", exc_info=True)
+        messages.error(request, 'Sorry, your payment cannot be processed right now. Please try again later.')
+        return HttpResponse(content=str(e), status=400)
 
 # Configure logging
 logger = logging.getLogger(__name__)
+
+
 def checkout(request):
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
@@ -79,9 +127,12 @@ def checkout(request):
                         )
                         order.delete()
                         return redirect(reverse('cart:cart'))
-
+                    
+                # Clear the cart after processing the order
+                
                 request.session['save_info'] = 'save-info' in request.POST
                 logger.info('Redirecting to checkout success for order number: %s', order.order_number)
+
                 return redirect(reverse('checkout_success', args=[order.order_number]))
             else:
                 logger.warning('Cart is empty for user: %s', request.user.id if request.user.is_authenticated else request.session.session_key)
@@ -156,7 +207,7 @@ def checkout(request):
                 if payment_intent.status == 'succeeded':
                     logger.info("Payment has already been processed for %s", request.POST['email'])
                     messages.success(request, "Your payment was already successful!")
-                    return redirect('cart:cart')  # Redirect if payment is already succeeded
+                    return redirect('checkout_success')  # Redirect if payment is already succeeded
 
                 # Check if the payment requires further confirmation (improved handling)
                 if payment_intent.status == 'requires_confirmation':
@@ -228,19 +279,41 @@ def get_or_create_cart(request):
 
 
 
-
 def checkout_success(request, order_number):
     """
     Handle successful checkouts
     """
     save_info = request.session.get('save_info')
     order = get_object_or_404(Order, order_number=order_number)
+
+    # Success message for the user
     messages.success(request, f'Order successfully processed! \
         Your order number is {order_number}. A confirmation \
         email will be sent to {order.email}.')
 
-    if 'bag' in request.session:
-        del request.session['bag']
+    # Retrieve user ID from session or request
+    user_id = request.user.id if request.user.is_authenticated else None
+
+    # Check for the user's cart in the database
+    if user_id:
+        cart = Cart.objects.filter(user_id=user_id).first()
+
+        if cart:
+            cart.delete()  # Optionally mark it as processed instead of deleting
+            logger.info(f'Cart deleted for user: {user_id}, order number: {order_number}.')
+        else:
+            logger.info(f'No cart found in database for user: {user_id} during checkout success for order number: {order_number}.')
+    else:
+        logger.warning('User not authenticated, cannot retrieve cart.')
+
+    # Clear the payment intent ID from the session
+    if 'payment_intent_id' in request.session:
+        del request.session['payment_intent_id']
+        logger.info(f'Payment intent ID cleared for order number: {order_number}.')
+
+    # Clear the saved information flag
+    if 'save_info' in request.session:
+        del request.session['save_info']
 
     template = 'checkout/checkout_success.html'
     context = {
@@ -248,5 +321,4 @@ def checkout_success(request, order_number):
     }
 
     return render(request, template, context)
-
 
