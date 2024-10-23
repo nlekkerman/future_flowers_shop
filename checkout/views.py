@@ -13,6 +13,8 @@ from django.urls import reverse
 from django.http import JsonResponse
 import json
 
+# Configure logging
+logger = logging.getLogger(__name__)
 
 from cart.context_processors import cart_context
 # Set up Stripe with secret key
@@ -64,8 +66,6 @@ def cache_checkout_data(request):
         messages.error(request, 'Sorry, your payment cannot be processed right now. Please try again later.')
         return HttpResponse(content=str(e), status=400)
 
-# Configure logging
-logger = logging.getLogger(__name__)
 
 
 def checkout(request):
@@ -88,7 +88,28 @@ def checkout(request):
         }
         order_form = OrderForm(form_data)
         if order_form.is_valid():
-            order = order_form.save()
+            order = order_form.save(commit=False)
+
+           
+            if request.user.is_authenticated:
+                try:
+                    profile = UserProfile.objects.get(user=request.user)
+                    order.user_profile = profile 
+                except UserProfile.DoesNotExist:
+                    logger.error('UserProfile does not exist for user: %s', request.user.username)
+                    messages.error(request, 'An error occurred while processing your order.')
+                    return redirect('checkout')
+
+
+            client_secret = request.POST.get('client_secret')
+            logger.debug(f"Received client_secret in HANDLER WAY: {client_secret}")
+
+            pid = client_secret.split('_secret')[0]
+            logger.debug(f"Extracted PaymentIntent ID HANDLER WAY: {pid}")
+
+            order.stripe_pid = pid
+            order.original_bag = json.dumps(cart)
+            order.save()
             logger.info('Order form is valid. Order saved with ID: %s', order.id)
 
             cart = Cart.objects.filter(

@@ -11,7 +11,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from reviews.models import Review, Comment 
+from checkout.models import Order
 from communications.models import ChatConversation, ChatMessage 
+
+# Import logging module
+import logging
+logger = logging.getLogger(__name__)
 
 def welcome_message(request):
     return render(request, 'custom_accounts/welcome_message.html')
@@ -55,7 +60,6 @@ def register(request):
 
     return render(request, 'custom_accounts/register.html', {'form': form})
 
-
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -72,7 +76,21 @@ def logout(request):
 
 @login_required
 def profile(request):
-    return render(request, 'custom_accounts/profile.html')
+    # Get the user profile based on the logged-in user
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        profile = None  # Handle case where the profile doesn't exist
+    
+    if profile:
+        orders = Order.objects.filter(user_profile=profile)
+        if not orders.exists():
+            print(f"No orders found for user {request.user.username}.")
+        # Pass orders to the context for rendering in the template
+    else:
+        orders = []
+
+    return render(request, 'custom_accounts/profile.html', {'orders': orders})
 
 def debug_view(request):
     redirect_uri = 'https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net/accounts/google/login/callback/'
@@ -85,10 +103,6 @@ def debug_view(request):
         f"Client Secret: {client_secret}"
     )
     return HttpResponse(response, content_type="text/plain")
-
-
-
-
 
 @login_required
 def admin_dashboard(request):

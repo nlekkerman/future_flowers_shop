@@ -81,13 +81,7 @@ function populateCheckout(cart) {
         grandTotalElement.textContent = `$${(orderTotal + deliveryFee).toFixed(2)}`;
     }
 
-    // Handle form submission
-    checkoutForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        cartDataInput.value = JSON.stringify(cart);
-        console.log('FORM SUBMITTED WITH CART DATA:', cartDataInput.value);
-        this.submit();
-    });
+   
 }
 
 

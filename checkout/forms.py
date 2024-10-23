@@ -8,7 +8,7 @@ class OrderForm(forms.ModelForm):
             'full_name', 'email', 'phone_number',
             'street_address1', 'street_address2',
             'town_or_city', 'postcode', 'country',
-            'county',
+            'county','user_profile',
         )
         widgets = {
             'country': forms.Select(attrs={'class': 'stripe-style-input form-control'}),

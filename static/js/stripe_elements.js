@@ -27,8 +27,12 @@ var style = {
     }
 };
 
-var card = elements.create('card', {style: style});
+var card = elements.create('card', {
+    style: style
+});
 card.mount('#card-element');
+
+let cardValid = false; // Flag to track card validity
 
 // Handle real-time validation errors on the card element
 card.addEventListener('change', function (event) {
@@ -42,24 +46,48 @@ card.addEventListener('change', function (event) {
         `;
         $(errorDiv).html(html);
         console.error('Card validation error:', event.error.message);
+        cardValid = false; // Mark card as invalid
     } else {
         errorDiv.textContent = '';
         console.log('Card validation success: No errors.');
+        cardValid = true; // Mark card as valid
     }
+
+    toggleSubmitButton();
 });
 
-// Handle form submit
-var form = document.getElementById('payment-form');
+// Function to enable/disable the submit button based on card validity
+function toggleSubmitButton() {
+    var submitButton = $('#submit-cart-button');
+    var messageDiv = $('#card-errors'); // Div to display messages
+
+    console.log('Toggle Submit Button called. Current card validity:', cardValid); // Log the current card validity
+
+    if (cardValid) {
+        submitButton.attr('disabled', false);
+        messageDiv.text('Your card details are valid. You can proceed to checkout.').css('color', 'green');
+        console.log('Submit button enabled. Message displayed: "Your card details are valid. You can proceed to checkout."'); // Log when button is enabled
+    } else {
+        submitButton.attr('disabled', true);
+        messageDiv.text('Please enter valid card details to enable the checkout button.').css('color', 'red');
+        console.log('Submit button disabled. Message displayed: "Please enter valid card details to enable the checkout button."'); // Log when button is disabled
+    }
+}
+
 
 // Handle form submit
 var form = document.getElementById('payment-form');
 
-form.addEventListener('submit', function(ev) {
+
+
+form.addEventListener('submit', function (ev) {
     ev.preventDefault();
 
     // Disable the card input and submit button to prevent multiple submissions
-    card.update({ 'disabled': true });
-    $('#submit-cart-button').attr('disabled', true);
+    card.update({
+        'disabled': true
+    });
+    $('#submit-button').attr('disabled', true);
 
     // Get the 'save info' checkbox status
     var saveInfo = Boolean($('#id-save-info').attr('checked'));
@@ -78,7 +106,7 @@ form.addEventListener('submit', function(ev) {
     $.post(url, postData).done(function () {
         // Confirm card payment with Stripe
         stripe.confirmCardPayment(clientSecret, {
-            payment_method: { 
+            payment_method: {
                 card: card,
                 billing_details: {
                     name: $.trim(form.full_name.value),
@@ -107,28 +135,30 @@ form.addEventListener('submit', function(ev) {
                     state: $.trim(form.county.value),
                 }
             }
-        }).then(function(result) {
+        }).then(function (result) {
             if (result.error) {
                 // Handle error in payment confirmation
                 console.error('Payment confirmation error:', result.error.message);
                 alert(`Payment error: ${result.error.message}`); // Alert the user
                 $('#card-errors').html(`<span class="checkout-icon" role="alert"><i class="fas fa-times"></i></span><span>${result.error.message}</span>`);
-                card.update({ 'disabled': false });
-                $('#submit-cart-button').attr('disabled', false);
+                card.update({
+                    'disabled': false
+                });
+                $('#submit-button').attr('disabled', false);
             } else if (result.paymentIntent.status === 'succeeded') {
                 // Payment succeeded
                 form.submit();
                 clearCart();
             } else if (result.paymentIntent.status === 'requires_action') {
                 // Handle 3D Secure authentication
-                stripe.handleCardAction(result.paymentIntent.client_secret).then(function(result) {
+                stripe.handleCardAction(result.paymentIntent.client_secret).then(function (result) {
                     if (result.error) {
                         console.error('3D Secure authentication failed:', result.error.message);
                         alert(`3D Secure authentication error: ${result.error.message}`); // Alert the user
                     } else if (result.paymentIntent.status === 'succeeded') {
                         form.submit();
                     }
-                }).catch(function(error) {
+                }).catch(function (error) {
                     console.error('Error during 3D Secure authentication:', error);
                     alert(`Error during 3D Secure authentication: ${error.message}`); // Alert the user
                 });
@@ -136,7 +166,7 @@ form.addEventListener('submit', function(ev) {
                 console.warn('Unhandled payment status:', result.paymentIntent.status);
                 alert(`Unhandled payment status: ${result.paymentIntent.status}`); // Alert the user
             }
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.error('Unexpected error:', error);
             alert(`Unexpected error: ${error.message}`); // Alert the user
         });
@@ -156,5 +186,3 @@ function clearCart() {
     localStorage.removeItem('cart'); // Adjust 'cart' to the actual key used for your cart
     console.log('Cart cleared from local storage.');
 }
-
-
