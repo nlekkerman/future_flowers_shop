@@ -31,8 +31,8 @@
 
             <!-- Order total, delivery, and grand total (calculated via JS) -->
             <hr class="my-0">
-            <div class="row text-black">
-                <div class="col-7 offset-2">
+            <div class="order-total-row text-black">
+                <div class="col-7">
                     <p class="my-0">Order Total:</p>
                     <p class="my-0">Delivery:</p>
                     <p class="my-0">Grand Total:</p>
@@ -81,7 +81,7 @@
                     <div class="mb-3" id="card-element"></div>
 
                     <!-- Used to display form errors -->
-                    <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
+                    <div class="mb-3" id="card-errors" role="alert"></div>
                       <!-- Pass the client secret to the view so we can get the payment intent id -->
                       <input type="hidden" value="{{ client_secret }}" name="client_secret">
                 </fieldset>

@@ -13,10 +13,25 @@ from django.contrib.auth.models import User
 from reviews.models import Review, Comment 
 from checkout.models import Order
 from communications.models import ChatConversation, ChatMessage 
-
+from .forms import ProfileEditForm
 # Import logging module
 import logging
 logger = logging.getLogger(__name__)
+
+@login_required
+def edit_profile(request):
+    profile = request.user.profile  # Get the profile for the logged-in user
+
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()  # Save the updated profile
+            messages.success(request, 'Your profile has been updated successfully!')
+            return redirect('profile')  # Redirect to profile page after saving changes
+    else:
+        form = ProfileEditForm(instance=profile)  # Pre-fill form with current profile data
+
+    return render(request, 'custom_accounts/edit_profile.html', {'form': form})
 
 def welcome_message(request):
     return render(request, 'custom_accounts/welcome_message.html')
@@ -81,16 +96,19 @@ def profile(request):
         profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
         profile = None  # Handle case where the profile doesn't exist
-    
+
+    # Fetch orders associated with the profile
     if profile:
         orders = Order.objects.filter(user_profile=profile)
         if not orders.exists():
             print(f"No orders found for user {request.user.username}.")
-        # Pass orders to the context for rendering in the template
     else:
         orders = []
 
-    return render(request, 'custom_accounts/profile.html', {'orders': orders})
+    return render(request, 'custom_accounts/profile.html', {
+        'orders': orders,
+        'profile': profile,  # Pass the profile to the template
+    })
 
 def debug_view(request):
     redirect_uri = 'https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net/accounts/google/login/callback/'

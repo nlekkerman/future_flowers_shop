@@ -10,55 +10,65 @@
 </div>
 <!-- Page Main Container -->
 <div class="profile-page-main-container">
-    <div class="profile-row">
-       <!-- Sidebar Toggle Button for Small Screens (Visible on Small Screens Only) -->
-       <div class="col-12 d-md-none">
-        <button class="btn custom-button-small" id="toggleSidebar">
-            <i class="fas fa-bars"></i> <!-- Font Awesome menu (bars) icon -->
-        </button>
+    <div class="container mt-5"></div>
+    <!-- Profile Header Section -->
+    <div class="profile-header text-center">
+        <div class="edit-image">
+            <img src="{{ profile.get_profile_image }}" id="profileImage" alt="Profile Image">
+        </div>
+        <h2>{{ user.username }}</h2>
+        <p>{{ profile.about_self|default:"No description provided." }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+
+        {% if profile %}
+        {% if profile.address %}
+        <p><strong>Address:</strong> {{ profile.address }}</p>
+        {% else %}
+        <p><strong>Address:</strong> Not provided</p>
+        {% endif %}
+        {% if profile.phone_number %}
+        <p><strong>Phone Number:</strong> {{ profile.phone_number }}</p>
+        {% else %}
+        <p><strong>Phone Number:</strong> Not provided</p>
+        {% endif %}
+        {% else %}
+        <p>No profile information available.</p>
+        {% endif %}
+
+        <a href="{% url 'edit_profile' %}" class="btn btn-light btn-sm">Edit Profile</a>
     </div>
 
-    <div class="row">
-        <!-- User Profile Sidebar -->
-        <div class="sidebar-column-small" id="sidebarMenu">
-            <!-- Navigation Sidebar -->
-            <ul class="list-group">
-                <li class="sidebar-link-item"><a href="#">Profile</a></li>
-                <li class="sidebar-link-item"><a href="#">Edit Account</a></li>
-                <li class="sidebar-link-item"><a href="#">Order History</a></li>
-                <li class="sidebar-link-item"><a href="{% url 'account_logout' %}">Logout</a></li>
-            </ul>
-        </div>
 
-        <!-- Profile Main Content -->
-<div class="content-column-large">
-    <!-- Profile Details -->
-    
-    <h2>Your Orders</h2>
-    {% if orders %}
-        <ul class="order-list">
+</div>
+<div class="profile-row">
+    <!-- Profile Main Content -->
+    <div class="content-column-large">
+        <!-- Profile Details -->
+
+        <h2>Recent Orders</h2>
+        {% if orders %}
+        <ul class="profile-order-list">
             {% for order in orders %}
-                <li class="order-item">
-                    <h3>Order Number: {{ order.order_number }}</h3>
-                    <p>Date: {{ order.date|date:"F j, Y" }}</p>
-                    <p>Total: ${{ order.grand_total }}</p>
+            <li class="profile-order-item">
+                <p class="profile-order-date">Date: {{ order.date|date:"F j, Y" }}</p>
+                <p class="profile-order-total">Total: ${{ order.grand_total }}</p>
 
-                    <!-- Display the first item image -->
-                    {% if order.lineitems.count > 0 %}
-                        {% with first_item=order.lineitems.first %}
-                            <div class="order-item-image">
-                                <img src="{{ first_item.seed.image.url }}" alt="{{ first_item.seed.name }}">
-                            </div>
-                        {% endwith %}
-                    {% endif %}
-                </li>
+                <!-- Display the first item image -->
+                {% if order.lineitems.count > 0 %}
+                {% with first_item=order.lineitems.first %}
+                <div class="profile-order-item-image">
+                    <img src="{{ first_item.seed.image.url }}" alt="{{ first_item.seed.name }}"
+                        class="profile-order-image">
+                </div>
+                {% endwith %}
+                {% endif %}
+            </li>
             {% endfor %}
         </ul>
-    {% else %}
-        <p>You have no orders yet.</p>
-    {% endif %}
-</div>
 
+        {% else %}
+        <p>You have no orders yet.</p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

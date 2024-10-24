@@ -620,6 +620,7 @@ color: white;
 .sidebar-column-small {
     margin-bottom: 20px;
     padding-left: 10px;
+    border-right: 10px solid #333;
 }
 
 /* Content Column */
@@ -633,28 +634,69 @@ color: white;
     margin-bottom: 1rem;
 }
 
-/* Order History */
-.order-history-list {
-    list-style: none;
-    padding-left: 0;
-}
 
-.order-history-item {
+.profile-order-list {
+    list-style-type: none;
     display: flex;
-    justify-content: space-between;
-    padding: 15px;
-    border-bottom: 1px solid #e9ecef;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+    padding: 0;
+    width: 100%;
+    margin: 0;
 }
 
-.order-history-empty {
-    padding: 15px;
-    text-align: center;
+.profile-order-item {
+    border: 5px solid transparent;
+    border-radius: 5px; 
+    margin-bottom: 10px; /* Space between order items */
+    background-color: rgba(0, 0, 0, 0.7); 
+    transition: box-shadow 0.3s; /* Smooth shadow transition */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.4),
+        /* Inner glow */
+        0 0 10px rgba(255, 255, 255, 0.3),
+        /* Middle glow */
+        0 0 15px rgba(255, 255, 255, 0.1);
+    /* Outer glow */
+ 
 }
 
-.order-history-button {
-    margin-left: 15px;
+.edit-image{
+
+    height: 300px;
+    width: 300px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto;
 }
 
+.profile-order-item:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Shadow effect on hover */
+}
+
+.profile-order-number {
+    font-size: 1em; /* Larger font for order number */
+    color:white;
+    margin-bottom: 5px; /* Space below order number */
+}
+
+.profile-order-date, 
+.profile-order-total {
+    font-size: 1em; /* Standard font size for date and total */
+    color:rgb(0, 243, 73);
+    margin: 0; /* Remove margin */
+}
+
+.profile-order-item-image {
+    margin-top: 10px; /* Space above the image */
+}
+
+.profile-order-image {
+    width: 100px; /* Fixed width for the image */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 4px; /* Slightly rounded corners */
+    object-fit: cover; /* Cover the container without distortion */
+}
 
 .profile-page-main-container{
 
