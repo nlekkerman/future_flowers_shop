@@ -12,10 +12,28 @@
 
 <button id="filter-toggle" class="btn filter-toggle">
     <i id="filter-icon" class="fas fa-filter"></i> Filters
-
-
-
 </button>
+
+<div id="filter-container" class="filter-container mb-4 d-none">
+    <div id="filter-buttons" class="filter-buttons btn-group " role="group"
+        aria-label="Category Filter">
+        <button data-category="" class="custom-buttons active">All</button>
+        <button data-category="rose" class="custom-buttons ">Roses</button>
+        <button data-category="tree" class="custom-buttons ">Trees</button>
+        <button data-category="bush" class="custom-buttons ">Bushes</button>
+        <button data-category="flower" class="custom-buttons ">Flowers</button>
+    </div>
+
+    <div class="sorting-buttons btn-group" role="group" aria-label="Sort Options">
+        <button href="#" data-sort="" class="custom-buttons active">Default</button>
+        <button href="#" data-sort="price_asc" class="custom-buttons">L/High</button>
+        <button href="#" data-sort="price_desc" class="custom-buttons">H/Low</button>
+        <button href="#" data-sort="latest" class="custom-buttons">Latest</button>
+        <button href="#" data-sort="discount" class="custom-buttons">Discounted</button>
+    </div>
+
+</div>
+
 <div id="seed-details-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close-modal-button">&times;</span>

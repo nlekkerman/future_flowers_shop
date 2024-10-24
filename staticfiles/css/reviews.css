@@ -923,6 +923,7 @@
 }
 
 
+
 /* Glow effect for the reviews container on hover */
 .about-container:hover {
     transition: filter 0.7s ease-in-out; /* Smooth transition */
@@ -950,6 +951,7 @@
 .review-card:hover,
 .form-login:hover,
 .register-form:hover,
+.profile-order-item:hover,
 .contact-content:hover {
     transform: scale(1.1);
     box-shadow:

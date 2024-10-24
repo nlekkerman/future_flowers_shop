@@ -8,16 +8,25 @@ body {
     color: white;
     /* White text globally */
 }
-
+ /* Styling the container that wraps the image and name */
+ .image-name-container {
+    display: flex;
+  flex-direction: column;
+    gap: 10px;
+    /* Add some space between the image and the name */
+}
 /* Checkout Items Container */
 #checkout-items-container {
     padding: 20px;
     margin: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
 }
-
+    /* Styling the total price to make it more prominent */
+    .price-color-green {
+        font-weight: bold;
+        color: #134b02;
+    }
 /* Item Row */
 .item-row {
     width: 100%;
@@ -140,9 +149,7 @@ button[type="submit"]:hover {
     border-right: 3px solid rgba(255, 255, 255, 0.6);
 }
 
-.checkout-row {
-    min-height: 100%;
-}
+
 
 .checkout-button-font {
     background-color: #228604 !important;
@@ -150,41 +157,58 @@ button[type="submit"]:hover {
     margin: 5px;
 }
 
+.order-total-row {
+    display: flex;
+    flex-direction: row;
+
+
+
+}
 
 .StripeElement,
 .stripe-style-input {
-  box-sizing: border-box;
-  height: 40px;
-  padding: 10px 12px;
-  border: 2px solid transparent;
-  background-color: rgba(0, 0, 0, 0.9);
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.4),
-  /* Inner glow */
-  0 0 10px rgba(255, 255, 255, 0.3),
-  /* Middle glow */
-  0 0 15px rgba(255, 255, 255, 0.1);
-/* Outer glow */  -webkit-transition: box-shadow 150ms ease;
-  transition: box-shadow 150ms ease;
-  border-radius: 20px;
+    box-sizing: border-box;
+    height: 40px;
+    padding: 10px 12px;
+    border: 2px solid transparent;
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.4),
+        /* Inner glow */
+        0 0 10px rgba(255, 255, 255, 0.3),
+        /* Middle glow */
+        0 0 15px rgba(255, 255, 255, 0.1);
+    /* Outer glow */
+    -webkit-transition: box-shadow 150ms ease;
+    transition: box-shadow 150ms ease;
+    border-radius: 20px;
 }
 
 .StripeElement--focus,
 .stripe-style-input:focus,
-.stripe-style-input:active,
-#card-element:focus {
-  box-shadow: 0 1px 3px 0 #97d30c;
-  color: white;
+.stripe-style-input:active {
+    box-shadow: 0 1px 3px 0 #97d30c;
+    color: rgb(0, 0, 0);
+    background-color: antiquewhite;
 }
-.custom-select{
+
+#card-element:focus {
+    box-shadow: 0 1px 3px 0 #97d30c;
+    color: rgb(233, 12, 12);
+    background-color: rgb(11, 221, 46);
+}
+
+
+.custom-select {
     text-align: center;
 }
 
-.StripeElement--webkit-autofill, StripeElement--webkit-autofill {
-  background-color: #fefde5 !important;
+.StripeElement--webkit-autofill,
+StripeElement--webkit-autofill {
+    background-color: #fff700 !important;
 }
 
 .stripe-style-input::placeholder {
-    color: #aab7c4;
+    color: #687279;
 }
 
 .fieldset-label {
@@ -195,15 +219,18 @@ button[type="submit"]:hover {
 #payment-form .form-control,
 #card-element {
     color: #ffffff;
+    background-color: #000000;
     border: 1px solid #000;
 }
-.close-order-success-button{
+
+.close-order-success-button {
 
     position: absolute;
     top: 220px;
     right: 50px;
 }
-.checout-success-container{
+
+.checout-success-container {
 
     width: 100%;
     height: 100%;
@@ -220,6 +247,7 @@ button[type="submit"]:hover {
     .checkout-cart-item-quantity {
         margin-bottom: 10px;
     }
+
     .sidebar-column-small {
         display: none;
     }
@@ -230,33 +258,37 @@ button[type="submit"]:hover {
     .chat-footer-input {
         margin: 0 auto;
         width: 50%;
-    
+
     }
 
     .about-container {
         height: 500px;
-        width: 500px;}
+        width: 500px;
+    }
 
     .header.animate-herder .list-container ul {
-      
+
         top: 30px;
         right: 10px;
-       
+
     }
+
     .filter-container {
-       
-        width: 65%; 
-        }
+
+        width: 65%;
+    }
+
     #chat-container {
-      
+
         width: 515px;
         height: 515px;
     }
+
     .search-wrapper {
-    
+
         left: 50%;
 
-       
+
     }
 
     .search-wrapper {
@@ -278,56 +310,68 @@ button[type="submit"]:hover {
 
 
 }
+
 @media screen and (min-width: 1023px) {
 
     .about-container {
         height: 600px;
-        width: 600px;}
+        width: 600px;
+    }
 
     .filter-container {
         top: 150px !important;
-      
-        width: 40%;}
-        
+
+        width: 40%;
     }
+
+}
 
 @media screen and (min-width: 1439px) {
 
     .about-container {
         height: 700px;
-        width: 700px;}
-        .filter-container {
-            top: 150px !important;
-          
-            width: 40%;}
-            
-        }
-    
-@media screen and (min-width: 1800px) {
-
-    
-    .about-container {
-        height: 700px;
-        width: 700px;}
+        width: 700px;
+    }
 
     .filter-container {
         top: 150px !important;
-      
-        width: 40%;}
-        
-   
+
+        width: 40%;
+    }
+
+}
+
+@media screen and (min-width: 1800px) {
+
+
+    .about-container {
+        height: 700px;
+        width: 700px;
+    }
+
+    .filter-container {
+        top: 150px !important;
+
+        width: 40%;
+    }
+
+
     .custom-buttons {
-        font-size: 1.2rem; /* Make button font smaller */
-       
+        font-size: 1.2rem;
+        /* Make button font smaller */
+
     }
+
     .chat-message {
-       
+
         font-size: 1.5rem;
-      
+
     }
+
     .modal-content {
-    
-        max-width: 1000px;}
+
+        max-width: 1000px;
+    }
 
 
     .cart-item {
@@ -341,6 +385,8 @@ button[type="submit"]:hover {
         border-radius: 10px;
         max-width: 1200px;
     }
+
+   
 
     .item-info {
         display: flex;
@@ -385,12 +431,7 @@ button[type="submit"]:hover {
     }
 
 
-    /* Styling the total price to make it more prominent */
-    .cart-item p:last-child {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #228604;
-    }
+
 
     .my-0 {
         font-size: 2rem;
@@ -603,10 +644,16 @@ button[type="submit"]:hover {
         width: 715px;
         height: 715px;
     }
-    .about-description,.vision-description,.values-description,.community-description,.testimonial {
+
+    .about-description,
+    .vision-description,
+    .values-description,
+    .community-description,
+    .testimonial {
         font-size: 1.5rem;
-        
+
     }
+
     .contact-content {
         width: 700px;
         height: 700px;
@@ -625,20 +672,20 @@ button[type="submit"]:hover {
         /* Adjust icon size */
         transition: transform 0.3s;
         /* Smooth scale effect */
-    
+
     }
 
     /* Right-aligned messages (sent messages) */
-.message-right {
-   
-    margin-left: 300px !important;
-}
+    .message-right {
 
-/* Left-aligned messages (received messages) */
-.message-left {
- 
-    margin-right: 300px !important;
+        margin-left: 300px !important;
+    }
 
-}
+    /* Left-aligned messages (received messages) */
+    .message-left {
+
+        margin-right: 300px !important;
+
+    }
 
 }

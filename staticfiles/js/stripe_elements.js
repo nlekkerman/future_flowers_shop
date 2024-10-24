@@ -13,7 +13,7 @@ var elements = stripe.elements();
 
 var style = {
     base: {
-        color: '#000',
+        color: '#fff',
         fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
         fontSmoothing: 'antialiased',
         fontSize: '16px',
@@ -53,23 +53,35 @@ card.addEventListener('change', function (event) {
         cardValid = true; // Mark card as valid
     }
 
-    toggleSubmitButton();
+    toggleSubmitButton(event.complete);
 });
 
 // Function to enable/disable the submit button based on card validity
-function toggleSubmitButton() {
+function toggleSubmitButton(cardValid) {
     var submitButton = $('#submit-cart-button');
-    var messageDiv = $('#card-message'); // Div to display messages
+    var messageDiv = $('#card-errors'); // Div to display messages
+
+    console.log('Toggle Submit Button called. Current card validity:', cardValid); // Log the current card validity
 
     if (cardValid) {
-        submitButton.attr('disabled', false);
-        messageDiv.text('Your card details are valid. You can proceed to checkout.').css('color', 'green');
+        submitButton.attr('disabled', false); // Enable the button if the card is valid
+        messageDiv.text('Your card details are valid. You can proceed to checkout.')
+                  .css('color', 'green')
+                  .show(); // Show the message in green
+        console.log('Submit button enabled. Message displayed: "Your card details are valid. You can proceed to checkout."'); 
     } else {
-        submitButton.attr('disabled', true);
-        messageDiv.text('Please enter valid card details to enable the checkout button.').css('color', 'red');
+        submitButton.attr('disabled', true); // Disable the button if the card is invalid
+        messageDiv.text('Please enter valid card details to enable the checkout button.')
+                  .css('color', 'red')
+                  .show(); // Show the message in red
+        console.log('Submit button disabled. Message displayed: "Please enter valid card details to enable the checkout button."'); 
     }
 }
 
+// Call this function when the page loads to hide the message initially
+$(document).ready(function() {
+    $('#card-errors').hide(); // Hide the message div initially
+});
 // Handle form submit
 var form = document.getElementById('payment-form');
 
@@ -77,17 +89,12 @@ var form = document.getElementById('payment-form');
 
 form.addEventListener('submit', function (ev) {
     ev.preventDefault();
-    // Check if card is complete before submission
-    if (!cardValid) {
-        alert('Please fill in your card details before submitting.AAAAAAAAAAA');
-        return; // Prevent form submission if card details are incomplete
-    }
 
     // Disable the card input and submit button to prevent multiple submissions
     card.update({
         'disabled': true
     });
-    $('#submit-cart-button').attr('disabled', true);
+    $('#submit-button').attr('disabled', true);
 
     // Get the 'save info' checkbox status
     var saveInfo = Boolean($('#id-save-info').attr('checked'));
@@ -144,7 +151,7 @@ form.addEventListener('submit', function (ev) {
                 card.update({
                     'disabled': false
                 });
-                $('#submit-cart-button').attr('disabled', false);
+                $('#submit-button').attr('disabled', false);
             } else if (result.paymentIntent.status === 'succeeded') {
                 // Payment succeeded
                 form.submit();

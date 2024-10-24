@@ -106,36 +106,36 @@ export function displaySeeds({
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Handle filtering and sorting
-    // For filter buttons
-    document.querySelectorAll('.filter-buttons .filter-button').forEach(button => {
+  
+    document.querySelectorAll('.filter-buttons .custom-buttons').forEach(button => {
         button.addEventListener('click', function () {
+            console.log("FILTER CLICKED");
             const category = this.dataset.category;
-
+    
             // Update active class for filter buttons
-            document.querySelectorAll('.filter-buttons .filter-button').forEach(btn => {
+            document.querySelectorAll('.filter-buttons .custom-buttons').forEach(btn => {
                 btn.classList.remove('active');
             });
             this.classList.add('active');
-
+    
             // Call displaySeeds with the selected category
             displaySeeds({ category });
         });
     });
 
     // For sorting buttons
-    document.querySelectorAll('.sorting-buttons a').forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault(); // Prevent default link behavior
-
-            const sort = this.dataset.sort;
-
-            // Update active class for sorting links
-            document.querySelectorAll('.sorting-buttons a').forEach(l => {
-                l.classList.remove('active');
+    document.querySelectorAll('.sorting-buttons button').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent default button behavior
+    
+            const sort = this.dataset.sort; // Get the sort value from the data attribute
+    
+            // Update active class for sorting buttons
+            document.querySelectorAll('.sorting-buttons button').forEach(btn => {
+                btn.classList.remove('active');
             });
-            this.classList.add('active');
-
+            this.classList.add('active'); // Add active class to the clicked button
+    
             // Call displaySeeds with the selected sort option
             displaySeeds({ sort });
         });

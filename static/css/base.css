@@ -168,7 +168,6 @@ body.blur {
     padding: 15px;
     border-radius: 40px;
     z-index: 99;
-    background: url('static/media/images/background.jpg') no-repeat center center fixed;
 }
 
 /* Hover effect on filter container */
