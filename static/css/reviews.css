@@ -952,8 +952,6 @@
 .form-login:hover,
 .register-form:hover,
 .profile-order-item:hover,
-#admin-message-icon,
-#messagesIcon,
 .contact-content:hover {
     transform: scale(1.1);
     box-shadow:

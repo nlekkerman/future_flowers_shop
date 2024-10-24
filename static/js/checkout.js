@@ -103,15 +103,20 @@ function renderCartItem(item) {
 
     return `
         <div class="cart-item">
-            <div class="item-info">
-                <img src="${itemImage}" alt="${name}" class="item-image"  />
-                <p class="item-font"><strong>${name}</strong></p>
+           <div class="item-info">
+                <!-- New div wrapping the image and the name -->
+                <div class="image-name-container">
+                    <img src="${itemImage}" alt="${name}" class="item-image" />
+                    <p class="item-font"><strong>${name}</strong></p>
+                </div>
+
+                <!-- Existing quantity and price details -->
                 <div class="quantity-update-display">
                     <p class="item-font">Quantity:</p>
                     <p class="item-font text-center">${itemQuantity}</p>
                 </div>
                 <p class="item-font">Price: $${itemPrice.toFixed(2)}</p>
-                <p >Total: $${itemTotalPrice.toFixed(2)}</p>
+                <p>Total: <strong class="price-color-green">$${itemTotalPrice.toFixed(2)}</strong></p>
             </div>
         </div>
     `;
