@@ -312,7 +312,11 @@ StripeElement--webkit-autofill {
 }
 
 @media screen and (min-width: 1023px) {
-
+    .profile-order-list {
+        
+        flex-direction: row;
+ 
+    }
     .about-container {
         height: 600px;
         width: 600px;
@@ -445,9 +449,7 @@ StripeElement--webkit-autofill {
         color: white;
     }
 
-    .checkout-row {
-        min-height: 100%;
-    }
+  
 
     .form-control {
 

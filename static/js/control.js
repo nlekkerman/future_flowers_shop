@@ -58,12 +58,7 @@ export async function fetchCartData() {
             // Store cart data in local storage
             localStorage.setItem('cart', JSON.stringify(data));
             console.log('Cart data saved to local storage:', data);
-            // User is logged in, set cart button visibility to visible
-            const cartButton = document.getElementById('cart-button');
-            if (cartButton) {
-                cartButton.style.display = 'block'; // Show cart button
-                console.log('Cart button is now visible.');
-            }
+            
         }
     } catch (error) {
         // Log any error that occurred during the fetch

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <a href="{% url 'profile' %}" class="btn mt-10">Back to Orders</a>
+    
+    <h2 class="order-number">Order Number <strong class="order-number-strong">{{ order.order_number }}</strong></h2>
+    <p><strong>Date:</strong> {{ order.date|date:"F j, Y" }}</p>
+    <p><strong>Total:</strong> ${{ order.grand_total }}</p>
+    <p><strong>Delivery Cost:</strong> ${{ order.delivery_cost }}</p>
+    
+    <h3>Order Items</h3>
+    <div class="row">
+        {% for item in order.lineitems.all %}
+        <div class="col-md-4 mb-4"> <!-- Adjust the number for desired column width -->
+            <div>
+                <img src="{{ item.seed.image.url }}" alt="{{ item.seed.name }}" class="card-img-top order-item-image">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.seed.name }}</h5>
+                    <p class="card-text"><strong>Quantity:</strong> {{ item.quantity }}</p>
+                    <p class="card-text"><strong>Price:</strong> ${{ item.lineitem_total }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

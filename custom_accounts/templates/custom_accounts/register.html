@@ -35,13 +35,20 @@
     <form method="post" class="register-form">
         {% csrf_token %}
         {{ form.as_p }}
+
+        <div class="newsletter-checkbox-container">
+            <label for="newsletter">
+                <input type="checkbox" id="newsletter" name="newsletter">
+                Receive Newsletter
+            </label>
+        </div>
         <button type="submit" class="login-button">Register</button>
     </form>
 
-    <!-- Google Sign-In Button -->
-    <div id="g-signin2 text-white">sign</div>
-    <div id="g-signin-status"></div>
+
 
 </div>
+<p class="registration-link">Have an account? <a href="{% url 'account_login' %}">Login here</a></p>
+
 </div>
 {% endblock %}

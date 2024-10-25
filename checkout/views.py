@@ -343,3 +343,9 @@ def checkout_success(request, order_number):
 
     return render(request, template, context)
 
+def order_detail(request, order_number):
+    order = get_object_or_404(Order, order_number=order_number)
+    context = {
+        'order': order,
+    }
+    return render(request, 'checkout/order_detail.html', context)

@@ -506,3 +506,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Cart button found, event listener attached.");
     }
 });
+
+
+

@@ -106,6 +106,23 @@ export function displaySeeds({
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+
+    const cartData = JSON.parse(localStorage.getItem('cart'));
+    const cartButton = document.getElementById('cart-button');
+
+    if (cartData && Array.isArray(cartData.items) && cartData.items.length > 0) {
+        // Show the cart button if there are items in the cart
+        if (cartButton) {
+            cartButton.style.display = 'block'; // Show cart button
+            console.log('Cart button is now visible.');
+        }
+    } else {
+        // Hide the cart button if the cart is empty or undefined
+        if (cartButton) {
+            cartButton.style.display = 'none'; // Hide cart button
+            console.log('Cart button is now hidden.');
+        }
+    }
   
     document.querySelectorAll('.filter-buttons .custom-buttons').forEach(button => {
         button.addEventListener('click', function () {
@@ -200,7 +217,14 @@ function attachEventListeners() {
 // Add item to cart
 function addToCart(seed, quantity = 1) {
     let cartData = getCartFromLocalStorage(); // Fetch current cart data
+    const cartButton = document.getElementById('cart-button');
+    cartButton.style.display = 'block'; // Hide cart button
+    cartButton.classList.add('fancy');
 
+    // Remove the fancy class after the animation is done
+    setTimeout(() => {
+        cartButton.classList.remove('fancy');
+    }, 1500);
     // Use the full URL directly if available, otherwise use a fallback image URL
     let imageUrl = seed.image || '/media/images/wild-flowers-icon.webp';
 

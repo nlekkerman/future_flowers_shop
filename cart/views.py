@@ -128,7 +128,6 @@ def update_quantity(request):
 
 @csrf_exempt
 @require_POST
-@login_required
 def delete_item(request):
     if request.method == 'POST':
         try:

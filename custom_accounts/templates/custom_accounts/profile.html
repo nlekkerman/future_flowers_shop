@@ -40,25 +40,24 @@
 
 
 </div>
-<div class="profile-row">
+<div class="d-flex flex-lg-row flex-column profile-row">
     <!-- Profile Main Content -->
     <div class="content-column-large">
-        <!-- Profile Details -->
-
         <h2>Recent Orders</h2>
         {% if orders %}
         <ul class="profile-order-list">
             {% for order in orders %}
             <li class="profile-order-item">
-                <p class="profile-order-date">Date: {{ order.date|date:"F j, Y" }}</p>
-                <p class="profile-order-total">Total: ${{ order.grand_total }}</p>
+                <a href="{% url 'order_detail' order.order_number %}">
+                    <p class="profile-order-date">Date: {{ order.date|date:"F j, Y" }}</p>
+                    <p class="profile-order-total">Total: ${{ order.grand_total }}</p>
+                </a>
 
                 <!-- Display the first item image -->
                 {% if order.lineitems.count > 0 %}
                 {% with first_item=order.lineitems.first %}
                 <div class="profile-order-item-image">
-                    <img src="{{ first_item.seed.image.url }}" alt="{{ first_item.seed.name }}"
-                        class="profile-order-image">
+                    <img src="{{ first_item.seed.image.url }}" alt="{{ first_item.seed.name }}" class="profile-order-image">
                 </div>
                 {% endwith %}
                 {% endif %}
@@ -71,4 +70,5 @@
         {% endif %}
     </div>
 </div>
+
 {% endblock %}
