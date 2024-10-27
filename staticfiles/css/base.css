@@ -168,7 +168,6 @@ body.blur {
     padding: 15px;
     border-radius: 40px;
     z-index: 99;
-    background: url('static/media/images/background.jpg') no-repeat center center fixed;
 }
 
 /* Hover effect on filter container */
@@ -662,12 +661,36 @@ header .dropdown-item {
 /* Hover effect for search icon */
 .search-icon-wrapper:hover .search-icon-img {
     transform: scale(1.2);
-    /* Enlarge the icon */
     animation: shake 0.5s infinite;
-    /* Continuous shake animation */
+}
+
+/* Add this to your CSS file */
+@keyframes fancyEffect {
+    0% {
+        transform: translateX(0) rotate(0deg) scale(1, 1);
+    }
+    20% {
+        transform: translateX(-5px) rotate(-5deg) scale(0.9, 1.1); /* Shake left and squeeze */
+    }
+    40% {
+        transform: translateX(5px) rotate(5deg) scale(1.1, 0.9); /* Shake right and stretch */
+    }
+    60% {
+        transform: translateX(0) rotate(0deg) scale(0.95, 1.05); /* Slight squeeze */
+    }
+    80% {
+        transform: translateX(-5px) rotate(-5deg) scale(1.05, 0.95); /* Another shake and squeeze */
+    }
+    100% {
+        transform: translateX(0) rotate(0deg) scale(1, 1); /* Reset to normal */
+    }
 }
 
 
+
+.fancy {
+    animation: fancyEffect 1s ease-in-out;
+}
 
 /* Custom focus styles */
 .search-container input[type="search"]:focus,

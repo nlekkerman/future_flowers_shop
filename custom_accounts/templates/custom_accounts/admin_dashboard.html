@@ -261,7 +261,21 @@
         </ul>
     {% endif %}
 </div>
-
+<section>
+    <h3 class="admin-dashboard-section-title">Send Newsletter</h3>
+    <form method="post" action="{% url 'send_newsletter' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="newsletter-subject">Subject</label>
+            <input type="text" id="newsletter-subject" name="subject" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="newsletter-message">Message</label>
+            <textarea id="newsletter-message" name="message" class="form-control" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Newsletter</button>
+    </form>
+</section>
 <script>
     // Get modal and buttons
     let modal = document.getElementById("addSeedModal");

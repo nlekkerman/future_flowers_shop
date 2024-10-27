@@ -7,11 +7,14 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: rgba(0, 0, 0, 0.4);
 }
-
+.delete-message-content{
+    background-color: #a80303;
+}
 .go-to-checkout-button {
     position: fixed;
     top: 115px;
     right: 30px;
+    display: none;
 }
 
 /* Cart title */
@@ -353,6 +356,7 @@
     visibility: hidden;
     /* Initially hidden */
     pointer-events: none;
+    background-color: rgba(218, 0, 0, 0.9);
     /* Prevent interaction when hidden */
 
 }

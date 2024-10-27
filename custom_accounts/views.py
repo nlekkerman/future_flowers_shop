@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.urls import reverse
 from django.conf import settings
+from django.core.mail import send_mail
 from custom_accounts.models import UserProfile
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -13,26 +14,56 @@ from django.contrib.auth.models import User
 from reviews.models import Review, Comment 
 from checkout.models import Order
 from communications.models import ChatConversation, ChatMessage 
-from .forms import ProfileEditForm
+from .forms import ProfileEditForm , CustomUserCreationForm
+
+import os
 # Import logging module
 import logging
 logger = logging.getLogger(__name__)
 
 @login_required
 def edit_profile(request):
-    profile = request.user.profile  # Get the profile for the logged-in user
+    # Retrieve the profile for the logged-in user directly
+    profile = request.user.profile
 
     if request.method == 'POST':
         form = ProfileEditForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()  # Save the updated profile
             messages.success(request, 'Your profile has been updated successfully!')
-            return redirect('profile')  # Redirect to profile page after saving changes
+            return redirect('profile')  # Redirect to the profile page after saving changes
     else:
         form = ProfileEditForm(instance=profile)  # Pre-fill form with current profile data
 
     return render(request, 'custom_accounts/edit_profile.html', {'form': form})
 
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()  # Save the user instance
+            newsletter_preference = form.cleaned_data.get("newsletter", False)
+            user.backend = 'allauth.account.auth_backends.AuthenticationBackend'
+
+            # Log the user in after registration
+            auth_login(request, user)
+            messages.success(request, 'Registration successful.')
+            # Send the welcome email if newsletter preference is checked
+            # Send the welcome email if newsletter preference is checked
+            if newsletter_preference:
+                logger.info(f"User {user.username} opted in for the newsletter.")
+                send_welcome_email(user)
+            else:
+                logger.info(f"User {user.username} did not opt in for the newsletter.")
+
+            # Redirect to the home page after logging in
+            return redirect('home')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = CustomUserCreationForm()  # Create an instance of your custom form
+
+    return render(request, 'custom_accounts/register.html', {'form': form})
 def welcome_message(request):
     return render(request, 'custom_accounts/welcome_message.html')
 
@@ -52,28 +83,47 @@ def login(request):
         form = AuthenticationForm()
     return render(request, 'custom_accounts/login.html', {'form': form})
 
-def register(request):
+def send_welcome_email(user):
+    subject = "Welcome to Future Flower Shop!"
+    message = f"Hi {user.username},\n\nThank you for registering at Future Flower Shop! We’re excited to have you with us."
+    email_from = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [user.email]
+    
+    try:
+        send_mail(subject, message, email_from, recipient_list, fail_silently=False)
+    except Exception as e:
+       
+def send_newsletter(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            # Manually set the backend attribute
-            user.backend = 'django.contrib.auth.backends.ModelBackend'
-            auth_login(request, user)
-            messages.success(request, 'Registration successful.')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
 
-            # Create a user profile upon registration
-            if not UserProfile.objects.filter(user=user).exists():
-                UserProfile.objects.create(user=user)
-            
-            # Redirect to the home page after logging in
-            return redirect(reverse('home'))  # Replace 'home' with your home page URL name
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = UserCreationForm()
 
-    return render(request, 'custom_accounts/register.html', {'form': form})
+        # Get all users who receive newsletters
+        users = UserProfile.objects.filter(receives_newsletter=True)
+     
+        # Send email to each user
+        for user_profile in users:
+            try:
+              
+                send_mail(
+                    subject,
+                    message,
+                    os.environ.get('EMAIL_HOST_USER'),  # Ensure you're using the correct email
+                    [user_profile.user.email],
+                    fail_silently=False,
+                )
+                logger.info(f"Newsletter sent successfully to {user_profile.user.email}.")
+                messages.success(request, f"Newsletter sent to {user_profile.user.email}.")
+            except Exception as e:
+              
+                messages.error(request, f"Failed to send email to {user_profile.user.email}. Error: {str(e)}")
+
+       
+        return redirect('admin_dashboard')
+
+    return render(request, 'admin_dashboard')
+
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):

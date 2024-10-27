@@ -106,36 +106,53 @@ export function displaySeeds({
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Handle filtering and sorting
-    // For filter buttons
-    document.querySelectorAll('.filter-buttons .filter-button').forEach(button => {
-        button.addEventListener('click', function () {
-            const category = this.dataset.category;
 
+    const cartData = JSON.parse(localStorage.getItem('cart'));
+    const cartButton = document.getElementById('cart-button');
+
+    if (cartData && Array.isArray(cartData.items) && cartData.items.length > 0) {
+        // Show the cart button if there are items in the cart
+        if (cartButton) {
+            cartButton.style.display = 'block'; // Show cart button
+            console.log('Cart button is now visible.');
+        }
+    } else {
+        // Hide the cart button if the cart is empty or undefined
+        if (cartButton) {
+            cartButton.style.display = 'none'; // Hide cart button
+            console.log('Cart button is now hidden.');
+        }
+    }
+  
+    document.querySelectorAll('.filter-buttons .custom-buttons').forEach(button => {
+        button.addEventListener('click', function () {
+            console.log("FILTER CLICKED");
+            const category = this.dataset.category;
+    
             // Update active class for filter buttons
-            document.querySelectorAll('.filter-buttons .filter-button').forEach(btn => {
+            document.querySelectorAll('.filter-buttons .custom-buttons').forEach(btn => {
                 btn.classList.remove('active');
             });
             this.classList.add('active');
-
+    
             // Call displaySeeds with the selected category
             displaySeeds({ category });
         });
     });
 
     // For sorting buttons
-    document.querySelectorAll('.sorting-buttons a').forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault(); // Prevent default link behavior
-
-            const sort = this.dataset.sort;
-
-            // Update active class for sorting links
-            document.querySelectorAll('.sorting-buttons a').forEach(l => {
-                l.classList.remove('active');
+    document.querySelectorAll('.sorting-buttons button').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent default button behavior
+    
+            const sort = this.dataset.sort; // Get the sort value from the data attribute
+    
+            // Update active class for sorting buttons
+            document.querySelectorAll('.sorting-buttons button').forEach(btn => {
+                btn.classList.remove('active');
             });
-            this.classList.add('active');
-
+            this.classList.add('active'); // Add active class to the clicked button
+    
             // Call displaySeeds with the selected sort option
             displaySeeds({ sort });
         });
@@ -200,7 +217,14 @@ function attachEventListeners() {
 // Add item to cart
 function addToCart(seed, quantity = 1) {
     let cartData = getCartFromLocalStorage(); // Fetch current cart data
+    const cartButton = document.getElementById('cart-button');
+    cartButton.style.display = 'block'; // Hide cart button
+    cartButton.classList.add('fancy');
 
+    // Remove the fancy class after the animation is done
+    setTimeout(() => {
+        cartButton.classList.remove('fancy');
+    }, 1500);
     // Use the full URL directly if available, otherwise use a fallback image URL
     let imageUrl = seed.image || '/media/images/wild-flowers-icon.webp';
 

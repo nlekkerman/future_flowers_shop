@@ -74,7 +74,7 @@ const showDeletionMessage = (itemName) => {
     }
 
     const messageContent = `
-        <div class="flower-message-content">
+        <div class="delete-message-content">
             <p><strong>${itemName}</strong> has been deleted successfully.</p>
         </div>
     `;
