@@ -91,8 +91,10 @@ def send_welcome_email(user):
     
     try:
         send_mail(subject, message, email_from, recipient_list, fail_silently=False)
+        logger.info(f"Welcome email sent successfully to {user.email}.")
     except Exception as e:
-       
+        pass
+
 def send_newsletter(request):
     if request.method == 'POST':
         subject = request.POST.get('subject')

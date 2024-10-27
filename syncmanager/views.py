@@ -122,25 +122,58 @@ def get_conversation_messages(request, conversation_id):
         })
 
     return JsonResponse({'messages': message_data})
-
-
-
+    
 def get_user_conversations(request, user_id):
     # Fetch the user
     user = get_object_or_404(User, pk=user_id)
 
-    # Fetch conversations where the superuser is involved
-    conversations = ChatConversation.objects.filter(
-        superuser=user
-    ).filter(deleted=False)
+    # Check if the logged-in user is a superuser
+    if user.is_superuser:
+        # Fetch conversations where the superuser is involved with other users
+        conversations = ChatConversation.objects.filter(
+            superuser=user
+        ).filter(deleted=False)
 
-    # Prepare the response data
+        # If no conversations exist, return a message
+        if not conversations.exists():
+            return JsonResponse({'message': 'No conversations found for this superuser.'})
+
+    else:
+        # Fetch conversations where the logged-in user is involved
+        conversations = ChatConversation.objects.filter(
+            user=user
+        ).filter(deleted=False)
+
+        # If there are no conversations, try to create one with a superuser
+        if not conversations.exists():
+            # Find any superuser in the database
+            superuser = User.objects.filter(is_superuser=True).first()
+            if superuser:
+                # Create a new conversation between the user and the superuser
+                conversation = ChatConversation.objects.create(
+                    user=user,
+                    superuser=superuser
+                )
+                initial_message_content = "Welcome to Future Flower Shop! Enjoy exploring seeds and gardening with us."
+                ChatMessage.objects.create(
+                    conversation=conversation,
+                    sender=superuser,
+                    content=initial_message_content
+                )
+                return JsonResponse({
+                    'message': 'No existing conversations found. Created a new conversation with a superuser.',
+                    'conversation_id': conversation.id,
+                })
+            else:
+                return JsonResponse({'message': 'No superuser available to create a conversation with.'})
+
+    # Prepare the response data for existing conversations
     conversation_data = []
     for conversation in conversations:
         # Fetch unseen messages for this conversation
         unseen_messages = conversation.messages.filter(seen=False).exclude(sender=user)
 
-        # Prepare unseen messages data (you can adjust fields as needed)
+        # Prepare unseen messages data
         unseen_messages_data = [{'id': msg.id, 'content': msg.content} for msg in unseen_messages]
 
         conversation_data.append({
@@ -149,10 +182,12 @@ def get_user_conversations(request, user_id):
             'superuser': conversation.superuser.username,
             'started_at': conversation.started_at.isoformat(),
             'unseenMessagesCount': unseen_messages.count(),
-            'unseenMessages': unseen_messages_data,  # Include unseen messages in the response
+            'unseenMessages': unseen_messages_data,
         })
 
     return JsonResponse({'conversations': conversation_data})
+
+
 
 # Define a constant for the anonymous user ID
 ANONYMOUS_USER_ID = 0  # Adjust this as needed

@@ -3,6 +3,7 @@ import logging
 from django.conf import settings
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.core.mail import send_mail
 from django.contrib import messages
 from .models import Order, OrderLineItem
 from .forms import OrderForm
@@ -287,18 +288,6 @@ def checkout(request):
     return render(request, template, context)
 
 
-def get_or_create_cart(request):
-    if request.user.is_authenticated:
-        return Cart.objects.get_or_create(user=request.user)[0]
-    else:
-        session_id = request.session.session_key
-        if not session_id:
-            request.session.create()  # Create a session if one does not exist
-            session_id = request.session.session_key
-        return Cart.objects.get_or_create(session_id=session_id)[0]
-
-
-
 
 def checkout_success(request, order_number):
     """
@@ -335,6 +324,10 @@ def checkout_success(request, order_number):
     # Clear the saved information flag
     if 'save_info' in request.session:
         del request.session['save_info']
+    try:
+        send_order_confirmation_email(order)
+    except Exception as e:
+        messages.warning(request, "Your order was successful, but we couldn't send the confirmation email. Please contact support.")
 
     template = 'checkout/checkout_success.html'
     context = {
@@ -343,9 +336,73 @@ def checkout_success(request, order_number):
 
     return render(request, template, context)
 
+
+def get_or_create_cart(request):
+    if request.user.is_authenticated:
+        return Cart.objects.get_or_create(user=request.user)[0]
+    else:
+        session_id = request.session.session_key
+        if not session_id:
+            request.session.create()  # Create a session if one does not exist
+            session_id = request.session.session_key
+        return Cart.objects.get_or_create(session_id=session_id)[0]
+
+
 def order_detail(request, order_number):
     order = get_object_or_404(Order, order_number=order_number)
     context = {
         'order': order,
     }
     return render(request, 'checkout/order_detail.html', context)
+
+def send_order_confirmation_email(order):
+    """
+    Sends an order confirmation email to the user with order details.
+    """
+    logger.info(f"Preparing to send order confirmation email for Order #{order.order_number} to {order.email}.")
+
+    # Set up email details
+    subject = f"Order Confirmation - Order #{order.order_number}"
+    email_from = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [order.email]
+    
+    # Build the email message
+    try:
+        logger.debug("Building email message content.")
+        message = f"Hello {order.full_name},\n\n"
+        message += "Thank you for your purchase from Future Flower Shop!\n\n"
+        message += f"Order Number: {order.order_number}\n"
+        message += f"Order Date: {order.date}\n\n"
+        message += "Order Details:\n"
+        
+        # Log individual items being added to the message
+        order_items = order.lineitems.all()
+        if order_items:
+            for item in order_items:
+                line_total = item.lineitem_total 
+                message += f"- {item.seed.name} (x{item.quantity}): ${line_total:.2f}\n"
+                logger.debug(f"Added item to email content: {item.seed.name} (Quantity: {item.quantity}) - Line Total: ${line_total:.2f}")
+        else:
+            logger.warning(f"No items found for Order #{order.order_number}.")
+        
+  
+        total_amount = order.grand_total
+        message += f"\nTotal Amount: ${total_amount:.2f}\n\n"
+  
+        message += "We hope you have a wonderful time nurturing your seeds and watching them blossom into beautiful plants!\n"
+        message += "If you have any questions or need assistance along the way, please don't hesitate to reach out to us.\n\n"
+
+        logger.debug(f"Email content built successfully for Order #{order.order_number}.")
+    except Exception as e:
+        logger.error(f"Error while building email content for Order #{order.order_number}. Error: {e}")
+        return
+
+    # Send the email and handle exceptions
+    try:
+        logger.info(f"Sending order confirmation email to {order.email}.")
+        send_mail(subject, message, email_from, recipient_list, fail_silently=False)
+        logger.info(f"Order confirmation email sent successfully to {order.email} for Order #{order.order_number}.")
+    except Exception as e:
+        logger.error(f"Failed to send order confirmation email to {order.email} for Order #{order.order_number}. Error: {e}")
+
+
