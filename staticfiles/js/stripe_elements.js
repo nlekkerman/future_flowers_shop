@@ -58,7 +58,7 @@ card.addEventListener('change', function (event) {
 
 // Function to enable/disable the submit button based on card validity
 function toggleSubmitButton(cardValid) {
-    var submitButton = $('#submit-cart-button');
+    var submitButton = $('#submit-button');
     var messageDiv = $('#card-errors'); // Div to display messages
 
     console.log('Toggle Submit Button called. Current card validity:', cardValid); // Log the current card validity
@@ -69,6 +69,7 @@ function toggleSubmitButton(cardValid) {
                   .css('color', 'green')
                   .show(); // Show the message in green
         console.log('Submit button enabled. Message displayed: "Your card details are valid. You can proceed to checkout."'); 
+        
     } else {
         submitButton.attr('disabled', true); // Disable the button if the card is invalid
         messageDiv.text('Please enter valid card details to enable the checkout button.')
@@ -146,32 +147,42 @@ form.addEventListener('submit', function (ev) {
             if (result.error) {
                 // Handle error in payment confirmation
                 console.error('Payment confirmation error:', result.error.message);
-                alert(`Payment error: ${result.error.message}`); // Alert the user
+                alert(`Payment error: ${result.error.message}`);
                 $('#card-errors').html(`<span class="checkout-icon" role="alert"><i class="fas fa-times"></i></span><span>${result.error.message}</span>`);
                 card.update({
                     'disabled': false
                 });
                 $('#submit-button').attr('disabled', false);
+                closeModal();
             } else if (result.paymentIntent.status === 'succeeded') {
-                // Payment succeeded
+             
                 form.submit();
                 clearCart();
+                closeModal();
+                showModal("You're almost there! 🌱 Thank you for choosing us for your gardening journey. In just a moment, you’ll be nurturing your seeds and watching them blossom into vibrant plants. Prepare for the joy of cultivating life in your garden!");
+
             } else if (result.paymentIntent.status === 'requires_action') {
                 // Handle 3D Secure authentication
                 stripe.handleCardAction(result.paymentIntent.client_secret).then(function (result) {
                     if (result.error) {
                         console.error('3D Secure authentication failed:', result.error.message);
-                        alert(`3D Secure authentication error: ${result.error.message}`); // Alert the user
+                        alert(`3D Secure authentication error: ${result.error.message}`); 
+                        closeModal();
                     } else if (result.paymentIntent.status === 'succeeded') {
+                        clearCart(); 
+                       
                         form.submit();
+                        closeModal();
                     }
                 }).catch(function (error) {
                     console.error('Error during 3D Secure authentication:', error);
-                    alert(`Error during 3D Secure authentication: ${error.message}`); // Alert the user
+                    alert(`Error during 3D Secure authentication: ${error.message}`); 
+                    closeModal();
                 });
             } else {
                 console.warn('Unhandled payment status:', result.paymentIntent.status);
                 alert(`Unhandled payment status: ${result.paymentIntent.status}`); // Alert the user
+                closeModal();
             }
         }).catch(function (error) {
             console.error('Unexpected error:', error);
@@ -185,6 +196,7 @@ form.addEventListener('submit', function (ev) {
 });
 
 
+
 function clearCart() {
     const cartContents = localStorage.getItem('cart');
     if (cartContents) {
@@ -193,3 +205,59 @@ function clearCart() {
     localStorage.removeItem('cart'); // Adjust 'cart' to the actual key used for your cart
     console.log('Cart cleared from local storage.');
 }
+
+function showModal(message) {
+    // Modal HTML structure with a dynamic message and animation container
+    const modalHTML = `
+        <div id="thankYouModal" class="modal" style="display: block;">
+            <div class="modal-content">
+                <h4>Thank You for Shopping with Us!</h4>
+                <div id="animationContainer" style="width: 100%; height: 200px;"></div>
+                <p>${message}</p>
+            </div>
+            <div class="modal-footer">
+                <button id="closeModalButton" class="btn">Close</button>
+            </div>
+        </div>
+        <div id="modalOverlay" class="modal-overlay"></div>
+    `;
+
+    // Append modal and overlay to body
+    $('body').append(modalHTML);
+
+    // Load and play the animation
+    try {
+        var animation = bodymovin.loadAnimation({
+            container: document.getElementById('animationContainer'), // Required
+            path: '/static/animations/truck-delivery-service.json', // Path to your animation file
+            renderer: 'svg', // Render as SVG
+            loop: true, // Loop the animation
+            autoplay: true, // Autoplay the animation
+        });
+        console.log("Animation loaded successfully");
+    } catch (error) {
+        console.error("Error loading animation:", error);
+    }
+
+    // Close modal on button click
+    $('#closeModalButton').on('click', closeModal);
+}
+
+// Function to close the modal
+function closeModal() {
+    $('#thankYouModal').remove(); // Remove modal
+    $('#modalOverlay').remove();  // Remove overlay
+}
+
+
+// Add the click event to the submit button
+document.getElementById('submit-button').onclick = function() {
+    // Check if the form is filled and valid
+    if (cardValid && form.checkValidity()) { 
+        showModal("Your order is being processed! You will receive an email confirmation shortly.");
+
+    } else {
+        console.log("Form is invalid or card details are incorrect.");
+        return; // Simply return if the form is not valid
+    }
+};

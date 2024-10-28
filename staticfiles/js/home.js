@@ -19,31 +19,12 @@ window.onload = async () => {
         loggedInUsername = await fetchUsername(); // Fetch username here
         await fetchMessageCounts();
         updateIconsBasedOnSuperUser();
-        fetchCartData();
+        await fetchCartData();
         await fetchAndStoreSeeds();
 
 
-        // Check for items in the cart and toggle cart button visibility
-        const cartData = JSON.parse(localStorage.getItem('cart'));
-        const cartButton = document.getElementById('cart-button');
-        const checkoutBtn = document.getElementById('go-to-checkout-button');
 
-        if (cartData && Array.isArray(cartData.items) && cartData.items.length > 0) {
-            // Show the cart button if there are items in the cart
-            if (cartButton) {
-                cartButton.style.display = 'block'; // Show cart button
-                checkoutBtn.style.display = 'block'; // Show cart button
-                console.log('Cart button is now visible.');
-            }
-        } else {
-            // Hide the cart button if the cart is empty or undefined
-            if (cartButton) {
-                cartButton.style.display = 'none'; // Hide cart button
-                checkoutBtn.style.display = 'none'; // Hide cart button
-                console.log('Cart button is now hidden.');
-            }
-        }
-
+        toggleCartButtonVisibility();
 
         const chatContainer = document.getElementById('chat-container');
         const messagesIcon = document.getElementById('messagesIcon');
@@ -108,10 +89,58 @@ window.onload = async () => {
     }
 };
 
+function toggleCartButtonVisibility() {
+    console.log('Function toggleCartButtonVisibility called.');
+
+    // Retrieve cart data from localStorage
+    const cartData = JSON.parse(localStorage.getItem('cart'));
+    console.log('Cart data retrieved:', cartData);
+
+    // Get references to the cart and checkout buttons
+    const cartButton = document.getElementById('cart-button');
+    const checkoutBtn = document.getElementById('go-to-checkout-button');
+    console.log('Cart button element:', cartButton);
+    console.log('Checkout button element:', checkoutBtn);
+
+    // Check if cartData has items and if they form a valid array with content
+    if (cartData && Array.isArray(cartData.items) && cartData.items.length > 0) {
+        console.log(`Cart contains ${cartData.items.length} items. Making cart and checkout buttons visible.`);
+        
+        if (cartButton) {
+            cartButton.style.display = 'block'; // Show cart button
+            console.log('Cart button is set to visible.');
+        }
+        
+        if (checkoutBtn) {
+            checkoutBtn.style.display = 'block'; // Show checkout button
+            console.log('Checkout button is set to visible.');
+        }
+    } else {
+        console.log('Cart is empty or undefined. Hiding cart and checkout buttons.');
+        
+        if (cartButton) {
+            cartButton.style.display = 'none'; // Hide cart button
+            console.log('Cart button is set to hidden.');
+        }
+        
+        if (checkoutBtn) {
+            checkoutBtn.style.display = 'none'; // Hide checkout button
+            console.log('Checkout button is set to hidden.');
+        }
+    }
+    
+    console.log('toggleCartButtonVisibility function execution completed.');
+}
+
+
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     updateCartTotalUILogin(); // Update cart total when the page loads
-    // Run the function when the page loads
-    // Get the elements by their ID
+    toggleCartButtonVisibility();
 
 
 
@@ -147,6 +176,8 @@ document.getElementById('login-button').addEventListener('click', async () => {
         // Call fetchCartData() to retrieve the cart data after login
         await fetchCartData();
         updateCartTotalUILogin()
+        
+        toggleCartButtonVisibility();
         console.log('Cart data fetched successfully after login.');
     } catch (error) {
         console.error('Error fetching cart data after login:', error);
@@ -905,4 +936,5 @@ document.addEventListener("DOMContentLoaded", function () {
         return cookieValue;
     }
 });
+
 
