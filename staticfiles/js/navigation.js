@@ -7,24 +7,32 @@ document.addEventListener("DOMContentLoaded", function() {
     let isOpen = false;
 
     // Function to update menu position based on page
-    function updateMenuPosition() {
-        // Check if the current URL matches the home URL
-        const isHome = window.location.href === "https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net/";
+    // Function to update menu position based on page
+function updateMenuPosition() {
+    // Array of URLs for the home page (local and deployed)
+    const homeUrls = [
+        "https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net/",
+        "https://future-flower-shop-7f6f515e140f.herokuapp.com//" // Add the actual deployed URL here
+    ];
+    
+    // Check if the current URL matches any of the home URLs
+    const isHome = homeUrls.includes(window.location.href);
 
-        if (isOpen) {
-            // If the menu is open, keep it centered
-            navigationContainer.classList.add('centered');
-            navigationContainer.classList.remove('bottom-right');
-        } else if (!isOpen && !isHome) {
-            // If the menu is closed and it's not the homepage, position the menu in the bottom-right
-            navigationContainer.classList.add('bottom-right');
-            navigationContainer.classList.remove('centered');
-        } else {
-            // If it's on the homepage and the menu is closed, keep it centered
-            navigationContainer.classList.add('centered');
-            navigationContainer.classList.remove('bottom-right');
-        }
+    if (isOpen) {
+        // If the menu is open, keep it centered
+        navigationContainer.classList.add('centered');
+        navigationContainer.classList.remove('menu-toggle-active');
+    } else if (!isOpen && !isHome) {
+        // If the menu is closed and it's not the homepage, position the menu in the menu-toggle-active
+        navigationContainer.classList.add('menu-toggle-active');
+        navigationContainer.classList.remove('centered');
+    } else {
+        // If it's on the homepage and the menu is closed, keep it centered
+        navigationContainer.classList.add('centered');
+        navigationContainer.classList.remove('menu-toggle-active');
     }
+}
+
 
     // Initial call to set position
     updateMenuPosition();
@@ -38,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Always center the menu when opened
             navigationContainer.classList.add('centered');
-            navigationContainer.classList.remove('bottom-right');
+            navigationContainer.classList.remove('menu-toggle-active');
 
             // Add blur effect
             body.classList.add('active-blur');

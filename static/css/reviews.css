@@ -349,7 +349,7 @@
     border: 1px solid #ddd;
     text-align: center;
     border-radius: 5px;
-  
+
 }
 
 /* Modal Actions */
@@ -925,20 +925,25 @@
 
 
 /* Glow effect for the reviews container on hover */
-.about-container:hover {
-    transition: filter 0.7s ease-in-out; /* Smooth transition */
-    filter: drop-shadow(5px 12px 24px rgba(200, 200, 200, 0.8)) 
-            drop-shadow(0 0 15px rgba(220, 220, 220, 0.6)) 
-            drop-shadow(0 0 25px rgba(240, 240, 240, 0.4));
+.about-container:hover  {
+    transition: filter 0.7s ease-in-out;
+    /* Smooth transition */
+    filter: drop-shadow(5px 12px 24px rgba(200, 200, 200, 0.8)) drop-shadow(0 0 15px rgba(220, 220, 220, 0.6)) drop-shadow(0 0 25px rgba(240, 240, 240, 0.4));
     background: none;
 }
 
+.logo-container  {
+    transition: filter 0.7s ease-in-out;
+    /* Smooth transition */
+    filter: drop-shadow(5px 12px 24px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 15px rgba(0, 24, 70, 0.6)) drop-shadow(0 0 25px rgba(68, 0, 0, 0.7));
+    background: none;
+}
 .seed-list-item:hover,
 .modal-content:hover,
 #reviews-container:hover,
 #chat-container:hover,
 .cart-item:hover,
-.seed-card:hover {
+.seed-card:hover{
     box-shadow:
         0 0 8px rgba(255, 255, 255, 0.6),
         /* Inner glow with alpha 0.6 */
@@ -952,15 +957,22 @@
 .form-login:hover,
 .register-form:hover,
 .profile-order-item:hover,
-.contact-content:hover {
+.contact-content:hover{
     transform: scale(1.1);
     box-shadow:
         0 0 8px rgba(173, 235, 168, 0.6),
         0 0 15px rgba(150, 241, 165, 0.4),
         0 0 25px rgba(44, 250, 3, 0.2);
-   
-}
 
+}
+.logo-container {
+   
+    box-shadow:
+        0 0 8px rgba(173, 235, 168, 0.6),
+        0 0 15px rgba(150, 241, 165, 0.4),
+        0 0 25px rgba(44, 250, 3, 0.2);
+
+}
 .comments-icons-container {
     display: flex;
     flex-direction: row;

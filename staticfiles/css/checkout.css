@@ -8,13 +8,15 @@ body {
     color: white;
     /* White text globally */
 }
- /* Styling the container that wraps the image and name */
- .image-name-container {
+
+/* Styling the container that wraps the image and name */
+.image-name-container {
     display: flex;
-  flex-direction: column;
+    flex-direction: column;
     gap: 10px;
     /* Add some space between the image and the name */
 }
+
 /* Checkout Items Container */
 #checkout-items-container {
     padding: 20px;
@@ -22,11 +24,13 @@ body {
     display: flex;
     flex-direction: column;
 }
-    /* Styling the total price to make it more prominent */
-    .price-color-green {
-        font-weight: bold;
-        color: #134b02;
-    }
+
+/* Styling the total price to make it more prominent */
+.price-color-green {
+    font-weight: bold;
+    color: #134b02;
+}
+
 /* Item Row */
 .item-row {
     width: 100%;
@@ -254,7 +258,10 @@ StripeElement--webkit-autofill {
 }
 
 @media screen and (min-width: 768px) {
-
+    .menu-icon {
+        width: 150px;
+        height: 150px;
+    }
     .chat-footer-input {
         margin: 0 auto;
         width: 50%;
@@ -297,26 +304,55 @@ StripeElement--webkit-autofill {
     }
 
     #filter-toggle {
-        top: 0px;
+
         width: 150px;
-        top: 0px;
+        top: 100px;
     }
 
-    .navigation-container.bottom-right {
+    .navigation-container.menu-toggle-active {
 
-        top: 75%;
-        left: 80%;
+        top: 40%;
+        right: 0px;
     }
 
-
+    .nav-link-icon {
+       
+        width: 60px;
+        
+    }
 }
 
 @media screen and (min-width: 1023px) {
-    .profile-order-list {
-        
-        flex-direction: row;
- 
+    .nav-link-icon {
+        width: 120px; 
     }
+    .menu-icon {
+        width: 250px;
+        height: 250px;
+    }
+    .logo-container {
+        right: 31px;
+        position: fixed;
+        top: 150px;
+        width: 300px;
+        height: 300px;
+        background: none;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: translateY(0%);
+    }
+    .logo-container img {
+        width: 300px;
+        height: 300px;
+    }
+    .profile-order-list {
+
+        flex-direction: row;
+
+    }
+
     .about-container {
         height: 600px;
         width: 600px;
@@ -327,11 +363,27 @@ StripeElement--webkit-autofill {
 
         width: 40%;
     }
+    .icon-text-style {
+       
+        color: white;
+        font-size: 1.3em;
+        
+    }
 
 }
 
 @media screen and (min-width: 1439px) {
-
+    .nav-link-icon {
+       
+        width: 160px;
+        
+    }
+    .icon-text-style {
+       
+        color: white;
+        font-size: 2em;
+        
+    }
     .about-container {
         height: 700px;
         width: 700px;
@@ -346,7 +398,7 @@ StripeElement--webkit-autofill {
 }
 
 @media screen and (min-width: 1800px) {
-
+    
 
     .about-container {
         height: 700px;
@@ -390,7 +442,7 @@ StripeElement--webkit-autofill {
         max-width: 1200px;
     }
 
-   
+
 
     .item-info {
         display: flex;
@@ -449,7 +501,7 @@ StripeElement--webkit-autofill {
         color: white;
     }
 
-  
+
 
     .form-control {
 
@@ -616,8 +668,15 @@ StripeElement--webkit-autofill {
     }
 
     .nav-link-icon {
-
-        width: 130px;
+       
+        width: 190px;
+        
+    }
+    .icon-text-style {
+       
+        color: white;
+        font-size: 2.5em;
+        
     }
 
     .menu-icon-span {
@@ -629,10 +688,9 @@ StripeElement--webkit-autofill {
         width: 60%;
     }
 
-    .navigation-container.bottom-right {
-
-        top: 85%;
-        left: 85%;
+    .navigation-container.menu-toggle-active {
+        top: 40px;
+        right: 0px;
 
     }
 
@@ -669,11 +727,9 @@ StripeElement--webkit-autofill {
 
     .social-icon {
         width: 80px;
-        /* Adjust icon size */
         height: 80px;
-        /* Adjust icon size */
         transition: transform 0.3s;
-        /* Smooth scale effect */
+
 
     }
 

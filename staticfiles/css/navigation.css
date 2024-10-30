@@ -26,13 +26,13 @@
 }
 
 /* Bottom Right Position */
-.navigation-container.bottom-right {
+.navigation-container.menu-toggle-active {
     position: fixed;
     right: 20px;
     transform: translate(0, 0);
     pointer-events: none;
-    top: 75%;
-    left: 25%;
+    top: 20px;
+    right: 0px;
     width: 300px;
     height: 300px;
 }
@@ -121,8 +121,8 @@ body.active-blur::before {
     background-image: url('/static/media/images/sunflower.webp'); 
     background-size: cover;
     background-position: center;
-    width: 150px;
-    height: 150px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     padding: 15px;
     cursor: pointer;
@@ -148,10 +148,10 @@ body.active-blur::before {
 }
 
 /* Bottom Right Position */
-.menu.bottom-right {
+.menu.menu-toggle-active {
     position: fixed; /* Fix position */
-    bottom: 20px; /* Space from bottom */
-    right: 20px; /* Space from right */
+    top: 20;
+    right: 0px;
     align-items: flex-end; /* Align items to the end */
 }
 
@@ -246,10 +246,10 @@ body.active-blur::before {
     flex-direction: column;
     justify-content: space-around;
     color: white;
-    padding: 10px;
+    padding: 0px;
     margin: 5px 0;
     color: white;
-    width: 90px;
+    width: 50px;
     text-align: center; 
     text-decoration: none !important;
     opacity: 0;
@@ -269,14 +269,11 @@ body.active-blur::before {
 }
 
 .icon-text-style {
-    opacity: 0;
-    position: absolute; /* Position the text in the center */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust positioning */
-    animation: blink-animation 2s infinite; /* Trigger animation every 2 seconds */
+    font-family: 'Georgia', serif;
+    font-family: 'Roboto', sans-serif;
+    font-family: 'Lobster', cursive;
     color: white; /* Text color */
-    font-size: 1.2rem; /* Text size */
+    font-size: 12px; /* Text size */
     text-shadow: 0 0 3px black; /* Initial outline effect */
 }
 /* Animation to show and hide the element */
@@ -313,11 +310,3 @@ font-size: 1rem;
 }
 
 
-
-.nav-top-row {
-    transform: translateY(-20px); /* Move slightly up when hidden */
-}
-
-.nav-bottom-row {
-    transform: translateY(20px); /* Move slightly down when hidden */
-}
