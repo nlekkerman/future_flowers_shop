@@ -1,5 +1,9 @@
-import {getCartFromLocalStorage} from './utils.js';
-import {sendToCart} from './control.js';
+import {
+    getCartFromLocalStorage
+} from './utils.js';
+import {
+    sendToCart
+} from './control.js';
 // Function to get all seeds from local storage
 
 function getAllSeeds() {
@@ -192,7 +196,7 @@ function toggleSearchResults() {
     const resultsContainer = document.getElementById('search-results-container');
     const searchButton = document.getElementById('search-button');
     const searchIcon = document.getElementById('searchIcon');
-        const searchContainer = document.getElementById('searchContainer');
+    const searchContainer = document.getElementById('searchContainer');
 
     if (resultsContainer) {
         if (isSearchResultsVisible) {
@@ -357,7 +361,7 @@ function attachAddToCartButtonEventListeners() {
         button.addEventListener('click', async (event) => {
             event.stopPropagation(); // Prevent triggering the card click event
 
-            const seedId = button.getAttribute('data-seed-id');   
+            const seedId = button.getAttribute('data-seed-id');
             const quantity = 1; // Default quantity
 
             // Instead of getting seedElement, directly get the seed details from local storage
@@ -498,30 +502,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', () => {
     const viewCartButton = document.getElementById('cart-button');
-    
+
     if (viewCartButton) {
         viewCartButton.addEventListener('click', () => {
             window.location.href = '/cart/'; // Redirect to cart page
         });
         console.log("Cart button found, event listener attached.");
     }
-});
-document.addEventListener('DOMContentLoaded', function () {
-    console.log("DOM fully loaded and parsed. Starting animation setup...");
-
-    // Retrieve the path from the data attribute in the HTML
-    const animationPath1 = document.getElementById('animationContainer1').getAttribute('data-path');
-
-    console.log("Animation path retrieved:", animationPath1);
-
-    // Load the first animation
-    const animation1 = bodymovin.loadAnimation({
-        container: document.getElementById('animationContainer1'), // Container for the first animation
-        path: animationPath1, // Path to your first animation JSON
-        renderer: 'svg',
-        loop: true, // Loop the animation indefinitely
-        autoplay: true, // Autoplay the animation
-    });
-
-    console.log("First animation initialized with path:", animationPath1);
 });

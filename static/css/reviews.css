@@ -956,11 +956,9 @@
     transform: scale(1.1);
     box-shadow:
         0 0 8px rgba(173, 235, 168, 0.6),
-        /* Inner glow with alpha 0.6 */
         0 0 15px rgba(150, 241, 165, 0.4),
-        /* Middle glow with alpha 0.4 */
         0 0 25px rgba(44, 250, 3, 0.2);
-    /* Outer glow with alpha 0.2 */
+   
 }
 
 .comments-icons-container {
