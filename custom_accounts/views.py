@@ -139,7 +139,7 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
 
 def logout(request):
     auth_logout(request)
-    return redirect('account_login')
+    return redirect('home/home.html')
 
 @login_required
 def profile(request):

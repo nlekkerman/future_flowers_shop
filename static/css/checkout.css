@@ -327,8 +327,8 @@ StripeElement--webkit-autofill {
         width: 120px; 
     }
     .menu-icon {
-        width: 250px;
-        height: 250px;
+        width: 200px;
+        height: 200px;
     }
     .logo-container {
         right: 31px;
@@ -375,13 +375,13 @@ StripeElement--webkit-autofill {
 @media screen and (min-width: 1439px) {
     .nav-link-icon {
        
-        width: 160px;
+        width: 100px;
         
     }
     .icon-text-style {
        
         color: white;
-        font-size: 2em;
+        font-size: 1.5em;
         
     }
     .about-container {

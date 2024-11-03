@@ -1,43 +1,57 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const menuIcon = document.getElementById("menuIcon");
+    const logoContainer = document.getElementById("logoContainer");
     const topRow = document.querySelector(".nav-top-row");
     const bottomRow = document.querySelector(".nav-bottom-row");
     const navigationContainer = document.querySelector('.navigation-container');
     const body = document.body; // Reference to the body element
     let isOpen = false;
 
-    // Function to update menu position based on page
-    // Function to update menu position based on page
-function updateMenuPosition() {
-    // Array of URLs for the home page (local and deployed)
-    const homeUrls = [
-        "https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net/",
-        "https://future-flower-shop-7f6f515e140f.herokuapp.com//" // Add the actual deployed URL here
-    ];
-    
-    // Check if the current URL matches any of the home URLs
-    const isHome = homeUrls.includes(window.location.href);
 
-    if (isOpen) {
-        // If the menu is open, keep it centered
-        navigationContainer.classList.add('centered');
-        navigationContainer.classList.remove('menu-toggle-active');
-    } else if (!isOpen && !isHome) {
-        // If the menu is closed and it's not the homepage, position the menu in the menu-toggle-active
-        navigationContainer.classList.add('menu-toggle-active');
-        navigationContainer.classList.remove('centered');
-    } else {
-        // If it's on the homepage and the menu is closed, keep it centered
-        navigationContainer.classList.add('centered');
-        navigationContainer.classList.remove('menu-toggle-active');
+    // Function to update menu position based on page
+    function updateMenuPosition() {
+        // Array of URLs for the home page (local and deployed)
+        const homeUrls = [
+            "https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net/",
+            "https://future-flower-shop-7f6f515e140f.herokuapp.com/" // Add the actual deployed URL here
+        ];
+
+        // Check if the current URL matches any of the home URLs
+        const isHome = homeUrls.includes(window.location.href);
+        const logoContainer = document.querySelector('.logo-container');
+
+        if (isOpen) {
+            // If the menu is open, keep it centered
+            navigationContainer.classList.add('centered');
+            navigationContainer.classList.remove('menu-toggle-active');
+        } else if (!isOpen && !isHome) {
+            // If the menu is closed and it's not the homepage, position the menu in the menu-toggle-active
+            navigationContainer.classList.add('menu-toggle-active');
+            navigationContainer.classList.remove('centered');
+        } else {
+            // If it's on the homepage and the menu is closed, keep it centered
+            navigationContainer.classList.add('centered');
+            navigationContainer.classList.remove('menu-toggle-active');
+        }
+
+        // Toggle logo-container visibility based on whether it's a homepage URL
+        if (isHome) {
+            logoContainer.style.opacity = '1';
+            logoContainer.style.visibility = 'visible';
+        } else {
+            logoContainer.style.opacity = '0';
+            logoContainer.style.visibility = 'hidden';
+        }
     }
-}
+
+    // Example call to update menu position
+    updateMenuPosition();
 
 
     // Initial call to set position
     updateMenuPosition();
 
-    menuIcon.addEventListener("click", function() {
+    menuIcon.addEventListener("click", function () {
         isOpen = !isOpen; // Toggle the menu state
 
         if (isOpen) {
@@ -109,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const viewSeedsButton = document.getElementById('close-order-success-button');
     if (viewSeedsButton) {
         viewSeedsButton.addEventListener('click', () => {
-            console.log("CILIKICIAKSADA"); // This should be logged when clicked
             window.location.href = '/seeds/?show_seeds=true'; // Adjust to your URL or route
         });
     } else {
