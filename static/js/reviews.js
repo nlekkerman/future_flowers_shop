@@ -4,9 +4,10 @@ import {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-
+    const body = document.body;
 
     const icon = document.getElementById('icon');
+    const reviewsIcon = document.getElementById('reviews-icon');
     const reviewsContainer = document.getElementById('reviews-container');
     // Create the message modal container
     const messageModal = document.createElement('div');
@@ -28,15 +29,17 @@ document.addEventListener('DOMContentLoaded', function () {
     modalContent.className = 'modal-box-content'; // Three-word class name
 
 
-    // Create the modal message paragraph
+   
     const modalMessage = document.createElement('p');
 
-    // Create the close button
+    
     const closeButton = document.createElement('button');
-    closeButton.className = 'button-close-modal'; // Three-word class name
+    closeButton.className = 'button-close-modal'; 
     closeButton.textContent = 'x';
     closeButton.onclick = function () {
-        messageModal.style.display = 'none'; // Close the modal
+        messageModal.style.display = 'none'; 
+  
+
     };
 
     // Append the message and close button to the modal content
@@ -52,9 +55,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to display the message modal
     function showMessageReview(message) {
-        modalMessage.textContent = message; // Set the message text
-        messageModal.style.display = 'flex'; // Show the modal
-        messageModal.style.zIndex = '999999999999999'; // Show the modal
+        modalMessage.textContent = message; 
+        messageModal.style.display = 'flex'; 
+        messageModal.style.zIndex = '999999999999999'; 
     }
     // Function to load reviews
     async function loadReviews() {
@@ -99,6 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 closeButton.addEventListener('click', function () {
 
                     reviewsContainer.classList.remove('show');
+                    body.classList.remove('active-blur');
                 });
                 reviewsContainer.appendChild(closeButton); // Add close button to container
 
@@ -253,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         commentsList.appendChild(commentElement);
                     });
 
-                    // Append each review column to the row
+                   
                     rowElement.appendChild(reviewElement);
 
                     // Ensure the Edit button is handled correctly
@@ -360,39 +364,39 @@ document.addEventListener('DOMContentLoaded', function () {
         function openReviewModal() {
             // Create the modal HTML dynamically
             const modalHTML = `
-<div class="modal fade custom-review-modal" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog custom-modal-dialog" role="document">
-        <div class="modal-content custom-modal-content">
-            <div class="modal-header custom-modal-header">
-                <h5 class="modal-title custom-modal-title" id="reviewModalLabel">Write a Review</h5>
-                
-            </div>
-            <div class="modal-body custom-modal-body">
-                <button type="button" class="close custom-close-button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <form id="dynamic-review-form" class="custom-review-form">
-                    <div class="form-group custom-form-group">
-                        <label for="rating" class="custom-label">Rating</label>
-                        <select name="rating" id="rating" class="custom-select">
-                            <option value="1">1 Star</option>
-                            <option value="2">2 Stars</option>
-                            <option value="3">3 Stars</option>
-                            <option value="4">4 Stars</option>
-                            <option value="5">5 Stars</option>
-                        </select>
-                    </div>
-                    <div class="form-group custom-form-group">
-                        <label for="comment" class="custom-label">Comment</label>
-                        <textarea class="custom-textarea" id="comment" name="comment" rows="3"></textarea>
-                    </div>
-                    <button type="submit" class="btn">Submit Review</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-`;
+                                <div class="modal fade custom-review-modal" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog custom-modal-dialog" role="document">
+                                        <div class="modal-content custom-modal-content">
+                                            <div class="modal-header custom-modal-header">
+                                                <h5 class="modal-title custom-modal-title" id="reviewModalLabel">Write a Review</h5>
+                                                
+                                            </div>
+                                            <div class="modal-body custom-modal-body">
+                                                <button type="button" class="close custom-close-button" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <form id="dynamic-review-form" class="custom-review-form">
+                                                    <div class="form-group custom-form-group">
+                                                        <label for="rating" class="custom-label">Rating</label>
+                                                        <select name="rating" id="rating" class="custom-select">
+                                                            <option value="1">1 Star</option>
+                                                            <option value="2">2 Stars</option>
+                                                            <option value="3">3 Stars</option>
+                                                            <option value="4">4 Stars</option>
+                                                            <option value="5">5 Stars</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group custom-form-group">
+                                                        <label for="comment" class="custom-label">Comment</label>
+                                                        <textarea class="custom-textarea" id="comment" name="comment" rows="3"></textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn">Submit Review</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
 
             // Append modal to the body
             document.body.insertAdjacentHTML('beforeend', modalHTML);
@@ -741,13 +745,27 @@ function openEditReviewModal(review) {
         }
         return cookieValue;
     }
-    // Load reviews when the page loads
+   
     loadReviews();
 
-    // Add click event to the icon to toggle visibility
     icon.addEventListener('click', function () {
-
         reviewsContainer.classList.add('show'); // Show the container
-
+        body.classList.add('active-blur'); // Apply blur to body
     });
+
+    // Add click event to `reviewsIcon` to show `reviewsContainer` and apply body blur
+    reviewsIcon.addEventListener('click', function () {
+        reviewsContainer.classList.add('show'); // Show the container
+        body.classList.add('active-blur'); // Apply blur to body
+    });
+
+   
+    reviewsContainer.addEventListener('click', function (event) {
+        if (event.target === reviewsContainer) {
+            reviewsContainer.classList.remove('show'); // Hide the container
+            body.classList.remove('active-blur'); // Remove blur from body
+        }
+    });
+    
+
 });

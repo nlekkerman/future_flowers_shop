@@ -10,6 +10,16 @@ body {
     /* Optional: covers the whole background */
 }
 
+.home-icon-container{
+    display: flex;
+    position: absolute;
+    top: 10px;
+ 
+}
+
+.home-icon-custom{
+    width: 50px;
+}
 .logo-container {
     background-color: rgb(0 0 0 / 72%);
     top: 50%;
@@ -75,9 +85,36 @@ body.blur {
     justify-content: flex-end;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
 
+}
 
+/* Right-aligned navigation column */
+.right-nav-column {
+    position: fixed;
+    right: 0;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color:rgba(0, 0, 0, 0.7);
+    border-left: 1px solid #ddd;
+    height: 100vh;
+}
 
+/* Icon item styling */
+.icon-item {
+    margin: 15px 0;
+    text-align: center;
+}
 
+.icon-img {
+    width: 40px;
+    height: 40px;
+}
+
+.icon-label {
+    font-size: 12px;
+    color: white;
+    margin-top: 5px;
 }
 
 .conversation {

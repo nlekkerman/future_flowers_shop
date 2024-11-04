@@ -663,19 +663,19 @@ StripeElement--webkit-autofill {
     }
 
     .menu-icon {
-        width: 350px;
-        height: 350px;
+        width: 300px;
+        height: 300px;
     }
 
     .nav-link-icon {
        
-        width: 190px;
+        width: 170px;
         
     }
     .icon-text-style {
        
         color: white;
-        font-size: 2.5em;
+        font-size: 2em;
         
     }
 

@@ -2,11 +2,20 @@
 {% load socialaccount %}
 {% load static %}
 {% block content %}
-<div class="navigation-container">
-    {% include 'navigation.html' %}
-    </div>
+
 
 <div class="form-container">
+
+    <div class="home-icon-container">
+    <a href="{% url 'home' %}" class="home-icon ">
+        <img  src="{% static 'media/images/home-icon.png' %}" alt="Home Icon" class="home-icon-custom">
+
+        
+        <p class="icon-text-style">Home</p>
+
+    </a>
+
+</div>
     <h2 class="login-heading text-white">Login</h2>
     <div class="form-login">
 
