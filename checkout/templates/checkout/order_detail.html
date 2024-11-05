@@ -2,7 +2,10 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="navigation-container"></div>
+    {% include 'navigation.html' %}
+    </div>
+<div class="order-details-container container mt-5">
     <a href="{% url 'profile' %}" class="btn mt-10">Back to Orders</a>
     
     <h2 class="order-number">Order Number <strong class="order-number-strong">{{ order.order_number }}</strong></h2>

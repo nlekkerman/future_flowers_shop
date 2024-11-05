@@ -239,7 +239,11 @@ StripeElement--webkit-autofill {
     width: 100%;
     height: 100%;
 }
+.order-details-container{
 
+    position: relative;
+    z-index: 12;
+}
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .item-container-checkout {
@@ -258,10 +262,22 @@ StripeElement--webkit-autofill {
 }
 
 @media screen and (min-width: 768px) {
+
+    .fixed-menu-icon {
+
+        top: 100px;
+
+    }
+
+    .right-nav-column {
+        top: 180px;
+    }
+
     .menu-icon {
         width: 150px;
         height: 150px;
     }
+
     .chat-footer-input {
         margin: 0 auto;
         width: 50%;
@@ -316,20 +332,22 @@ StripeElement--webkit-autofill {
     }
 
     .nav-link-icon {
-       
+
         width: 60px;
-        
+
     }
 }
 
 @media screen and (min-width: 1023px) {
     .nav-link-icon {
-        width: 120px; 
+        width: 120px;
     }
+
     .menu-icon {
         width: 200px;
         height: 200px;
     }
+
     .logo-container {
         right: 31px;
         position: fixed;
@@ -343,10 +361,12 @@ StripeElement--webkit-autofill {
         align-items: center;
         transform: translateY(0%);
     }
+
     .logo-container img {
         width: 300px;
         height: 300px;
     }
+
     .profile-order-list {
 
         flex-direction: row;
@@ -363,27 +383,30 @@ StripeElement--webkit-autofill {
 
         width: 40%;
     }
+
     .icon-text-style {
-       
+
         color: white;
         font-size: 1.3em;
-        
+
     }
 
 }
 
 @media screen and (min-width: 1439px) {
     .nav-link-icon {
-       
+
         width: 100px;
-        
+
     }
+
     .icon-text-style {
-       
+
         color: white;
         font-size: 1.5em;
-        
+
     }
+
     .about-container {
         height: 700px;
         width: 700px;
@@ -398,7 +421,7 @@ StripeElement--webkit-autofill {
 }
 
 @media screen and (min-width: 1800px) {
-    
+
 
     .about-container {
         height: 700px;
@@ -668,15 +691,16 @@ StripeElement--webkit-autofill {
     }
 
     .nav-link-icon {
-       
+
         width: 170px;
-        
+
     }
+
     .icon-text-style {
-       
+
         color: white;
         font-size: 2em;
-        
+
     }
 
     .menu-icon-span {

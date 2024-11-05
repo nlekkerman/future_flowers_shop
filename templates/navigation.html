@@ -2,11 +2,6 @@
 
 <nav class="menu">
     <div class="nav-top-row">
-        <a class="nav-link-icon shop-icon" id="view-seeds-button" >
-            <img  src="{% static 'media/images/light-purple-flower-icon.png' %}" alt="Shopping Icon" class="icon-image">
-
-            <p class="icon-text-style">Shop</p>
-        </a>
         <a href="{% url 'home' %}" class="nav-link-icon home-icon">
             <img  src="{% static 'media/images/home-icon.png' %}" alt="Home Icon" class="icon-image">
 
@@ -14,6 +9,12 @@
             <p class="icon-text-style">Home</p>
 
         </a>
+        <a class="nav-link-icon shop-icon" id="view-seeds-button" >
+            <img  src="{% static 'media/images/light-purple-flower-icon.png' %}" alt="Shopping Icon" class="icon-image">
+
+            <p class="icon-text-style">Shop</p>
+        </a>
+   
         <a class="nav-link-icon" class="icon nav-link-icon reviews-icon" id="icon">
             <img  src="{% static 'media/images/dark-purple-flower.png' %}" alt="Reviews Icon" class="icon-image">
 
@@ -49,22 +50,19 @@
     </div>
 </nav>
 
-<div class="fixed-menu-icon "><img src="{% static 'media/images/sunflower.webp' %}" alt="Menu Icon" >
-</div>
+
 
 <!-- Right-Aligned Navigation Column Container -->
 <div class="right-nav-column">
   
-     
+    <a href="{% url 'home' %}">
+        <img src="{% static 'media/images/home-icon.png' %}" alt="Home Icon" class="icon-img">
+        <p class="icon-label">Home</p>
+    </a>    
  
 <a id="shop-icon">
     <img src="{% static 'media/images/light-purple-flower-icon.png' %}" alt="Shopping Icon" class="icon-img">
     <p class="icon-label">Shop</p>
-</a>
-
-<a href="{% url 'home' %}">
-    <img src="{% static 'media/images/home-icon.png' %}" alt="Home Icon" class="icon-img">
-    <p class="icon-label">Home</p>
 </a>
 
 <a id="reviews-icon" href="#">

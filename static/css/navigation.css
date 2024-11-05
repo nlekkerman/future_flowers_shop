@@ -19,10 +19,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
+    z-index: 10;
     transition: opacity 0.3s ease, transform 0.3s ease;
+
 }
 
 
@@ -66,7 +65,7 @@
 
 .trees-icon {
     @extend .icon-style;
-    /* Apply common styles */
+
 }
 
 .about-us-icon {
@@ -96,7 +95,7 @@
     /* Apply blur effect */
     background-color: rgba(0, 0, 0, 0.4);
     /* Optional dark overlay */
-    z-index: 900;
+    z-index: 9;
     /* Below the navigation container */
     visibility: hidden;
     /* Hidden by default */
@@ -104,7 +103,10 @@
     transition: opacity 0.5s ease;
     /* Smooth transition */
 }
-
+.profile-header{
+    position: relative;
+    z-index: 100;
+}
 /* Show blur effect when active */
 .active-blur .blur-overlay {
     visibility: visible;
@@ -122,7 +124,7 @@ body.active-blur::before {
     /* Add a semi-transparent overlay */
     backdrop-filter: blur(8px);
     /* Apply blur effect */
-    z-index: 999;
+    z-index: 2;
     /* Make sure it's below the navigation but above other content */
     pointer-events: none;
     /* Allow interactions with the navigation menu */
@@ -148,15 +150,18 @@ body.active-blur::before {
     /* Apply the pop-out animation */
 }
 
-.fixed-menu-icon  {
-    position: absolute;
+.fixed-menu-icon {
+    position: fixed;
     right: 5px;
     top: 150px;
- 
+    display: flex;
+    flex-direction: column;
+    z-index: 876876876;
+
 }
 
 .fixed-menu-icon img {
-   width: 50px;
+    width: 50px;
 }
 
 .menu {
@@ -168,7 +173,59 @@ body.active-blur::before {
     transition: all 0.3s ease;
 }
 
+/* Right-aligned navigation column */
+.right-nav-column {
+    position: fixed;
+    right: -200px;
+    top: 220px;
+    display: flex;
+    flex-direction: column;
+    padding:2px;
+    background-color: rgb(0, 44, 61);
+    border-left: 1px solid #ddd;
+    visibility: hidden;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    transition: right 0.6s ease;
+    opacity: 0;
 
+}
+
+.right-nav-column.visible {
+    right: 0;
+    visibility: visible;
+    opacity: 1;
+
+}
+
+.right-nav-column a {
+    cursor: pointer;
+    text-decoration: none;
+    /* Optional: Remove underline if desired */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+   
+}
+
+.right-nav-column a:hover .icon-img {
+    transform: scale(1.1);
+    /* Optional: Adds a slight zoom effect on hover */
+}
+
+.right-nav-column .icon-img {
+    width: 40px;
+    /* Adjust icon size as needed */
+    height: auto;
+    transition: transform 0.2s ease-in-out;
+}
+
+.right-nav-column .icon-label {
+    font-size: 10px;
+    color: white;
+    margin: 0px !important;
+}
 
 
 /* Basic styling for the menu icon */

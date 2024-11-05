@@ -3,29 +3,23 @@
 {% load static %}
 {% block content %}
 
-
+<div class="navigation-container">
+    {% include 'navigation.html' %}
+    </div>
 <div class="form-container">
+ 
+ 
 
-    <div class="home-icon-container">
-    <a href="{% url 'home' %}" class="home-icon ">
-        <img  src="{% static 'media/images/home-icon.png' %}" alt="Home Icon" class="home-icon-custom">
-
-        
-        <p class="icon-text-style">Home</p>
-
-    </a>
-
-</div>
     <h2 class="login-heading text-white">Login</h2>
     <div class="form-login">
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn login-button">Login</button>
-    </form>
-</div>
+       
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn login-button">Login</button>
+        </form>
+    </div>
     <p class="registration-link">Don't have an account? <a href="{% url 'account_signup' %}">Register here</a></p>
 
-    
-{% endblock %}
+</div>
+    {% endblock %}

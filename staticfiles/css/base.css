@@ -17,8 +17,12 @@ body {
  
 }
 
-.home-icon-custom{
-    width: 50px;
+
+.home-icon-custom {
+    display: block; /* Ensures the image fills the anchor tag area */
+    width: 40px; /* Set width as needed */
+    height: 40px; /* Set height as needed */
+    margin: 0 auto; /* Centers the image */
 }
 .logo-container {
     background-color: rgb(0 0 0 / 72%);
@@ -80,42 +84,13 @@ body.blur {
     height: 100px;
     top: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 1001;
     display: flex;
     justify-content: flex-end;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
 
 }
 
-/* Right-aligned navigation column */
-.right-nav-column {
-    position: fixed;
-    right: 0;
-    top: 100px;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    background-color:rgba(0, 0, 0, 0.7);
-    border-left: 1px solid #ddd;
-    height: 100vh;
-}
-
-/* Icon item styling */
-.icon-item {
-    margin: 15px 0;
-    text-align: center;
-}
-
-.icon-img {
-    width: 40px;
-    height: 40px;
-}
-
-.icon-label {
-    font-size: 12px;
-    color: white;
-    margin-top: 5px;
-}
 
 .conversation {
     border-bottom: 2px solid white;
@@ -189,6 +164,8 @@ body.blur {
     background-color: rgba(0, 0, 0, 0.8);
     color: white !important;
     border-radius: 8px;
+    position: relative;
+    z-index: 12;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 

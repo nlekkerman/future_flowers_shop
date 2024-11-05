@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Create the message modal container
     const messageModal = document.createElement('div');
     messageModal.id = 'modal-overlay-background'; // Three-word ID
-    messageModal.className = 'modal-overlay-background'; // Three-word class name
+    messageModal.className = 'modal-overlay-background'; 
     messageModal.style.display = 'none';
     messageModal.style.position = 'fixed';
     messageModal.style.zIndex = '1000';
@@ -26,8 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Create the modal content box
     const modalContent = document.createElement('div');
-    modalContent.className = 'modal-box-content'; // Three-word class name
-
+    modalContent.className = 'modal-box-content';
 
    
     const modalMessage = document.createElement('p');

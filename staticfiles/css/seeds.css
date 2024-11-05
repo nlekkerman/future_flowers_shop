@@ -79,7 +79,9 @@ li a {
     color: white !important;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 170px;
+    margin-top: 220px;
+    z-index: 20;
+    position: relative;
 }
 .background-container{
     width: 100%;

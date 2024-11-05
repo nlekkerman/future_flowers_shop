@@ -2,18 +2,21 @@
 .cart-container {
     max-width: 1200px;
     margin: 2px auto;
-    margin-top: 180px;
+    margin-top: 230px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 12;
 }
 .delete-message-content{
-    background-color: #a80303;
+    background-color: rgba(255, 0, 0, 0.7);
 }
 .go-to-checkout-button {
     position: fixed;
-    top: 115px;
-    right: 30px;
+    top: 15px;
+    left: 5px;
+    z-index: 1002;
     display: none;
 }
 
@@ -332,32 +335,21 @@
 #delete-item-messages {
     position: fixed;
     top: 50%;
-    /* Center vertically */
     left: 50%;
-    /* Center horizontally */
     transform: translate(-50%, -50%);
-    /* Adjust for exact center */
     display: flex;
-    /* Keep flex to ensure centering */
     align-items: center;
-    /* Center content vertically */
     justify-content: center;
-    /* Center content horizontally */
     transition: opacity 0.4s ease, visibility 0.4s ease;
-    /* Smooth fade-in effect */
     color: white !important;
-    z-index: 1000;
-    /* Ensure it stays on top */
+    z-index: 1005;
     height: 333px;
     width: 500px;
     text-align: center;
     opacity: 0;
-    /* Initially hidden */
     visibility: hidden;
-    /* Initially hidden */
     pointer-events: none;
     background-color: rgba(218, 0, 0, 0.9);
-    /* Prevent interaction when hidden */
 
 }
 
@@ -491,6 +483,7 @@ button.close-button-cart:hover {
 .quantity-update-display {
     display: flex;
     flex-direction: column;
+  
 
 }
 
