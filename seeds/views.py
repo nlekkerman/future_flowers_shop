@@ -88,7 +88,7 @@ def seed_list(request):
     sort = request.GET.get('sort')
     page_number = request.GET.get('page', 1)
     
-    seeds = Seed.objects.all()
+    seeds = Seed.objects.all().order_by('name')
     
     if category:
         seeds = seeds.filter(category=category)
@@ -102,7 +102,7 @@ def seed_list(request):
     elif sort == 'discount':
         seeds = seeds.filter(discount=True).order_by('-discount')
 
-    # Pagination
+    # Set up pagination
     paginator = Paginator(seeds, 9)  # Show 9 seeds per page
     page_obj = paginator.get_page(page_number)
         

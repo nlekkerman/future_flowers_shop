@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function startOrLoadConversation() {
         console.log('Fetching conversation data.');
     
-        const userId = 1; // Example user ID; replace with actual user ID
-        const superuserId = 1; // Example superuser ID; replace with actual superuser ID
+        const userId = 1; 
+        const superuserId = 1; 
     
         console.log('Sending request with user_id:', userId, 'and superuser_id:', superuserId);
     

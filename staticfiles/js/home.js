@@ -102,8 +102,8 @@ window.onload = async () => {
  * - Handling editing and deletion of seed entries
  * - Managing CSRF tokens for secure AJAX requests
  */
-document.addEventListener("DOMContentLoaded", async function() {
-    
+document.addEventListener("DOMContentLoaded", async function () {
+
 
     // Create the message modal container
     const messageModal = document.createElement('div');
@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             seedListContainer.innerHTML = ''; // Clear any existing content
 
             if (data.success) {
-              
+
                 // Loop through the seeds and create a list item for each
                 data.seeds.forEach(seed => {
                     // Create list item
@@ -341,30 +341,30 @@ function toggleCartButtonVisibility() {
     // Check if cartData has items and if they form a valid array with content
     if (cartData && Array.isArray(cartData.items) && cartData.items.length > 0) {
         console.log(`Cart contains ${cartData.items.length} items. Making cart and checkout buttons visible.`);
-        
+
         if (cartButton) {
             cartButton.style.display = 'block'; // Show cart button
             console.log('Cart button is set to visible.');
         }
-        
+
         if (checkoutBtn) {
             checkoutBtn.style.display = 'block'; // Show checkout button
             console.log('Checkout button is set to visible.');
         }
     } else {
         console.log('Cart is empty or undefined. Hiding cart and checkout buttons.');
-        
+
         if (cartButton) {
             cartButton.style.display = 'none'; // Hide cart button
             console.log('Cart button is set to hidden.');
         }
-        
+
         if (checkoutBtn) {
             checkoutBtn.style.display = 'none'; // Hide checkout button
             console.log('Checkout button is set to hidden.');
         }
     }
-    
+
     console.log('toggleCartButtonVisibility function execution completed.');
 }
 
@@ -406,7 +406,7 @@ document.getElementById('login-button').addEventListener('click', async () => {
         // Call fetchCartData() to retrieve the cart data after login
         await fetchCartData();
         updateCartTotalUILogin()
-        
+
         toggleCartButtonVisibility();
         console.log('Cart data fetched successfully after login.');
     } catch (error) {
@@ -458,7 +458,15 @@ export function displayConversationsFromLocalStorage() {
         chatContainer.innerHTML = '<p>No conversations found.</p>';
         return;
     }
+    // Sort conversations: unseen messages first, then by start time (latest first)
+    conversations.sort((a, b) => {
+        // If 'a' has unseen messages and 'b' does not, 'a' comes first
+        if (a.unseenMessagesCount > 0 && b.unseenMessagesCount === 0) return -1;
+        if (a.unseenMessagesCount === 0 && b.unseenMessagesCount > 0) return 1;
 
+        // If both have the same unseen status, sort by start time (latest first)
+        return new Date(b.started_at) - new Date(a.started_at);
+    });
 
     conversations.forEach((conversation) => {
         console.info(`Displaying conversation:`, conversation);
@@ -913,4 +921,3 @@ function hideLoadingAnimation() {
         console.log("No loading overlay found to remove."); // Log if overlay was not found
     }
 }
-

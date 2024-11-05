@@ -98,7 +98,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const registerContainer = document.querySelector('.register-form-container');
     const checkoutContainer = document.querySelector('.checkout-container');
     const loginContainer = document.querySelector('.form-container');
-    
+    const orderDetailsContainer = document.querySelector('.order-details-container');
+   
     // Log initialized elements
     console.log("Elements initialized:", {
         menuIcon,
@@ -130,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
             setZIndex(checkoutContainer, '1');
             setZIndex(registerContainer, '1');
             setZIndex(loginContainer, '1');
+            setZIndex(orderDetailsContainer, '1');
 
 
             profileContainer.style.zIndex = '1';
@@ -144,6 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
             setZIndex(checkoutContainer, '12');
             setZIndex(registerContainer, '12');
             setZIndex(loginContainer, '12');
+            setZIndex(orderDetailsContainer, '12');
         }
 
         // Log the current z-index values for debugging

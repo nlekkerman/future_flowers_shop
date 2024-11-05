@@ -244,19 +244,32 @@ function displaySearchResults(seeds) {
         const backgroundImageUrl = seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg';
 
         let seedHTML = `
-            <div class="search-seed-card h-100 d-flex flex-column justify-content-between"
-                id="search-seed-card-${seed.id}"
-                data-seed-id="${seed.id}"
-                style="background-image: url('${backgroundImageUrl}'); background-size: cover; background-position: center; position: relative; padding: 20px; border-radius: 8px; color: white; cursor: pointer;">
-                <div class="card-overlay" style="background-color: rgba(0, 0, 0, 0.6); padding: 10px; border-radius: 8px;">
-                    <h2 class="card-title">${seed.name}</h2>
-                </div>
-                <div class="card-footer" style="text-align: center;">
-                    ${seed.is_in_stock ?
-                        '<p class="card-text text-success"><strong>In Stock</strong></p>' :
-                        '<p class="card-text text-danger"><strong>Out of Stock</strong></p>'}
-                </div>
+        <div class="seed-card h-100" id="seed-card-${seed.id}" data-seed-id="${seed.id}">
+            <div class="card-img-container">
+                <img src="${seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg'}" class="card-img-top" alt="${seed.name}">
+                ${seed.discount > 0 ? '<span class="discount-label">Discounted</span>' : ''}
             </div>
+            <div class="card-body">
+                <h2 class="card-title h5">${seed.name}</h2>
+                <p class="card-text"><strong>Scientific Name:</strong> ${seed.scientific_name}</p>
+                <p class="card-text"><strong>Planting Months:</strong> ${seed.planting_months_from} to ${seed.planting_months_to}</p>
+                <p class="card-text"><strong>Flowering Months:</strong> ${seed.flowering_months_from} to ${seed.flowering_months_to}</p>
+                <p class="card-text">
+                    <strong>Price:</strong> 
+                    ${seed.discount > 0 ? 
+                        `<span class="original-price">$${seed.price}</span> <span class="discounted-price">$${seed.discounted_price}</span>` 
+                        : `$${seed.price}`}
+                </p>
+                ${seed.is_in_stock ? 
+                    '<p class="card-text text-success"><strong>In Stock</strong></p>' : 
+                    '<p class="card-text text-danger"><strong>Out of Stock</strong></p>'}
+            </div>
+            <div class="card-footer text-center">
+                <button class="btn add-to-cart-button ${!seed.is_in_stock ? 'out-of-stock' : ''}" data-seed-id="${seed.id}" ${seed.is_in_stock ? '' : 'disabled'}>
+                    ${seed.is_in_stock ? 'Add to Cart' : 'Out of Stock'}
+                </button>
+            </div>
+        </div>
         `;
 
         searchSeedElement.innerHTML = seedHTML;

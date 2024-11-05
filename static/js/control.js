@@ -349,8 +349,29 @@ export async function fetchMessageCounts() {
             // Ensure you are selecting the correct class or ID.
             // If it's a class, use `.unseen-messages-count`, if an ID, use `#unseen-messages-count`.
             document.querySelectorAll('.unseen-messages-count').forEach(element => {
-                element.innerText = unseenMessages; // Update innerText for each matched element
+                element.innerText = unseenMessages; 
             });
+
+           // Select the single notification area element
+           const notificationArea = document.getElementById('notification-area');
+
+           if (notificationArea) {
+               // Log current color and the unseen messages count
+               console.log("Current background color:", notificationArea.style.backgroundColor);
+               
+               if (unseenMessages > 0) {
+                   console.log("Setting background color to red due to unseen messages.");
+                   notificationArea.style.backgroundColor = 'red'; // Color when unseen messages are present
+               } else {
+                   console.log("No unseen messages, resetting background color to transparent.");
+                   notificationArea.style.backgroundColor = 'transparent'; // Reset when no unseen messages
+               }
+
+               // Log final background color to confirm the change
+               console.log("Final background color:", notificationArea.style.backgroundColor);
+           } else {
+               console.warn("Notification area with ID 'notification-area' not found.");
+           }
 
         } else {
             console.error('Failed to fetch message counts:', data);

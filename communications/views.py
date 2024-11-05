@@ -99,58 +99,6 @@ def admin_user_chat_messages(request, conversation_id):
         'form': form.as_p()
     })
 
-@login_required
-def chat_bot_handle_choice(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        choice = data.get('choice')
-
-        if choice == '1':
-            chat_messages = '<div class="message bot"><p>Here are some options about seeds:</p></div>'
-            chat_options = '''
-                <button type="button" class="btn" onclick="handleChoice('1.1')">Check out our Q&A page</button>
-                <button type="button" class="btn" onclick="handleChoice('1.2')">Chat with us</button>
-            '''
-        elif choice == '2':
-            chat_messages = '<div class="message bot"><p>Here are some options about delivery:</p></div>'
-            chat_options = '''
-                <button type="button" class="btn" onclick="handleChoice('2.1')">Check out our Q&A page</button>
-                <button type="button" class="btn" onclick="handleChoice('2.2')">Chat with us</button>
-            '''
-        elif choice == '1.1' or choice == '2.1':
-            chat_messages = '<div class="message bot"><p>Redirecting to our Q&A page...</p></div>'
-            chat_options = ''
-            redirect_url = reverse('communications:qa_page')
-            return JsonResponse({'redirect_url': redirect_url})
-        elif choice == '1.2' or choice == '2.2':
-            redirect_url = reverse('communications:user_chat_messages') if not request.user.is_superuser else reverse('communications:chat_list')
-            return JsonResponse({'redirect_url': redirect_url})
-        else:
-            chat_messages = '<div class="message bot"><p>Invalid choice, please select again.</p></div>'
-            chat_options = '''
-                <button type="button" class="btn" onclick="handleChoice('1')">Do you have a question about seeds?</button>
-                <button type="button" class="btn" onclick="handleChoice('2')">Do you have a question about delivery?</button>
-                <button type="button" class="btn" onclick="handleChoice('3')">Do you want to chat with us?</button>
-            '''
-
-        return JsonResponse({
-            'chat_messages': chat_messages,
-            'chat_options': chat_options
-        })
-
-@login_required
-def chat_bot_view(request):
-    initial_message = "Hi, I'm Buzz, your chatbot. How can I assist you today?"
-    choices = [
-        {"value": "1", "text": "Do you have a question about seeds?"},
-        {"value": "2", "text": "Do you have a question about delivery?"},
-        {"value": "3", "text": "Do you want to chat with us?"}
-    ]
-    
-    return render(request, 'communications/chat_bot.html', {
-        'initial_message': initial_message,
-        'choices': choices
-    })
 
 def contact_view(request):
     return render(request, 'communications/contact.html')

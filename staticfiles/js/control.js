@@ -349,7 +349,19 @@ export async function fetchMessageCounts() {
             // Ensure you are selecting the correct class or ID.
             // If it's a class, use `.unseen-messages-count`, if an ID, use `#unseen-messages-count`.
             document.querySelectorAll('.unseen-messages-count').forEach(element => {
-                element.innerText = unseenMessages; // Update innerText for each matched element
+                element.innerText = unseenMessages; 
+            });
+
+            // Select notification area element(s)
+            const notificationAreas = document.querySelectorAll('.notification-area');
+
+            // Change background color if there are unseen messages
+            notificationAreas.forEach(notificationArea => {
+                if (unseenMessages > 0) {
+                    notificationArea.style.backgroundColor = 'red'; // Color when unseen messages are present
+                } else {
+                    notificationArea.style.backgroundColor = 'transparent'; // Reset when no unseen messages
+                }
             });
 
         } else {

@@ -1,11 +1,17 @@
-import { getCartFromLocalStorage } from './utils.js';
-import { sendToCart } from './control.js';
+import {
+    getCartFromLocalStorage
+} from './utils.js';
+import {
+    sendToCart
+} from './control.js';
 
 export function displaySeeds({
     category = '',
     sort = '',
     inStock = undefined,
-    discounted = undefined
+    discounted = undefined,
+    currentPage = 1, // New parameter for the current page
+    itemsPerPage = 9 // New parameter for items per page
 } = {}) {
     const seedsData = JSON.parse(localStorage.getItem('seeds_data')) || [];
     const seedsContainer = document.getElementById('seeds-container');
@@ -26,22 +32,17 @@ export function displaySeeds({
     // Apply filters
     let filteredSeeds = seedsData;
 
-    console.log('Initial Seeds Data:', seedsData);
-    console.log('Filters Applied - In Stock:', inStock, 'Discounted:', discounted, 'Category:', category);
+    // Apply discount filter
+    if (discounted === true) {
+        filteredSeeds = filteredSeeds.filter(seed => parseFloat(seed.discount) > 0.00);
+    }
 
     if (inStock !== undefined) {
         filteredSeeds = filteredSeeds.filter(seed => seed.is_in_stock === inStock);
-        console.log('Filtered Seeds After inStock Filter:', filteredSeeds);
-    }
-
-    if (discounted !== undefined) {
-        filteredSeeds = filteredSeeds.filter(seed => (seed.discount > 0) === discounted);
-        console.log('Filtered Seeds After Discount Filter:', filteredSeeds);
     }
 
     if (category) {
         filteredSeeds = filteredSeeds.filter(seed => seed.category === category || category === '');
-        console.log('Filtered Seeds After Category Filter:', filteredSeeds);
     }
 
     // Apply sorting
@@ -55,55 +56,112 @@ export function displaySeeds({
         filteredSeeds.sort((a, b) => b.discount - a.discount);
     }
 
-    console.log('Filtered Seeds After Sorting:', filteredSeeds);
+    // Pagination calculations
+    const totalItems = filteredSeeds.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const startIdx = (currentPage - 1) * itemsPerPage;
+    const endIdx = startIdx + itemsPerPage;
+    const seedsToDisplay = filteredSeeds.slice(startIdx, endIdx);
 
-    if (filteredSeeds.length === 0) {
+    rowElement.innerHTML = '';
+
+    if (seedsToDisplay.length === 0) {
         rowElement.innerHTML = '<p>No seeds available based on the selected filters.</p>';
         return;
     }
 
-    rowElement.innerHTML = '';
-
-    filteredSeeds.forEach(seed => {
+    seedsToDisplay.forEach(seed => {
         const seedElement = document.createElement('div');
         seedElement.className = 'col-12 col-md-6 col-lg-4 mb-4';
 
         let seedHTML = `
         <div class="seed-card h-100" id="seed-card-${seed.id}" data-seed-id="${seed.id}">
             <div class="card-img-container">
-                    <img src="${seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg'}" class="card-img-top" alt="${seed.name}">
-                    ${seed.discount > 0 ? '<span class="discount-label">Discounted</span>' : ''}
-                </div>
-                <div class="card-body">
-                    <h2 class="card-title h5">${seed.name}</h2>
-                    <p class="card-text"><strong>Scientific Name:</strong> ${seed.scientific_name}</p>
-                    <p class="card-text"><strong>Planting Months:</strong> ${seed.planting_months_from} to ${seed.planting_months_to}</p>
-                    <p class="card-text"><strong>Flowering Months:</strong> ${seed.flowering_months_from} to ${seed.flowering_months_to}</p>
-                    <p class="card-text">
-                        <strong>Price:</strong> 
-                        ${seed.discount > 0 ? 
-                            `<span class="original-price">$${seed.price}</span> <span class="discounted-price">$${seed.discounted_price}</span>` 
-                            : `$${seed.price}`}
-                    </p>
-                    ${seed.is_in_stock ? 
-                        '<p class="card-text text-success"><strong>In Stock</strong></p>' : 
-                        '<p class="card-text text-danger"><strong>Out of Stock</strong></p>'}
-                </div>
-                <div class="card-footer text-center">
-                    <button class="btn add-to-cart-button ${!seed.is_in_stock ? 'out-of-stock' : ''}" data-seed-id="${seed.id}" ${seed.is_in_stock ? '' : 'disabled'}>
-                        ${seed.is_in_stock ? 'Add to Cart' : 'Out of Stock'}
-                    </button>
-                </div>
+                <img src="${seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg'}" class="card-img-top" alt="${seed.name}">
+                ${seed.discount > 0 ? '<span class="discount-label">Discounted</span>' : ''}
             </div>
+            <div class="card-body">
+                <h2 class="card-title h5">${seed.name}</h2>
+                <p class="card-text"><strong>Scientific Name:</strong> ${seed.scientific_name}</p>
+                <p class="card-text"><strong>Planting Months:</strong> ${seed.planting_months_from} to ${seed.planting_months_to}</p>
+                <p class="card-text"><strong>Flowering Months:</strong> ${seed.flowering_months_from} to ${seed.flowering_months_to}</p>
+                <p class="card-text">
+                    <strong>Price:</strong> 
+                    ${seed.discount > 0 ? 
+                        `<span class="original-price">$${seed.price}</span> <span class="discounted-price">$${seed.discounted_price}</span>` 
+                        : `$${seed.price}`}
+                </p>
+                ${seed.is_in_stock ? 
+                    '<p class="card-text text-success"><strong>In Stock</strong></p>' : 
+                    '<p class="card-text text-danger"><strong>Out of Stock</strong></p>'}
+            </div>
+            <div class="card-footer text-center">
+                <button class="btn add-to-cart-button ${!seed.is_in_stock ? 'out-of-stock' : ''}" data-seed-id="${seed.id}" ${seed.is_in_stock ? '' : 'disabled'}>
+                    ${seed.is_in_stock ? 'Add to Cart' : 'Out of Stock'}
+                </button>
+            </div>
+        </div>
         `;
 
         seedElement.innerHTML = seedHTML;
         rowElement.appendChild(seedElement);
     });
 
-    // Attach event listeners
+    // Create pagination controls
+    let paginationControls = document.getElementById('pagination-controls');
+    if (!paginationControls) {
+        paginationControls = document.createElement('div');
+        paginationControls.id = 'pagination-controls';
+        paginationControls.className = 'pagination-controls';
+        seedsContainer.appendChild(paginationControls);
+    } else {
+        // Clear existing buttons
+        paginationControls.innerHTML = '';
+    }
+
+    // Generate pagination buttons
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.className = 'page-button';
+
+        // Set default style for all buttons
+        pageButton.style.backgroundColor = 'transparent';
+        pageButton.style.border = 'none';
+        pageButton.style.color = 'white';
+        pageButton.style.fontSize = '1.2em';
+        pageButton.style.cursor = 'pointer';
+        pageButton.style.margin = '0 5px';
+        pageButton.style.padding = '5px 10px';
+        pageButton.style.textDecoration = 'none';
+
+        // Style for the active button
+        if (i === currentPage) {
+            pageButton.classList.add('active');
+            pageButton.style.textDecoration = 'underline';
+            pageButton.style.color = 'white';
+        }
+
+        pageButton.addEventListener('click', () => {
+            displaySeeds({
+                category,
+                sort,
+                inStock,
+                discounted,
+                currentPage: i,
+                itemsPerPage
+            });
+        });
+
+        paginationControls.appendChild(pageButton);
+    }
+
+    seedsContainer.appendChild(paginationControls);
+
+    // Attach other event listeners if needed
     attachEventListeners();
 }
+
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -123,20 +181,22 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Cart button is now hidden.');
         }
     }
-  
+
     document.querySelectorAll('.filter-buttons .custom-buttons').forEach(button => {
         button.addEventListener('click', function () {
             console.log("FILTER CLICKED");
             const category = this.dataset.category;
-    
+
             // Update active class for filter buttons
             document.querySelectorAll('.filter-buttons .custom-buttons').forEach(btn => {
                 btn.classList.remove('active');
             });
             this.classList.add('active');
-    
+
             // Call displaySeeds with the selected category
-            displaySeeds({ category });
+            displaySeeds({
+                category
+            });
         });
     });
 
@@ -144,17 +204,19 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.sorting-buttons button').forEach(button => {
         button.addEventListener('click', function (e) {
             e.preventDefault(); // Prevent default button behavior
-    
+
             const sort = this.dataset.sort; // Get the sort value from the data attribute
-    
+
             // Update active class for sorting buttons
             document.querySelectorAll('.sorting-buttons button').forEach(btn => {
                 btn.classList.remove('active');
             });
             this.classList.add('active'); // Add active class to the clicked button
-    
+
             // Call displaySeeds with the selected sort option
-            displaySeeds({ sort });
+            displaySeeds({
+                sort
+            });
         });
     });
 });
@@ -275,7 +337,7 @@ function addToCart(seed, quantity = 1) {
         quantity
     });
 
-  
+
 }
 
 // Update cart UI elements
@@ -368,12 +430,12 @@ function displaySeedDetails(seed) {
             // Call addToCart with the image URL
             addToCart(seed, quantity, imageUrl);
             updateCartUI();
-                try {
-                    await sendToCart(seedId, quantity, seed);
-                    console.log('Item sent to server successfully.');
-                } catch (error) {
-                    console.error('Failed to send item to server:', error);
-                }
+            try {
+                await sendToCart(seedId, quantity, seed);
+                console.log('Item sent to server successfully.');
+            } catch (error) {
+                console.error('Failed to send item to server:', error);
+            }
         });
     }
 }

@@ -28,29 +28,6 @@
     {% endfor %}
 </div>
 
-<div id="chat-bot-options" class="{% if show_chat_bot %}make-visible{% else %}hidden{% endif %}">
-    <h3>Chat Bot Options:</h3>
-    <form method="post">
-        {% csrf_token %}
-        <p><button name="chat_bot_choice" value="1" class="btn">Do you have a question about seeds?</button></p>
-        <p><button name="chat_bot_choice" value="2" class="btn">Do you have a question about delivery?</button></p>
-        <p><button name="chat_bot_choice" value="3" class="btn">Do you want to chat with us?</button></p>
-    </form>
-</div>
-
-<div id="chat-bot-suboptions" class="{% if show_suboptions %}make-visible{% else %}hidden{% endif %}">
-    <h3>Chat Bot Suboptions:</h3>
-    <form method="post">
-        {% csrf_token %}
-        {% if request.session.chat_bot_option == '1' %}
-            <p><button name="subchoice" value="1.1" class="btn">Check out our Q&A page</button></p>
-            <p><button name="subchoice" value="1.2" class="btn">Chat with us</button></p>
-        {% elif request.session.chat_bot_option == '2' %}
-            <p><button name="subchoice" value="2.1" class="btn">Check out our Q&A page</button></p>
-            <p><button name="subchoice" value="2.2" class="btn">Chat with us</button></p>
-        {% endif %}
-    </form>
-</div>
 
 <div id="message-form" class="{% if show_form %}make-visible{% else %}hidden{% endif %}">
     <h3>Send a new message</h3>
