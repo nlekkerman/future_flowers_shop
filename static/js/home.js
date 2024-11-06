@@ -104,7 +104,7 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
         if (response.ok) {
             // Successful login
             console.log('Login successful');
-            window.location.href = window.location.origin;
+            window.location.replace('/');  // Redirect to home page, replacing login in history
         } else {
             // Handle login failure (e.g., show error message)
             console.error('Login failed:', response.status);
