@@ -3,7 +3,7 @@ from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from django.conf import settings
 from django.core.mail import send_mail
@@ -79,24 +79,23 @@ def login(request):
             if not hasattr(user, 'profile'):
                 return JsonResponse({'success': False, 'redirect': '/register'})
 
-            # If the request is an AJAX request, return JSON response
+            # Return JSON response for AJAX requests
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': True, 'redirect': '/'})
             
-            # For normal form submission (non-AJAX), redirect to home
-            return redirect('home')
+            # For non-AJAX requests, still return a JSON response with redirect info
+            return JsonResponse({'success': True, 'redirect': '/'})
 
         else:
-            # If the form is invalid, return error details in JSON
+            # Return form errors as JSON if the form is invalid
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'errors': form.errors})
 
-    # For GET requests (render login page)
+    # For GET requests, render login page (non-AJAX)
     else:
         form = AuthenticationForm()
-
-    return render(request, 'custom_accounts/login.html', {'form': form})
     
+    return render(request, 'custom_accounts/login.html', {'form': form})
          
 def send_welcome_email(user):
     subject = "Welcome to Future Flower Shop!"
