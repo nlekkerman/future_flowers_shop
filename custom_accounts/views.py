@@ -156,6 +156,8 @@ def logout(request):
     auth_logout(request)
     return redirect('home')
 
+from django.http import HttpResponseRedirect
+
 @login_required
 def profile(request):
     # Get the user profile based on the logged-in user
@@ -171,6 +173,13 @@ def profile(request):
             print(f"No orders found for user {request.user.username}.")
     else:
         orders = []
+
+    # Pass profile image URL safely (ensure HTTPS)
+    if profile and profile.profile_image:
+        profile_image_url = profile.profile_image.url
+        # Ensure profile image URL uses HTTPS (if applicable)
+        if profile_image_url.startswith("http://"):
+            profile.profile_image.url = profile_image_url.replace("http://", "https://")
 
     return render(request, 'custom_accounts/profile.html', {
         'orders': orders,
