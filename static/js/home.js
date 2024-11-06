@@ -403,28 +403,48 @@ document.getElementById('login-button').addEventListener('click', async () => {
     console.log('Login button clicked. Fetching user data...');
 
     try {
-        // 1. Fetch the user ID
-        const userId = await fetchUserId();
-        console.log(`Fetched user ID: ${userId}`);
+        // Step 1: Fetch user data via POST request to login endpoint
+        const loginResponse = await fetch('/login/', {
+            method: 'POST',
+            body: new FormData(document.getElementById('login-form')),  // Assuming you have a form with ID 'login-form'
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'  // Indicating that this is an AJAX request
+            }
+        });
 
-        // 2. Check if the user is a superuser
-        const isSuperUser = await checkIfSuperUser(userId);
-        console.log(`Is user a superuser? ${isSuperUser}`);
-
-        if (isSuperUser) {
-            // Additional logic for superusers (if needed)
-            console.log('Superuser detected. Proceeding with admin functionality.');
-        } else {
-            console.log('Standard user detected.');
+        if (!loginResponse.ok) {
+            throw new Error('Login failed');
         }
 
-        // 3. Fetch cart data and update UI if the user is verified
-        await fetchCartData();
-        updateCartTotalUILogin();
+        // Step 2: Parse the JSON response from the backend
+        const data = await loginResponse.json();
 
-        // 4. Toggle cart button visibility after fetching the cart data
-        toggleCartButtonVisibility();
-        console.log('Cart data fetched successfully after login.');
+        if (data.success) {
+            const userId = data.user_id;  // Get the user ID from the response
+            const isSuperUser = data.is_superuser;  // Get the superuser status from the response
+
+            console.log(`Fetched user ID: ${userId}`);
+            console.log(`Is user a superuser? ${isSuperUser}`);
+
+            // Additional logic for superuser or standard user
+            if (isSuperUser) {
+                console.log('Superuser detected. Proceeding with admin functionality.');
+                // Add superuser specific logic here (e.g., showing admin panel)
+            } else {
+                console.log('Standard user detected.');
+                // Logic for regular user (e.g., display user-specific content)
+            }
+
+            // Step 3: Fetch cart data and update UI if the user is verified
+            await fetchCartData();
+            updateCartTotalUILogin();
+
+            // Step 4: Toggle cart button visibility after fetching the cart data
+            toggleCartButtonVisibility();
+            console.log('Cart data fetched successfully after login.');
+        } else {
+            throw new Error('Login response was not successful');
+        }
 
     } catch (error) {
         console.error('Error during login sequence:', error);
