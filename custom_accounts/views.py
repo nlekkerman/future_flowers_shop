@@ -158,6 +158,7 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
         profile.save()
 
 def logout(request):
+    request.session.flush()
     auth_logout(request)
     return redirect('home')
 

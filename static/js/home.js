@@ -88,6 +88,69 @@ window.onload = async () => {
         console.error('Error during onload initialization:', error);
     }
 };
+document.getElementById('login-form').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Fetch username and password from the form
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        // 1. Attempt to log in via the POST request
+        const loginResponse = await fetch('/login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')  // If you're using CSRF token
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        });
+
+        if (loginResponse.ok) {
+            console.log('Login successful, fetching user ID...');
+
+            // 2. Fetch the user ID after successful login
+            const userIdResponse = await fetch('/get_user_id/', {
+                method: 'GET',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            });
+
+            if (userIdResponse.ok) {
+                const userData = await userIdResponse.json();
+                const userId = userData.user_id;
+                console.log(`Fetched user ID: ${userId}`);
+
+                // 3. Check if the user is a superuser
+                const isSuperUserResponse = await fetch(`/check_if_superuser/${userId}/`);
+                const isSuperUser = await isSuperUserResponse.json();
+                console.log(`Is user a superuser? ${isSuperUser}`);
+
+                // Additional actions based on superuser status
+                if (isSuperUser) {
+                    console.log('Superuser detected.');
+                } else {
+                    console.log('Standard user detected.');
+                }
+
+                // Proceed to fetch cart data
+                await fetchCartData();
+                updateCartTotalUILogin();
+                toggleCartButtonVisibility();
+            } else {
+                console.error('Failed to fetch user ID.');
+            }
+        } else {
+            console.error('Login failed.');
+        }
+    } catch (error) {
+        console.error('Error during login sequence:', error);
+    }
+});
 
 /*
  * This script runs when the DOM is fully loaded and parsed.
@@ -388,77 +451,24 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.getElementById('logout-button').addEventListener('click', () => {
-    // Clear cart data from localStorage
+    // Log the userId before deletion
+    const userId = localStorage.getItem('userId');
+    console.log('User ID before deletion:', userId);
+
+    // Clear any localStorage data related to the user
+    localStorage.removeItem('userId');
     localStorage.removeItem('cart');
-    // Set cart total to 0 in localStorage
-    localStorage.setItem('cartTotal', '0.00'); // Store total as a string
+    localStorage.setItem('cartTotal', '0.00');  // Reset cart total to $0.00
 
+    // Log the userId after deletion to confirm it is removed
+    const clearedUserId = localStorage.getItem('userId');
+    console.log('User ID after deletion:', clearedUserId);  // Should log 'null' if successfully removed
 
-
-    console.log('Cart cleared and total set to $0.00 after logout.');
-
+    console.log('LocalStorage cleared for user data and cart after logout.');
 });
 
-document.getElementById('login-button').addEventListener('click', async () => {
-    console.log('Login button clicked. Fetching user data...');
 
-    try {
-        // 1. First, attempt to log in (this is handled by your login form, AJAX request, etc.)
-        const loginResponse = await fetch('/login/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')  // If you're using CSRF token
-            },
-            body: JSON.stringify({
-                username: document.getElementById('username').value,
-                password: document.getElementById('password').value
-            })
-        });
 
-        if (loginResponse.ok) {
-            console.log('BABABABABABABABABABABABABABABBA Login successful, fetching user ID...');
-            
-            // 2. Fetch the user ID after successful login
-            const userIdResponse = await fetch('/get_user_id/', {
-                method: 'GET',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                }
-            });
-
-            if (userIdResponse.ok) {
-                const userData = await userIdResponse.json();
-                const userId = userData.user_id;
-                console.log(`Fetched user ID: ${userId}`);
-
-                // 3. Now check if the user is a superuser or not
-                const isSuperUserResponse = await fetch(`/check_if_superuser/${userId}/`);
-                const isSuperUser = await isSuperUserResponse.json();
-                console.log(`Is user a superuser? ${isSuperUser}`)
-
-                // Additional actions based on superuser status
-                if (isSuperUser) {
-                    console.log('Superuser detected.');
-                } else {
-                    console.log('Standard user detected.');
-                }
-
-                // Now proceed to fetch cart data
-                await fetchCartData();
-                updateCartTotalUILogin();
-                toggleCartButtonVisibility();
-            } else {
-                console.error('Failed to fetch user ID.');
-            }
-        } else {
-            console.error('Login failed.');
-        }
-
-    } catch (error) {
-        console.error('Error during login sequence:', error);
-    }
-});
 
 
 export function displayConversationsFromLocalStorage() {

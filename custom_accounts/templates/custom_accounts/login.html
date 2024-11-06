@@ -13,11 +13,13 @@
     <h2 class="login-heading text-white">Login</h2>
     <div class="form-login">
        
-        <form method="post">
+        <form method="post" id="login-form">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn login-button">Login</button>
+            <input type="text" id="username" name="username" required>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" id="login-button" class="btn login-button">Login</button>
         </form>
+        
     </div>
     <p class="registration-link">Don't have an account? <a href="{% url 'account_signup' %}">Register here</a></p>
 
