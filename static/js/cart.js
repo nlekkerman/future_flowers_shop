@@ -95,8 +95,8 @@ export function loadCart() {
     const defaultImageUrl = '/media/images/wild-flowers-icon.webp';
     const cartContainer = document.getElementById('cart-items-container');
     const totalPriceElement = document.querySelector('.total-cart-price-value');
-
     const deleteItemMessages = document.getElementById('delete-item-messages');
+    const emptyCartMessage = document.querySelector('.empty-cart-message');
 
     const hideMessage = (element) => {
         element.classList.remove('show');
@@ -162,13 +162,17 @@ export function loadCart() {
     let totalCartPrice = 0;
 
     if (!cart.items || cart.items.length === 0) {
-        cartItemsHTML = `
-        <div class="empty-cart-message" >
-            <p class="display-4 text-center">Your cart is empty.</p>
-            <a href="https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net/seeds/?show_seeds=true" class="btn empty-cart-message-button">Start Shopping</a>
-        </div>
-        `;
+        
+        cartItemsHTML = '';
+        emptyCartMessage.style.display = 'block';
+        const viewSeedsButton = document.getElementById('viewSeedsButton');
+        if (viewSeedsButton) {
+            viewSeedsButton.addEventListener('click', () => {
+                window.location.href = '/seeds/?show_seeds=true';
+            });
+        }
     } else {
+        emptyCartMessage.style.display = 'none';
         cart.items.forEach(item => {
             if (item && item.seed) {
                 const seedId = item.seed.id; // Correct usage of ID
@@ -216,6 +220,9 @@ export function loadCart() {
         });
     }
     
+    document.getElementById('viewSeedsButton').addEventListener('click', () => {
+        window.location.href = '/seeds/?show_seeds=true';
+    });
 
     cartContainer.innerHTML = cartItemsHTML;
     totalPriceElement.textContent = `$${totalCartPrice.toFixed(2)}`;

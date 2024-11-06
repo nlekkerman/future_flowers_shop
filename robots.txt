@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://future-flower-shop-7f6f515e140f.herokuapp.com/sitemap.xml

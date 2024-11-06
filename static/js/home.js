@@ -400,17 +400,34 @@ document.getElementById('logout-button').addEventListener('click', () => {
 });
 
 document.getElementById('login-button').addEventListener('click', async () => {
-    console.log('Login button clicked. Fetching cart data...');
+    console.log('Login button clicked. Fetching user data...');
 
     try {
-        // Call fetchCartData() to retrieve the cart data after login
-        await fetchCartData();
-        updateCartTotalUILogin()
+        // 1. Fetch the user ID
+        const userId = await fetchUserId();
+        console.log(`Fetched user ID: ${userId}`);
 
+        // 2. Check if the user is a superuser
+        const isSuperUser = await checkIfSuperUser(userId);
+        console.log(`Is user a superuser? ${isSuperUser}`);
+
+        if (isSuperUser) {
+            // Additional logic for superusers (if needed)
+            console.log('Superuser detected. Proceeding with admin functionality.');
+        } else {
+            console.log('Standard user detected.');
+        }
+
+        // 3. Fetch cart data and update UI if the user is verified
+        await fetchCartData();
+        updateCartTotalUILogin();
+
+        // 4. Toggle cart button visibility after fetching the cart data
         toggleCartButtonVisibility();
         console.log('Cart data fetched successfully after login.');
+
     } catch (error) {
-        console.error('Error fetching cart data after login:', error);
+        console.error('Error during login sequence:', error);
     }
 });
 

@@ -163,10 +163,10 @@ export function loadCart() {
 
     if (!cart.items || cart.items.length === 0) {
         cartItemsHTML = `
-        <div class="empty-cart-message" >
-            <p class="display-4 text-center">Your cart is empty.</p>
-            <a href="https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net/seeds/?show_seeds=true" class="btn empty-cart-message-button">Start Shopping</a>
-        </div>
+        <div class="empty-cart-message">
+        <p class="display-4 text-center">Your cart is empty.</p>
+        <button id="viewSeedsButton" class="btn empty-cart-message-button">Start Shopping</button>
+    </div>
         `;
     } else {
         cart.items.forEach(item => {
@@ -216,6 +216,9 @@ export function loadCart() {
         });
     }
     
+    document.getElementById('viewSeedsButton').addEventListener('click', () => {
+        window.location.href = '/seeds/?show_seeds=true';
+    });
 
     cartContainer.innerHTML = cartItemsHTML;
     totalPriceElement.textContent = `$${totalCartPrice.toFixed(2)}`;
