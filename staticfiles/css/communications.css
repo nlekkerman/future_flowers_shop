@@ -242,7 +242,7 @@
 }
 
 #chat-window {
-    background: url('/media/images/buzz-image.png') no-repeat center center fixed;
+    background: url('/images/buzz-image.png') no-repeat center center fixed;
     background-size: cover;
     height: 90vh;
     /* 90% of the viewport height */
@@ -667,7 +667,7 @@
     /* Center vertically */
     height: 100vh;
     /* Full viewport height */
-    background-image: url('/media/images/modal-background-one.png');
+    background-image: url('/images/modal-background-one.png');
     /* Replace with your background image path */
     background-size: contain;
     /* Cover the entire section */
@@ -782,7 +782,7 @@
     text-align: center;
     color: white !important;
     background-color: transparent;
-    background: url('/media/images/modal-background-one.png') no-repeat center center fixed;
+    background: url('/images/modal-background-one.png') no-repeat center center fixed;
     background-size: contain;
     margin-top: 100px !important;
 
@@ -813,7 +813,7 @@
 .vision-section {
     padding: 5px !important;
     color: white;
-    background: url('/media/images/modal-background-one.png') no-repeat center center fixed;
+    background: url('/images/modal-background-one.png') no-repeat center center fixed;
     background-size: contain;
 
 }
@@ -834,7 +834,7 @@
     background-color: rgba(0, 0, 0, 0.5);
     /* Semi-transparent overlay */
     padding: 5px !important;
-    background: url('/media/images/modal-background-one.png') no-repeat center center fixed;
+    background: url('/images/modal-background-one.png') no-repeat center center fixed;
     background-size: contain;
 }
 
@@ -855,7 +855,7 @@
 }
 
 .community-section {
-    background: url('/media/images/modal-background-one.png') no-repeat center center fixed;
+    background: url('/images/modal-background-one.png') no-repeat center center fixed;
     background-size: contain;
     color: white;
     position: relative;
@@ -876,7 +876,7 @@
 
 .testimonials-section {
     padding: 5px !important;
-    background: url('/media/images/modal-background-one.png') no-repeat center center fixed;
+    background: url('/images/modal-background-one.png') no-repeat center center fixed;
     background-size: contain;
 }
 

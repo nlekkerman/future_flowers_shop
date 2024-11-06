@@ -131,7 +131,7 @@ body.active-blur::before {
 }
 
 .menu-icon {
-    background-image: url('/static/media/images/sunflower.webp');
+    background-image: url('/static/images/sunflower.webp');
     background-size: cover;
     background-position: center;
     width: 50px;

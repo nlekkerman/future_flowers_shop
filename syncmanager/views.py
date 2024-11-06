@@ -325,7 +325,7 @@ def get_username(request):
     username = request.user.username
     return JsonResponse({'username': username})
 
-@login_required
+
 def check_superuser_status(request):
     """Check if the user is authenticated and whether they are a superuser."""
     is_superuser = request.user.is_superuser

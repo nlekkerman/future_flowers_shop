@@ -90,71 +90,30 @@ window.onload = async () => {
 };
 document.getElementById('login-form').addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent the default form submission
-    
-    // Fetch username and password from the form
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
 
-    console.log('Login button clicked!');
-    console.log('Username:', username);  // Log the current username
-    console.log('Password:', password);  // Log the current password (caution: do not log passwords in production)
+    console.log('Login button clicked. Fetching user data...');
 
     try {
-        // 1. Attempt to log in via the POST request
-        const loginResponse = await fetch('/login/', {
+        // Submit the login form to the backend and await response
+        const response = await fetch('/custom_accounts/login/', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')  // If you're using CSRF token
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password
-            })
+            body: new FormData(event.target),
+            credentials: 'include', // Send cookies along with the request
         });
 
-        if (loginResponse.ok) {
-            console.log('Login successful, fetching user ID...');
-
-            // 2. Fetch the user ID after successful login
-            const userIdResponse = await fetch('/get_user_id/', {
-                method: 'GET',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                }
-            });
-
-            if (userIdResponse.ok) {
-                const userData = await userIdResponse.json();
-                const userId = userData.user_id;
-                console.log(`Fetched user ID: ${userId}`);
-
-                // 3. Check if the user is a superuser
-                const isSuperUserResponse = await fetch(`/check_if_superuser/${userId}/`);
-                const isSuperUser = await isSuperUserResponse.json();
-                console.log(`Is user a superuser? ${isSuperUser}`);
-
-                // Additional actions based on superuser status
-                if (isSuperUser) {
-                    console.log('Superuser detected.');
-                } else {
-                    console.log('Standard user detected.');
-                }
-
-                // Proceed to fetch cart data
-                await fetchCartData();
-                updateCartTotalUILogin();
-                toggleCartButtonVisibility();
-            } else {
-                console.error('Failed to fetch user ID.');
-            }
+        if (response.ok) {
+            // Successful login
+            console.log('Login successful');
+            window.location.href = window.location.origin;
         } else {
-            console.error('Login failed.');
+            // Handle login failure (e.g., show error message)
+            console.error('Login failed:', response.status);
         }
     } catch (error) {
-        console.error('Error during login sequence:', error);
+        console.error('Network error during login:', error);
     }
 });
+
 
 
 /*
@@ -437,7 +396,7 @@ function toggleCartButtonVisibility() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    updateCartTotalUILogin(); // Update cart total when the page loads
+    
     toggleCartButtonVisibility();
 
 

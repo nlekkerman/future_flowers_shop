@@ -222,7 +222,7 @@ export async function fetchUserId() {
             // Optionally handle specific status codes
             if (response.status === 401) {
                 // User is not authenticated, redirect to login
-                window.location.href = '/accounts/login/';
+                window.location.href = '/custom_accounts/login/';
             }
             return null; // Exit function if response is not okay
         }

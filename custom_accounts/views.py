@@ -67,42 +67,23 @@ def register(request):
 def welcome_message(request):
     return render(request, 'custom_accounts/welcome_message.html')
 
+
 def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            auth_login(request, user)  # Log the user in
+            auth_login(request, user)
 
             # Ensure the user has a profile
             if not hasattr(user, 'profile'):
-                return redirect('register')  # Redirect if no profile exists
+                return redirect('register')  # Redirect to the registration page if no profile exists
 
-            # Check if the request is an AJAX request
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                # Return user ID and superuser status in JSON
-                return JsonResponse({
-                    'success': True,
-                    'user_id': user.id,
-                    'is_superuser': user.is_superuser
-                })
-
-            # For non-AJAX requests, redirect to the home page
-            return redirect('home')
-
-        else:
-            # If the form is invalid, handle it here (e.g., send back an error message)
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': False,
-                    'errors': form.errors
-                }, status=400)
-
+            return redirect('home')  
     else:
         form = AuthenticationForm()
-
     return render(request, 'custom_accounts/login.html', {'form': form})
-    
+       
 def send_welcome_email(user):
     subject = "Welcome to Future Flower Shop!"
     message = f"Hi {user.username},\n\nThank you for registering at Future Flower Shop! We’re excited to have you with us."

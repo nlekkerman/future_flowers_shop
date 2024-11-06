@@ -7,7 +7,7 @@
     background-color: black; /* Background color */
     border: 1px solid #ddd; /* Border */
     border-radius: 8px; /* Rounded corners */
-    background: url('/static/media/images/modal-background-one.png') no-repeat center center fixed;
+    background: url('/static/images/modal-background-one.png') no-repeat center center fixed;
     background-size: contain;
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.6),  /* Inner glow */
     0 0 15px rgba(255, 255, 255, 0.4), /* Middle glow */
@@ -163,7 +163,7 @@
     max-width: 450px;
     margin: 0 auto;
     padding: 20px;
-    background: url('/static/media/images/modal-background-one.png') no-repeat center center fixed;
+    background: url('/static/images/modal-background-one.png') no-repeat center center fixed;
     background-size: contain;
 }
 /* Style the form heading */
