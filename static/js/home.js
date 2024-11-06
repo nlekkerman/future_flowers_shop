@@ -88,23 +88,30 @@ window.onload = async () => {
         console.error('Error during onload initialization:', error);
     }
 };
+
 document.getElementById('login-form').addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent the default form submission
 
     console.log('Login button clicked. Fetching user data...');
 
     try {
+        // Get CSRF token from the cookie
+        const csrfToken = getCookie('csrftoken'); // Assuming you have a getCookie function that gets the CSRF token from cookies
+
         // Submit the login form to the backend and await response
         const response = await fetch('/custom_accounts/login/', {
             method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,  // Include CSRF token in headers
+            },
             body: new FormData(event.target),
-            credentials: 'include', // Send cookies along with the request
+            credentials: 'include',  // Send cookies along with the request
         });
 
         if (response.ok) {
             // Successful login
             console.log('Login successful');
-            window.location.reload();  // Redirect to home page, replacing login in history
+            window.location.replace('/');  // Redirect to the home page
         } else {
             // Handle login failure (e.g., show error message)
             console.error('Login failed:', response.status);
