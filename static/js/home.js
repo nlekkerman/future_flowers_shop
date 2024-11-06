@@ -403,53 +403,63 @@ document.getElementById('login-button').addEventListener('click', async () => {
     console.log('Login button clicked. Fetching user data...');
 
     try {
-        // Step 1: Fetch user data via POST request to login endpoint
+        // 1. First, attempt to log in (this is handled by your login form, AJAX request, etc.)
         const loginResponse = await fetch('/login/', {
             method: 'POST',
-            body: new FormData(document.getElementById('login-form')),  // Assuming you have a form with ID 'login-form'
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'  // Indicating that this is an AJAX request
-            }
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')  // If you're using CSRF token
+            },
+            body: JSON.stringify({
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value
+            })
         });
 
-        if (!loginResponse.ok) {
-            throw new Error('Login failed');
-        }
+        if (loginResponse.ok) {
+            console.log('BABABABABABABABABABABABABABABBA Login successful, fetching user ID...');
+            
+            // 2. Fetch the user ID after successful login
+            const userIdResponse = await fetch('/get_user_id/', {
+                method: 'GET',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            });
 
-        // Step 2: Parse the JSON response from the backend
-        const data = await loginResponse.json();
+            if (userIdResponse.ok) {
+                const userData = await userIdResponse.json();
+                const userId = userData.user_id;
+                console.log(`Fetched user ID: ${userId}`);
 
-        if (data.success) {
-            const userId = data.user_id;  // Get the user ID from the response
-            const isSuperUser = data.is_superuser;  // Get the superuser status from the response
+                // 3. Now check if the user is a superuser or not
+                const isSuperUserResponse = await fetch(`/check_if_superuser/${userId}/`);
+                const isSuperUser = await isSuperUserResponse.json();
+                console.log(`Is user a superuser? ${isSuperUser}`)
 
-            console.log(`Fetched user ID: ${userId}`);
-            console.log(`Is user a superuser? ${isSuperUser}`);
+                // Additional actions based on superuser status
+                if (isSuperUser) {
+                    console.log('Superuser detected.');
+                } else {
+                    console.log('Standard user detected.');
+                }
 
-            // Additional logic for superuser or standard user
-            if (isSuperUser) {
-                console.log('Superuser detected. Proceeding with admin functionality.');
-                // Add superuser specific logic here (e.g., showing admin panel)
+                // Now proceed to fetch cart data
+                await fetchCartData();
+                updateCartTotalUILogin();
+                toggleCartButtonVisibility();
             } else {
-                console.log('Standard user detected.');
-                // Logic for regular user (e.g., display user-specific content)
+                console.error('Failed to fetch user ID.');
             }
-
-            // Step 3: Fetch cart data and update UI if the user is verified
-            await fetchCartData();
-            updateCartTotalUILogin();
-
-            // Step 4: Toggle cart button visibility after fetching the cart data
-            toggleCartButtonVisibility();
-            console.log('Cart data fetched successfully after login.');
         } else {
-            throw new Error('Login response was not successful');
+            console.error('Login failed.');
         }
 
     } catch (error) {
         console.error('Error during login sequence:', error);
     }
 });
+
 
 export function displayConversationsFromLocalStorage() {
     const storedConversations = localStorage.getItem('userConversations');
