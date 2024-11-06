@@ -90,10 +90,14 @@ window.onload = async () => {
 };
 document.getElementById('login-form').addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent the default form submission
-
+    
     // Fetch username and password from the form
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
+
+    console.log('Login button clicked!');
+    console.log('Username:', username);  // Log the current username
+    console.log('Password:', password);  // Log the current password (caution: do not log passwords in production)
 
     try {
         // 1. Attempt to log in via the POST request
@@ -151,6 +155,7 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
         console.error('Error during login sequence:', error);
     }
 });
+
 
 /*
  * This script runs when the DOM is fully loaded and parsed.
