@@ -3,7 +3,7 @@ from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
 from django.core.mail import send_mail
@@ -15,6 +15,7 @@ from reviews.models import Review, Comment
 from checkout.models import Order
 from communications.models import ChatConversation, ChatMessage 
 from .forms import ProfileEditForm , CustomUserCreationForm
+
 
 import os
 # Import logging module
@@ -156,7 +157,6 @@ def logout(request):
     auth_logout(request)
     return redirect('home')
 
-from django.http import HttpResponseRedirect
 
 @login_required
 def profile(request):
@@ -174,17 +174,23 @@ def profile(request):
     else:
         orders = []
 
-    # Pass profile image URL safely (ensure HTTPS)
+    # Prepare the profile image URL (ensure HTTPS)
     if profile and profile.profile_image:
         profile_image_url = profile.profile_image.url
         # Ensure profile image URL uses HTTPS (if applicable)
         if profile_image_url.startswith("http://"):
-            profile.profile_image.url = profile_image_url.replace("http://", "https://")
+            profile_image_url = profile_image_url.replace("http://", "https://")
+    else:
+        # If no image is set, you can provide a default image URL
+        profile_image_url = f'{settings.STATIC_URL}images/user-icon.png'
 
+    # Pass the profile image URL and other data to the template
     return render(request, 'custom_accounts/profile.html', {
         'orders': orders,
         'profile': profile,  # Pass the profile to the template
+        'profile_image_url': profile_image_url  # Pass the image URL
     })
+
 
 def debug_view(request):
     redirect_uri = 'https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net/accounts/google/login/callback/'

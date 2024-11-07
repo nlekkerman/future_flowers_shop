@@ -14,7 +14,7 @@
     <!-- Profile Header Section -->
     <div class="profile-header text-center">
         <div class="edit-image">
-            <img src="{{ profile.get_profile_image }}" id="profileImage" alt="Profile Image">
+            <img src="{{ user.profile.get_profile_image_url }}" id="profileImage" alt="Profile Image">
         </div>
         <h2>{{ user.username }}</h2>
         <p>{{ profile.about_self|default:"No description provided." }}</p>

@@ -102,24 +102,11 @@
                     <div>
 
 
-                        {% if request.user.is_authenticated %}
-                        {% if request.user.profile.profile_image and request.user.profile.profile_image.url %}
-                            <!-- Display the user's profile image and username -->
-                            <img src="{{ request.user.profile.profile_image.url }}" alt="Profile Image" class="user-icon"
-                                 style="width: 40px; height: 40px;" />
-                            <span>{{ request.user.username|capfirst }}</span>
-                        {% else %}
-                            <!-- Display the default icon with username if profile image is not set -->
-                            <img src="{% static 'images/user-icon.png' %}" alt="Default User Icon" class="user-icon"
-                                 style="width: 40px; height: 40px;" />
-                            <span>{{ request.user.username|capfirst }}</span>
-                        {% endif %}
-                    {% else %}
-                        <!-- Display the default icon for anonymous users -->
-                        <img src="{% static 'images/user-icon.png' %}" alt="Default User Icon" class="user-icon"
-                             style="width: 40px; height: 40px;" />
-                    {% endif %}
-                    
+                        <img src="{% static 'images/user-icon.png' %}"
+                            data-profile-url="{{ user.profile.get_profile_image_url }}" alt="Profile Image"
+                            class="user-icon" style="width: 40px; height: 40px;" id="profile-image">
+                        <span class="username-text">{{ request.user.username|capfirst }}</span>
+
 
                     </div>
                 </a>

@@ -251,18 +251,15 @@ function attachEventListeners() {
             const imageUrl = seedElement.querySelector('.card-img-top').getAttribute('src');
             const seed = getSeedFromLocalStorage(seedId);
 
-            console.log(`Adding Seed ID ${seedId} to cart with quantity ${quantity}`);
-            console.log(`Image URL: ${imageUrl}`);
-            console.log('Seed details:', seed);
-            console.log('PARE PARE:', seed.discounted_price);
+           
 
             if (seed) {
-                console.log('Before adding to cart:', getCartFromLocalStorage()); // Log cart state before addition
+               
                 addToCart(seed, quantity, imageUrl);
                 updateCartUI(); // Ensure the cart UI is updated after adding the item
                 try {
                     await sendToCart(seedId, quantity, seed);
-                    console.log('Item sent to server successfully.');
+                   
                 } catch (error) {
                     console.error('Failed to send item to server:', error);
                 }
@@ -388,9 +385,10 @@ function displaySeedDetails(seed) {
     }
 
     seedDetailsContent.innerHTML = `
-        <div
+        <div 
             style="background-image: url('${seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg'}'); background-size: cover; width: 100%;" >
             <h1>${seed.name}</h1>
+            <div class="seed-details-content-text">
             <p><strong>Scientific Name:</strong> ${seed.scientific_name}</p>
             <p><strong>Description:</strong> ${seed.description}</p>
             <p><strong>Planting Months:</strong> ${seed.planting_months_from} to ${seed.planting_months_to}</p>
@@ -402,9 +400,10 @@ function displaySeedDetails(seed) {
             ${seed.is_in_stock ? 
                 '<p class="card-text text-success"><strong>In Stock</strong></p>' : 
                 '<p class="card-text text-danger"><strong>Out of Stock</strong></p>'}
+            </div>
             <div class="details-add-button-container>
                 <div class="col-md-2">
-                    <button class="btn btn-sm mt-2 ${!seed.is_in_stock ? 'out-of-stock' : ''}" 
+                    <button class="details-add-button btn btn-sm mt-2 ${!seed.is_in_stock ? 'out-of-stock' : ''}" 
                         data-seed-id="${seed.id}" 
                         ${seed.is_in_stock ? '' : 'disabled'}>
                         ${seed.is_in_stock ? 'Add to Cart' : 'Out of Stock'}

@@ -111,7 +111,8 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
         if (response.ok) {
             // Successful login
             console.log('Login successful');
-            window.location.replace('/');  // Redirect to the home page
+            const result = await response.json();
+            window.location.replace(result.redirect);  // Redirect to the home page
         } else {
             // Handle login failure (e.g., show error message)
             console.error('Login failed:', response.status);
