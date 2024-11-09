@@ -1,0 +1,32 @@
+{% extends "base.html" %}  
+
+{% block content %} 
+<div class="navigation-container"></div>
+    {% include 'navigation.html' %}
+    </div>
+<div class="faq-container">
+    <h1>Frequently Asked Questions</h1>
+
+    {% for faq in faqs %}
+    <div class="faq-item">
+        <div class="faq-question">{{ faq.question }}</div>
+        <div class="faq-answer">
+            <p>{{ faq.answer }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <p>No questions available at the moment.</p>
+    {% endfor %}
+</div>
+
+<script>
+    // JavaScript to toggle answers when a question is clicked
+    const questions = document.querySelectorAll('.faq-question');
+    questions.forEach(question => {
+        question.addEventListener('click', () => {
+            question.classList.toggle('active');
+        });
+    });
+</script>
+
+{% endblock %}

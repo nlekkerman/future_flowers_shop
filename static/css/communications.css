@@ -131,12 +131,94 @@
 #messageForm button:hover {
     background-color: #004d40;
 }
+/* FAQ Page Styles */
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8); /* Light background color */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(30%);
+}
 
+.faq-container h1 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 30px;
+    color: white;
+    font-weight: bold;
+}
+
+.faq-item {
+    margin-bottom: 20px;
+}
+
+.faq-question {
+    background-color: #2c6f00; /* Green background for the question */
+    color: white;
+    padding: 15px;
+    font-size: 1.2em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+}
+
+.faq-question:hover {
+    background-color: #1f4c00; /* Darker green on hover */
+}
+
+.faq-answer {
+    padding: 15px;
+    background-color: #f9f9f9; /* Light gray background for the answer */
+    border-left: 3px solid #2c6f00; /* Green border to the left */
+    margin-top: 10px;
+    display: none;
+    font-size: 1em;
+    color: #555;
+    border-radius: 5px;
+}
+
+.faq-question.active + .faq-answer {
+    display: block;
+}
+
+.faq-answer p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.faq-question.active {
+    background-color: #1f4c00; /* Darker green when active */
+}
+
+.faq-item:last-child {
+    margin-bottom: 0; /* Remove margin from last item */
+}
 /* Media queries for responsive design */
 @media (max-width: 768px) {
     .chat-main-container {
         max-width: 100%;
         margin: 0;
+    }
+    .faq-container {
+        padding: 15px;
+    }
+
+    .faq-question {
+        font-size: 1.1em;
+        padding: 12px;
+    }
+
+    .faq-answer {
+        font-size: 0.9em;
+        padding: 12px;
+    }
+
+    .faq-container h1 {
+        font-size: 1.6em;
     }
 }
 

@@ -106,3 +106,46 @@ def contact_view(request):
 def about(request):
     return render(request, 'communications/about.html')
 
+def faq_view(request):
+    # Updated FAQs (Static Content)
+    faqs = [
+        {
+            "question": "What is the delivery policy?",
+            "answer": "Delivery is free for orders above $50. For orders under $50, a small shipping fee applies."
+        },
+        {
+            "question": "How should I store my seeds?",
+            "answer": "Seeds should be stored in a cool, dry place, away from sunlight to maintain their viability."
+        },
+        {
+            "question": "Can I return seeds?",
+            "answer": "We accept returns for unopened seed packets within 30 days of purchase."
+        },
+        {
+            "question": "How do I plant my seeds?",
+            "answer": "Each seed comes with specific planting instructions on the packet. Generally, plant them in well-drained soil and ensure they receive adequate sunlight."
+        },
+        {
+            "question": "Are the seeds GMO-free?",
+            "answer": "Yes, all our seeds are free from genetic modifications and are naturally grown."
+        },
+        {
+            "question": "How long do the seeds stay viable?",
+            "answer": "Seeds can stay viable for 1-3 years if stored properly, but it’s best to plant them within the first year."
+        },
+        {
+            "question": "What is the best season to plant seeds?",
+            "answer": "It depends on the type of plant, but most seeds are best planted in the spring or early summer."
+        },
+        {
+            "question": "Do you offer international shipping?",
+            "answer": "Currently, we only offer shipping within the United States. We hope to expand internationally in the future."
+        },
+        {
+            "question": "Can I buy seeds in bulk?",
+            "answer": "Yes, we offer bulk discounts for large orders. Contact us for more information on bulk pricing."
+        }
+    ]
+
+    return render(request, 'communications/questions.html', {'faqs': faqs})
+

@@ -482,6 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
+    
     var chatIcon = document.getElementById('chatIcon');
     if (chatIcon) {
         chatIcon.addEventListener('click', function (event) {

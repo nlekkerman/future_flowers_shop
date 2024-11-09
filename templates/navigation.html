@@ -30,7 +30,7 @@
     </div>
 
     <div class="nav-bottom-row">
-        <a class="nav-link-icon reviews-icon">
+        <a class="nav-link-icon reviews-icon" href="{% url 'communications:questions' %}">
             <img  src="{% static '/images/flower-156608_640.png' %}" alt="Q&A Icon" class="icon-image">
             <p class="icon-text-style">Q&A</p>
 
@@ -70,7 +70,7 @@
     <p class="icon-label">Reviews</p>
 </a>
 
-<a id="q-and-a-icon" href="#">
+<a id="q-and-a-icon"href="{% url 'communications:questions' %}">
     <img src="{% static '/images/flower-156608_640.png' %}" alt="Q&A Icon" class="icon-img">
     <p class="icon-label">Q&A</p>
 </a>

@@ -459,17 +459,14 @@ StripeElement--webkit-autofill {
         font-size: 1.7rem;
     }
 
-    .header {
-        height: 130px;
-    }
-
+    
     #notification-area {
         font-size: 2rem;
     }
 
     .user-icon {
-        width: 100px !important;
-        height: 100px !important;
+        width: 70px !important;
+        height: 70px !important;
 
     }
 

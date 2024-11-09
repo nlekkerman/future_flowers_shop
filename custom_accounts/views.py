@@ -67,37 +67,30 @@ def register(request):
     return render(request, 'custom_accounts/register.html', {'form': form})
 def welcome_message(request):
     return render(request, 'custom_accounts/welcome_message.html')
-
+    
 def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         
-        if form.is_valid():
-            user = form.get_user()
-            auth_login(request, user)
+        # Print form errors if form is invalid
+        if not form.is_valid():
+            print(f"Form errors: {form.errors}")
+            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
 
-            # Ensure the user has a profile
-            if not hasattr(user, 'profile'):
-                return JsonResponse({'success': False, 'redirect': '/register'})
+        user = form.get_user()
+        auth_login(request, user)  # Log the user in
 
-            # Return JSON response for AJAX requests
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'success': True, 'redirect': '/'})
-            
-            # For non-AJAX requests, still return a JSON response with redirect info
-            return JsonResponse({'success': True, 'redirect': '/'})
+        if not hasattr(user, 'profile'):
+            return JsonResponse({'success': False, 'redirect': '/register'})  # Redirect if no profile
 
-        else:
-            # Return form errors as JSON if the form is invalid
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'success': False, 'errors': form.errors})
-
-    # For GET requests, render login page (non-AJAX)
-    else:
-        form = AuthenticationForm()
+        # Return a JSON response indicating success and redirect
+        return JsonResponse({'success': True, 'redirect': '/'})
     
+    # For GET requests or other request methods, render the login page
+    form = AuthenticationForm()
     return render(request, 'custom_accounts/login.html', {'form': form})
-         
+
+
 def send_welcome_email(user):
     subject = "Welcome to Future Flower Shop!"
     message = f"Hi {user.username},\n\nThank you for registering at Future Flower Shop! We’re excited to have you with us."
@@ -160,7 +153,6 @@ def logout(request):
 
 @login_required
 def profile(request):
-    # Get the user profile based on the logged-in user
     try:
         profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:

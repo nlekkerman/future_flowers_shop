@@ -294,6 +294,15 @@ function displaySearchResults(seeds) {
     attachSeedCardEventListeners();
     attachAddToCartButtonEventListeners();
 }
+document.addEventListener("DOMContentLoaded", function() {
+    const profileImage = document.getElementById("profile-image");
+    const profileImageUrl = profileImage.getAttribute("data-profile-url");
+
+    // Check if the profile image URL is different from the default
+    if (profileImageUrl && profileImageUrl !== profileImage.src) {
+        profileImage.src = profileImageUrl;  // Set profile image URL if it exists
+    }
+});
 
 function displaySearchResultsSeedDetails(seed) {
     const seedDetailsContent = document.getElementById('search-seed-details-content');
@@ -473,6 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
+    
     var chatIcon = document.getElementById('chatIcon');
     if (chatIcon) {
         chatIcon.addEventListener('click', function (event) {

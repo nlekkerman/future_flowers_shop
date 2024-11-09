@@ -239,11 +239,13 @@ StripeElement--webkit-autofill {
     width: 100%;
     height: 100%;
 }
-.order-details-container{
+
+.order-details-container {
 
     position: relative;
     z-index: 12;
 }
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .item-container-checkout {
@@ -263,14 +265,32 @@ StripeElement--webkit-autofill {
 
 @media screen and (min-width: 768px) {
 
+    .right-nav-column .icon-label {
+        font-size: 1.2rem;
+
+    }
+
+    .right-nav-column .icon-img {
+        width: 70px;
+    }
+
+    .fixed-menu-icon img {
+        width: 80px;
+    }
+
     .fixed-menu-icon {
 
         top: 100px;
 
     }
 
+    .menu-text {
+        text-align: center;
+        font-size: 1.2rem;
+    }
+
     .right-nav-column {
-        top: 180px;
+        top: 220px;
     }
 
     .menu-icon {
@@ -339,6 +359,8 @@ StripeElement--webkit-autofill {
 }
 
 @media screen and (min-width: 1023px) {
+
+
     .nav-link-icon {
         width: 120px;
     }
@@ -394,6 +416,64 @@ StripeElement--webkit-autofill {
 }
 
 @media screen and (min-width: 1439px) {
+    .card-text { font-size: 1.4rem;}
+    .seeds-title { font-size: 3rem;}
+    .add-to-cart-button { font-size: 1.5rem;}
+    .modal-content {max-width: 700px;}
+    #seed-details-content p {font-size: 1.5rem;}
+    #seed-details-content h1 {font-size: 2.5rem;}
+    .seed-details-content-text{
+        background-color: rgba(0, 0, 0, 0.8);
+        width: 100%;
+    }
+    .details-add-button{
+    font-size: 1.5rem;
+    }
+
+    .right-nav-column {
+        top: 350px;
+    }
+
+    .right-nav-column .icon-label {
+        font-size: 1.7rem;
+
+    }
+
+    .right-nav-column .icon-img {
+        width: 70px;
+    }
+
+
+    .fixed-menu-icon img {
+        width: 120px;
+    }
+
+    .fixed-menu-icon {
+
+        top: 200px;
+
+    }
+
+    .menu-text {
+        text-align: center;
+        font-size: 1.7rem;
+    }
+
+    
+    #notification-area {
+        font-size: 2rem;
+    }
+
+    .user-icon {
+        width: 70px !important;
+        height: 70px !important;
+
+    }
+
+    .username-text {
+        font-size: 2rem;
+    }
+
     .nav-link-icon {
 
         width: 100px;
@@ -422,6 +502,34 @@ StripeElement--webkit-autofill {
 
 @media screen and (min-width: 1800px) {
 
+    .right-nav-column {
+        top: 370px;
+    }
+
+    .right-nav-column .icon-label {
+        font-size: 1.7rem;
+
+    }
+
+    .right-nav-column .icon-img {
+        width: 70px;
+    }
+
+
+    .fixed-menu-icon img {
+        width: 120px;
+    }
+
+    .fixed-menu-icon {
+
+        top: 200px;
+
+    }
+
+    .menu-text {
+        text-align: center;
+        font-size: 1.7rem;
+    }
 
     .about-container {
         height: 700px;
@@ -675,11 +783,7 @@ StripeElement--webkit-autofill {
         /* Adjust size as needed */
     }
 
-    /* Increase font size for any form buttons */
-    button {
-        font-size: 20px;
-        /* Adjust size as needed */
-    }
+
 
     .btn {
         font-size: 1.5rem;
@@ -768,6 +872,105 @@ StripeElement--webkit-autofill {
 
         margin-right: 300px !important;
 
+    }
+
+    .header {
+        height: 170px;
+    }
+
+    #notification-area {
+        font-size: 3rem;
+        top: 200px;
+    }
+
+    .user-icon {
+        width: 150px !important;
+        height: 150px !important;
+
+    }
+
+    .username-text {
+        font-size: 3rem;
+    }
+
+    .logo-container {
+        top: 250px;
+        width: 700px;
+        height: 700px;
+    }
+
+    .logo-container img {
+        width: 700px;
+        height: 700px;
+    }
+
+    .search-icon-wrapper img {
+        height: 140px;
+    }
+
+    .search-container button[type="submit"] {
+
+        font-size: 5rem;
+
+    }
+
+    #seed-search-input {
+
+        font-size: 5rem;
+    }
+
+    #search-warning {
+
+        font-size: 3rem;
+    }
+
+    .fixed-menu-icon {
+        top: 200px;
+    }
+}
+
+@media screen and (min-width: 2200px) {
+    .card-text { font-size: 2.1rem;}
+    .seeds-title { font-size: 5rem;}
+    .add-to-cart-button { font-size: 1.5rem;}
+    .modal-content {max-width: 1200px;}
+    #seed-details-content p {font-size: 2.2rem;}
+    #seed-details-content h1 {font-size: 5rem;}
+   
+    .details-add-button{
+    font-size: 2.2rem;
+    }
+
+    .card-title {
+        font-size: 3rem;
+    }
+    .right-nav-column {
+        top: 500px;
+    }
+
+    .right-nav-column .icon-label {
+        font-size: 3rem;
+
+    }
+
+    .right-nav-column .icon-img {
+        width: 200px;
+    }
+
+
+    .fixed-menu-icon img {
+        width: 220px;
+    }
+
+    .fixed-menu-icon {
+
+        top: 200px;
+
+    }
+
+    .menu-text {
+        text-align: center;
+        font-size: 2.7rem;
     }
 
 }

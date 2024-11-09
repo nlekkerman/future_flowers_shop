@@ -88,37 +88,117 @@ window.onload = async () => {
         console.error('Error during onload initialization:', error);
     }
 };
+function showModal() {
+    const modal = document.getElementById('login-modal');
+    modal.classList.remove('hide'); // Remove hide class if it was hidden
+    modal.classList.add('show'); // Add show class to animate entrance
+}
 
+// Hide the modal
+function hideModal() {
+    const modal = document.getElementById('login-modal');
+    modal.classList.remove('show'); // Remove show class
+    modal.classList.add('hide'); // Add hide class to animate exit
+}
 document.getElementById('login-form').addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent the default form submission
-
+    event.preventDefault();
     console.log('Login button clicked. Fetching user data...');
 
-    try {
-        // Get CSRF token from the cookie
-        const csrfToken = getCookie('csrftoken'); // Assuming you have a getCookie function that gets the CSRF token from cookies
+     // Show the modal with the message "Attempting to log in..."
+     const modal = document.getElementById('login-modal'); // The modal element
+     const modalMessage = document.getElementById('modal-message'); // Element inside the modal for displaying messages
+     const modalIcon = document.querySelector('#login-modal img');
+     showModal();
+     modalMessage.textContent = 'Attempting to log in...';  // Set modal message
+     
+ 
 
-        // Submit the login form to the backend and await response
+    // Get CSRF token
+    const csrfToken = getCookie('csrftoken');
+    if (!csrfToken) {
+        console.error('CSRF token is missing!');
+        return;
+    }
+
+    try {
+        // Prepare form data for submission
+        const formData = new FormData(event.target);
+
+        // Submit login request
         const response = await fetch('/custom_accounts/login/', {
             method: 'POST',
             headers: {
-                'X-CSRFToken': csrfToken,  // Include CSRF token in headers
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest' // Ensure it's an AJAX request
             },
-            body: new FormData(event.target),
-            credentials: 'include',  // Send cookies along with the request
+            body: formData,
+            credentials: 'include', // Ensures cookies like session are sent with the request
         });
 
-        if (response.ok) {
-            // Successful login
-            console.log('Login successful');
+        // Check response content type to confirm it's JSON
+        if (response.headers.get('Content-Type').includes('application/json')) {
             const result = await response.json();
-            window.location.replace(result.redirect);  // Redirect to the home page
+
+            if (result.success) {
+                console.log('Login successful, redirecting...');
+                // Update modal message and icon for success
+                modalMessage.textContent = 'You are logged in!';
+                modalIcon.src = modalIcon.getAttribute('data-success-url');
+
+                hideModal();
+                window.location.replace(result.redirect);
+          
+                
+            } else {
+                // Handle failed login and display errors
+                console.log('Login failed. Errors:', result.errors);
+
+                hideModal();
+                
+                // Clear any previous error messages
+                const errorContainer = document.getElementById('error-messages');
+                errorContainer.innerHTML = '';  // Clear old errors
+
+                // Display new error messages
+                if (result.errors && typeof result.errors === 'object') {
+                    for (let field in result.errors) {
+                        const errorMessage = result.errors[field];
+                        const errorItem = document.createElement('p');
+                        errorItem.textContent = `${errorMessage}`;
+                        errorItem.style.color = 'red'; // Style for errors
+                        errorContainer.appendChild(errorItem);
+                    }
+                } else {
+                    const errorItem = document.createElement('p');
+                    errorItem.textContent = 'An unknown error occurred during login.';
+                    errorItem.style.color = 'red';
+                    errorContainer.appendChild(errorItem);
+                }
+            }
         } else {
-            // Handle login failure (e.g., show error message)
-            console.error('Login failed:', response.status);
+            // Handle unexpected response format (HTML, typically an error page)
+            console.error('Unexpected response format:', response.status);
+            const text = await response.text(); // Get raw response text (likely HTML)
+            console.error('Response text:', text);
+
+            // Display a general error message
+            const errorContainer = document.getElementById('error-messages');
+            errorContainer.innerHTML = '';  // Clear old errors
+            const errorItem = document.createElement('p');
+            errorItem.textContent = 'An error occurred during login. Please try again later.';
+            errorItem.style.color = 'red';
+            errorContainer.appendChild(errorItem);
         }
     } catch (error) {
-        console.error('Network error during login:', error);
+        console.error('Network error during login:', error); // Handle network-related issues
+
+        // Display a network error message
+        const errorContainer = document.getElementById('error-messages');
+        errorContainer.innerHTML = '';  // Clear old errors
+        const errorItem = document.createElement('p');
+        errorItem.textContent = 'A network error occurred. Please check your connection and try again.';
+        errorItem.style.color = 'red';
+        errorContainer.appendChild(errorItem);
     }
 });
 
@@ -413,6 +493,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', () => {
     const viewCartButton = document.getElementById('cart-button');
+    
 
     if (viewCartButton) {
         viewCartButton.addEventListener('click', () => {

@@ -13,6 +13,33 @@
     0 0 15px rgba(255, 255, 255, 0.4), /* Middle glow */
     0 0 25px rgba(255, 255, 255, 0.2); /* Outer glow */
 }
+#login-modal {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    position: fixed; /* Center the modal in the viewport */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1002;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+}
+/* Fade-in animation */
+#login-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Fade-out animation */
+#login-modal.hide {
+    opacity: 0;
+    visibility: hidden;
+}
 .newsletter-checkbox-container{
     padding: 5px;
     margin: 10px;

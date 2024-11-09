@@ -17,11 +17,23 @@
             {% csrf_token %}
             <input type="text" id="username" name="username" required>
             <input type="password" id="password" name="password" required>
+            <div id="error-messages"></div>
             <button type="submit" id="login-button" class="btn login-button">Login</button>
         </form>
         
     </div>
     <p class="registration-link">Don't have an account? <a href="{% url 'account_signup' %}">Register here</a></p>
-
+  
 </div>
+<!-- Modal Structure -->
+
+<div id="login-modal" >
+    <div class="modal-content">
+        <img id="modal-icon" src="{% static 'images/login-icon.png' %}" data-success-url="{% static 'images/login-success.png' %}">
+        <p id="modal-message"></p>
+    </div>
+</div>
+
+
+
     {% endblock %}

@@ -10,5 +10,6 @@ urlpatterns = [
     path('api/new-messages-count/', views.NewMessagesCountAPIView.as_view(), name='new-messages-count'),
     path('contact/', views.contact_view, name='contact'),
     path('about/', views.about, name='about'),
+    path('questions/', views.faq_view, name='questions'),
 
 ]
