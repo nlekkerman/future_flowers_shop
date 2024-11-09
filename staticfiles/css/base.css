@@ -244,7 +244,10 @@ body.blur {
         left: 50%;  /* Horizontally center */
         transform: translate(-50%, -50%);  /* Offset by half its width and height */
 }
-
+.seo-text {
+    position: absolute;
+    left: -9999px;
+    visibility: hidden;}
 @keyframes shine-green {
     0% {
         border-image: linear-gradient(90deg, #4caf50, #81c784, #c8e6c9) 1;
@@ -764,12 +767,8 @@ header .dropdown-item {
     left: 50%;
     transform: translateX(-50%);
     padding: 20px;
-    /* Add padding to give space around content */
     filter: drop-shadow(16px 4px 9px rgba(43, 54, 1, 0.6));
-    z-index: 1000000;
-
-    /* Ensure it's above other content */
-
+    z-index: 1000;
 }
 
 .search-container.show {

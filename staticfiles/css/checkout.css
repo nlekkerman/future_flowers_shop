@@ -289,9 +289,6 @@ StripeElement--webkit-autofill {
         font-size: 1.2rem;
     }
 
-    .right-nav-column {
-        top: 220px;
-    }
 
     .menu-icon {
         width: 150px;
@@ -430,9 +427,7 @@ StripeElement--webkit-autofill {
     font-size: 1.5rem;
     }
 
-    .right-nav-column {
-        top: 350px;
-    }
+
 
     .right-nav-column .icon-label {
         font-size: 1.7rem;
@@ -502,9 +497,6 @@ StripeElement--webkit-autofill {
 
 @media screen and (min-width: 1800px) {
 
-    .right-nav-column {
-        top: 370px;
-    }
 
     .right-nav-column .icon-label {
         font-size: 1.7rem;
@@ -944,17 +936,15 @@ StripeElement--webkit-autofill {
     .card-title {
         font-size: 3rem;
     }
-    .right-nav-column {
-        top: 500px;
-    }
+   
 
     .right-nav-column .icon-label {
-        font-size: 3rem;
+        font-size: 2.5rem;
 
     }
 
     .right-nav-column .icon-img {
-        width: 200px;
+        width: 150px;
     }
 
 
@@ -970,7 +960,7 @@ StripeElement--webkit-autofill {
 
     .menu-text {
         text-align: center;
-        font-size: 2.7rem;
+        font-size: 2.2rem;
     }
 
 }

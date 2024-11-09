@@ -20,11 +20,26 @@
 </div>
 
 <script>
-    // JavaScript to toggle answers when a question is clicked
-    const questions = document.querySelectorAll('.faq-question');
-    questions.forEach(question => {
-        question.addEventListener('click', () => {
-            question.classList.toggle('active');
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log("DOM fully loaded and parsed");
+        
+        const questions = document.querySelectorAll('.faq-question');
+        console.log(`Found ${questions.length} questions.`);
+
+        questions.forEach((question, index) => {
+            console.log(`Attaching click event to question ${index + 1}`);
+            question.addEventListener('click', () => {
+                console.log(`Question ${index + 1} clicked:`, question.textContent.trim());
+                question.classList.toggle('active');
+                
+                const answer = question.nextElementSibling;
+                if (answer) {
+                    answer.classList.toggle('show');
+                    console.log(`Answer visibility toggled for question ${index + 1}`);
+                } else {
+                    console.warn(`No answer found for question ${index + 1}`);
+                }
+            });
         });
     });
 </script>

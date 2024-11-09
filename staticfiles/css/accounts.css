@@ -34,7 +34,21 @@
     opacity: 1;
     visibility: visible;
 }
+.admin-dashboard-section-newsletter form{
 
+    width: 100%;
+    max-width: 700px;
+    background-color: rgba(0, 0, 0, 0.7);
+    margin: 0px auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.admin-dashboard-section-newsletter form button {
+  
+    width: 15em;
+    margin: 0px auto;
+}
 /* Fade-out animation */
 #login-modal.hide {
     opacity: 0;

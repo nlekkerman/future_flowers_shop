@@ -140,6 +140,8 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transform: translateY(30%);
+    z-index: 1000;
+    position: relative;
 }
 
 .faq-container h1 {
@@ -771,21 +773,19 @@
     border-radius: 8px;
     text-align: center;
     color: #ffffff;
+    position: relative;
+    z-index: 1000;
     box-shadow:
         0 0 8px rgba(255, 255, 255, 0.6),
-        /* Inner glow with alpha 0.6 */
         0 0 15px rgba(255, 255, 255, 0.4),
-        /* Middle glow with alpha 0.4 */
         0 0 25px rgba(255, 255, 255, 0.2);
-    /* Outer glow with alpha 0.2 */
+
 }
 
 /* Style for the title */
 .contact-title {
     font-size: 2.5em;
-    /* Larger title size */
     margin-bottom: 20px;
-    /* Space below title */
 }
 
 /* Style for contact items */
