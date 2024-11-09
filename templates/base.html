@@ -4,66 +4,29 @@
 <html lang="en">
 
 <head>
-
     {% block meta %}
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token }}">
+    
+    <!-- Default Meta Description for SEO; Override in individual templates as needed -->
+    <meta name="description" content="Learn how to grow beautiful roses from seeds with our step-by-step guide. Discover expert tips for rose seed germination, growing rose trees, and creating a stunning garden. Why not buy online seeds for your garden today? Explore our collection of rose, wildflower, and tree seeds at Future Flower Shop to help your garden thrive.">
+    
     {% endblock %}
 
-    {% block extra_meta %}
-    {% endblock %}
+    {% block extra_meta %}{% endblock %}
 
+    <!-- External Stylesheets -->
     {% block corecss %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     {% endblock %}
 
-    {% block extra_css %}
+    {% block extra_css %}{% endblock %}
 
-
-    {% endblock %}
-
-    {% block corejs %}
-    <!-- Full version of jQuery -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <!-- Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <!-- Bootstrap JavaScript -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.6/lottie.min.js"></script>
-
-
-    <!-- Stripe.js-->
-    <script src="https://js.stripe.com/v3/"></script>
-
-
-    {% endblock %}
-
-
-
-    {% block extra_js %}
-    <!-- Include your scripts as modules -->
-    <script type="module" src="{% static 'js/base.js' %}"></script>
-    <script type="module" src="{% static 'js/home.js' %}" defer></script>
-    <script type="module" src="{% static 'js/control.js' %}" defer></script>
-    <script type="module" src="{% static 'js/seeds.js' %}" defer></script>
-    <script type="module" src="{% static 'js/cart.js' %}" defer></script>
-    <script type="module" src="{% static 'js/reviews.js' %}" defer></script>
-    <script type="module" src="{% static 'js/accounts.js' %}" defer></script>
-    <script type="module" src="{% static 'js/checkout.js' %}" defer></script>
-    <script type="module" src="{% static 'js/navigation.js' %}" defer></script>
-
-
-    <script type="module" src="{% static 'js/utils.js' %}" defer></script>
-
-
-
+    <!-- Internal Stylesheets -->
     <link rel="stylesheet" href="{% static 'css/navigation.css' %}">
     <link rel="stylesheet" href="{% static 'css/seeds.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -73,14 +36,37 @@
     <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
     <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
 
-
-
-
-
+    {% block corejs %}
+    <!-- Full version of jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!-- Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!-- Lottie for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.6/lottie.min.js"></script>
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
     {% endblock %}
 
+    {% block extra_js %}
+    <!-- Include JavaScript files as modules -->
+    <script type="module" src="{% static 'js/base.js' %}"></script>
+    <script type="module" src="{% static 'js/home.js' %}" defer></script>
+    <script type="module" src="{% static 'js/control.js' %}" defer></script>
+    <script type="module" src="{% static 'js/seeds.js' %}" defer></script>
+    <script type="module" src="{% static 'js/cart.js' %}" defer></script>
+    <script type="module" src="{% static 'js/reviews.js' %}" defer></script>
+    <script type="module" src="{% static 'js/accounts.js' %}" defer></script>
+    <script type="module" src="{% static 'js/checkout.js' %}" defer></script>
+    <script type="module" src="{% static 'js/navigation.js' %}" defer></script>
+    <script type="module" src="{% static 'js/utils.js' %}" defer></script>
+    {% endblock %}
+
+    <!-- Dynamic Page Title -->
     <title>Future Flower Shop {% block extra_title %}{% endblock %}</title>
 </head>
+
 <div id="letterDisplayContainer" class="letter-display-container"></div>
 
 <div class="header animate-herder">

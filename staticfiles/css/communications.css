@@ -136,16 +136,17 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f8f8f8; /* Light background color */
+    background-color: rgba(0, 0, 0, 0.8); /* Light background color */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(30%);
 }
 
 .faq-container h1 {
     text-align: center;
     font-size: 2em;
     margin-bottom: 30px;
-    color: #333;
+    color: white;
     font-weight: bold;
 }
 
@@ -162,6 +163,7 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    
 }
 
 .faq-question:hover {

@@ -228,7 +228,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 if 'DEVELOPMENT' in os.environ:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'nikoladev80@gmail.com'
+    DEFAULT_FROM_EMAIL = 'future.flower.shop.ci@gmail.com'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_USE_TLS = True
@@ -238,5 +238,3 @@ else:
     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASS')
     DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
 
-print("EMAIL_HOST_USER:", os.environ.get('EMAIL_HOST_USER'))
-print("EMAIL_HOST_PASS:", os.environ.get('EMAIL_HOST_PASS'))

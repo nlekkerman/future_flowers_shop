@@ -15,7 +15,7 @@ from reviews.models import Review, Comment
 from checkout.models import Order
 from communications.models import ChatConversation, ChatMessage 
 from .forms import ProfileEditForm , CustomUserCreationForm
-
+from django.core.exceptions import ObjectDoesNotExist
 
 import os
 # Import logging module
@@ -103,11 +103,11 @@ def send_welcome_email(user):
     except Exception as e:
         pass
 
+
 def send_newsletter(request):
     if request.method == 'POST':
         subject = request.POST.get('subject')
         message = request.POST.get('message')
-
 
         # Get all users who receive newsletters
         users = UserProfile.objects.filter(receives_newsletter=True)
@@ -115,25 +115,34 @@ def send_newsletter(request):
         # Send email to each user
         for user_profile in users:
             try:
-              
-                send_mail(
-                    subject,
-                    message,
-                    os.environ.get('EMAIL_HOST_USER'),  # Ensure you're using the correct email
-                    [user_profile.user.email],
-                    fail_silently=False,
-                )
-                logger.info(f"Newsletter sent successfully to {user_profile.user.email}.")
-                messages.success(request, f"Newsletter sent to {user_profile.user.email}.")
+                # Check if the user_profile has an associated user
+                try:
+                    if user_profile.user:  # This will now safely check the 'user' field
+                        logger.info(f"Attempting to send email to {user_profile.user.email}")
+                        send_mail(
+                            subject,
+                            message,
+                            os.environ.get('EMAIL_HOST_USER'),  # Ensure you're using the correct email
+                            [user_profile.user.email],
+                            fail_silently=False,
+                        )
+                        logger.info(f"Newsletter sent successfully to {user_profile.user.email}.")
+                        messages.success(request, f"Newsletter sent to {user_profile.user.email}.")
+                    else:
+                        logger.warning(f"User profile {user_profile.id} has no associated user.")
+                        messages.warning(request, f"User profile {user_profile.id} has no associated user. Skipping.")
+                except UserProfile.user.RelatedObjectDoesNotExist:
+                    # This is the exception raised when the related user is missing
+                    logger.warning(f"UserProfile with ID {user_profile.id} has no related User object.")
+                    messages.warning(request, f"User profile {user_profile.id} has no associated user. Skipping.")
             except Exception as e:
-              
-                messages.error(request, f"Failed to send email to {user_profile.user.email}. Error: {str(e)}")
+                # Handle and log any exceptions that occur during the email sending
+                logger.error(f"Failed to send email to {user_profile.user.email if user_profile.user else 'Unknown User'}: {str(e)}")
+                messages.error(request, f"Failed to send email to {user_profile.user.email if user_profile.user else 'Unknown User'}: {str(e)}")
 
-       
         return redirect('admin_dashboard')
 
     return render(request, 'admin_dashboard')
-
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):

@@ -1,7 +1,18 @@
 <!-- seeds.html -->
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Seeds{% endblock %}
+<!-- Page-Specific Title and Meta Tags for SEO -->
+{% block title %}Seeds - Future Flower Shop{% endblock %}
+{% block extra_meta %}
+    <!-- Dynamic Meta Description -->
+    <meta name="description" content="{{ seed.description|truncatewords:20 }}">
+
+    <!-- Dynamic Meta Keywords based on seed category, name, and general SEO terms -->
+    <meta name="keywords" content="{{ seed.name }}, {{ seed.category }}, {{ seed.scientific_name }}, {{ seed.category|default:'garden' }} seeds, Future Flower Shop, buy seeds online, gardening, plant seeds">
+
+{% endblock %}
+
+
 
 {% block content %}
 <!-- Navigation Bar -->
@@ -35,11 +46,12 @@
 </div>
 
 <div id="seed-details-modal" class="modal" style="display: none;">
+    <p class="seo-text"></p>
+        {{ seed.description|truncatewords:30 }} Find more details about growing and caring for {{ seed.name }}.
+    </p>
     <div class="modal-content">
-        <span class="close-modal-button">&times;</span>
-        <div id="seed-details-content"></div>
-
-       
+        <span class="close-modal-button" aria-label="Close">&times;</span>
+        <div id="seed-details-content" aria-live="polite"></div>
     </div>
 </div>
 
