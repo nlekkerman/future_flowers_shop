@@ -2,9 +2,24 @@ from django import forms
 from .models import Review, Comment
 
 class ReviewForm(forms.ModelForm):
+    comment = forms.CharField(
+        max_length=500,
+        widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'Write your review here...'}),
+        label='Review',
+        error_messages={
+            'max_length': 'Your review cannot exceed 500 characters.'
+        }
+    )
+
     class Meta:
         model = Review
         fields = ['rating', 'comment']  # Fields exposed in the form
+
+    def clean_comment(self):
+        comment = self.cleaned_data.get('comment')
+        if not comment or not comment.strip():  # Check for both empty and whitespace-only
+            raise forms.ValidationError("Review comment cannot be empty.")
+        return comment
 
 class CommentForm(forms.ModelForm):
     text = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'Write your comment here...'}), label='Comment')

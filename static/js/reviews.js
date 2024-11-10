@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Create the message modal container
     const messageModal = document.createElement('div');
     messageModal.id = 'modal-overlay-background'; // Three-word ID
-    messageModal.className = 'modal-overlay-background'; 
+    messageModal.className = 'modal-overlay-background';
     messageModal.style.display = 'none';
     messageModal.style.position = 'fixed';
     messageModal.style.zIndex = '1000';
@@ -28,16 +28,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalContent = document.createElement('div');
     modalContent.className = 'modal-box-content';
 
-   
+
     const modalMessage = document.createElement('p');
 
-    
+
     const closeButton = document.createElement('button');
-    closeButton.className = 'button-close-modal'; 
+    closeButton.className = 'button-close-modal';
     closeButton.textContent = 'x';
     closeButton.onclick = function () {
-        messageModal.style.display = 'none'; 
-  
+        messageModal.style.display = 'none';
+
 
     };
 
@@ -54,9 +54,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to display the message modal
     function showMessageReview(message) {
-        modalMessage.textContent = message; 
-        messageModal.style.display = 'flex'; 
-        messageModal.style.zIndex = '999999999999999'; 
+        modalMessage.textContent = message;
+        messageModal.style.display = 'flex';
+        messageModal.style.zIndex = '999999999999999';
     }
     // Function to load reviews
     async function loadReviews() {
@@ -113,9 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Add click event for the Write Review button
                 writeReviewButton.addEventListener('click', function () {
-                    console.log(
-                        "AKAKAKAKAKAKAAK"
-                    )
+
                     openReviewModal();
                 });
 
@@ -256,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         commentsList.appendChild(commentElement);
                     });
 
-                   
+
                     rowElement.appendChild(reviewElement);
 
                     // Ensure the Edit button is handled correctly
@@ -403,12 +401,30 @@ document.addEventListener('DOMContentLoaded', function () {
             // Show the modal
             $('#reviewModal').modal('show');
 
-            // Handle form submission
             const reviewForm = document.getElementById('dynamic-review-form');
             reviewForm.addEventListener('submit', function (event) {
                 event.preventDefault();
+                console.log("Submit button clicked, starting validation");
+            
+                const comment = document.getElementById('comment').value.trim();
+                console.log("Comment content:", comment);
+            
+                // Validate the comment field for emptiness and length
+                if (!comment) {
+                    console.log("Validation failed: Comment is empty.");
+                    alert("Review comment cannot be empty.");
+                    return;
+                }
+                if (comment.length > 500) {
+                    console.log("Validation failed: Comment is too long.");
+                    alert("Your review cannot exceed 500 characters.");
+                    return;
+                }
+                console.log("Validation passed: Comment is valid.");
+            
                 const formData = new FormData(reviewForm);
-
+                console.log("FormData prepared:", formData);
+            
                 // Submit the form via AJAX
                 fetch('/reviews/api/write/', {
                         method: 'POST',
@@ -418,6 +434,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         body: formData
                     })
                     .then(response => {
+                        console.log("Received response from server:", response);
                         if (response.ok) {
                             return response.json();
                         } else {
@@ -426,15 +443,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     })
                     .then(data => {
                         // Handle successful form submission
+                        console.log("Review submission successful:", data);
                         showMessageReview('Review submitted successfully!');
                         $('#reviewModal').modal('hide');
                         location.reload(); // Optionally reload the page to update the review list
                     })
                     .catch(error => {
-                        console.error('Error:', error);
+                        console.error('Error submitting review:', error);
                         showMessageReview('There was an error submitting your review. Please try again.');
                     });
             });
+            
         }
 
         function openEditCommentModal(reviewId, commentId, currentText) {
@@ -622,9 +641,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
- // Function to open the Edit Review modal dynamically
-function openEditReviewModal(review) {
-    const modalHTML = `
+    // Function to open the Edit Review modal dynamically
+    function openEditReviewModal(review) {
+        const modalHTML = `
         <div class="modal fade custom-review-modal" id="editReviewModal" tabindex="-1" role="dialog" aria-labelledby="editReviewModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"> <!-- modal-content to wrap the modal structure -->
@@ -662,72 +681,72 @@ function openEditReviewModal(review) {
         </div>
     `;
 
-    // Append modal to the body
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
+        // Append modal to the body
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-    // Show the modal
-    $('#editReviewModal').modal('show');
+        // Show the modal
+        $('#editReviewModal').modal('show');
 
-    // Handle form submission for updating the review
-    const editForm = document.getElementById('edit-review-form');
-    editForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-        const formData = new FormData(editForm);
-        formData.append('review_id', review.id); // Add the review ID for the update
+        // Handle form submission for updating the review
+        const editForm = document.getElementById('edit-review-form');
+        editForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(editForm);
+            formData.append('review_id', review.id); // Add the review ID for the update
 
-        // Submit the form via AJAX
-        fetch('/reviews/api/update_review/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                },
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Error updating the review.');
-                }
-            })
-            .then(data => {
-                showMessageReview('Review updated successfully!');
-                $('#editReviewModal').modal('hide');
-                location.reload(); // Reload to refresh the reviews
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showMessageReview('There was an error updating your review. Please try again.');
-            });
-    });
-
-    // Handle delete review button
-    document.getElementById('delete-review').addEventListener('click', function () {
-        const reviewId = this.dataset.reviewId;
-
-        if (confirm('Are you sure you want to delete this review?')) {
-            fetch(`/reviews/api/delete_review/${reviewId}/`, {
-                    method: 'DELETE',
+            // Submit the form via AJAX
+            fetch('/reviews/api/update_review/', {
+                    method: 'POST',
                     headers: {
                         'X-CSRFToken': getCookie('csrftoken'),
                     },
+                    body: formData
                 })
                 .then(response => {
                     if (response.ok) {
-                        showMessageReview('Review deleted successfully!');
-                        $('#editReviewModal').modal('hide');
-                        location.reload(); // Reload to refresh the reviews
+                        return response.json();
                     } else {
-                        throw new Error('Error deleting the review.');
+                        throw new Error('Error updating the review.');
                     }
+                })
+                .then(data => {
+                    showMessageReview('Review updated successfully!');
+                    $('#editReviewModal').modal('hide');
+                    location.reload(); // Reload to refresh the reviews
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    showMessageReview('There was an error deleting your review. Please try again.');
+                    showMessageReview('There was an error updating your review. Please try again.');
                 });
-        }
-    });
-}
+        });
+
+        // Handle delete review button
+        document.getElementById('delete-review').addEventListener('click', function () {
+            const reviewId = this.dataset.reviewId;
+
+            if (confirm('Are you sure you want to delete this review?')) {
+                fetch(`/reviews/api/delete_review/${reviewId}/`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken'),
+                        },
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            showMessageReview('Review deleted successfully!');
+                            $('#editReviewModal').modal('hide');
+                            location.reload(); // Reload to refresh the reviews
+                        } else {
+                            throw new Error('Error deleting the review.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showMessageReview('There was an error deleting your review. Please try again.');
+                    });
+            }
+        });
+    }
 
     // Helper function to get the CSRF token
     function getCookie(name) {
@@ -744,7 +763,7 @@ function openEditReviewModal(review) {
         }
         return cookieValue;
     }
-   
+
     loadReviews();
 
     icon.addEventListener('click', function () {
@@ -758,13 +777,13 @@ function openEditReviewModal(review) {
         body.classList.add('active-blur'); // Apply blur to body
     });
 
-   
+
     reviewsContainer.addEventListener('click', function (event) {
         if (event.target === reviewsContainer) {
             reviewsContainer.classList.remove('show'); // Hide the container
             body.classList.remove('active-blur'); // Remove blur from body
         }
     });
-    
+
 
 });
