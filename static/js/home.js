@@ -14,7 +14,6 @@ let loggedInUsername, loadingOverlay, loadingText;
 window.onload = async () => {
 
     try {
-
         const userId = await fetchUserId(); // Fetch user ID
         loggedInUsername = await fetchUsername(); // Fetch username here
         await fetchMessageCounts();
@@ -39,43 +38,38 @@ window.onload = async () => {
             }
 
             if (chatContainer.style.display === "block") {
-                console.log("CHAT TOGGLE HIDDEN");
-                chatContainer.style.display = "none"; // Hide the chat container
+                chatContainer.style.display = "none"; 
             } else {
-                chatContainer.style.display = "block"; // Show the chat container
-                console.log("CHAT TOGGLE VISIBLE");
+                chatContainer.style.display = "block"; 
             }
         };
 
         if (adminMessagesIcon) {
             adminMessagesIcon.addEventListener('click', async () => {
-                toggleChatContainerVisibility(); // Toggle visibility on icon click
-                console.log('Admin Message icon clicked.'); // For debugging
-                await fetchConversations(userId); // Fetch conversations for superuser
-                displayConversationsFromLocalStorage(); // Display conversations
+                toggleChatContainerVisibility();
+                await fetchConversations(userId); 
+                displayConversationsFromLocalStorage(); 
             });
         } else {
             console.error('Admin message icon not found.');
         }
 
-        // Check if messagesIcon is found
         if (messagesIcon) {
             messagesIcon.addEventListener('click', async () => {
-                console.log('Message icon clicked.'); // For debugging
                 const userMessages = await fetchUserMessages(userId);
                 displayUserMessages(userMessages, loggedInUsername);
-                toggleChatContainerVisibility(); // Toggle visibility when user messages icon is clicked
+                toggleChatContainerVisibility(); 
             });
         } else {
             console.error('Messages icon not found.');
         }
 
         if (userId) {
-            const isSuperUser = await checkIfSuperUser(); // Check superuser status
+            const isSuperUser = await checkIfSuperUser(); 
 
             if (isSuperUser) {
-                await fetchConversations(userId); // Fetch conversations for superuser
-                displayConversationsFromLocalStorage(); // Display conversations
+                await fetchConversations(userId); 
+                displayConversationsFromLocalStorage(); 
             } else {
                 // Fetch and display messages for regular user
                 const userMessages = await fetchUserMessages(userId);
@@ -90,30 +84,24 @@ window.onload = async () => {
 };
 function showModal() {
     const modal = document.getElementById('login-modal');
-    modal.classList.remove('hide'); // Remove hide class if it was hidden
-    modal.classList.add('show'); // Add show class to animate entrance
+    modal.classList.remove('hide'); 
+    modal.classList.add('show'); 
 }
 
 // Hide the modal
 function hideModal() {
     const modal = document.getElementById('login-modal');
-    modal.classList.remove('show'); // Remove show class
-    modal.classList.add('hide'); // Add hide class to animate exit
+    modal.classList.remove('show'); 
+    modal.classList.add('hide');
 }
 document.getElementById('login-form').addEventListener('submit', async (event) => {
     event.preventDefault();
-    console.log('Login button clicked. Fetching user data...');
-
-     // Show the modal with the message "Attempting to log in..."
-     const modal = document.getElementById('login-modal'); // The modal element
-     const modalMessage = document.getElementById('modal-message'); // Element inside the modal for displaying messages
+     const modalMessage = document.getElementById('modal-message');
      const modalIcon = document.querySelector('#login-modal img');
      showModal();
-     modalMessage.textContent = 'Attempting to log in...';  // Set modal message
+     modalMessage.textContent = 'Attempting to log in...';  // Set modal messag
      
- 
 
-    // Get CSRF token
     const csrfToken = getCookie('csrftoken');
     if (!csrfToken) {
         console.error('CSRF token is missing!');
@@ -121,27 +109,22 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
     }
 
     try {
-        // Prepare form data for submission
         const formData = new FormData(event.target);
 
-        // Submit login request
         const response = await fetch('/custom_accounts/login/', {
             method: 'POST',
             headers: {
                 'X-CSRFToken': csrfToken,
-                'X-Requested-With': 'XMLHttpRequest' // Ensure it's an AJAX request
+                'X-Requested-With': 'XMLHttpRequest' 
             },
             body: formData,
-            credentials: 'include', // Ensures cookies like session are sent with the request
+            credentials: 'include', 
         });
 
-        // Check response content type to confirm it's JSON
         if (response.headers.get('Content-Type').includes('application/json')) {
             const result = await response.json();
 
             if (result.success) {
-                console.log('Login successful, redirecting...');
-                // Update modal message and icon for success
                 modalMessage.textContent = 'You are logged in!';
                 modalIcon.src = modalIcon.getAttribute('data-success-url');
 
@@ -150,8 +133,7 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
           
                 
             } else {
-                // Handle failed login and display errors
-                console.log('Login failed. Errors:', result.errors);
+              
 
                 hideModal();
                 
@@ -178,7 +160,7 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
         } else {
             // Handle unexpected response format (HTML, typically an error page)
             console.error('Unexpected response format:', response.status);
-            const text = await response.text(); // Get raw response text (likely HTML)
+            const text = await response.text(); 
             console.error('Response text:', text);
 
             // Display a general error message
@@ -271,7 +253,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     fetch('/seeds/api/seeds/')
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             const seedListContainer = document.getElementById('seed-list');
             if (!seedListContainer) {
                 console.error('Element with ID "seed-list" not found in the DOM.');
@@ -441,46 +422,33 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
 function toggleCartButtonVisibility() {
-    console.log('Function toggleCartButtonVisibility called.');
-
-    // Retrieve cart data from localStorage
     const cartData = JSON.parse(localStorage.getItem('cart'));
     console.log('Cart data retrieved:', cartData);
 
     // Get references to the cart and checkout buttons
     const cartButton = document.getElementById('cart-button');
     const checkoutBtn = document.getElementById('go-to-checkout-button');
-    console.log('Cart button element:', cartButton);
-    console.log('Checkout button element:', checkoutBtn);
 
-    // Check if cartData has items and if they form a valid array with content
     if (cartData && Array.isArray(cartData.items) && cartData.items.length > 0) {
-        console.log(`Cart contains ${cartData.items.length} items. Making cart and checkout buttons visible.`);
 
         if (cartButton) {
-            cartButton.style.display = 'block'; // Show cart button
-            console.log('Cart button is set to visible.');
+            cartButton.style.display = 'block'; 
         }
 
         if (checkoutBtn) {
-            checkoutBtn.style.display = 'block'; // Show checkout button
-            console.log('Checkout button is set to visible.');
+            checkoutBtn.style.display = 'block'; 
         }
     } else {
-        console.log('Cart is empty or undefined. Hiding cart and checkout buttons.');
 
         if (cartButton) {
-            cartButton.style.display = 'none'; // Hide cart button
-            console.log('Cart button is set to hidden.');
+            cartButton.style.display = 'none'; 
         }
 
         if (checkoutBtn) {
-            checkoutBtn.style.display = 'none'; // Hide checkout button
-            console.log('Checkout button is set to hidden.');
+            checkoutBtn.style.display = 'none';
         }
     }
 
-    console.log('toggleCartButtonVisibility function execution completed.');
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -497,27 +465,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (viewCartButton) {
         viewCartButton.addEventListener('click', () => {
-            window.location.href = '/cart/'; // Redirect to cart page
+            window.location.href = '/cart/';
         });
-        console.log("Cart button found, event listener attached.");
     }
 });
 
 document.getElementById('logout-button').addEventListener('click', () => {
-    // Log the userId before deletion
-    const userId = localStorage.getItem('userId');
-    console.log('User ID before deletion:', userId);
-
-    // Clear any localStorage data related to the user
+ 
     localStorage.removeItem('userId');
     localStorage.removeItem('cart');
-    localStorage.setItem('cartTotal', '0.00');  // Reset cart total to $0.00
-
-    // Log the userId after deletion to confirm it is removed
-    const clearedUserId = localStorage.getItem('userId');
-    console.log('User ID after deletion:', clearedUserId);  // Should log 'null' if successfully removed
-
-    console.log('LocalStorage cleared for user data and cart after logout.');
+    localStorage.setItem('cartTotal', '0.00');
 });
 
 
@@ -527,8 +484,6 @@ document.getElementById('logout-button').addEventListener('click', () => {
 export function displayConversationsFromLocalStorage() {
     const storedConversations = localStorage.getItem('userConversations');
 
-    console.info('Attempting to load conversations from local storage.');
-
     if (!storedConversations) {
         console.warn('No conversations found in local storage.');
         return;
@@ -537,7 +492,6 @@ export function displayConversationsFromLocalStorage() {
     let conversations;
     try {
         conversations = JSON.parse(storedConversations);
-        console.info(`Parsed ${conversations.length} conversations from local storage.`);
     } catch (error) {
         console.error('Error parsing conversations from local storage:', error);
         return;
@@ -559,12 +513,10 @@ export function displayConversationsFromLocalStorage() {
 
     // Add event listener to close button to hide the chat-container
     closeButton.addEventListener('click', () => {
-        console.info('Close button clicked. Hiding chat container.');
         chatContainer.style.display = 'none';
     });
 
     if (conversations.length === 0) {
-        console.warn('No conversations to display.');
         chatContainer.innerHTML = '<p>No conversations found.</p>';
         return;
     }
@@ -579,14 +531,11 @@ export function displayConversationsFromLocalStorage() {
     });
 
     conversations.forEach((conversation) => {
-        console.info(`Displaying conversation:`, conversation);
-
         const conversationDiv = document.createElement('div');
         conversationDiv.className = 'conversation';
         conversationDiv.style.cursor = 'pointer';
         conversationDiv.style.marginBottom = '10px';
 
-        // Check if the conversation has unseen messages
         if (conversation.unseenMessagesCount > 0) {
             conversationDiv.style.backgroundColor = 'red'; // Set background color to red if there are unseen messages
         }
@@ -597,7 +546,7 @@ export function displayConversationsFromLocalStorage() {
         `;
 
         conversationDiv.addEventListener('click', async () => {
-            showLoadingAnimation(); // Show loading animation
+            showLoadingAnimation(); 
             conversationDiv.style.backgroundColor = 'transparent';
 
             // Gather the IDs of all unseen messages in this conversation
@@ -614,14 +563,13 @@ export function displayConversationsFromLocalStorage() {
             chatContainer.style.display = 'none'
             // Load conversation messages
             await loadConversationMessages(conversation.id, loggedInUsername);
-            hideLoadingAnimation(); // Hide loading animation after loading messages
-            // Fetch updated message counts
+            hideLoadingAnimation(); 
+           
             await fetchMessageCounts();
         });
         chatContainer.appendChild(conversationDiv);
     });
 
-    console.info(`Displayed ${conversations.length} conversations from local storage.`);
 }
 async function loadConversationMessages(conversationId, loggedInUsername) {
     try {
@@ -630,7 +578,6 @@ async function loadConversationMessages(conversationId, loggedInUsername) {
         if (!response.ok) throw new Error('Network response was not ok');
 
         const responseData = await response.json();
-        console.log('Parsed JSON response:', responseData);
 
         if (!Array.isArray(responseData.messages)) {
             throw new Error('Invalid response format: expected an array of messages');
@@ -717,7 +664,6 @@ async function loadConversationMessages(conversationId, loggedInUsername) {
         // Set up the send button click handler
         const sendButton = document.getElementById('send-message-button');
         sendButton.onclick = () => {
-            console.log('Username AHAHAHAHAHAHA before sending message:', loggedInUsername); // Debugging
             handleSendMessage(conversationId, loggedInUsername);
         };
 
@@ -732,33 +678,27 @@ async function handleSendMessage(conversationId, loggedInUsername) {
 
 
     if (messageContent) {
-        console.log(`Message sent: ${messageContent}`); // Log the message content
-
-        // Call the sendMessage function
         const data = await sendMessage(conversationId, messageContent);
 
-        // Log the entire response data for debugging
-        console.log('Data returned from sendMessage:', data);
 
         // Check if data is defined and has a success property
         if (data && data.success) {
             const modalMessageList = document.getElementById('modal-message-list');
             const newMessageDiv = document.createElement('div');
-            newMessageDiv.className = `chat-message message-right message-right`; // Assuming sent messages go to the right
+            newMessageDiv.className = `chat-message message-right message-right`; 
             const formatMessageDate = (date) => {
                 const options = {
                     day: '2-digit',
                     month: 'short'
-                }; // Day and month in short form (e.g., "05 Oct")
+                }; 
                 const dateString = date.toLocaleDateString(undefined, options);
                 const timeString = date.toLocaleTimeString(undefined, {
                     hour: '2-digit',
                     minute: '2-digit'
-                }); // Time in HH:MM format
-                return `${dateString}, ${timeString}`; // Combine date and time
+                }); 
+                return `${dateString}, ${timeString}`; 
             };
 
-            // Example usage for creating a new message div
             newMessageDiv.innerHTML = `
                 <div class="message-header">
                     <strong>${loggedInUsername}</strong>
@@ -785,10 +725,6 @@ async function handleSendMessage(conversationId, loggedInUsername) {
     }
 }
 async function displayUserMessages(messages, loggedInUsername) {
-    console.log('Entering displayUserMessages function');
-
-    console.log('Logged in username:', loggedInUsername);
-    console.log('Messages received:', messages); // Debugging output
 
     const chatContainer = document.getElementById('chat-container');
     if (!chatContainer) {
@@ -830,8 +766,7 @@ async function displayUserMessages(messages, loggedInUsername) {
 
     // Display existing messages
     messages.forEach((message) => {
-        console.info(`Displaying message:`, message);
-
+        
         const messageDiv = document.createElement('div');
         const messageClass = message.sender === loggedInUsername ? 'message-right' : 'message-left';
         messageDiv.className = `chat-message ${messageClass}`;
@@ -863,8 +798,6 @@ async function displayUserMessages(messages, loggedInUsername) {
     const sendButton = document.getElementById('send-message-button');
     sendButton.onclick = async () => {
         if (conversationId) {
-
-            console.log('Username before sending message:', loggedInUsername); // Debugging
             handleSendMessage(conversationId, loggedInUsername);
         } else {
             console.error('Conversation ID is not available.');
@@ -875,7 +808,6 @@ async function displayUserMessages(messages, loggedInUsername) {
     await updateMessageStatus(messageIds, true); // Update to seen
 }
 async function updateIconsBasedOnSuperUser() {
-    console.log("Starting to check user status..."); // Log when the function starts
     const result = await checkIfSuperUser();
 
     if (result === null) {
@@ -883,8 +815,6 @@ async function updateIconsBasedOnSuperUser() {
         console.error('Failed to fetch user status.');
         return;
     }
-
-    console.log("User status fetched:", result); // Log the result of the user status check
 
     const {
         isSuperUser,
@@ -896,22 +826,14 @@ async function updateIconsBasedOnSuperUser() {
     const messageIcon = document.getElementById('messagesIcon');
 
     if (!isAuthenticated) {
-        console.log("User is not authenticated."); // Log when the user is not authenticated
-        // If the user is not authenticated, hide the notification area
         notificationArea.style.display = 'none';
     } else {
-        console.log("User is authenticated."); // Log when the user is authenticated
-        // If the user is authenticated, show the notification area
         notificationArea.style.display = 'block';
 
         if (isSuperUser) {
-            console.log("User is a superuser."); // Log when the user is a superuser
-            // Show admin icon for superusers
             adminIcon.style.display = 'block';
             messageIcon.style.display = 'none';
         } else {
-            console.log("User is a regular authenticated user."); // Log when the user is a regular authenticated user
-            // Show message icon for regular authenticated users
             messageIcon.style.display = 'block';
             adminIcon.style.display = 'none';
         }
@@ -924,8 +846,6 @@ async function fetchUserMessages(userId) {
         if (!response.ok) throw new Error('Network response was not ok');
 
         const responseData = await response.json();
-        console.log('Fetched user messages:', responseData);
-
         if (!Array.isArray(responseData.messages)) {
             throw new Error('Invalid response format: expected an array of messages');
         }
@@ -956,7 +876,6 @@ async function updateMessageStatus(messageIds, isSeen) {
             console.error('Error updating message status:', errorData);
         } else {
             const successData = await response.json();
-            console.log('Success:', successData.message);
         }
     } catch (error) {
         console.error('Network error:', error);
@@ -964,7 +883,6 @@ async function updateMessageStatus(messageIds, isSeen) {
 }
 
 function createLoadingOverlay() {
-    console.log("Creating loading overlay..."); // Log when creating overlay
     loadingOverlay = document.createElement('div');
     loadingOverlay.id = 'loading-overlay';
     loadingOverlay.style.position = 'fixed'; // Fix position to overlay the entire screen
@@ -993,20 +911,17 @@ function createLoadingOverlay() {
 
     // Append the overlay to the body
     document.body.appendChild(loadingOverlay);
-    console.log("Loading overlay created and added to the body.");
 }
 
 
 function showLoadingAnimation() {
-    console.log("Showing loading animation..."); // Log when showing animation
-    createLoadingOverlay(); // Ensure the overlay is created
+    createLoadingOverlay();
 
     const text = "Loading";
     let index = 0;
 
     const intervalId = setInterval(() => {
         loadingText.textContent = text.slice(0, index) + '.'.repeat(index % 4);
-        console.log(`Loading text updated: ${loadingText.textContent}`); // Log loading text update
         index++;
 
         if (index > text.length) {
@@ -1016,18 +931,16 @@ function showLoadingAnimation() {
         // Stop the animation after the full text is displayed with dots
         if (index === text.length && loadingText.textContent.endsWith('...')) {
             clearInterval(intervalId);
-            console.log("Loading animation completed."); // Log when animation is completed
         }
-    }, 400); // Change this value to speed up or slow down the animation
+    }, 400);
 }
 
 function hideLoadingAnimation() {
-    console.log("Hiding loading animation..."); // Log when hiding animation
+   
     if (loadingOverlay) {
-        document.body.removeChild(loadingOverlay); // Remove the overlay from the body
-        loadingOverlay = null; // Reset to null
-        console.log("Loading overlay removed from the body."); // Log when overlay is removed
+        loadingOverlay = null; 
+        
     } else {
-        console.log("No loading overlay found to remove."); // Log if overlay was not found
+        console.log("No loading overlay found to remove.");
     }
 }

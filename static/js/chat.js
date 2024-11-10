@@ -5,35 +5,29 @@ document.addEventListener('DOMContentLoaded', function () {
     const messageInput = document.getElementById('message-input');
     const sendMessageButton = document.getElementById('send-message');
 
-    let currentConversationId = null; // Variable to store the current conversation ID
-
-    console.log('Document loaded and script executed.');
+    let currentConversationId = null;
 
     chatIcon.addEventListener('click', function () {
-        console.log('Chat icon clicked.');
-        // Toggle chat window visibility
+      
         if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
             console.log('Opening chat window.');
             chatWindow.style.display = 'flex';
-            startOrLoadConversation();  // Start or load conversation
+            startOrLoadConversation();
         } else {
-            console.log('Closing chat window.');
             chatWindow.style.display = 'none';
         }
     });
 
     closeChatButton.addEventListener('click', function () {
-        console.log('Close chat button clicked.');
         chatWindow.style.display = 'none';
     });
 
     sendMessageButton.addEventListener('click', function () {
         const text = messageInput.value;
-        console.log('Send message button clicked with text:', text);
         if (text.trim() !== '') {
             if (currentConversationId) {
                 sendMessage(text);
-                messageInput.value = '';  // Clear input field
+                messageInput.value = '';
             } else {
                 console.error('No conversation ID available.');
             }
@@ -48,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const userId = 1; 
         const superuserId = 1; 
     
-        console.log('Sending request with user_id:', userId, 'and superuser_id:', superuserId);
     
         fetch('/chat/start-or-load-conversation/', {
             method: 'POST',
@@ -62,17 +55,14 @@ document.addEventListener('DOMContentLoaded', function () {
             })
         })
         .then(response => {
-            console.log('Received response for start-or-load-conversation:', response);
             if (!response.ok) {
                 throw new Error('Network response was not ok.');
             }
             return response.json();
         })
         .then(data => {
-            console.log('Conversation data received:', data);
-            // Handle conversation data
             if (data.conversation_id) {
-                currentConversationId = data.conversation_id; // Store the conversation ID
+                currentConversationId = data.conversation_id; 
                 loadMessages(currentConversationId);
             } else {
                 console.error('Failed to start or load conversation.');
@@ -83,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
     function loadMessages(conversationId) {
-        console.log('Fetching messages for conversation ID:', conversationId);
         fetch(`/chat/get-messages/${conversationId}/`, {
             method: 'GET',
             headers: {
@@ -92,15 +81,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
         .then(response => {
-            console.log('Received response for get-messages:', response);
             if (!response.ok) {
                 throw new Error('Network response was not ok.');
             }
             return response.json();
         })
         .then(data => {
-            console.log('Messages received:', data.messages);
-            // Handle and display messages
             const messagesContainer = document.getElementById('messages');
             messagesContainer.innerHTML = ''; // Clear existing messages
             data.messages.forEach(message => {
@@ -115,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function sendMessage(text) {
-        console.log('Sending message:', text);
         fetch('/chat/send-message/', {
             method: 'POST',
             headers: {
@@ -128,15 +113,12 @@ document.addEventListener('DOMContentLoaded', function () {
             })
         })
         .then(response => {
-            console.log('Received response for send-message:', response);
             if (!response.ok) {
                 throw new Error('Network response was not ok.');
             }
             return response.json();
         })
         .then(data => {
-            console.log('Message sent:', data);
-            // Handle message sent
             loadMessages(currentConversationId);  // Reload messages after sending
         })
         .catch(error => {

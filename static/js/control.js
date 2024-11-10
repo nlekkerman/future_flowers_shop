@@ -1,6 +1,3 @@
-console.log('control.js loaded'); // Log when this script is loaded
-
-// Fetch and store seeds
 export async function fetchAndStoreSeeds() {
     try {
         const response = await fetch('/syncmanager/api/get_seeds_to_localstorage/');
@@ -9,20 +6,15 @@ export async function fetchAndStoreSeeds() {
             throw new Error(`Failed to fetch seeds: ${response.statusText}. Response body: ${responseBody}`);
         }
         const data = await response.json();
-        console.log('Fetched all seeds from server:', data.seeds);
-
         if (!Array.isArray(data.seeds)) {
             throw new Error('Expected `seeds` to be an array');
         }
 
         localStorage.setItem('seeds_data', JSON.stringify(data.seeds));
-        console.log('Seeds data saved to localStorage.');
 
-        // Return the data for use in other functions
-        return data.seeds; // Return the array of seeds
+        return data.seeds; 
     } catch (error) {
         console.error('Error fetching and storing seeds:', error);
-        // Optionally return an empty array or handle the error accordingly
         return [];
     }
 }
@@ -43,25 +35,17 @@ export function getCookie(name) {
 }
 export async function fetchCartData() {
     try {
-        console.log('Fetching cart data...');
-
-        // Fetch cart data from server
         const response = await fetch('/syncmanager/api/get_cart/');
         const data = await response.json();
-
-        // Log the raw response
-        console.log('Raw cart data:', data);
 
         if (data.error) {
             console.error('Error fetching cart:', data.error);
         } else {
-            // Store cart data in local storage
             localStorage.setItem('cart', JSON.stringify(data));
-            console.log('Cart data saved to local storage:', data);
             
         }
     } catch (error) {
-        // Log any error that occurred during the fetch
+       
         console.error('Error occurred during fetch:', error);
     }
 }
@@ -115,7 +99,6 @@ export async function updateQuantityOnServer(cartId, seedId, newQuantity) {
 
         const data = await response.json();
         if (data.success) {
-            console.log('Quantity updated successfully:', data.new_quantity);
             return data;
         } else {
             console.error('Error updating quantity:', data.error);
@@ -149,17 +132,15 @@ export async function deleteCartItemOnServer(seedId) {
         }
 
         const result = await response.json();
-        console.log('Server response:', result);
 
         if (result.success) {
             console.log('Item successfully deleted from server.');
         } else {
             console.error('Failed to delete item:', result.error);
-            // Optionally handle the error (e.g., show a message to the user)
+            
         }
     } catch (error) {
         console.error('Failed to delete item from server:', error);
-        // Optionally handle the error (e.g., show a message to the user)
     }
 }
 
@@ -183,7 +164,6 @@ export async function fetchUserMessages(userId) {
         if (!response.ok) throw new Error('Network response was not ok');
 
         const responseData = await response.json();
-        console.log('Fetched user messages:', responseData);
 
         if (!Array.isArray(responseData.messages)) {
             throw new Error('Invalid response format: expected an array of messages');
@@ -216,7 +196,6 @@ export async function fetchUserId() {
     try {
         const response = await fetch('/syncmanager/api/get_user_id/');
 
-        // Check if the response is okay (HTTP status in the range 200-299)
         if (!response.ok) {
             console.error('Failed to fetch user ID, redirecting to login or another error occurred:', response.status);
             // Optionally handle specific status codes
@@ -231,14 +210,6 @@ export async function fetchUserId() {
 
         if (data.user_id !== undefined) {
             localStorage.setItem('userId', data.user_id); // Store user ID in local storage
-
-            if (data.user_id === 0) { // Anonymous user check
-                console.log('User is anonymous');
-                // Handle anonymous user logic here if needed
-            } else {
-                console.log('User is logged in with ID:', data.user_id);
-                // Handle logged-in user logic here if needed
-            }
 
             return data.user_id;
         } else {
@@ -274,14 +245,13 @@ export async function sendMessage(conversationId, messageContent) {
 
         // Parse the JSON response
         const data = await response.json();
-        console.log('Message sent successfully:', data);
-        return data; // Return the data for further handling
+        return data; 
     } catch (error) {
         console.error('Error sending message:', error);
         return {
             success: false,
             error: error.message
-        }; // Return structured error
+        };
     }
 }
 export async function fetchUsername() {
@@ -301,12 +271,12 @@ export async function fetchMessages(conversationId) {
         // Parse the JSON response
         const data = await response.json();
 
-        // Check for success in the response
         if (data.success) {
-            console.log('Fetched messages:', data.messages); // Log messages to the console
-            return data.messages; // Return the messages for further use
+            
+            return data.messages; 
+            
         } else {
-            alert(`Error: ${data.error}`); // Alert if there's an error
+            alert(`Error: ${data.error}`); 
             return [];
         }
     } catch (error) {
@@ -344,10 +314,7 @@ export async function fetchMessageCounts() {
         if (response.ok) {
             const unseenMessages = data.unseenMessages;
 
-            console.log("Unseen messages: ", unseenMessages);
-
-            // Ensure you are selecting the correct class or ID.
-            // If it's a class, use `.unseen-messages-count`, if an ID, use `#unseen-messages-count`.
+            
             document.querySelectorAll('.unseen-messages-count').forEach(element => {
                 element.innerText = unseenMessages; 
             });
@@ -356,19 +323,13 @@ export async function fetchMessageCounts() {
            const notificationArea = document.getElementById('notification-area');
 
            if (notificationArea) {
-               // Log current color and the unseen messages count
-               console.log("Current background color:", notificationArea.style.backgroundColor);
                
                if (unseenMessages > 0) {
-                   console.log("Setting background color to red due to unseen messages.");
-                   notificationArea.style.backgroundColor = 'red'; // Color when unseen messages are present
+                   notificationArea.style.backgroundColor = 'red'; 
                } else {
-                   console.log("No unseen messages, resetting background color to transparent.");
-                   notificationArea.style.backgroundColor = 'transparent'; // Reset when no unseen messages
+                   notificationArea.style.backgroundColor = 'transparent';
                }
 
-               // Log final background color to confirm the change
-               console.log("Final background color:", notificationArea.style.backgroundColor);
            } else {
                console.warn("Notification area with ID 'notification-area' not found.");
            }
@@ -388,20 +349,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Add a click event listener to the search icon
     searchIcon.addEventListener('click', function () {
-        // Log to console for debugging
-        console.log("SSSSSEEEEEEEAAAAAAARRRRRRCCCCCCCCCHHHHH");
-
-        // Check the current display state and toggle
+     
         if (searchContainer.style.display === 'none' || searchContainer.style.display === '') {
-            searchContainer.classList.add('show'); // Add class to show
-            searchContainer.style.display = 'block'; // Temporarily set display to block
-            searchIcon.style.opacity = '0'; // Hide the icon
+            searchContainer.classList.add('show'); 
+            searchContainer.style.display = 'block'; 
+            searchIcon.style.opacity = '0';
         } else {
-            searchContainer.classList.remove('show'); // Remove class to hide
-            setTimeout(() => { // Wait for transition to finish before hiding
-                searchContainer.style.display = 'none'; // Set display to none after fade
-                searchIcon.style.opacity = '1'; // Show the icon again
-            }, 300); // Match timeout to CSS transition duration
+            searchContainer.classList.remove('show');
+            setTimeout(() => { 
+                searchContainer.style.display = 'none';
+                searchIcon.style.opacity = '1';
+            }, 300); 
         }
     });
 });

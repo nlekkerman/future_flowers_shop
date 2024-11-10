@@ -119,10 +119,6 @@ function updateCartUI() {
         cartTotalElement.textContent = `$${totalPrice.toFixed(2)}`; // Display the total price
     }
 
-    console.log('Cart UI updated:', {
-        itemCount,
-        totalPrice
-    });
 }
 
 
@@ -131,16 +127,7 @@ function updateCartUI() {
 export function displayMessageInModal(message, item) {
     const messagesContainer = document.getElementById('item-added-search-message');
 
-    if (!messagesContainer) {
-        console.error('Element with ID "item-added-search-message" not found.');
-        return;
-    }
 
-    // Log the details for debugging
-    console.log('Displaying message in modal:', {
-        message,
-        item
-    });
 
     // Fetch image URL based on item ID
     const imageUrl = `https://res.cloudinary.com/dg0ssec7u/image/upload/${item.image}.webp`;
@@ -163,15 +150,10 @@ export function displayMessageInModal(message, item) {
 
     // Display the message container
     messagesContainer.style.display = 'block';
-
-    // Log message visibility
-    console.log('Message container displayed.');
-
-    // Hide the message after a few seconds (optional)
     setTimeout(() => {
         messagesContainer.style.display = 'none';
         console.log('Message container hidden.');
-    }, 5000); // Adjust time as needed
+    }, 5000); 
 }
 // Function to hide the message container
 export function hideItemAddedMessage() {
@@ -225,10 +207,6 @@ function toggleSearchResults() {
 function displaySearchResults(seeds) {
     const seedsContainer = document.getElementById('search-results-container');
 
-    if (!seedsContainer) {
-        console.error('Element with ID "search-results-container" not found.');
-        return;
-    }
 
     seedsContainer.innerHTML = '';
 
@@ -239,22 +217,20 @@ function displaySearchResults(seeds) {
 
     seeds.forEach(seed => {
         const searchSeedElement = document.createElement('div');
-        searchSeedElement.className = 'col-12 col-md-6 col-lg-4 mb-4';
-
-        const backgroundImageUrl = seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg';
+        searchSeedElement.className = 'search-card mb-4';
 
         let seedHTML = `
         <div class="seed-card h-100" id="seed-card-${seed.id}" data-seed-id="${seed.id}">
             <div class="card-img-container">
-                <img src="${seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg'}" class="card-img-top" alt="${seed.name}">
+                <img src="${seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg'}" class="search-item-img" alt="${seed.name}">
                 ${seed.discount > 0 ? '<span class="discount-label">Discounted</span>' : ''}
             </div>
-            <div class="card-body">
-                <h2 class="card-title h5">${seed.name}</h2>
-                <p class="card-text"><strong>Scientific Name:</strong> ${seed.scientific_name}</p>
-                <p class="card-text"><strong>Planting Months:</strong> ${seed.planting_months_from} to ${seed.planting_months_to}</p>
-                <p class="card-text"><strong>Flowering Months:</strong> ${seed.flowering_months_from} to ${seed.flowering_months_to}</p>
-                <p class="card-text">
+            <div class="card-body seed-card-body ">
+                <h2 class="card-title card-title-serach h5">${seed.name}</h2>
+                <p class="card-text card-text-search"><strong>Scientific Name:</strong> ${seed.scientific_name}</p>
+                <p class="card-text card-text-search"><strong>Planting Months:</strong> ${seed.planting_months_from} to ${seed.planting_months_to}</p>
+                <p class="card-text card-text-search"><strong>Flowering Months:</strong> ${seed.flowering_months_from} to ${seed.flowering_months_to}</p>
+                <p class="card-text card-text-search">
                     <strong>Price:</strong> 
                     ${seed.discount > 0 ? 
                         `<span class="original-price">$${seed.price}</span> <span class="discounted-price">$${seed.discounted_price}</span>` 
@@ -276,16 +252,9 @@ function displaySearchResults(seeds) {
         seedsContainer.appendChild(searchSeedElement);
         searchSeedElement.addEventListener('click', () => {
             const modal = document.getElementById('search-seed-details-modal');
-
-            if (!modal) {
-                console.error('Modal element not found.');
-                return;
-            }
-
             // Toggle the modal visibility using a class
             modal.classList.toggle('modal-visible');
 
-            console.log('Modal visibility toggled. Current display style:', modal.style.display);
         });
 
 
@@ -309,7 +278,6 @@ function displaySearchResultsSeedDetails(seed) {
     const seedDetailsModal = document.getElementById('search-seed-details-modal');
 
     if (!seedDetailsContent) {
-        console.error('Element with ID "search-seed-details-content" not found.');
         return;
     }
 
@@ -371,7 +339,7 @@ function attachSeedCardEventListeners() {
                 displaySearchResultsSeedDetails(seed);
                 showSearchDetailsModal();
             } else {
-                console.error('Seed not found in local storage.');
+                alert('Oops! We couldn\'t find the seed details. Please try again later.');
             }
         });
     });
@@ -390,18 +358,13 @@ function attachAddToCartButtonEventListeners() {
             const seed = getSeedFromLocalStorage(seedId);
             const imageUrl = seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg';
 
-            console.log(`Adding Seed ID ${seedId} to cart with quantity ${quantity}`);
-            console.log(`Image URL: ${imageUrl}`);
-            console.log('Seed details:', seed);
-            console.log('Discounted Price:', seed.discount > 0 ? (seed.price - (seed.price * seed.discount / 100)).toFixed(2) : seed.price);
-
             if (seed) {
-                console.log('Before adding to cart:', getCartFromLocalStorage()); // Log cart state before addition
+               
                 addToCart(seed, quantity, imageUrl);
                 updateCartUI(); // Ensure the cart UI is updated after adding the item
                 try {
                     await sendToCart(seedId, quantity, seed);
-                    console.log('Item sent to server successfully.');
+                   
                 } catch (error) {
                     console.error('Failed to send item to server:', error);
                 }
@@ -481,21 +444,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    
-    var chatIcon = document.getElementById('chatIcon');
-    if (chatIcon) {
-        chatIcon.addEventListener('click', function (event) {
-            console.log('Chat icon clicked');
-            // Uncomment below line to log href attribute
-            // console.log('Redirecting to:', chatIcon.href);
-        });
-    }
-});
-
-
-
-
 
 document.addEventListener('DOMContentLoaded', function () {
     // Get references to the button and filter container
@@ -530,6 +478,6 @@ document.addEventListener('DOMContentLoaded', () => {
         viewCartButton.addEventListener('click', () => {
             window.location.href = '/cart/'; // Redirect to cart page
         });
-        console.log("Cart button found, event listener attached.");
+       
     }
 });

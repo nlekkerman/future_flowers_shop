@@ -6,6 +6,7 @@
     https://stripe.com/docs/stripe-js
 */
 
+
 var stripePublicKey = $('#id_stripe_public_key').text().slice(1, -1);
 var clientSecret = $('#id_client_secret').text().slice(1, -1);
 var stripe = Stripe(stripePublicKey);
@@ -49,8 +50,7 @@ card.addEventListener('change', function (event) {
         cardValid = false; // Mark card as invalid
     } else {
         errorDiv.textContent = '';
-        console.log('Card validation success: No errors.');
-        cardValid = true; // Mark card as valid
+        cardValid = true; 
     }
 
     toggleSubmitButton(event.complete);
@@ -61,21 +61,18 @@ function toggleSubmitButton(cardValid) {
     var submitButton = $('#submit-button');
     var messageDiv = $('#card-errors'); // Div to display messages
 
-    console.log('Toggle Submit Button called. Current card validity:', cardValid); // Log the current card validity
-
     if (cardValid) {
         submitButton.attr('disabled', false); // Enable the button if the card is valid
         messageDiv.text('Your card details are valid. You can proceed to checkout.')
                   .css('color', 'green')
-                  .show(); // Show the message in green
-        console.log('Submit button enabled. Message displayed: "Your card details are valid. You can proceed to checkout."'); 
+                  .show(); 
         
     } else {
         submitButton.attr('disabled', true); // Disable the button if the card is invalid
         messageDiv.text('Please enter valid card details to enable the checkout button.')
                   .css('color', 'red')
-                  .show(); // Show the message in red
-        console.log('Submit button disabled. Message displayed: "Please enter valid card details to enable the checkout button."'); 
+                  .show();
+                  
     }
 }
 

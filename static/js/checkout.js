@@ -1,9 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('DOM CONTENT LOADED. STARTING CHECKOUT PROCESS...');
-    
     let cart;
-
     try {
         const response = await fetch('/syncmanager/api/get_cart/');
         if (!response.ok) {
@@ -11,9 +8,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         
         cart = await response.json();
-        console.log('FETCHED CART DATA:', cart);
-
-        // Validate cart data
         if (!cart || typeof cart !== 'object' || !Array.isArray(cart.items)) {
             console.error('CART DATA IS NOT IN THE EXPECTED FORMAT:', cart);
             return;
@@ -38,27 +32,15 @@ function populateCheckout(cart) {
     const cartDataInput = document.getElementById('cart-data');
     const checkoutForm = document.getElementById('payment-form');
 
-    // Check for missing DOM elements
-    if (!checkoutItemsContainer) console.error('Missing: checkout-items-container');
-    if (!cartCount) console.error('Missing: cart-count');
-    if (!orderTotalElement) console.error('Missing: order-total');
-    if (!deliveryFeeElement) console.error('Missing: delivery-fee');
-    if (!grandTotalElement) console.error('Missing: grand-total');
-    if (!cartDataInput) console.error('Missing: cart-data');
-    if (!checkoutForm) console.error('Missing: checkout-form');
-
-    // Return early if any elements are missing
     if (!checkoutItemsContainer || !cartCount || !orderTotalElement || !deliveryFeeElement || !grandTotalElement || !cartDataInput || !checkoutForm) {
         console.error('ONE OR MORE DOM ELEMENTS ARE MISSING.');
         return;
     }
 
     let orderTotal = 0;
-    const deliveryFee = 5.00; // Default delivery fee
+    const deliveryFee = 5.00; 
+    checkoutItemsContainer.innerHTML = '';
 
-    checkoutItemsContainer.innerHTML = ''; // Clear previous items
-
-    // Iterate over cart items
     cart.items.forEach(item => {
         if (!item || !item.seed) {
             console.error('INVALID ITEM DATA:', item);
