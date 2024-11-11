@@ -12,7 +12,7 @@ This document provides a comprehensive overview of the features implemented in t
   - **Positioning**: Links are arranged in a circular pattern around the menu icon, using CSS transformations for smooth positioning.
 
     ```
-- **Image**: ![Interactive Navigation Menu](images/interactive-navigation-menu.png)
+- **Image**: ![Interactive Navigation Menu](images/features/menu.png)
 
 ### **2. Advanced Cart Management**
 
@@ -23,7 +23,7 @@ This document provides a comprehensive overview of the features implemented in t
   - **Remove Items**: Items can be removed from the cart.
   - **Total Calculation**: Displays the total cost and any applicable discounts.
 
-- **Image**: ![Advanced Cart Management](images/advanced-cart-management.png)
+- **Image**: ![Advanced Cart Management](images/features/cart.png)
 
 ### **3. Comprehensive Seed Details**
 
@@ -32,7 +32,7 @@ This document provides a comprehensive overview of the features implemented in t
   - **Detailed View**: Provides a thorough description of each seed.
   - **Add to Cart**: Users can select the quantity and add seeds to their cart.
 
-- **Image**: ![Comprehensive Seed Details](images/comprehensive-seed-details.png)
+- **Image**: ![Comprehensive Seed Details](images/features/shop-seeds.png)
 
 ### **4. Custom Account Management**
 
@@ -42,7 +42,7 @@ This document provides a comprehensive overview of the features implemented in t
   - **Profile Management**: Update personal details and preferences.
   - **Order History**: View past orders and track current ones.
 
-- **Image**: ![Custom Account Management](images/custom-account-management.png)
+- **Image**: ![Custom Account Management](images/features/edit_profile.png)
 
 ### **5. Review and Rating System**
 
@@ -51,7 +51,7 @@ This document provides a comprehensive overview of the features implemented in t
   - **Submit Reviews**: Add feedback and ratings for seeds.
   - **View Reviews**: Read reviews from other users.
 
-- **Image**: ![Review and Rating System](images/review-and-rating-system.png)
+- **Image**: ![Review and Rating System](images/features/rewievs.png)
 
 ### **6. Chat and Chatbot Integration**
 
@@ -60,7 +60,7 @@ This document provides a comprehensive overview of the features implemented in t
   - **Live Chat**: Real-time support with human representatives.
   - **Chatbot**: AI-driven responses for FAQs and new user onboarding.
 
-- **Image**: ![Chat and Chatbot Integration](images/chat-and-chatbot-integration.png)
+- **Chatbot was not implmented in this iteration**
 
 ### **7. Seamless Checkout Process**
 
@@ -78,7 +78,7 @@ This document provides a comprehensive overview of the features implemented in t
   - **Responsive Layout**: Adaptable design for different screen sizes.
   - **Security**: Protects user data and transactions.
 
-- **Image**: ![Responsive and Secure Design](images/responsive-and-secure-design.png)
+- **Image**: ![Responsive and Secure Design](images/features/responsive-img.png)
 
 ### **9. Admin Dashboard**
 
