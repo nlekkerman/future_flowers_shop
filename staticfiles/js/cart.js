@@ -1,3 +1,5 @@
+/* jshint esversion: 8 */
+
 import { updateQuantityOnServer, deleteCartItemOnServer } from './control.js'; 
 const updateItemMessages = document.getElementById('update-item-messages');
 

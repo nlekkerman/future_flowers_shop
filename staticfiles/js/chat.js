@@ -1,3 +1,4 @@
+/* jshint esversion: 11 */
 document.addEventListener('DOMContentLoaded', function () {
     const chatIcon = document.getElementById('chat-icon');
     const chatWindow = document.getElementById('chat-window');

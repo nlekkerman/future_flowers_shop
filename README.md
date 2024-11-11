@@ -116,7 +116,7 @@ For more information on features and testing, please refer to the [Testing Docum
 ### Social Media Presence
 We will maintain an active **Facebook page** to engage with our community of gardening enthusiasts, share seasonal promotions, and provide expert gardening tips. Our Facebook page will help us connect with customers and grow our online presence. Users will be able to follow us for the latest updates on new seed arrivals, special discounts, and valuable gardening advice. 
 
-![Future Flower Shop Facebook Page](https://www.example.com/facebook-image.jpg)  
+![Future Flower Shop Facebook Page](documentation/images/fb-page.png)  
 *Image of our Facebook page*
 
 ### SEO Optimization

@@ -1,3 +1,4 @@
+/* jshint esversion: 8 */
 import {
     getCartFromLocalStorage
 } from './utils.js';
@@ -176,12 +177,11 @@ export function displayMessageInModal(message, item) {
     const imageUrl = `https://res.cloudinary.com/dg0ssec7u/image/upload/${item.image}.webp`;
 
     // Update background image and styles
-    messagesContainer.style.backgroundImage = `url('${imageUrl}')`;; // Set the background image
-    messagesContainer.style.backgroundSize = 'cover'; // Ensure the image covers the container
-    messagesContainer.style.backgroundPosition = 'center'; // Center the background image
-    messagesContainer.style.backgroundRepeat = 'no-repeat'; // Prevent image repetition
-    messagesContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.9)'; // Optional: dark overlay for better readability
-
+    messagesContainer.style.backgroundImage = `url('${imageUrl}')`;
+    messagesContainer.style.backgroundSize = 'cover'; 
+    messagesContainer.style.backgroundPosition = 'center'; 
+    messagesContainer.style.backgroundRepeat = 'no-repeat';
+    messagesContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.9)'; 
     // Set the message content
     messagesContainer.innerHTML = `
         <div class="message-content">
@@ -339,10 +339,12 @@ document.addEventListener("DOMContentLoaded", function() {
 * Handles showing seed details in a modal on card click.
 */
 function displaySearchResultsSeedDetails(seed) {
+    let isSeedDetailsVisible = false;
     const seedDetailsContent = document.getElementById('search-seed-details-content');
     const seedDetailsModal = document.getElementById('search-seed-details-modal');
 
     if (!seedDetailsContent) {
+        console.log('seedDetailsContent element not found!');
         return;
     }
 
@@ -379,16 +381,16 @@ function displaySearchResultsSeedDetails(seed) {
     if (closeButton) {
         closeButton.addEventListener('click', () => {
             if (seedDetailsModal) {
-                seedDetailsModal.style.display = 'none'; // Hide the seed details card
-                isSeedDetailsVisible = false; // Update the visibility flag
+                seedDetailsModal.style.display = 'none'; 
+                isSeedDetailsVisible = false; 
             }
         });
     }
 
     // Show the seed details modal
     if (seedDetailsModal) {
-        seedDetailsModal.style.display = 'block'; // Ensure the modal is visible
-        isSeedDetailsVisible = true; // Update the visibility flag
+        seedDetailsModal.style.display = 'block'; 
+        isSeedDetailsVisible = true; 
     }
 }
 

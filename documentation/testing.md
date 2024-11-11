@@ -76,3 +76,14 @@
    - **Image**: ![Shopping Cart Wrong Email](images/testing/shoping-card-wrong-email.png)
 
 ---
+## Validation
+
+Due to illness, I was unable to complete the validation of all files as planned. The validation process for **HTML**, **JavaScript**, and **Python** files has not been fully carried out yet. However, you can find further details in the respective validation files.
+
+- [HTML Validation](images/html-validation.png)
+- [JavaScript cart Validation](images/cart-script-validation.png)
+- [JavaScript base Validation](images/base-script-valiation.png)
+- [CSS  Validation](images/css-validation.png)
+- [Python Validation](images/checkout-python-validatio.png)
+
+Please refer to these links for the pending validation results.

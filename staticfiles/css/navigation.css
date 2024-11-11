@@ -42,7 +42,13 @@
     background-position: center;
 }
 
-.icon-style {
+
+.contact-us-icon,
+.home-icon,
+.trees-icon,
+.about-us-icon,
+.bush-icon,
+.reviews-icon {
     border-radius: 50%;
     height: 90px;
     background-size: cover;
@@ -50,40 +56,8 @@
     font-weight: 700;
     font-size: 0.7rem;
     color: black !important;
-    /* Default color */
 }
 
-.home-icon {
-    @extend .icon-style;
-    /* Apply common styles */
-}
-
-.contact-us-icon {
-    @extend .icon-style;
-    /* Apply common styles */
-}
-
-.trees-icon {
-    @extend .icon-style;
-
-}
-
-.about-us-icon {
-    @extend .icon-style;
-    /* Apply common styles */
-    color: rgb(255, 255, 255) !important;
-    /* Specific color for this icon */
-}
-
-.bush-icon {
-    @extend .icon-style;
-    /* Apply common styles */
-}
-
-.reviews-icon {
-    @extend .icon-style;
-    /* Apply common styles */
-}
 
 .blur-overlay {
     position: fixed;
