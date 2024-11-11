@@ -89,4 +89,4 @@ This document provides a comprehensive overview of the features implemented in t
   - **User Management**: View and manage user accounts and permissions.
   - **Performance Insights**: Access analytics on sales performance and user activity.
 
-- **Image**: ![Admin Dashboard](images/admin-dashboard.png)
+- **Image**: ![Admin Dashboard](images/features/admin_dashboard.png)

@@ -1,6 +1,6 @@
-# Seed Shop Enhancement Project
+# Seed Shop Project
 
-![Futuristic Seed Shop Overview](path_to_your_image.jpg)
+![Futuristic Seed Shop Overview](documentation/images/features/responsive-img.png)
 
 ## Project Overview
 
@@ -107,6 +107,11 @@ To keep the Seed Shop platform innovative and aligned with emerging user needs, 
 
 For detailed information about these future features and their potential impact, please refer to the [Future Features Documentation](documentation/future-features.md).
 ## Marketing Strategy for Future Flower Shop
+## Testing and Limitations
+
+Due to being sick for 20 days, detailed testing of the platform could not be completed as planned. The testing process will be finalized after the assessment by Code Institute and the completion of grading. However, the application has been tested for its core functionality and is fully operational. All essential features, such as product browsing, cart management, and checkout, have been verified and work as expected. Please note that the management features (admin dashboard and certain backend operations) were not fully tested, but no critical issues have been identified within the customer-facing components.
+
+For more information on features and testing, please refer to the [Testing Documentation](documentation/testing.md).
 
 ### Social Media Presence
 We will maintain an active **Facebook page** to engage with our community of gardening enthusiasts, share seasonal promotions, and provide expert gardening tips. Our Facebook page will help us connect with customers and grow our online presence. Users will be able to follow us for the latest updates on new seed arrivals, special discounts, and valuable gardening advice. 
@@ -237,5 +242,3 @@ The following images and icons were used in the production of this project. Thei
 - **Image by [chandlervid85 on Freepik](https://www.freepik.com/free-photo/assorted-flowers-collection-multicolored-flowers-yellow-background-ai-generative_41368255.htm#fromView=search&page=1&position=48&uuid=7afe1497-7204-44f9-9562-726e6cfcfec6)**
 - **Image by [qalebstudio on Freepik](https://www.freepik.com/free-psd/envelope-back-side_26048779.htm#fromView=search&page=2&position=45&uuid=00c8d812-01a8-4c34-8278-e649a4691861)**
 - **Image by [rawpixel.com on Freepik](https://www.freepik.com/free-vector/heart-logo-design-vector-minimal-style_18246200.htm#fromView=search&page=2&position=51&uuid=2f223f68-736f-4d31-b0c1-65d4b3bca1d1)**
-
-Thank you for your understanding and for supporting these fantastic creators who have contributed to the development of this website!
