@@ -1,4 +1,49 @@
 # Detailed Features Documentation
+# Table of Contents
+
+1. [Interactive Navigation Menu](#interactive-navigation-menu)  
+   1.1. [Description](#description)  
+   1.2. [Functionality](#functionality)  
+   1.3. [Image](#image)
+
+2. [Advanced Cart Management](#advanced-cart-management)  
+   2.1. [Description](#description-1)  
+   2.2. [Functionality](#functionality-1)  
+   2.3. [Image](#image-1)
+
+3. [Comprehensive Seed Details](#comprehensive-seed-details)  
+   3.1. [Description](#description-2)  
+   3.2. [Functionality](#functionality-2)  
+   3.3. [Image](#image-2)
+
+4. [Custom Account Management](#custom-account-management)  
+   4.1. [Description](#description-3)  
+   4.2. [Functionality](#functionality-3)  
+   4.3. [Image](#image-3)
+
+5. [Review and Rating System](#review-and-rating-system)  
+   5.1. [Description](#description-4)  
+   5.2. [Functionality](#functionality-4)  
+   5.3. [Image](#image-4)
+
+6. [Chat and Chatbot Integration](#chat-and-chatbot-integration)  
+   6.1. [Description](#description-5)  
+   6.2. [Functionality](#functionality-5)
+
+7. [Seamless Checkout Process](#seamless-checkout-process)  
+   7.1. [Description](#description-6)  
+   7.2. [Functionality](#functionality-6)  
+   7.3. [Image](#image-5)
+
+8. [Responsive and Secure Design](#responsive-and-secure-design)  
+   8.1. [Description](#description-7)  
+   8.2. [Functionality](#functionality-7)  
+   8.3. [Image](#image-6)
+
+9. [Admin Dashboard](#admin-dashboard)  
+   9.1. [Description](#description-8)  
+   9.2. [Functionality](#functionality-8)  
+   9.3. [Image](#image-7)
 
 This document provides a comprehensive overview of the features implemented in the Seed Shop platform. It covers the functionality, user interactions, and technical aspects of each feature.
 

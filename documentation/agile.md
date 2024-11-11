@@ -1,5 +1,54 @@
 # Agile Project Management for Seed Shop
 ![Agile Project Management](images/agile.png)
+# Table of Contents
+
+1. [Epic: Cart Management System](#epic-cart-management-system)  
+   1.1. [US01: Implement Add to Cart Functionality](#us01-implement-add-to-cart-functionality)  
+   1.2. [US02: Implement View Cart Page](#us02-implement-view-cart-page)  
+   1.3. [US03: Implement Update Cart Items](#us03-implement-update-cart-items)  
+   1.4. [US04: Implement Remove Cart Items](#us04-implement-remove-cart-items)  
+   1.5. [US05: Implement Cart Persistence](#us05-implement-cart-persistence)
+
+2. [Epic: Navigation and Filtering System](#epic-navigation-and-filtering-system)  
+   2.1. [US01: Implement Main Navigation Menu](#us01-implement-main-navigation-menu)  
+   2.2. [US02: Implement Category Filtering](#us02-implement-category-filtering)  
+   2.3. [US03: Implement Search Functionality](#us03-implement-search-functionality)  
+   2.4. [US04: Implement Sorting Options](#us04-implement-sorting-options)  
+   2.5. [US05: Optimize Navigation for Mobile](#us05-optimize-navigation-for-mobile)
+
+3. [Epic: Stripe Integration and Checkout System](#epic-stripe-integration-and-checkout-system)  
+   3.1. [US01: Implement Stripe Payment Gateway](#us01-implement-stripe-payment-gateway)  
+   3.2. [US02: Create Checkout Page](#us02-create-checkout-page)  
+   3.3. [US03: Implement Order Confirmation Page](#us03-implement-order-confirmation-page)  
+   3.4. [US04: Implement Payment Error Handling](#us04-implement-payment-error-handling)  
+   3.5. [US05: Implement Payment Confirmation Emails](#us05-implement-payment-confirmation-emails)  
+   3.6. [US06: Ensure PCI Compliance](#us06-ensure-pci-compliance)
+
+4. [Epic: Custom Account Integration](#epic-custom-account-integration)  
+   4.1. [US01: Implement User Registration](#us01-implement-user-registration)  
+   4.2. [US02: Implement User Login](#us02-implement-user-login)  
+   4.3. [US03: Implement Password Reset Functionality](#us03-implement-password-reset-functionality)  
+   4.4. [US04: Implement User Profile Management](#us04-implement-user-profile-management)  
+   4.5. [US05: Implement Account Settings Management](#us05-implement-account-settings-management)  
+   4.6. [US06: Implement User Account Security Features](#us06-implement-user-account-security-features)
+
+5. [Epic: Seed Details and Seed List Functionality](#epic-seed-details-and-seed-list-functionality)  
+   5.1. [US01: Implement Seed List Page](#us01-implement-seed-list-page)  
+   5.2. [US02: Implement Seed Detail Page](#us02-implement-seed-detail-page)  
+   5.3. [US03: Implement Related Seeds Section](#us03-implement-related-seeds-section)  
+   5.4. [US04: Implement Seed Availability Indicator](#us04-implement-seed-availability-indicator)  
+   5.5. [US05: Implement Seed Search and Filter Options](#us05-implement-seed-search-and-filter-options)  
+   5.6. [US06: Implement Seed Comparison Feature](#us06-implement-seed-comparison-feature)  
+   5.7. [US07: Implement User Ratings and Reviews for Seeds](#us07-implement-user-ratings-and-reviews-for-seeds)
+
+6. [Epic: Communication Channels and Support](#epic-communication-channels-and-support)  
+   6.1. [US01: Display Seed Ratings and Reviews](#us01-display-seed-ratings-and-reviews)  
+   6.2. [US02: Submit Seed Reviews and Ratings](#us02-submit-seed-reviews-and-ratings)  
+   6.3. [US03: Implement Review Moderation](#us03-implement-review-moderation)  
+   6.4. [US04: Implement Chatbot for Customer Support](#us04-implement-chatbot-for-customer-support)  
+   6.5. [US05: Enable Live Chat with Customer Support](#us05-enable-live-chat-with-customer-support)  
+   6.6. [US06: Implement Review and Rating Analytics](#us06-implement-review-and-rating-analytics)
+
 
 This document outlines the epics, user stories, and tasks for the Seed Shop project. Each epic includes detailed user stories and tasks that contribute to achieving the epic's goals.
 

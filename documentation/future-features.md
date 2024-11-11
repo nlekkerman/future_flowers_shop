@@ -1,5 +1,38 @@
 # Future Features for Seed Shop Enhancement Project
 
+# Table of Contents
+
+1. [Voice Command Navigation](#voice-command-navigation)  
+   1.1. [Objective](#objective)  
+   1.2. [Description](#description)  
+   1.3. [Features](#features)  
+
+2. [Advanced Personalization](#advanced-personalization)  
+   2.1. [Objective](#objective-1)  
+   2.2. [Description](#description-1)  
+   2.3. [Features](#features-1)
+
+3. [Augmented Reality (AR) Integration](#augmented-reality-ar-integration)  
+   3.1. [Objective](#objective-2)  
+   3.2. [Description](#description-2)  
+   3.3. [Features](#features-2)
+
+4. [Expanded Chatbot Capabilities](#expanded-chatbot-capabilities)  
+   4.1. [Objective](#objective-3)  
+   4.2. [Description](#description-3)  
+   4.3. [Features](#features-3)
+
+5. [Social Media Integration](#social-media-integration)  
+   5.1. [Objective](#objective-4)  
+   5.2. [Description](#description-4)  
+   5.3. [Features](#features-4)
+
+6. [Enhanced Analytics and Reporting](#enhanced-analytics-and-reporting)  
+   6.1. [Objective](#objective-5)  
+   6.2. [Description](#description-5)  
+   6.3. [Features](#features-5)
+
+
 As part of our ongoing commitment to improving the Seed Shop platform, we are considering several future enhancements that will further enrich the user experience and expand the platform's capabilities. Below are some potential features we plan to explore:
 
 ## Voice Command Navigation

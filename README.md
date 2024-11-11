@@ -2,6 +2,21 @@
 
 ![Futuristic Seed Shop Overview](documentation/images/features/responsive-img.png)
 
+## Table of Contents
+
+1. [Project Overview](#project-overview)
+2. [Goals](#goals)
+   - [User Goals](#user-goals)
+   - [Owner Goals](#owner-goals)
+3. [Features Overview](#features-overview)
+4. [Possible Future Features](#possible-future-features)
+5. [Marketing Strategy for Future Flower Shop](#marketing-strategy-for-future-flower-shop)
+6. [Testing and Limitations](#testing-and-limitations)
+7. [Agile Methodology Overview](#agile-methodology-overview)
+8. [Technologies Used](#technologies-used)
+9. [Credits](#credits)
+10. [Image and Icon Attributions](#image-and-icon-attributions)
+
 ## Project Overview
 
 This project focuses on enhancing the Seed Shop platform by integrating advanced features to create a seamless and intuitive shopping experience. The goal is to offer a futuristic and engaging platform that caters to modern user expectations through intuitive navigation, comprehensive product details, and advanced communication tools.
