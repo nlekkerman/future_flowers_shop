@@ -12,6 +12,15 @@ logger = logging.getLogger(__name__)
 @login_required
 @require_POST
 def write_review(request):
+    """
+    Handles the submission of a new review. The review is saved with a 'pending' status until approved.
+
+    Parameters:
+        request (HttpRequest): The HTTP request containing the review data.
+
+    Returns:
+        JsonResponse: A JSON response with the success or failure message.
+    """
     form = ReviewForm(request.POST)
     if form.is_valid():
         review = form.save(commit=False)
@@ -31,7 +40,15 @@ def write_review(request):
 
 @login_required
 def fetch_reviews(request):
-    # Fetch all approved reviews with related approved comments
+    """
+    Fetches all approved reviews along with their approved comments.
+
+    Parameters:
+        request (HttpRequest): The HTTP request to fetch reviews.
+
+    Returns:
+        JsonResponse: A JSON response containing the reviews and their associated comments.
+    """
     reviews = Review.objects.filter(status='approved', deleted=False).prefetch_related('comments')
 
     # Prepare the data in JSON format
@@ -58,9 +75,25 @@ def fetch_reviews(request):
     return JsonResponse({'reviews': data})
 
 
-@csrf_exempt  # Note: Consider adding proper CSRF protection
+@csrf_exempt 
 @login_required
 def update_review(request):
+    """
+    Updates an existing review submitted by the user. The review's rating, comment, and status are updated. 
+
+    If the review is successfully found, the rating and comment are modified, and the status is set to 'pending'. 
+    The updated review is then saved to the database.
+
+    Parameters:
+        request (HttpRequest): The HTTP request containing the review update data. 
+            This includes the 'review_id', 'rating', and 'comment' fields.
+
+    Returns:
+        JsonResponse: A JSON response indicating the success or failure of the update.
+            - If successful, returns a message confirming the review was updated.
+            - If the review does not exist, returns an error message with a 404 status.
+            - If the request method is not 'POST', returns an error with a 400 status.
+    """
     if request.method == 'POST':
         review_id = request.POST.get('review_id')
         rating = request.POST.get('rating')
@@ -78,9 +111,18 @@ def update_review(request):
 
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
 
-@csrf_exempt  # Note: Consider adding proper CSRF protection
+@csrf_exempt
 @login_required
 def delete_review(request, review_id):
+    """
+    Deletes a review submitted by the user.
+
+    Parameters:
+        request (HttpRequest): The HTTP request to delete the review.
+
+    Returns:
+        JsonResponse: A JSON response with the success or failure message.
+    """
     try:
         review = Review.objects.get(id=review_id, user=request.user)
         review.delete()
@@ -91,9 +133,19 @@ def delete_review(request, review_id):
 
 @login_required
 def leave_comment(request, review_id):
+    """
+    Allows a user to leave a comment on a review.
+
+    Parameters:
+        request (HttpRequest): The HTTP request containing the comment data.
+        review_id (int): The ID of the review to which the comment is being added.
+
+    Returns:
+        JsonResponse: A JSON response with the success or failure message.
+    """
     if request.method == 'POST':
         try:
-            # Parse the incoming JSON data
+           
             data = json.loads(request.body)
             comment_text = data.get('text')
 
@@ -145,11 +197,21 @@ def leave_comment(request, review_id):
 
 @login_required
 def update_comment(request, review_id, comment_id):
-    logger.info(f"Received request to update comment with ID: {comment_id} for review ID: {review_id}. User: {request.user.username}")
+    """
+    Updates an existing comment on a review.
 
-    if request.method == 'PUT':  # Check for PUT request
+    Parameters:
+        request (HttpRequest): The HTTP request containing the updated comment data.
+        review_id (int): The ID of the review the comment is associated with.
+        comment_id (int): The ID of the comment being updated.
+
+    Returns:
+        JsonResponse: A JSON response with the success or failure message.
+    """
+
+    if request.method == 'PUT': 
         try:
-            # Parse the incoming JSON data
+            #
             data = json.loads(request.body)
             logger.debug(f"Incoming data for updating comment ID {comment_id}: {data}")
 
@@ -210,8 +272,17 @@ def update_comment(request, review_id, comment_id):
 
 @login_required
 def delete_comment(request, review_id, comment_id):
-    logger.info(f"Delete request received for comment ID {comment_id} under review ID {review_id} by user {request.user.username}")
+    """
+    Deletes an existing comment on a review.
 
+    Parameters:
+        request (HttpRequest): The HTTP request to delete the comment.
+        review_id (int): The ID of the review to which the comment belongs.
+        comment_id (int): The ID of the comment being deleted.
+
+    Returns:
+        JsonResponse: A JSON response with the success or failure message.
+    """
     if request.method == 'DELETE':
         try:
             # Fetch the comment

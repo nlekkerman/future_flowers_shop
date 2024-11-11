@@ -11,8 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token }}">
     
     <!-- Default Meta Description for SEO; Override in individual templates as needed -->
-    <meta name="description" content="Learn how to grow beautiful roses from seeds with our step-by-step guide. Discover expert tips for rose seed germination, growing rose trees, and creating a stunning garden. Why not buy online seeds for your garden today? Explore our collection of rose, wildflower, and tree seeds at Future Flower Shop to help your garden thrive.">
-    
+    <meta name="description" content="{% block meta_description %}Learn how to grow beautiful roses from seeds with our step-by-step guide. Discover expert tips for rose seed germination, growing rose trees, and creating a stunning garden. Why not buy online seeds for your garden today? Explore our collection of rose, wildflower, and tree seeds at Future Flower Shop to help your garden thrive.{% endblock %}">    
     {% endblock %}
 
     {% block extra_meta %}{% endblock %}
@@ -20,7 +19,7 @@
     <!-- External Stylesheets -->
     {% block corecss %}
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     {% endblock %}
 
@@ -52,14 +51,14 @@
     {% block extra_js %}
     <!-- Include JavaScript files as modules -->
     <script type="module" src="{% static 'js/base.js' %}"></script>
-    <script type="module" src="{% static 'js/home.js' %}" defer></script>
-    <script type="module" src="{% static 'js/control.js' %}" defer></script>
-    <script type="module" src="{% static 'js/seeds.js' %}" defer></script>
-    <script type="module" src="{% static 'js/cart.js' %}" defer></script>
-    <script type="module" src="{% static 'js/reviews.js' %}" defer></script>
-    <script type="module" src="{% static 'js/checkout.js' %}" defer></script>
-    <script type="module" src="{% static 'js/navigation.js' %}" defer></script>
-    <script type="module" src="{% static 'js/utils.js' %}" defer></script>
+    <script type="module" src="{% static 'js/home.js' %}" ></script>
+    <script type="module" src="{% static 'js/control.js' %}" ></script>
+    <script type="module" src="{% static 'js/seeds.js' %}" ></script>
+    <script type="module" src="{% static 'js/cart.js' %}" ></script>
+    <script type="module" src="{% static 'js/reviews.js' %}" ></script>
+    <script type="module" src="{% static 'js/checkout.js' %}" ></script>
+    <script type="module" src="{% static 'js/navigation.js' %}" ></script>
+    <script type="module" src="{% static 'js/utils.js' %}" ></script>
     {% endblock %}
 
     <!-- Dynamic Page Title -->
@@ -76,7 +75,7 @@
                 <a class="text-black nav-link" id="cart-button">
                     <div class="text-center icon-container">
                         <img src="{% static '/images/shopping-icon.png' %}" alt="User Icon" class="user-icon"
-                            style="width: 60px; height: 60px;" />
+                            style="width: 60px; height: 60px;">
                     </div>
                 </a>
             </li>
@@ -143,7 +142,7 @@
 
 <div class="search-wrapper">
     <div class="search-icon-wrapper" id="searchIcon">
-        <img src="{% static '/images/search-icon-img.png' %}" alt="Search Icon" class="search-icon-img" />
+        <img src="{% static '/images/search-icon-img.png' %}" alt="Search Icon" class="search-icon-img">
 
     </div>
     <div class="search-container" id="searchContainer" style="display: none;">
@@ -176,7 +175,7 @@
 </div>
 
 
-<div id="chat-container" style="display: none;"></div>
+<div id="chat-container" style="display: none;">
 <!-- Messages will be loaded here -->
 </div>
 

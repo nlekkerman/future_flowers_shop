@@ -36,13 +36,26 @@ def custom_404_view(request, exception=None):
 User = get_user_model()
 @csrf_exempt
 def send_message(request, conversation_id):
+    """
+    Handles sending a message in a specific conversation identified by `conversation_id`.
+    The message content is expected to be in the body of the POST request as JSON.
+    
+    Args:
+        request (HttpRequest): The HTTP request object, which contains the body with the message content.
+        conversation_id (int): The ID of the conversation to send the message to.
+
+    Returns:
+        JsonResponse: A JSON response indicating the success or failure of the operation.
+            - Success case: Contains message ID, sender, content, and sent timestamp.
+            - Failure case: Contains an error message and appropriate HTTP status code.
+    """
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             content = data.get('content')
 
             if content:
-                sender = request.user  # Get the currently logged-in user
+                sender = request.user
                 conversation = ChatConversation.objects.get(id=conversation_id)
 
                 # Create the new message
@@ -57,9 +70,9 @@ def send_message(request, conversation_id):
                     'success': True,
                     'message': {
                         'id': message.id,
-                        'sender': sender.username,  # Include sender's username
+                        'sender': sender.username, 
                         'content': message.content,
-                        'sent_at': message.sent_at.isoformat(),  # Use ISO format for datetime
+                        'sent_at': message.sent_at.isoformat(),
                     }
                 }
                 return JsonResponse(response_data)
@@ -75,6 +88,18 @@ def send_message(request, conversation_id):
 
 @login_required  # Ensure the user is logged in
 def fetch_messages(request, conversation_id):
+    """
+    Fetches all messages in a specific conversation identified by `conversation_id`.
+    
+    Args:
+        request (HttpRequest): The HTTP request object.
+        conversation_id (int): The ID of the conversation whose messages need to be fetched.
+    
+    Returns:
+        JsonResponse: 
+            - Success: A JSON response containing all messages in the conversation.
+            - Failure: A JSON response with an error message and an appropriate HTTP status code (404, 500, 405, 403).
+    """
     if request.method == 'GET':
         try:
             # Get the conversation by ID
@@ -105,26 +130,46 @@ def fetch_messages(request, conversation_id):
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
 
 def get_conversation_messages(request, conversation_id):
-    # Fetch the conversation, ensuring it's not marked as deleted
+    """
+    Fetches all messages for a specific conversation, ensuring the conversation is not marked as deleted.
+    
+    Args:
+        request (HttpRequest): The HTTP request object.
+        conversation_id (int): The ID of the conversation whose messages need to be fetched.
+    
+    Returns:
+        JsonResponse: A JSON response containing the messages of the conversation.
+    """
     conversation = get_object_or_404(ChatConversation, pk=conversation_id, deleted=False)
 
     # Fetch messages associated with this conversation, ordered by when they were sent
-    messages = ChatMessage.objects.filter(conversation=conversation).order_by('sent_at')  # Use 'sent_at' instead of 'timestamp'
+    messages = ChatMessage.objects.filter(conversation=conversation).order_by('sent_at')
 
     # Prepare the response data
     message_data = []
     for message in messages:
         message_data.append({
             'id': message.id,
-            'sender': message.sender.username,  # Assuming 'sender' is a ForeignKey to User
+            'sender': message.sender.username, 
             'content': message.content,
-            'sent_at': message.sent_at.isoformat(),  # Use 'sent_at' instead of 'timestamp'
+            'sent_at': message.sent_at.isoformat(),
         })
 
     return JsonResponse({'messages': message_data})
     
 def get_user_conversations(request, user_id):
-    # Fetch the user
+    """
+    Fetches conversations involving a specific user, checking if they are a superuser.
+    
+    Args:
+        request (HttpRequest): The HTTP request object.
+        user_id (int): The ID of the user whose conversations need to be fetched.
+    
+    Returns:
+        JsonResponse: 
+            - Success: A JSON response containing the list of conversations.
+            - Failure: A JSON response with an error message and appropriate status code.
+    """
     user = get_object_or_404(User, pk=user_id)
 
     # Check if the logged-in user is a superuser
@@ -190,20 +235,37 @@ def get_user_conversations(request, user_id):
 
 
 # Define a constant for the anonymous user ID
-ANONYMOUS_USER_ID = 0  # Adjust this as needed
+ANONYMOUS_USER_ID = 0  
 
 def get_user_id(request):
+    """
+    Returns the user ID for the logged-in user or a constant value for anonymous users.
+    
+    Args:
+        request (HttpRequest): The HTTP request object.
+    
+    Returns:
+        JsonResponse: A JSON response with the user ID.
+    """
     if request.user.is_authenticated:
-        user_id = request.user.id  # Get the logged-in user's ID
+        user_id = request.user.id 
     else:
-        user_id = ANONYMOUS_USER_ID  # Handle as an anonymous user
+        user_id = ANONYMOUS_USER_ID 
 
     return JsonResponse({'user_id': user_id})
 
 
 @login_required
 def get_user_messages(request):
-    """Fetch messages for the logged-in user."""
+    """
+    Fetches messages for the logged-in user.
+    
+    Args:
+        request (HttpRequest): The HTTP request object.
+    
+    Returns:
+        JsonResponse: A JSON response containing the user's messages.
+    """
     try:
         user = request.user
         
@@ -217,9 +279,9 @@ def get_user_messages(request):
         message_list = [{
             'id': message.id,
             'content': message.content,
-            'sender': message.sender.username,  # Correctly access the username
+            'sender': message.sender.username,
             'sent_at': message.sent_at,
-            'conversation_id': message.conversation.id  # Adjusted field name for clarity
+            'conversation_id': message.conversation.id 
         } for message in messages]
 
         return JsonResponse({'messages': message_list})
@@ -230,6 +292,18 @@ def get_user_messages(request):
 
 
 def get_seeds_to_localstorage(request):
+    """
+    Retrieves all seeds that are not marked as deleted and processes them for sending to local storage.
+    It also calculates the discounted price for each seed if a discount is applied.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        JsonResponse: 
+            - Success: A JSON response containing the seed data, including name, price, image, and discounted price.
+            - Failure: A JSON response with an error message and status 500 if an exception occurs.
+    """
     try:
         
         seeds = Seed.objects.filter(deleted=False).values()
@@ -238,19 +312,18 @@ def get_seeds_to_localstorage(request):
         seeds_data = []
         for seed in seeds:
             if seed['image']:
-                seed['image'] = str(seed['image'])  # Convert to string URL
+                seed['image'] = str(seed['image']) 
             
             # Calculate discounted price
-            price = float(seed['price'])  # Convert price to float
-            discount = float(seed['discount'])  # Convert discount to float
-
+            price = float(seed['price']) 
+            discount = float(seed['discount']) 
             if discount > 0:
                 discounted_price = price - (price * (discount / 100))
                 logger.debug(f"Calculated discounted price: {discounted_price}")
             else:
                 discounted_price = price
             
-            seed['discounted_price'] = round(discounted_price, 2)  # Add discounted price to seed
+            seed['discounted_price'] = round(discounted_price, 2)
 
             seeds_data.append(seed)
         
@@ -261,6 +334,17 @@ def get_seeds_to_localstorage(request):
 
 
 def get_cart_data(request):
+    """
+    Retrieves cart data for the logged-in user or anonymous users (based on session).
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        JsonResponse: 
+            - Success: A JSON response containing the user's cart data (ID, user, items, total price).
+            - Failure: A JSON response with an error message and status 500 if an exception occurs.
+    """
     try:
         if request.user.is_authenticated:
             # Fetch cart for logged-in user
@@ -268,7 +352,7 @@ def get_cart_data(request):
         else:
             # Handle anonymous users (session-based cart)
             if not request.session.session_key:
-                request.session.create()  # Create a new session if not already created
+                request.session.create() 
 
             session_key = request.session.session_key
             # Fetch or create cart for the session
@@ -280,7 +364,7 @@ def get_cart_data(request):
             'user': request.user.username if request.user.is_authenticated else 'Anonymous',
             'created_at': cart.created_at.isoformat(),
             'updated_at': cart.updated_at.isoformat(),
-            'total_price': float(cart.get_total_price()),  # Simplified to include total price only
+            'total_price': float(cart.get_total_price()), 
             'items': []
         }
 
@@ -288,13 +372,13 @@ def get_cart_data(request):
         # Loop through the cart items and handle discount properly
         for item in cart.items.all():
             item_price = item.seed.price
-            item_discount = item.seed.discount or 0  # Check if there's a discount
+            item_discount = item.seed.discount or 0
             if item_discount > 0:
                 # Calculate the discounted price
                 discounted_price = item_price - (item_price * (item_discount / 100))
-                price_to_use = discounted_price  # Use discounted price if applicable
+                price_to_use = discounted_price 
             else:
-                price_to_use = item_price  # Use regular price if no discount
+                price_to_use = item_price
 
             # Add item data to cart_data
             item_data = {
@@ -302,12 +386,12 @@ def get_cart_data(request):
                 'seed': {
                     'id': item.seed.id,
                     'name': item.seed.name,
-                    'price': float(price_to_use),  # Use the discounted price if applicable
-                    'image': str(item.seed.image),  # Convert image URL to string
-                    'is_in_stock': item.seed.is_in_stock  # Indicate if the seed is in stock
+                    'price': float(price_to_use),
+                    'image': str(item.seed.image),
+                    'is_in_stock': item.seed.is_in_stock
                 },
                 'quantity': item.quantity,
-                'total_price': float(item.get_total_price()),  # Use total price as float
+                'total_price': float(item.get_total_price()),
             }
             cart_data['items'].append(item_data)
 
@@ -322,19 +406,46 @@ def get_cart_data(request):
 
 
 def get_username(request):
+    """
+    Retrieves the username of the logged-in user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        JsonResponse: A JSON response containing the logged-in user's username.
+    """
     username = request.user.username
     return JsonResponse({'username': username})
 
 
 def check_superuser_status(request):
-    """Check if the user is authenticated and whether they are a superuser."""
+    """
+    Checks if the logged-in user is a superuser and if they are authenticated.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        JsonResponse: A JSON response containing the superuser status and authentication status.
+    """
     is_superuser = request.user.is_superuser
-    is_authenticated = request.user.is_authenticated  # Check if the user is authenticated
+    is_authenticated = request.user.is_authenticated 
     return JsonResponse({'isSuperUser': is_superuser, 'isAuthenticated': is_authenticated})
 
 @login_required
 def get_message_counts(request):
-    """View to return message counts for the logged-in user."""
+    """
+    Returns the message counts for the logged-in user, including total messages and unseen messages.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        JsonResponse: 
+            - Success: A JSON response containing the total message count and unseen message count.
+            - Failure: A JSON response with an error message and status 500 if an exception occurs.
+    """
     try:
         user = request.user
 
@@ -362,28 +473,34 @@ def get_message_counts(request):
         return JsonResponse({'error': 'An error occurred while fetching message counts.'}, status=500)
 
 
-
-
-
 @csrf_exempt
 @require_POST
 def update_message_status(request):
+    """
+    Updates the status of a message (e.g., marking it as seen).
+
+    Args:
+        request (HttpRequest): The HTTP request object, containing the message ID and status to be updated.
+
+    Returns:
+        JsonResponse: 
+            - Success: A JSON response indicating the success of the status update.
+            - Failure: A JSON response with an error message and status 500 if an exception occurs.
+    """
     try:
         data = json.loads(request.body)
-        logger.info(f"Received data: {data}")  # Log the incoming data
+        logger.info(f"Received data: {data}")
         
-        message_ids = data.get('messageIds')  # Get the list of message IDs
-        seen = data.get('isSeen', True)  # Default to True if not specified
+        message_ids = data.get('messageIds')
+        seen = data.get('isSeen', True)
 
-        # Validate that message_ids is a list and is not empty
         if not isinstance(message_ids, list) or not message_ids:
             return JsonResponse({'error': 'Invalid message IDs provided.'}, status=400)
 
-        # Update the is_seen status of the messages in the database
         updated_count = ChatMessage.objects.filter(id__in=message_ids).update(seen=seen)
 
         if updated_count == 0:
-            logger.warning(f"No messages updated for IDs: {message_ids}")  # Log if no messages were updated
+            logger.warning(f"No messages updated for IDs: {message_ids}")
             return JsonResponse({'error': 'No messages updated. Check if message IDs are valid.'}, status=404)
 
         return JsonResponse({'message': 'Message status updated successfully.'}, status=200)
@@ -392,5 +509,5 @@ def update_message_status(request):
         logger.error("Invalid JSON received")
         return JsonResponse({'error': 'Invalid JSON received.'}, status=400)
     except Exception as e:
-        logger.error(f"Error: {str(e)}")  # Log any other errors
+        logger.error(f"Error: {str(e)}")
         return JsonResponse({'error': str(e)}, status=500)

@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block content %}
-<div class="navigation-container"></div>
+<div class="navigation-container">
     {% include 'navigation.html' %}
     </div>
 <div class="order-details-container container mt-5">
     <a href="{% url 'profile' %}" class="btn mt-10">Back to Orders</a>
     
-    <h2 class="order-number">Order Number <strong class="order-number-strong">{{ order.order_number }}</strong></h2>
+    <h2 class="order-number">Order Number <strong class="order-number-strong ">{{ order.order_number }}</strong></h2>
     <p><strong>Date:</strong> {{ order.date|date:"F j, Y" }}</p>
     <p><strong>Total:</strong> ${{ order.grand_total }}</p>
     <p><strong>Delivery Cost:</strong> ${{ order.delivery_cost }}</p>

@@ -1,6 +1,23 @@
 from .models import ChatConversation, ChatMessage
 
 def chat_context(request):
+    """
+    Generates the context for chat-related views, including fetching conversations and messages.
+
+    This function retrieves all chat conversations involving the logged-in user (either as a regular user or superuser).
+    If a specific conversation ID is provided in the request, it fetches the details of that conversation along with its
+    associated messages. If the conversation is not found, an error message is added to the context.
+
+    Parameters:
+        - request (HttpRequest): The HTTP request, which may contain the logged-in user and an optional conversation_id.
+
+    Returns:
+        dict: A dictionary containing the following context data:
+            - 'conversations': A queryset of all conversations involving the logged-in user.
+            - 'specific_conversation': The conversation details for a specific conversation ID (if found).
+            - 'messages': A queryset of messages associated with the specific conversation (if found).
+            - 'error': An error message if the specified conversation ID is not valid.
+    """
     context = {}
 
     if request.user.is_authenticated:

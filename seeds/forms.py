@@ -10,7 +10,40 @@ CATEGORY_CHOICES = [
 ]
 
 class SeedForm(forms.ModelForm):
-    # Define the category field explicitly with choices
+    """
+    A form to create or edit a Seed object. This form includes fields for the seed's name, 
+    scientific name, description, planting and flowering months, category, height, sun preference, 
+    price, discount, stock availability, and image.
+
+    Attributes:
+        category (ChoiceField): Dropdown for selecting the seed's category (e.g., 'rose', 'flower').
+        name (CharField): The name of the seed (e.g., 'Rose').
+        scientific_name (CharField): The scientific name of the seed (e.g., 'Rosa spp.').
+        description (TextField): A detailed description of the seed.
+        planting_months_from (NumberInput): The month to start planting.
+        planting_months_to (NumberInput): The month to finish planting.
+        flowering_months_from (NumberInput): The month to start flowering.
+        flowering_months_to (NumberInput): The month to finish flowering.
+        height_from (NumberInput): The minimum height the plant will grow to, in meters.
+        height_to (NumberInput): The maximum height the plant will grow to, in meters.
+        sun_preference (ChoiceField): Dropdown for selecting the sun preference (e.g., 'full_sun', 'partly').
+        price (NumberInput): The price of the seed.
+        discount (NumberInput): The discount percentage applied to the seed's price.
+        is_in_stock (BooleanField): Indicates if the seed is in stock.
+        image (ClearableFileInput): File input for uploading an image of the seed.
+
+    Meta Class:
+        model (Seed): The model that the form is linked to (Seed).
+        fields (list): List of fields to be displayed on the form.
+        widgets (dict): Custom widgets to style the form elements (e.g., adding Bootstrap classes).
+        labels (dict): Custom labels for the form fields.
+        error_messages (dict): Custom error messages for field validation.
+
+    Methods:
+        clean_price(): Ensures that the price entered is greater than or equal to zero.
+        clean_discount(): Ensures that the discount is between 0 and 100.
+    """
+    
     category = forms.ChoiceField(choices=CATEGORY_CHOICES, label="Category")
 
     class Meta:
@@ -68,6 +101,19 @@ class SeedForm(forms.ModelForm):
         }
 
 class SearchForm(forms.Form):
+    """
+    A form to handle search queries for seeds. This form allows users to input a search term to find seeds 
+    based on the seed's attributes such as name, category, or other fields. It can be used in the search 
+    functionality of a seed catalog or inventory system.
+
+    Attributes:
+        query (CharField): The search input field where users can type their query to search for seeds. 
+                            The query is optional and has a placeholder text of 'Search seeds...'.
+                            The input is constrained to a maximum length of 100 characters.
+
+    Methods:
+        clean_query(): This method can be added in the future to further validate the search query input if necessary.
+    """
     query = forms.CharField(
         max_length=100,
         required=False,

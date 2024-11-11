@@ -4,19 +4,45 @@ import {
 import {
     sendToCart
 } from './control.js';
-// Function to get all seeds from local storage
 
+/* 
+* Retrieves all seed data from localStorage.
+* This function fetches the seed data stored in localStorage and returns it as an array.
+* If no seed data is found, an empty array is returned.
+*
+* Returns:
+*   Array: The array of seed data, or an empty array if no data is found.
+*/
 function getAllSeeds() {
     return JSON.parse(localStorage.getItem('seeds_data')) || [];
 }
 
-// Function to get a seed from local storage
+/* 
+* Retrieves a specific seed from localStorage based on the given seed ID.
+* This function finds the seed matching the provided seed ID from the list of all seeds.
+* It returns the seed object if found, or undefined if the seed is not found.
+*
+* Parameters:
+*   - seedId (string): The ID of the seed to be retrieved from localStorage.
+*
+* Returns:
+*   Object: The seed object if found, otherwise undefined.
+*/
 function getSeedFromLocalStorage(seedId) {
     const seeds = getAllSeeds();
     return seeds.find(seed => seed.id === parseInt(seedId, 10));
 }
 
-// Function to search seeds
+/* 
+* Searches for seeds based on the given query, category, and sun preference.
+* This function filters the list of seeds to find those that match the search criteria.
+* It updates the UI to display the search results.
+*
+* Parameters:
+*   - query (string): The search query to look for in seed names or descriptions.
+*   - category (string, optional): The category to filter seeds by.
+*   - sunPreference (string, optional): The sun preference to filter seeds by.
+*/
 export function searchSeeds(query, category = '', sunPreference = '') {
     const seedsData = getAllSeeds();
     const lowerCaseQuery = query.toLowerCase(); // Convert query to lowercase once for better performance
@@ -37,7 +63,16 @@ export function searchSeeds(query, category = '', sunPreference = '') {
     toggleSearchResults();
 }
 
-// Add item to cart
+/* 
+* Adds a seed item to the cart with a specified quantity.
+* This function checks if the seed is already in the cart, and if it is, it updates the quantity and total price.
+* If the seed is not in the cart, it adds the item as a new entry.
+* The cart data is then saved to localStorage.
+*
+* Parameters:
+*   - seed (Object): The seed object to be added to the cart.
+*   - quantity (number, optional): The quantity of the seed to be added to the cart (defaults to 1).
+*/
 function addToCart(seed, quantity = 1) {
     let cartData = getCartFromLocalStorage(); // Fetch current cart data
 
@@ -94,8 +129,11 @@ function addToCart(seed, quantity = 1) {
 
 }
 
-
-// Update cart UI elements
+/* 
+* Updates the cart UI with the latest item count and total price.
+* This function fetches the updated cart data from localStorage and updates the cart count and total price
+* on the webpage accordingly.
+*/
 function updateCartUI() {
     const cartData = getCartFromLocalStorage(); // Fetch the updated cart data
     const cartCountElement = document.getElementById('cart-count'); // Element for item count
@@ -119,28 +157,20 @@ function updateCartUI() {
         cartTotalElement.textContent = `$${totalPrice.toFixed(2)}`; // Display the total price
     }
 
-    console.log('Cart UI updated:', {
-        itemCount,
-        totalPrice
-    });
 }
 
-
-
-// Example displayMessageInModal function
+/* 
+* Displays a message in a modal to inform the user that an item has been successfully added to the cart.
+* The modal is displayed with a background image and information about the item added to the cart.
+*
+* Parameters:
+*   - message (string): The message to be displayed in the modal.
+*   - item (Object): The item details such as quantity and image to be shown in the modal.
+*/
 export function displayMessageInModal(message, item) {
     const messagesContainer = document.getElementById('item-added-search-message');
 
-    if (!messagesContainer) {
-        console.error('Element with ID "item-added-search-message" not found.');
-        return;
-    }
 
-    // Log the details for debugging
-    console.log('Displaying message in modal:', {
-        message,
-        item
-    });
 
     // Fetch image URL based on item ID
     const imageUrl = `https://res.cloudinary.com/dg0ssec7u/image/upload/${item.image}.webp`;
@@ -163,17 +193,16 @@ export function displayMessageInModal(message, item) {
 
     // Display the message container
     messagesContainer.style.display = 'block';
-
-    // Log message visibility
-    console.log('Message container displayed.');
-
-    // Hide the message after a few seconds (optional)
     setTimeout(() => {
         messagesContainer.style.display = 'none';
         console.log('Message container hidden.');
-    }, 5000); // Adjust time as needed
+    }, 5000); 
 }
-// Function to hide the message container
+
+/* 
+* Hides the item added message modal when the close button is clicked.
+* This function removes the message modal from the screen after it has been displayed.
+*/
 export function hideItemAddedMessage() {
     const messagesContainer = document.getElementById('item-added-search-message');
     if (messagesContainer) {
@@ -181,7 +210,10 @@ export function hideItemAddedMessage() {
     }
 }
 
-// Function to show the modal
+/* 
+* Toggles the visibility of the search details modal.
+* This function shows or hides the search seed details modal based on its current state.
+*/
 function showSearchDetailsModal() {
     const modal = document.getElementById('search-seed-details-modal');
     if (modal) {
@@ -189,9 +221,16 @@ function showSearchDetailsModal() {
     }
 }
 
-
+/* 
+* Toggles the visibility of the search results container.
+* This function either shows or hides the search results and updates the search button text accordingly.
+*/
 let isSearchResultsVisible = false;
 
+/* 
+* Toggles the visibility of search results and search container.
+* Updates button text and adjusts the display of related elements.
+*/
 function toggleSearchResults() {
     const resultsContainer = document.getElementById('search-results-container');
     const searchButton = document.getElementById('search-button');
@@ -222,13 +261,13 @@ function toggleSearchResults() {
     }
 }
 
+/* 
+* Displays search results for the seeds in the results container.
+* Handles seed data presentation and formatting.
+*/
 function displaySearchResults(seeds) {
     const seedsContainer = document.getElementById('search-results-container');
 
-    if (!seedsContainer) {
-        console.error('Element with ID "search-results-container" not found.');
-        return;
-    }
 
     seedsContainer.innerHTML = '';
 
@@ -239,22 +278,20 @@ function displaySearchResults(seeds) {
 
     seeds.forEach(seed => {
         const searchSeedElement = document.createElement('div');
-        searchSeedElement.className = 'col-12 col-md-6 col-lg-4 mb-4';
-
-        const backgroundImageUrl = seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg';
+        searchSeedElement.className = 'search-card mb-4';
 
         let seedHTML = `
         <div class="seed-card h-100" id="seed-card-${seed.id}" data-seed-id="${seed.id}">
             <div class="card-img-container">
-                <img src="${seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg'}" class="card-img-top" alt="${seed.name}">
+                <img src="${seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg'}" class="search-item-img" alt="${seed.name}">
                 ${seed.discount > 0 ? '<span class="discount-label">Discounted</span>' : ''}
             </div>
-            <div class="card-body">
-                <h2 class="card-title h5">${seed.name}</h2>
-                <p class="card-text"><strong>Scientific Name:</strong> ${seed.scientific_name}</p>
-                <p class="card-text"><strong>Planting Months:</strong> ${seed.planting_months_from} to ${seed.planting_months_to}</p>
-                <p class="card-text"><strong>Flowering Months:</strong> ${seed.flowering_months_from} to ${seed.flowering_months_to}</p>
-                <p class="card-text">
+            <div class="card-body seed-card-body ">
+                <h2 class="card-title card-title-serach h5">${seed.name}</h2>
+                <p class="card-text card-text-search"><strong>Scientific Name:</strong> ${seed.scientific_name}</p>
+                <p class="card-text card-text-search"><strong>Planting Months:</strong> ${seed.planting_months_from} to ${seed.planting_months_to}</p>
+                <p class="card-text card-text-search"><strong>Flowering Months:</strong> ${seed.flowering_months_from} to ${seed.flowering_months_to}</p>
+                <p class="card-text card-text-search">
                     <strong>Price:</strong> 
                     ${seed.discount > 0 ? 
                         `<span class="original-price">$${seed.price}</span> <span class="discounted-price">$${seed.discounted_price}</span>` 
@@ -276,16 +313,9 @@ function displaySearchResults(seeds) {
         seedsContainer.appendChild(searchSeedElement);
         searchSeedElement.addEventListener('click', () => {
             const modal = document.getElementById('search-seed-details-modal');
-
-            if (!modal) {
-                console.error('Modal element not found.');
-                return;
-            }
-
             // Toggle the modal visibility using a class
             modal.classList.toggle('modal-visible');
 
-            console.log('Modal visibility toggled. Current display style:', modal.style.display);
         });
 
 
@@ -304,12 +334,15 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+/* 
+* Attaches event listeners to seed cards for click actions.
+* Handles showing seed details in a modal on card click.
+*/
 function displaySearchResultsSeedDetails(seed) {
     const seedDetailsContent = document.getElementById('search-seed-details-content');
     const seedDetailsModal = document.getElementById('search-seed-details-modal');
 
     if (!seedDetailsContent) {
-        console.error('Element with ID "search-seed-details-content" not found.');
         return;
     }
 
@@ -359,8 +392,10 @@ function displaySearchResultsSeedDetails(seed) {
     }
 }
 
-
-
+/* 
+* Attaches event listeners to seed cards for click actions.
+* Handles showing seed details in a modal on card click.
+*/
 function attachSeedCardEventListeners() {
     document.querySelectorAll('.search-seed-card').forEach(card => {
         card.addEventListener('click', (event) => {
@@ -371,12 +406,16 @@ function attachSeedCardEventListeners() {
                 displaySearchResultsSeedDetails(seed);
                 showSearchDetailsModal();
             } else {
-                console.error('Seed not found in local storage.');
+                alert('Oops! We couldn\'t find the seed details. Please try again later.');
             }
         });
     });
 }
 
+/* 
+* Attaches event listeners to "Add to Cart" buttons for adding items to the cart.
+* Ensures cart UI is updated after adding an item.
+*/
 function attachAddToCartButtonEventListeners() {
     // Attach click event listener to "Add to Cart" buttons
     document.querySelectorAll('.add-to-cart-button').forEach(button => {
@@ -390,18 +429,13 @@ function attachAddToCartButtonEventListeners() {
             const seed = getSeedFromLocalStorage(seedId);
             const imageUrl = seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg';
 
-            console.log(`Adding Seed ID ${seedId} to cart with quantity ${quantity}`);
-            console.log(`Image URL: ${imageUrl}`);
-            console.log('Seed details:', seed);
-            console.log('Discounted Price:', seed.discount > 0 ? (seed.price - (seed.price * seed.discount / 100)).toFixed(2) : seed.price);
-
             if (seed) {
-                console.log('Before adding to cart:', getCartFromLocalStorage()); // Log cart state before addition
+               
                 addToCart(seed, quantity, imageUrl);
                 updateCartUI(); // Ensure the cart UI is updated after adding the item
                 try {
                     await sendToCart(seedId, quantity, seed);
-                    console.log('Item sent to server successfully.');
+                   
                 } catch (error) {
                     console.error('Failed to send item to server:', error);
                 }
@@ -414,7 +448,10 @@ function attachAddToCartButtonEventListeners() {
     });
 }
 
-
+/* 
+* Initializes event listeners and logic for handling search form submission.
+* Displays warning if search input is empty and triggers search on valid input.
+*/
 document.addEventListener('DOMContentLoaded', () => {
     const searchForm = document.getElementById('seed-search-form');
     const searchInput = document.getElementById('seed-search-input');
@@ -460,12 +497,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Close message when clicking on the close button
+/* 
+* Hides messages when the "close" button is clicked.
+*/
 document.addEventListener('click', (event) => {
     if (event.target.classList.contains('btn-close-message')) {
         hideItemAddedMessage();
     }
 });
+
+/* 
+* Initializes event listeners and logic for closing messages.
+* Hides message containers on close button click.
+*/
 document.addEventListener('DOMContentLoaded', function () {
     // Handle close button clicks
     const closeButtons = document.querySelectorAll('.close-button-container');
@@ -473,7 +517,7 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             const message = this.closest('.message-container');
             if (message) {
-                message.style.display = 'none'; // Hide the message
+                message.style.display = 'none'; 
             }
         });
     });
@@ -481,22 +525,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    
-    var chatIcon = document.getElementById('chatIcon');
-    if (chatIcon) {
-        chatIcon.addEventListener('click', function (event) {
-            console.log('Chat icon clicked');
-            // Uncomment below line to log href attribute
-            // console.log('Redirecting to:', chatIcon.href);
-        });
-    }
-});
-
-
-
-
-
+/* 
+* Toggles the visibility of the filter container on button click.
+* Changes filter icon between filter and close icons.
+*/
 document.addEventListener('DOMContentLoaded', function () {
     // Get references to the button and filter container
     const toggleButton = document.getElementById('filter-toggle');
@@ -520,9 +552,10 @@ document.addEventListener('DOMContentLoaded', function () {
     toggleButton.addEventListener('click', toggleFilterVisibility);
 });
 
-
-
-
+/* 
+* Initializes event listener for the cart button.
+* Redirects to the cart page when clicked.
+*/
 document.addEventListener('DOMContentLoaded', () => {
     const viewCartButton = document.getElementById('cart-button');
 
@@ -530,6 +563,6 @@ document.addEventListener('DOMContentLoaded', () => {
         viewCartButton.addEventListener('click', () => {
             window.location.href = '/cart/'; // Redirect to cart page
         });
-        console.log("Cart button found, event listener attached.");
+       
     }
 });

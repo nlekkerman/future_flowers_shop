@@ -14,7 +14,6 @@ let loggedInUsername, loadingOverlay, loadingText;
 window.onload = async () => {
 
     try {
-
         const userId = await fetchUserId(); // Fetch user ID
         loggedInUsername = await fetchUsername(); // Fetch username here
         await fetchMessageCounts();
@@ -39,43 +38,38 @@ window.onload = async () => {
             }
 
             if (chatContainer.style.display === "block") {
-                console.log("CHAT TOGGLE HIDDEN");
-                chatContainer.style.display = "none"; // Hide the chat container
+                chatContainer.style.display = "none"; 
             } else {
-                chatContainer.style.display = "block"; // Show the chat container
-                console.log("CHAT TOGGLE VISIBLE");
+                chatContainer.style.display = "block"; 
             }
         };
 
         if (adminMessagesIcon) {
             adminMessagesIcon.addEventListener('click', async () => {
-                toggleChatContainerVisibility(); // Toggle visibility on icon click
-                console.log('Admin Message icon clicked.'); // For debugging
-                await fetchConversations(userId); // Fetch conversations for superuser
-                displayConversationsFromLocalStorage(); // Display conversations
+                toggleChatContainerVisibility();
+                await fetchConversations(userId); 
+                displayConversationsFromLocalStorage(); 
             });
         } else {
             console.error('Admin message icon not found.');
         }
 
-        // Check if messagesIcon is found
         if (messagesIcon) {
             messagesIcon.addEventListener('click', async () => {
-                console.log('Message icon clicked.'); // For debugging
                 const userMessages = await fetchUserMessages(userId);
                 displayUserMessages(userMessages, loggedInUsername);
-                toggleChatContainerVisibility(); // Toggle visibility when user messages icon is clicked
+                toggleChatContainerVisibility(); 
             });
         } else {
             console.error('Messages icon not found.');
         }
 
         if (userId) {
-            const isSuperUser = await checkIfSuperUser(); // Check superuser status
+            const isSuperUser = await checkIfSuperUser(); 
 
             if (isSuperUser) {
-                await fetchConversations(userId); // Fetch conversations for superuser
-                displayConversationsFromLocalStorage(); // Display conversations
+                await fetchConversations(userId); 
+                displayConversationsFromLocalStorage(); 
             } else {
                 // Fetch and display messages for regular user
                 const userMessages = await fetchUserMessages(userId);
@@ -90,120 +84,16 @@ window.onload = async () => {
 };
 function showModal() {
     const modal = document.getElementById('login-modal');
-    modal.classList.remove('hide'); // Remove hide class if it was hidden
-    modal.classList.add('show'); // Add show class to animate entrance
+    modal.classList.remove('hide'); 
+    modal.classList.add('show'); 
 }
 
 // Hide the modal
 function hideModal() {
     const modal = document.getElementById('login-modal');
-    modal.classList.remove('show'); // Remove show class
-    modal.classList.add('hide'); // Add hide class to animate exit
+    modal.classList.remove('show'); 
+    modal.classList.add('hide');
 }
-document.getElementById('login-form').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    console.log('Login button clicked. Fetching user data...');
-
-     // Show the modal with the message "Attempting to log in..."
-     const modal = document.getElementById('login-modal'); // The modal element
-     const modalMessage = document.getElementById('modal-message'); // Element inside the modal for displaying messages
-     const modalIcon = document.querySelector('#login-modal img');
-     showModal();
-     modalMessage.textContent = 'Attempting to log in...';  // Set modal message
-     
- 
-
-    // Get CSRF token
-    const csrfToken = getCookie('csrftoken');
-    if (!csrfToken) {
-        console.error('CSRF token is missing!');
-        return;
-    }
-
-    try {
-        // Prepare form data for submission
-        const formData = new FormData(event.target);
-
-        // Submit login request
-        const response = await fetch('/custom_accounts/login/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrfToken,
-                'X-Requested-With': 'XMLHttpRequest' // Ensure it's an AJAX request
-            },
-            body: formData,
-            credentials: 'include', // Ensures cookies like session are sent with the request
-        });
-
-        // Check response content type to confirm it's JSON
-        if (response.headers.get('Content-Type').includes('application/json')) {
-            const result = await response.json();
-
-            if (result.success) {
-                console.log('Login successful, redirecting...');
-                // Update modal message and icon for success
-                modalMessage.textContent = 'You are logged in!';
-                modalIcon.src = modalIcon.getAttribute('data-success-url');
-
-                hideModal();
-                window.location.replace(result.redirect);
-          
-                
-            } else {
-                // Handle failed login and display errors
-                console.log('Login failed. Errors:', result.errors);
-
-                hideModal();
-                
-                // Clear any previous error messages
-                const errorContainer = document.getElementById('error-messages');
-                errorContainer.innerHTML = '';  // Clear old errors
-
-                // Display new error messages
-                if (result.errors && typeof result.errors === 'object') {
-                    for (let field in result.errors) {
-                        const errorMessage = result.errors[field];
-                        const errorItem = document.createElement('p');
-                        errorItem.textContent = `${errorMessage}`;
-                        errorItem.style.color = 'red'; // Style for errors
-                        errorContainer.appendChild(errorItem);
-                    }
-                } else {
-                    const errorItem = document.createElement('p');
-                    errorItem.textContent = 'An unknown error occurred during login.';
-                    errorItem.style.color = 'red';
-                    errorContainer.appendChild(errorItem);
-                }
-            }
-        } else {
-            // Handle unexpected response format (HTML, typically an error page)
-            console.error('Unexpected response format:', response.status);
-            const text = await response.text(); // Get raw response text (likely HTML)
-            console.error('Response text:', text);
-
-            // Display a general error message
-            const errorContainer = document.getElementById('error-messages');
-            errorContainer.innerHTML = '';  // Clear old errors
-            const errorItem = document.createElement('p');
-            errorItem.textContent = 'An error occurred during login. Please try again later.';
-            errorItem.style.color = 'red';
-            errorContainer.appendChild(errorItem);
-        }
-    } catch (error) {
-        console.error('Network error during login:', error); // Handle network-related issues
-
-        // Display a network error message
-        const errorContainer = document.getElementById('error-messages');
-        errorContainer.innerHTML = '';  // Clear old errors
-        const errorItem = document.createElement('p');
-        errorItem.textContent = 'A network error occurred. Please check your connection and try again.';
-        errorItem.style.color = 'red';
-        errorContainer.appendChild(errorItem);
-    }
-});
-
-
-
 /*
  * This script runs when the DOM is fully loaded and parsed.
  * It creates a modal for displaying messages and handles 
@@ -218,8 +108,7 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
  * - Managing CSRF tokens for secure AJAX requests
  */
 document.addEventListener("DOMContentLoaded", async function () {
-
-
+    
     // Create the message modal container
     const messageModal = document.createElement('div');
     messageModal.id = 'modal-overlay-background'; // Three-word ID
@@ -269,91 +158,111 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
     fetch('/seeds/api/seeds/')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            const seedListContainer = document.getElementById('seed-list');
-            if (!seedListContainer) {
-                console.error('Element with ID "seed-list" not found in the DOM.');
+    .then(response => {
+        console.log('Fetch response status:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Data received from API:', data);  // Log the entire response data
+
+        const seedListContainer = document.getElementById('seed-list');
+        if (!seedListContainer) {
+            console.error('Element with ID "seed-list" not found in the DOM.');
+            return;
+        }
+
+        // Clear existing content
+        seedListContainer.innerHTML = '';
+
+        // Check if the data was successful
+        if (data.success) {
+            console.log('Data success status:', data.success);
+
+            // Check if seeds exist
+            if (!data.seeds || data.seeds.length === 0) {
+                console.warn('No seeds found in the data.');
+                const noSeedsItem = document.createElement('li');
+                noSeedsItem.textContent = 'No seeds available.';
+                seedListContainer.appendChild(noSeedsItem);
                 return;
             }
 
-            seedListContainer.innerHTML = ''; // Clear any existing content
+            // Loop through each seed in data.seeds
+            data.seeds.forEach(seed => {
+                console.log('Processing seed:', seed);
 
-            if (data.success) {
+                // Create list item
+                const listItem = document.createElement('li');
+                listItem.className = 'seed-list-item';
 
-                // Loop through the seeds and create a list item for each
-                data.seeds.forEach(seed => {
-                    // Create list item
-                    const listItem = document.createElement('li');
-                    listItem.className = 'seed-list-item'; // Add class for styling
+                // Create a span for seed name
+                const seedName = document.createElement('span');
+                seedName.className = 'seed-name';
+                seedName.textContent = `${seed.name} (${seed.scientific_name})`;
 
-                    // Create a span for seed name with styling
-                    const seedName = document.createElement('span');
-                    seedName.className = 'seed-name'; // Add class for seed name
-                    seedName.textContent = `${seed.name} (${seed.scientific_name})`;
+                // Create Edit link
+                const editLink = document.createElement('a');
+                editLink.textContent = 'Edit';
+                editLink.className = 'edit-link';
 
-                    // Create Edit link
-                    const editLink = document.createElement('a');
-                    editLink.textContent = 'Edit';
-                    editLink.className = 'edit-link'; // Add class for edit link
-
-                    // Event listener to open the modal and populate data
-                    editLink.addEventListener('click', function (event) {
-                        event.preventDefault(); // Prevent the default action of the link
-                        openEditSeedModal(seed); // Call the function to open the modal and pass the seed data
-
-                    });
-
-                    // Create Delete link
-                    const deleteLink = document.createElement('a');
-                    deleteLink.textContent = 'Delete';
-                    deleteLink.className = 'delete-link'; // Add class for delete link
-                    deleteLink.onclick = function (event) {
-                        event.preventDefault(); // Prevent default link behavior
-                        if (confirm('Are you sure you want to delete this seed?')) {
-                            // Perform delete action here
-                            fetch(`/seeds/seeds/${seed.id}/delete/`, {
-                                    method: 'DELETE', // Assuming your delete method
-                                    headers: {
-                                        'X-CSRFToken': getCookie('csrftoken'), // CSRF protection
-                                    },
-                                })
-                                .then(response => {
-                                    if (response.ok) {
-                                        seedListContainer.removeChild(listItem);
-                                        showMessageAdmin('Seed deleted successfully.'); // Show message
-                                    } else {
-                                        showMessageAdmin('Failed to delete seed.'); // Show error message
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error('Error deleting seed:', error);
-                                    showMessageAdmin('An error occurred while deleting the seed.');
-
-                                });
-                        }
-                    };
-
-                    // Append seed name and buttons to the list item
-                    listItem.appendChild(seedName);
-                    listItem.appendChild(editLink);
-                    listItem.appendChild(deleteLink);
-
-                    // Append the list item to the container
-                    seedListContainer.appendChild(listItem);
+                // Event listener to open the modal and populate data
+                editLink.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    console.log('Edit link clicked for seed:', seed.name);
+                    openEditSeedModal(seed);
                 });
 
+                // Create Delete link
+                const deleteLink = document.createElement('a');
+                deleteLink.textContent = 'Delete';
+                deleteLink.className = 'delete-link';
 
-            } else {
-                const errorItem = document.createElement('li');
-                errorItem.textContent = 'Failed to load seeds.';
-                seedListContainer.appendChild(errorItem);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching seeds:', error);
-        });
+                deleteLink.onclick = function (event) {
+                    event.preventDefault();
+                    console.log('Delete link clicked for seed:', seed.name);
+                    if (confirm('Are you sure you want to delete this seed?')) {
+                        fetch(`/seeds/seeds/${seed.id}/delete/`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRFToken': getCookie('csrftoken'),
+                                },
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    console.log('Seed deleted successfully:', seed.id);
+                                    seedListContainer.removeChild(listItem);
+                                    showMessageAdmin('Seed deleted successfully.');
+                                } else {
+                                    console.error('Failed to delete seed:', seed.id);
+                                    showMessageAdmin('Failed to delete seed.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error deleting seed:', error);
+                                showMessageAdmin('An error occurred while deleting the seed.');
+                            });
+                    }
+                };
+
+                // Append elements to the list item
+                listItem.appendChild(seedName);
+                listItem.appendChild(editLink);
+                listItem.appendChild(deleteLink);
+
+                // Append the list item to the container
+                seedListContainer.appendChild(listItem);
+                console.log('Seed item appended for:', seed.name);
+            });
+        } else {
+            console.warn('Data.success is false. Seeds could not be loaded.');
+            const errorItem = document.createElement('li');
+            errorItem.textContent = 'Failed to load seeds.';
+            seedListContainer.appendChild(errorItem);
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching seeds:', error);
+    });
 
     function openEditSeedModal(seed) {
         document.getElementById('edit-seed-id').value = seed.id; // Set the ID for the hidden field
@@ -440,47 +349,128 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 
-function toggleCartButtonVisibility() {
-    console.log('Function toggleCartButtonVisibility called.');
+document.getElementById('login-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+     const modalMessage = document.getElementById('modal-message');
+     const modalIcon = document.querySelector('#login-modal img');
+     showModal();
+     modalMessage.textContent = 'Attempting to log in...';  // Set modal messag
+     
 
-    // Retrieve cart data from localStorage
+    const csrfToken = getCookie('csrftoken');
+    if (!csrfToken) {
+        console.error('CSRF token is missing!');
+        return;
+    }
+
+    try {
+        const formData = new FormData(event.target);
+
+        const response = await fetch('/custom_accounts/login/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest' 
+            },
+            body: formData,
+            credentials: 'include', 
+        });
+
+        if (response.headers.get('Content-Type').includes('application/json')) {
+            const result = await response.json();
+
+            if (result.success) {
+                modalMessage.textContent = 'You are logged in!';
+                modalIcon.src = modalIcon.getAttribute('data-success-url');
+
+                hideModal();
+                window.location.replace(result.redirect);
+          
+                
+            } else {
+              
+
+                hideModal();
+                
+                // Clear any previous error messages
+                const errorContainer = document.getElementById('error-messages');
+                errorContainer.innerHTML = '';  // Clear old errors
+
+                // Display new error messages
+                if (result.errors && typeof result.errors === 'object') {
+                    for (let field in result.errors) {
+                        const errorMessage = result.errors[field];
+                        const errorItem = document.createElement('p');
+                        errorItem.textContent = `${errorMessage}`;
+                        errorItem.style.color = 'red'; // Style for errors
+                        errorContainer.appendChild(errorItem);
+                    }
+                } else {
+                    const errorItem = document.createElement('p');
+                    errorItem.textContent = 'An unknown error occurred during login.';
+                    errorItem.style.color = 'red';
+                    errorContainer.appendChild(errorItem);
+                }
+            }
+        } else {
+            // Handle unexpected response format (HTML, typically an error page)
+            console.error('Unexpected response format:', response.status);
+            const text = await response.text(); 
+            console.error('Response text:', text);
+
+            // Display a general error message
+            const errorContainer = document.getElementById('error-messages');
+            errorContainer.innerHTML = '';  // Clear old errors
+            const errorItem = document.createElement('p');
+            errorItem.textContent = 'An error occurred during login. Please try again later.';
+            errorItem.style.color = 'red';
+            errorContainer.appendChild(errorItem);
+        }
+    } catch (error) {
+        console.error('Network error during login:', error); // Handle network-related issues
+
+        // Display a network error message
+        const errorContainer = document.getElementById('error-messages');
+        errorContainer.innerHTML = '';  // Clear old errors
+        const errorItem = document.createElement('p');
+        errorItem.textContent = 'A network error occurred. Please check your connection and try again.';
+        errorItem.style.color = 'red';
+        errorContainer.appendChild(errorItem);
+    }
+});
+
+
+
+
+
+function toggleCartButtonVisibility() {
     const cartData = JSON.parse(localStorage.getItem('cart'));
     console.log('Cart data retrieved:', cartData);
 
     // Get references to the cart and checkout buttons
     const cartButton = document.getElementById('cart-button');
     const checkoutBtn = document.getElementById('go-to-checkout-button');
-    console.log('Cart button element:', cartButton);
-    console.log('Checkout button element:', checkoutBtn);
 
-    // Check if cartData has items and if they form a valid array with content
     if (cartData && Array.isArray(cartData.items) && cartData.items.length > 0) {
-        console.log(`Cart contains ${cartData.items.length} items. Making cart and checkout buttons visible.`);
 
         if (cartButton) {
-            cartButton.style.display = 'block'; // Show cart button
-            console.log('Cart button is set to visible.');
+            cartButton.style.display = 'block'; 
         }
 
         if (checkoutBtn) {
-            checkoutBtn.style.display = 'block'; // Show checkout button
-            console.log('Checkout button is set to visible.');
+            checkoutBtn.style.display = 'block'; 
         }
     } else {
-        console.log('Cart is empty or undefined. Hiding cart and checkout buttons.');
 
         if (cartButton) {
-            cartButton.style.display = 'none'; // Hide cart button
-            console.log('Cart button is set to hidden.');
+            cartButton.style.display = 'none'; 
         }
 
         if (checkoutBtn) {
-            checkoutBtn.style.display = 'none'; // Hide checkout button
-            console.log('Checkout button is set to hidden.');
+            checkoutBtn.style.display = 'none';
         }
     }
 
-    console.log('toggleCartButtonVisibility function execution completed.');
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -497,27 +487,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (viewCartButton) {
         viewCartButton.addEventListener('click', () => {
-            window.location.href = '/cart/'; // Redirect to cart page
+            window.location.href = '/cart/';
         });
-        console.log("Cart button found, event listener attached.");
     }
 });
 
 document.getElementById('logout-button').addEventListener('click', () => {
-    // Log the userId before deletion
-    const userId = localStorage.getItem('userId');
-    console.log('User ID before deletion:', userId);
-
-    // Clear any localStorage data related to the user
+ 
     localStorage.removeItem('userId');
     localStorage.removeItem('cart');
-    localStorage.setItem('cartTotal', '0.00');  // Reset cart total to $0.00
-
-    // Log the userId after deletion to confirm it is removed
-    const clearedUserId = localStorage.getItem('userId');
-    console.log('User ID after deletion:', clearedUserId);  // Should log 'null' if successfully removed
-
-    console.log('LocalStorage cleared for user data and cart after logout.');
+    localStorage.setItem('cartTotal', '0.00');
 });
 
 
@@ -527,8 +506,6 @@ document.getElementById('logout-button').addEventListener('click', () => {
 export function displayConversationsFromLocalStorage() {
     const storedConversations = localStorage.getItem('userConversations');
 
-    console.info('Attempting to load conversations from local storage.');
-
     if (!storedConversations) {
         console.warn('No conversations found in local storage.');
         return;
@@ -537,7 +514,6 @@ export function displayConversationsFromLocalStorage() {
     let conversations;
     try {
         conversations = JSON.parse(storedConversations);
-        console.info(`Parsed ${conversations.length} conversations from local storage.`);
     } catch (error) {
         console.error('Error parsing conversations from local storage:', error);
         return;
@@ -559,12 +535,10 @@ export function displayConversationsFromLocalStorage() {
 
     // Add event listener to close button to hide the chat-container
     closeButton.addEventListener('click', () => {
-        console.info('Close button clicked. Hiding chat container.');
         chatContainer.style.display = 'none';
     });
 
     if (conversations.length === 0) {
-        console.warn('No conversations to display.');
         chatContainer.innerHTML = '<p>No conversations found.</p>';
         return;
     }
@@ -579,14 +553,11 @@ export function displayConversationsFromLocalStorage() {
     });
 
     conversations.forEach((conversation) => {
-        console.info(`Displaying conversation:`, conversation);
-
         const conversationDiv = document.createElement('div');
         conversationDiv.className = 'conversation';
         conversationDiv.style.cursor = 'pointer';
         conversationDiv.style.marginBottom = '10px';
 
-        // Check if the conversation has unseen messages
         if (conversation.unseenMessagesCount > 0) {
             conversationDiv.style.backgroundColor = 'red'; // Set background color to red if there are unseen messages
         }
@@ -597,7 +568,7 @@ export function displayConversationsFromLocalStorage() {
         `;
 
         conversationDiv.addEventListener('click', async () => {
-            showLoadingAnimation(); // Show loading animation
+            showLoadingAnimation(); 
             conversationDiv.style.backgroundColor = 'transparent';
 
             // Gather the IDs of all unseen messages in this conversation
@@ -614,14 +585,13 @@ export function displayConversationsFromLocalStorage() {
             chatContainer.style.display = 'none'
             // Load conversation messages
             await loadConversationMessages(conversation.id, loggedInUsername);
-            hideLoadingAnimation(); // Hide loading animation after loading messages
-            // Fetch updated message counts
+            hideLoadingAnimation(); 
+           
             await fetchMessageCounts();
         });
         chatContainer.appendChild(conversationDiv);
     });
 
-    console.info(`Displayed ${conversations.length} conversations from local storage.`);
 }
 async function loadConversationMessages(conversationId, loggedInUsername) {
     try {
@@ -630,7 +600,6 @@ async function loadConversationMessages(conversationId, loggedInUsername) {
         if (!response.ok) throw new Error('Network response was not ok');
 
         const responseData = await response.json();
-        console.log('Parsed JSON response:', responseData);
 
         if (!Array.isArray(responseData.messages)) {
             throw new Error('Invalid response format: expected an array of messages');
@@ -717,7 +686,6 @@ async function loadConversationMessages(conversationId, loggedInUsername) {
         // Set up the send button click handler
         const sendButton = document.getElementById('send-message-button');
         sendButton.onclick = () => {
-            console.log('Username AHAHAHAHAHAHA before sending message:', loggedInUsername); // Debugging
             handleSendMessage(conversationId, loggedInUsername);
         };
 
@@ -732,33 +700,27 @@ async function handleSendMessage(conversationId, loggedInUsername) {
 
 
     if (messageContent) {
-        console.log(`Message sent: ${messageContent}`); // Log the message content
-
-        // Call the sendMessage function
         const data = await sendMessage(conversationId, messageContent);
 
-        // Log the entire response data for debugging
-        console.log('Data returned from sendMessage:', data);
 
         // Check if data is defined and has a success property
         if (data && data.success) {
             const modalMessageList = document.getElementById('modal-message-list');
             const newMessageDiv = document.createElement('div');
-            newMessageDiv.className = `chat-message message-right message-right`; // Assuming sent messages go to the right
+            newMessageDiv.className = `chat-message message-right message-right`; 
             const formatMessageDate = (date) => {
                 const options = {
                     day: '2-digit',
                     month: 'short'
-                }; // Day and month in short form (e.g., "05 Oct")
+                }; 
                 const dateString = date.toLocaleDateString(undefined, options);
                 const timeString = date.toLocaleTimeString(undefined, {
                     hour: '2-digit',
                     minute: '2-digit'
-                }); // Time in HH:MM format
-                return `${dateString}, ${timeString}`; // Combine date and time
+                }); 
+                return `${dateString}, ${timeString}`; 
             };
 
-            // Example usage for creating a new message div
             newMessageDiv.innerHTML = `
                 <div class="message-header">
                     <strong>${loggedInUsername}</strong>
@@ -785,10 +747,6 @@ async function handleSendMessage(conversationId, loggedInUsername) {
     }
 }
 async function displayUserMessages(messages, loggedInUsername) {
-    console.log('Entering displayUserMessages function');
-
-    console.log('Logged in username:', loggedInUsername);
-    console.log('Messages received:', messages); // Debugging output
 
     const chatContainer = document.getElementById('chat-container');
     if (!chatContainer) {
@@ -830,8 +788,7 @@ async function displayUserMessages(messages, loggedInUsername) {
 
     // Display existing messages
     messages.forEach((message) => {
-        console.info(`Displaying message:`, message);
-
+        
         const messageDiv = document.createElement('div');
         const messageClass = message.sender === loggedInUsername ? 'message-right' : 'message-left';
         messageDiv.className = `chat-message ${messageClass}`;
@@ -863,8 +820,6 @@ async function displayUserMessages(messages, loggedInUsername) {
     const sendButton = document.getElementById('send-message-button');
     sendButton.onclick = async () => {
         if (conversationId) {
-
-            console.log('Username before sending message:', loggedInUsername); // Debugging
             handleSendMessage(conversationId, loggedInUsername);
         } else {
             console.error('Conversation ID is not available.');
@@ -875,7 +830,6 @@ async function displayUserMessages(messages, loggedInUsername) {
     await updateMessageStatus(messageIds, true); // Update to seen
 }
 async function updateIconsBasedOnSuperUser() {
-    console.log("Starting to check user status..."); // Log when the function starts
     const result = await checkIfSuperUser();
 
     if (result === null) {
@@ -883,8 +837,6 @@ async function updateIconsBasedOnSuperUser() {
         console.error('Failed to fetch user status.');
         return;
     }
-
-    console.log("User status fetched:", result); // Log the result of the user status check
 
     const {
         isSuperUser,
@@ -896,22 +848,14 @@ async function updateIconsBasedOnSuperUser() {
     const messageIcon = document.getElementById('messagesIcon');
 
     if (!isAuthenticated) {
-        console.log("User is not authenticated."); // Log when the user is not authenticated
-        // If the user is not authenticated, hide the notification area
         notificationArea.style.display = 'none';
     } else {
-        console.log("User is authenticated."); // Log when the user is authenticated
-        // If the user is authenticated, show the notification area
         notificationArea.style.display = 'block';
 
         if (isSuperUser) {
-            console.log("User is a superuser."); // Log when the user is a superuser
-            // Show admin icon for superusers
             adminIcon.style.display = 'block';
             messageIcon.style.display = 'none';
         } else {
-            console.log("User is a regular authenticated user."); // Log when the user is a regular authenticated user
-            // Show message icon for regular authenticated users
             messageIcon.style.display = 'block';
             adminIcon.style.display = 'none';
         }
@@ -924,8 +868,6 @@ async function fetchUserMessages(userId) {
         if (!response.ok) throw new Error('Network response was not ok');
 
         const responseData = await response.json();
-        console.log('Fetched user messages:', responseData);
-
         if (!Array.isArray(responseData.messages)) {
             throw new Error('Invalid response format: expected an array of messages');
         }
@@ -956,7 +898,6 @@ async function updateMessageStatus(messageIds, isSeen) {
             console.error('Error updating message status:', errorData);
         } else {
             const successData = await response.json();
-            console.log('Success:', successData.message);
         }
     } catch (error) {
         console.error('Network error:', error);
@@ -964,7 +905,6 @@ async function updateMessageStatus(messageIds, isSeen) {
 }
 
 function createLoadingOverlay() {
-    console.log("Creating loading overlay..."); // Log when creating overlay
     loadingOverlay = document.createElement('div');
     loadingOverlay.id = 'loading-overlay';
     loadingOverlay.style.position = 'fixed'; // Fix position to overlay the entire screen
@@ -993,20 +933,17 @@ function createLoadingOverlay() {
 
     // Append the overlay to the body
     document.body.appendChild(loadingOverlay);
-    console.log("Loading overlay created and added to the body.");
 }
 
 
 function showLoadingAnimation() {
-    console.log("Showing loading animation..."); // Log when showing animation
-    createLoadingOverlay(); // Ensure the overlay is created
+    createLoadingOverlay();
 
     const text = "Loading";
     let index = 0;
 
     const intervalId = setInterval(() => {
         loadingText.textContent = text.slice(0, index) + '.'.repeat(index % 4);
-        console.log(`Loading text updated: ${loadingText.textContent}`); // Log loading text update
         index++;
 
         if (index > text.length) {
@@ -1016,18 +953,16 @@ function showLoadingAnimation() {
         // Stop the animation after the full text is displayed with dots
         if (index === text.length && loadingText.textContent.endsWith('...')) {
             clearInterval(intervalId);
-            console.log("Loading animation completed."); // Log when animation is completed
         }
-    }, 400); // Change this value to speed up or slow down the animation
+    }, 400);
 }
 
 function hideLoadingAnimation() {
-    console.log("Hiding loading animation..."); // Log when hiding animation
+   
     if (loadingOverlay) {
-        document.body.removeChild(loadingOverlay); // Remove the overlay from the body
-        loadingOverlay = null; // Reset to null
-        console.log("Loading overlay removed from the body."); // Log when overlay is removed
+        loadingOverlay = null; 
+        
     } else {
-        console.log("No loading overlay found to remove."); // Log if overlay was not found
+        console.log("No loading overlay found to remove.");
     }
 }

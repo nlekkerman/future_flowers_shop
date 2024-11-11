@@ -1,11 +1,18 @@
 import { updateQuantityOnServer, deleteCartItemOnServer } from './control.js'; 
 const updateItemMessages = document.getElementById('update-item-messages');
-const showMessage = (flowerInfo, backgroundImage) => {
-    console.log('showMessage called');
-    console.log('Flower Info:', flowerInfo);
-    console.log('Background Image:', backgroundImage);
 
-    // Use getElementById to find the element by ID
+/* Displays a message about the updated item with relevant flower info and an optional background image*/
+const showMessage = (flowerInfo, backgroundImage) => { 
+    /* 
+    * Parameters:
+    * - flowerInfo (Object): Contains details about the flower such as name, price, quantity, and totalPrice.
+    *      Example: { name: "Flower Name", price: "10.00", quantity: 2, totalPrice: "20.00" }
+    * - backgroundImage (String, optional): The URL of the background image to display. If not provided, the default is used.
+    * 
+    * Returns: void (This function doesn't return any value, it manipulates the DOM and shows a message.)
+    */
+
+   
     const updateItemMessages = document.getElementById('update-item-messages');
     if (!updateItemMessages) {
         console.error('updateItemMessages element not found.');
@@ -23,15 +30,6 @@ const showMessage = (flowerInfo, backgroundImage) => {
     const quantity = flowerInfo?.quantity || 0;
     const totalPrice = flowerInfo?.totalPrice ? parseFloat(flowerInfo.totalPrice).toFixed(2) : '0.00';
 
-    console.log('Message text element found:', messageTextElement);
-    console.log('Setting message content:', `
-        <div class="flower-message-content">
-            <p class="flower-name">You updated quantity for <strong>${name}</strong></p>
-            <p class="flower-price">Price: <span>$${price}</span></p>
-            <p class="flower-quantity">Quantity: <span>${quantity}</span></p>
-            <p class="flower-total">Total: <span>$${totalPrice}</span></p>
-        </div>
-    `);
 
     messageTextElement.innerHTML = `
         <div class="flower-message-content">
@@ -43,22 +41,29 @@ const showMessage = (flowerInfo, backgroundImage) => {
     `;
 
     if (backgroundImage) {
-        console.log('Setting background image:', backgroundImage);
         updateItemMessages.style.backgroundImage = `url(${backgroundImage})`;
     } else {
         console.log('No background image provided.');
     }
 
     updateItemMessages.classList.add('show');
-    console.log('Added "show" class to updateItemMessages.');
 
     setTimeout(() => {
         updateItemMessages.classList.remove('show');
-        console.log('Removed "show" class from updateItemMessages after 5 seconds.');
     }, 3000);
 };
-const showDeletionMessage = (itemName) => {
-    console.log('showDeletionMessage called');
+
+/* 
+* Displays a deletion message for an item, confirming its deletion from the cart.
+*/
+const showDeletionMessage = (itemName) => { 
+    /* 
+    * Parameters:
+    * - itemName (String): The name of the item being deleted.
+    *      Example: "Flower Name"
+    * 
+    * Returns: void (This function doesn't return any value, it manipulates the DOM to show a deletion message.)
+    */
     
     // Use getElementById to find the element by ID
     const updateItemMessages = document.getElementById('update-item-messages');
@@ -90,7 +95,16 @@ const showDeletionMessage = (itemName) => {
     }, 3000);
 };
 
-export function loadCart() {
+/* 
+* Loads and displays the cart data from localStorage. 
+* Updates the UI with cart items, totals, and item removal functionality.
+*/
+export function loadCart() { 
+    /* 
+    * Parameters: None
+    * 
+    * Returns: void (This function doesn't return any value, it manipulates the DOM to display cart items and updates the total.)
+    */
     const baseImageUrl = 'https://res.cloudinary.com/dg0ssec7u/image/upload/';
     const defaultImageUrl = '/media/images/wild-flowers-icon.webp';
     const cartContainer = document.getElementById('cart-items-container');
@@ -175,7 +189,7 @@ export function loadCart() {
         emptyCartMessage.style.display = 'none';
         cart.items.forEach(item => {
             if (item && item.seed) {
-                const seedId = item.seed.id; // Correct usage of ID
+                const seedId = item.seed.id; 
                 console.log('Processing item with seed ID:', seedId);
         
                 const name = item.seed.name;
@@ -213,7 +227,7 @@ export function loadCart() {
                     </div>
                 `;
         
-                totalCartPrice += itemTotalPrice;  // Sum up the total price
+                totalCartPrice += itemTotalPrice; 
             } else {
                 console.error("Item or seed is undefined", item);
             }
@@ -265,7 +279,7 @@ export function loadCart() {
 
                 // Show deletion message with the correctly formatted URL
                 showDeletionMessage(itemToDelete.seed.name, imageUrl, () => {
-                    deleteCartItem(seedId); // Pass the correct seedId as a number
+                    deleteCartItem(seedId); 
                     
                 }, () => {
                     console.log('Deletion cancelled.');
@@ -277,7 +291,19 @@ export function loadCart() {
     });
 
 }
-export async function updateCartQuantity(seedId) {
+
+/* 
+* Updates the quantity of an item in the cart, both locally and on the server.
+* Displays a success message and updates the cart UI after the update.
+*/
+export async function updateCartQuantity(seedId) { 
+    /* 
+    * Parameters:
+    * - seedId (String or Number): The unique ID of the seed (item) to update in the cart.
+    *      Example: "123" or 123
+    * 
+    * Returns: Promise<void> (As this is an asynchronous function, it doesn't return a value immediately, but it updates the cart and communicates with the server.)
+    */
     let cart = getCartFromLocalStorage();
 
     const seedIdStr = String(seedId);
@@ -330,31 +356,51 @@ export async function updateCartQuantity(seedId) {
               totalPrice: (parseFloat(updatedItem.seed.price) * newQuantity).toFixed(2)
           };
   
-          // Show the message with the correct image URL
+          
           showMessage(flowerInfo, imageUrl);
-         // Send the updated quantity to the server
+        
          try {
-            const cartId = cart.id || Date.now(); // Use existing cart ID or generate a new one
+            const cartId = cart.id || Date.now(); 
             const result = await updateQuantityOnServer(cartId, seedId, newQuantity);
             console.log('Server response:', result);
         } catch (error) {
             console.error('Failed to update quantity on server:', error);
-            // Optionally handle the error (e.g., show a message to the user)
+            
         }
     } else {
         console.warn('Quantity must be greater than zero.');
     }
 }
 
-// Helper function to get cart data from localStorage
-function getCartFromLocalStorage() {
+/* 
+* Helper function to retrieve cart data from localStorage.
+*/
+function getCartFromLocalStorage() { 
+    /* 
+    * Parameters: None
+    * 
+    * Returns:
+    * - cart (Object): The current cart data, typically containing an `id`, `user`, `created_at`, `updated_at`, and an array of `items`.
+    *      Example: { id: 123, user: "current_user", created_at: "2024-11-01T12:00:00Z", updated_at: "2024-11-01T12:00:00Z", items: [...] }
+    */
     const cartData = localStorage.getItem('cart');
     return cartData ? JSON.parse(cartData) : {
         items: []
     };
 }
 
-export async function deleteCartItem(seedId) {
+/* 
+* Deletes an item from the cart and updates the UI and total price accordingly.
+* Handles server communication for item deletion as well.
+*/
+export async function deleteCartItem(seedId) { 
+    /* 
+    * Parameters:
+    * - seedId (String or Number): The unique ID of the seed (item) to delete from the cart.
+    *      Example: "123" or 123
+    * 
+    * Returns: Promise<void> (As this is an asynchronous function, it doesn't return a value immediately, but it updates the cart and communicates with the server.)
+    */
     let cart = getCartFromLocalStorage();
     const seedIdInt = parseInt(seedId, 10);
 
@@ -412,11 +458,15 @@ export async function deleteCartItem(seedId) {
     showDeletionMessage(flowerName);
 }
 
-
-
-// Update the total price in the cart UI
-function updateCartTotal() {
-    // Fetch the cart data from local storage
+/* 
+* Updates the total price of the cart based on the current items and their quantities.
+*/
+function updateCartTotal() { 
+    /* 
+    * Parameters: None
+    * 
+    * Returns: void (This function doesn't return any value, it manipulates the DOM to display the updated total price.)
+    */
     const cartData = getCartFromLocalStorage();
 
     // Validate cart data
@@ -434,19 +484,33 @@ function updateCartTotal() {
     // Get the total price element and update its text content
     const cartTotalElement = document.getElementById('cart-total');
     if (cartTotalElement) {
-        cartTotalElement.textContent = `$${totalPrice.toFixed(2)}`; // Format as currency
-    } else {
+        cartTotalElement.textContent = `$${totalPrice.toFixed(2)}`;
         console.error('Cart total element not found.');
     }
 
     console.log('Cart total updated:', totalPrice.toFixed(2));
 }
 
-
-document.addEventListener('DOMContentLoaded', () => {
-    loadCart(); // Load and render the cart when the page is loaded
+/* 
+* Event listener that triggers when the page has fully loaded, initializing the cart UI.
+*/
+document.addEventListener('DOMContentLoaded', () => { 
+    /* 
+    * Parameters: None
+    * 
+    * Returns: void (This function doesn't return any value, it triggers when the DOM content is fully loaded.)
+    */
+    loadCart();
 });
 
-document.getElementById('go-to-checkout-button').addEventListener('click', function() {
+/* 
+* Event listener for the "Go to Checkout" button, redirecting the user to the checkout page.
+*/
+document.getElementById('go-to-checkout-button').addEventListener('click', function() { 
+    /* 
+    * Parameters: None
+    * 
+    * Returns: void (This function doesn't return any value, it redirects the user to the checkout page.)
+    */
      window.location.href = "/checkout/";
 });

@@ -51,10 +51,10 @@ function populateCheckout(cart) {
         orderTotal += item.quantity * parseFloat(item.seed.price);
     });
 
-    cartCount.textContent = cart.items.length; // Update cart count
-    orderTotalElement.textContent = `$${orderTotal.toFixed(2)}`; // Update order total
+    cartCount.textContent = cart.items.length; 
+    orderTotalElement.textContent = `$${orderTotal.toFixed(2)}`; 
 
-    // Update delivery fee and grand total based on order total
+   
     if (orderTotal > 50) {
         deliveryFeeElement.innerHTML = '<span style="color: green; font-weight: bold; text-align: left; margin-right: 10px;">FREE</span>';
         grandTotalElement.textContent = `$${orderTotal.toFixed(2)}`;

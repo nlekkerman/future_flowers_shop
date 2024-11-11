@@ -12,14 +12,17 @@
 {% endblock %}
 
 {% block content %}
+<div class="navigation-container">
+    {% include 'navigation.html' %}
+    </div>
+<div class="checkout-success-container">
+    
 
-<div class="checout-success-container">
+<div class="overlay"></div>
+<div class="container checkout-success-body">
     <button class="close-order-success-button btn" id="close-order-success-button">
         Continue with Shopping
       </button>
-
-<div class="overlay"></div>
-<div class="container">
     <div class="row">
         <div class="col">
             <hr>

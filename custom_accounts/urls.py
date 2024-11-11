@@ -1,6 +1,6 @@
 # custom_accounts/urls.py
 from django.urls import path
-from .views import (register,send_newsletter, login, logout, profile, debug_view,admin_dashboard, approve_review, reject_review, delete_review,edit_profile, approve_comment, reject_comment, delete_comment,conversation_detail_view )
+from .views import (register,send_newsletter, login, logout, profile, admin_dashboard, approve_review, reject_review, delete_review,edit_profile, approve_comment, reject_comment, delete_comment,conversation_detail_view )
 
 urlpatterns = [
     path('register/', register, name='account_signup'),
@@ -8,7 +8,6 @@ urlpatterns = [
     path('logout/', logout, name='account_logout'),
     path('profile/edit/', edit_profile, name='edit_profile'),
     path('profile/', profile, name='profile'),
-    path('custom_accounts/debug/', debug_view, name='debug'),
     path('admin/dashboard/', admin_dashboard, name='admin_dashboard'),
     path('admin/review/<int:id>/approve/', approve_review, name='approve_review'),
     path('admin/review/<int:id>/reject/', reject_review, name='reject_review'),

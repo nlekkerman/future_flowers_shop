@@ -2,12 +2,26 @@ from decimal import Decimal
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from cart.models import Cart, CartItem
-from seeds.models import Seed  # Import Seed model from seeds app
+from seeds.models import Seed
 
 def cart_context(request):
+    """
+    Generates and returns the context dictionary for the shopping cart, containing
+    information such as total prices, item details, delivery charges, and any applicable 
+    free delivery threshold calculations.
+
+    Parameters:
+        request (HttpRequest): The current request object, which is used to identify
+                               if the user is authenticated and to access the session.
+
+    Returns:
+        dict: A dictionary containing cart information such as item details, subtotal,
+              delivery charges, and grand total. If no cart is found, the context
+              will contain an empty cart entry.
+    """
     cart = None
     bag_items = []
-    total = Decimal('0.00')  # Initialize total as Decimal
+    total = Decimal('0.00')
     product_count = 0
     delivery = Decimal('0.00')
     free_delivery_delta = Decimal('0.00')
@@ -20,17 +34,17 @@ def cart_context(request):
     else:
         session_key = request.session.session_key
         if not session_key:
-            request.session.create()  # Create a new session if none exists
+            request.session.create() 
             session_key = request.session.session_key
         cart = Cart.objects.filter(session_id=session_key, deleted=False).first()
 
     # Process cart contents if it exists
     if cart:
-        cart_items = CartItem.objects.filter(cart=cart, deleted=False)  # Query related items
+        cart_items = CartItem.objects.filter(cart=cart, deleted=False) 
         for cart_item in cart_items:
             seed = cart_item.seed
             quantity = cart_item.quantity
-            item_total_price = cart_item.get_total_price()  # Use `get_total_price()` to calculate total
+            item_total_price = cart_item.get_total_price()  
             total += item_total_price
             product_count += quantity
             bag_items.append({

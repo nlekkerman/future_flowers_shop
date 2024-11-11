@@ -2,15 +2,42 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
-
 from checkout.webhook_handler import StripeWH_Handler
-
 import stripe
+
+"""
+This view handles incoming webhook notifications from Stripe. Webhooks allow Stripe 
+to notify the server about events related to payments, such as successful payments, 
+failed payments, etc. 
+
+In this implementation, we use Stripe's Webhook API to verify the event's authenticity 
+using a signature key and then delegate the event handling to a custom handler class.
+
+- `wh_secret` holds the secret key used to verify Stripe’s event signatures.
+- The `event_map` is a dictionary mapping Stripe event types to custom handler methods.
+- Each event type, such as 'payment_intent.succeeded', is mapped to a corresponding 
+  handler function, which processes the event accordingly.
+"""
 
 @require_POST
 @csrf_exempt
 def webhook(request):
-    """Listen for webhooks from Stripe"""
+    """
+    Handles POST requests from Stripe webhooks. 
+
+    Steps:
+        1. Validates the signature to ensure the webhook is sent by Stripe.
+        2. Constructs the event object from the request payload.
+        3. Retrieves and calls the appropriate handler based on the event type.
+        4. Returns an appropriate HTTP response indicating the outcome of handling the event.
+
+    Parameters:
+        request (HttpRequest): The incoming HTTP request object containing the payload and signature.
+        
+    Returns:
+        HttpResponse: A response indicating the success or failure of processing the webhook.
+    """
+    
     # Setup
     wh_secret = settings.STRIPE_WH_SECRET
     stripe.api_key = settings.STRIPE_SECRET_KEY

@@ -518,13 +518,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to delete a comment
     function deleteComment(reviewId, commentId) {
-        const url = `/reviews/api/comment/delete/${reviewId}/${commentId}/`; // Ensure this matches your Django URL pattern
-
+        const url = `/reviews/api/comment/delete/${reviewId}/${commentId}/`; 
         fetch(url, {
-                method: 'DELETE', // Use DELETE for deleting comments
+                method: 'DELETE', 
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken'), // Include CSRF token for Django
+                    'X-CSRFToken': getCookie('csrftoken'),
                 }
             })
             .then(response => {

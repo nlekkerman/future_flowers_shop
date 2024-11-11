@@ -5,6 +5,36 @@ from decimal import Decimal
 
 
 class Seed(models.Model):
+    """
+    A model representing a seed with attributes like name, scientific name, description, 
+    planting and flowering months, category, height, sun preference, price, discount, 
+    stock availability, and image.
+
+    Attributes:
+        name (CharField): The common name of the seed (e.g., 'Rose').
+        scientific_name (CharField): The scientific name of the seed (e.g., 'Rosa spp.').
+        description (TextField): A detailed description of the seed.
+        planting_months_from (PositiveIntegerField): Month to start planting.
+        planting_months_to (PositiveIntegerField): Month to end planting.
+        flowering_months_from (PositiveIntegerField): Month to start flowering.
+        flowering_months_to (PositiveIntegerField): Month to end flowering.
+        category (CharField): The seed's category (e.g., 'rose', 'tree').
+        height_from (DecimalField): Minimum plant height in meters.
+        height_to (DecimalField): Maximum plant height in meters.
+        sun_preference (CharField): Sun exposure required (e.g., 'full_sun').
+        price (DecimalField): Price of the seed.
+        discount (DecimalField): Discount percentage on the seed's price.
+        is_in_stock (BooleanField): Indicates if the seed is in stock.
+        created_at (DateTimeField): Timestamp when the seed was created.
+        last_modified (DateTimeField): Timestamp when the seed was last modified.
+        deleted (BooleanField): Indicates if the seed is marked as deleted.
+        image (CloudinaryField): Image of the seed uploaded via Cloudinary.
+
+    Methods:
+        calculate_discounted_price(): Returns the price after applying the discount.
+        has_discount(): Checks if the seed has a discount.
+        __str__(): Returns the seed's name as a string representation.
+    """
     CATEGORY_CHOICES = [
         ('rose', 'Rose'),
         ('flower', 'Flower'),

@@ -4,7 +4,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from custom_accounts.views import welcome_message
 from django.conf.urls import handler404
 from syncmanager.views import custom_404_view
 
@@ -17,10 +16,7 @@ urlpatterns = [
     
     # Custom accounts URLs (if you have any specific routes for custom account handling)
     path('custom_accounts/', include('custom_accounts.urls')),
-    
-    # Custom view for welcome message
-    path('welcome/', welcome_message, name='welcome_message'),
-    
+
     # Seeds application URLs
     path('seeds/', include('seeds.urls')),
 

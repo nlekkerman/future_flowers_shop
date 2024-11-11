@@ -5,13 +5,14 @@ import {
     sendToCart
 } from './control.js';
 
+
 export function displaySeeds({
     category = '',
     sort = '',
     inStock = undefined,
     discounted = undefined,
-    currentPage = 1, // New parameter for the current page
-    itemsPerPage = 9 // New parameter for items per page
+    currentPage = 1,
+    itemsPerPage = 9
 } = {}) {
     const seedsData = JSON.parse(localStorage.getItem('seeds_data')) || [];
     const seedsContainer = document.getElementById('seeds-container');
@@ -169,31 +170,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const cartButton = document.getElementById('cart-button');
 
     if (cartData && Array.isArray(cartData.items) && cartData.items.length > 0) {
-        // Show the cart button if there are items in the cart
+       
         if (cartButton) {
-            cartButton.style.display = 'block'; // Show cart button
-            console.log('Cart button is now visible.');
+            cartButton.style.display = 'block'; 
         }
     } else {
-        // Hide the cart button if the cart is empty or undefined
+       
         if (cartButton) {
             cartButton.style.display = 'none'; // Hide cart button
-            console.log('Cart button is now hidden.');
         }
     }
 
     document.querySelectorAll('.filter-buttons .custom-buttons').forEach(button => {
         button.addEventListener('click', function () {
-            console.log("FILTER CLICKED");
             const category = this.dataset.category;
 
-            // Update active class for filter buttons
             document.querySelectorAll('.filter-buttons .custom-buttons').forEach(btn => {
                 btn.classList.remove('active');
             });
             this.classList.add('active');
 
-            // Call displaySeeds with the selected category
             displaySeeds({
                 category
             });
@@ -203,17 +199,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // For sorting buttons
     document.querySelectorAll('.sorting-buttons button').forEach(button => {
         button.addEventListener('click', function (e) {
-            e.preventDefault(); // Prevent default button behavior
+            e.preventDefault(); 
 
-            const sort = this.dataset.sort; // Get the sort value from the data attribute
+            const sort = this.dataset.sort; 
 
-            // Update active class for sorting buttons
             document.querySelectorAll('.sorting-buttons button').forEach(btn => {
                 btn.classList.remove('active');
             });
-            this.classList.add('active'); // Add active class to the clicked button
+            this.classList.add('active'); 
 
-            // Call displaySeeds with the selected sort option
             displaySeeds({
                 sort
             });
@@ -223,14 +217,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 function attachEventListeners() {
-    // Attach click event listener to seed cards for viewing details
     document.querySelectorAll('.seed-card').forEach(card => {
         card.addEventListener('click', (event) => {
             const seedId = card.getAttribute('data-seed-id');
             const seed = getSeedFromLocalStorage(seedId);
 
             if (seed) {
-                console.log(`Seed card clicked. Seed ID: ${seedId}`, seed);
                 displaySeedDetails(seed);
                 showModal();
             } else {
@@ -242,10 +234,9 @@ function attachEventListeners() {
     // Attach click event listener to "Add to Cart" buttons
     document.querySelectorAll('.add-to-cart-button').forEach(button => {
         button.addEventListener('click', async (event) => {
-            event.stopPropagation(); // Prevent triggering the card click event
-
+            event.stopPropagation(); 
             const seedId = button.getAttribute('data-seed-id');
-            const quantity = 1; // Default quantity
+            const quantity = 1;
 
             const seedElement = button.closest('.seed-card');
             const imageUrl = seedElement.querySelector('.card-img-top').getAttribute('src');
@@ -256,16 +247,13 @@ function attachEventListeners() {
             if (seed) {
                
                 addToCart(seed, quantity, imageUrl);
-                updateCartUI(); // Ensure the cart UI is updated after adding the item
+                updateCartUI();
                 try {
                     await sendToCart(seedId, quantity, seed);
                    
                 } catch (error) {
                     console.error('Failed to send item to server:', error);
                 }
-
-
-                console.log('After adding to cart:', getCartFromLocalStorage()); // Log cart state after addition
             } else {
                 console.error('Seed not found in local storage.', seedId);
             }
@@ -275,60 +263,52 @@ function attachEventListeners() {
 }
 // Add item to cart
 function addToCart(seed, quantity = 1) {
-    let cartData = getCartFromLocalStorage(); // Fetch current cart data
+    let cartData = getCartFromLocalStorage();
     const cartButton = document.getElementById('cart-button');
-    cartButton.style.display = 'block'; // Hide cart button
+    cartButton.style.display = 'block'; 
     cartButton.classList.add('fancy');
 
-    // Remove the fancy class after the animation is done
+  
     setTimeout(() => {
         cartButton.classList.remove('fancy');
     }, 1500);
-    // Use the full URL directly if available, otherwise use a fallback image URL
+   
     let imageUrl = seed.image || '/media/images/wild-flowers-icon.webp';
-
-    // Calculate the correct price: either discounted or original price
+// Calculate the correct price: either discounted or original price
     let itemPrice = seed.discount > 0 ? parseFloat(seed.discounted_price) : parseFloat(seed.price);
-    // Find if the item already exists in the cart
     const existingItemIndex = cartData.items.findIndex(item => item.seed.id === seed.id);
 
     if (existingItemIndex >= 0) {
-        // Item is already in cart, update the quantity and total price
         cartData.items[existingItemIndex].quantity += quantity;
         cartData.items[existingItemIndex].total_price = cartData.items[existingItemIndex].quantity * itemPrice;
     } else {
-        // New item, add to cart
         cartData.items.push({
-            id: Date.now(), // Unique ID for the cart item
+            id: Date.now(), 
             seed: {
                 id: seed.id,
                 name: seed.name,
-                price: itemPrice, // Use the correct price
+                price: itemPrice,
                 image: imageUrl,
-                is_in_stock: seed.is_in_stock // Add stock status
+                is_in_stock: seed.is_in_stock 
             },
             quantity: quantity,
             total_price: itemPrice * quantity
         });
     }
 
-    // Calculate total cart price
     const total_price = cartData.items.reduce((total, item) => total + item.total_price, 0);
 
-    // Prepare updated cart data
     const updatedCartData = {
-        id: cartData.id || Date.now(), // Generate a new cart ID if it doesn't exist
-        user: 'current_user', // Placeholder for user information
+        id: cartData.id || Date.now(), 
+        user: 'current_user', 
         created_at: cartData.created_at || new Date().toISOString(),
         updated_at: new Date().toISOString(),
         total_price: total_price.toFixed(2),
         items: cartData.items
     };
 
-    // Save updated cart data to localStorage
     localStorage.setItem('cart', JSON.stringify(updatedCartData));
 
-    // Optionally, show a success message
     displayMessageInModal('Item successfully added to your cart!', {
         image: imageUrl,
         quantity
@@ -361,10 +341,6 @@ function updateCartUI() {
         cartTotalElement.textContent = `$${totalPrice.toFixed(2)}`; // Display the total price
     }
 
-    console.log('Cart UI updated:', {
-        itemCount,
-        totalPrice
-    });
 }
 
 
@@ -423,15 +399,11 @@ function displaySeedDetails(seed) {
             const quantity = 1; // Default quantity
             const imageUrl = seed.image ? `https://res.cloudinary.com/dg0ssec7u/image/upload/${seed.image}.webp` : '/static/default_image.jpg';
 
-            console.log(`Adding Seed ID ${seedId} to cart with quantity ${quantity}`);
-            console.log(`Image URL: ${imageUrl}`);
-
             // Call addToCart with the image URL
             addToCart(seed, quantity, imageUrl);
             updateCartUI();
             try {
                 await sendToCart(seedId, quantity, seed);
-                console.log('Item sent to server successfully.');
             } catch (error) {
                 console.error('Failed to send item to server:', error);
             }
@@ -477,11 +449,6 @@ export function displayMessageInModal(message, item) {
         return;
     }
 
-    // Log the details for debugging
-    console.log('Displaying message in modal:', {
-        message,
-        item
-    });
 
     // Base URL for image
     const baseImageUrl = 'https://res.cloudinary.com/dg0ssec7u/image/upload/';
@@ -512,20 +479,14 @@ export function displayMessageInModal(message, item) {
         </div>
     `;
 
-    // Display the message container
     messagesContainer.style.display = 'block';
 
-    // Log message visibility
-    console.log('Message container displayed.');
-
-    // Hide the message after a few seconds (optional)
     setTimeout(() => {
         messagesContainer.style.display = 'none';
         console.log('Message container hidden.');
-    }, 5000); // Adjust time as needed
+    }, 5000); 
 }
 
-// Function to hide the message container
 function hideItemAddedMessage() {
     const messagesContainer = document.getElementById('add-item-messages');
     if (messagesContainer) {
@@ -535,13 +496,10 @@ function hideItemAddedMessage() {
 
 
 
-// Close message when clicking on the close button
 document.addEventListener('click', (event) => {
     if (event.target.classList.contains('btn-close-message')) {
         hideItemAddedMessage();
     }
 });
 
-
-// Make sure the cart UI is updated on page load
 window.onload = updateCartUI;

@@ -1,3 +1,4 @@
+/* jshint esversion: 11 */
 document.addEventListener('DOMContentLoaded', function () {
     const chatIcon = document.getElementById('chat-icon');
     const chatWindow = document.getElementById('chat-window');
@@ -88,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(data => {
             const messagesContainer = document.getElementById('messages');
-            messagesContainer.innerHTML = ''; // Clear existing messages
+            messagesContainer.innerHTML = ''; 
             data.messages.forEach(message => {
                 const messageElement = document.createElement('div');
                 messageElement.textContent = `${message.sender}: ${message.text}`;
@@ -108,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 'X-CSRFToken': getCookie('csrftoken')
             },
             body: JSON.stringify({
-                conversation_id: currentConversationId, // Use the stored conversation ID
+                conversation_id: currentConversationId, 
                 text: text
             })
         })
@@ -119,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.json();
         })
         .then(data => {
-            loadMessages(currentConversationId);  // Reload messages after sending
+            loadMessages(currentConversationId); 
         })
         .catch(error => {
             console.error('Error sending message:', error);

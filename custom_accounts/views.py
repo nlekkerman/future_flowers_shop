@@ -24,7 +24,21 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def edit_profile(request):
-    # Retrieve the profile for the logged-in user directly
+    """
+    Allows authenticated users to edit their profile details such as their profile image and name.
+
+    This view retrieves the current user's profile information and initializes a form with the
+    existing data. If a POST request is received, it validates the form and updates the user's
+    profile with the new information. On successful update, the user is redirected to their profile
+    page and a success message is displayed.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object containing metadata about the request.
+
+    Returns:
+        HttpResponse: Renders 'custom_accounts/edit_profile.html' with the form if GET request or
+                      redirects to 'profile' page after successful form submission.
+    """
     profile = request.user.profile
 
     if request.method == 'POST':
@@ -39,40 +53,65 @@ def edit_profile(request):
     return render(request, 'custom_accounts/edit_profile.html', {'form': form})
 
 def register(request):
+    """
+    Handles user registration with an option for newsletter subscription.
+
+    If the request method is POST, the form data is validated. On successful validation, a new user
+    instance is created, logged in, and optionally subscribed to the newsletter. A welcome email is
+    sent if the user opts in for the newsletter. If the form submission is invalid, error messages
+    are displayed.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object containing user-submitted data.
+
+    Returns:
+        HttpResponse: Renders 'custom_accounts/register.html' with the form if GET request or
+                      redirects to 'home' page after successful registration.
+    """
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()  # Save the user instance
+            user = form.save() 
             newsletter_preference = form.cleaned_data.get("newsletter", False)
             user.backend = 'allauth.account.auth_backends.AuthenticationBackend'
 
-            # Log the user in after registration
+            
             auth_login(request, user)
             messages.success(request, 'Registration successful.')
-            # Send the welcome email if newsletter preference is checked
-            # Send the welcome email if newsletter preference is checked
+
             if newsletter_preference:
                 logger.info(f"User {user.username} opted in for the newsletter.")
                 send_welcome_email(user)
             else:
                 logger.info(f"User {user.username} did not opt in for the newsletter.")
 
-            # Redirect to the home page after logging in
+            
             return redirect('home')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
-        form = CustomUserCreationForm()  # Create an instance of your custom form
+        form = CustomUserCreationForm()
 
     return render(request, 'custom_accounts/register.html', {'form': form})
-def welcome_message(request):
-    return render(request, 'custom_accounts/welcome_message.html')
+
     
 def login(request):
+    """
+    Authenticates and logs in users, handling both valid and invalid form submissions.
+
+    When a POST request is made, the view attempts to authenticate the user with the provided
+    credentials. If successful, the user is logged in, and a JSON response indicates success.
+    If the user does not have an associated profile, a JSON response redirects to registration.
+    If the credentials are invalid, a JSON response with form errors is returned.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object containing login credentials.
+
+    Returns:
+        JsonResponse: Contains success status and redirection URL based on login success or failure.
+    """
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
-        
-        # Print form errors if form is invalid
         if not form.is_valid():
             print(f"Form errors: {form.errors}")
             return JsonResponse({'success': False, 'errors': form.errors}, status=400)
@@ -92,6 +131,19 @@ def login(request):
 
 
 def send_welcome_email(user):
+    """
+    Sends a personalized welcome email to new users after registration.
+
+    Constructs the welcome email with a subject and message, including the user's username.
+    Uses the Django `send_mail` utility to send the email to the user's registered email address.
+    Logs successful email sending or logs any encountered errors.
+
+    Parameters:
+        user (User): The registered user who should receive the welcome email.
+
+    Returns:
+        None: No direct response as this function is called within other views, but logs results.
+    """
     subject = "Welcome to Future Flower Shop!"
     message = f"Hi {user.username},\n\nThank you for registering at Future Flower Shop! We’re excited to have you with us."
     email_from = settings.DEFAULT_FROM_EMAIL
@@ -105,6 +157,20 @@ def send_welcome_email(user):
 
 
 def send_newsletter(request):
+    """
+    Distributes a newsletter to users who have opted into receiving emails.
+
+    Upon receiving a POST request, the newsletter's subject and message are extracted from the
+    request data. The view then filters for users subscribed to newsletters and sends the message to
+    each subscriber using the Django `send_mail` function. Logs are created for each email
+    successfully sent or any failure.
+
+    Parameters:
+        request (HttpRequest): Contains the subject and message data for the newsletter.
+
+    Returns:
+        HttpResponseRedirect: Redirects back to 'admin_dashboard' after sending the newsletter.
+    """
     if request.method == 'POST':
         subject = request.POST.get('subject')
         message = request.POST.get('message')
@@ -115,9 +181,9 @@ def send_newsletter(request):
         # Send email to each user
         for user_profile in users:
             try:
-                # Check if the user_profile has an associated user
+                
                 try:
-                    if user_profile.user:  # This will now safely check the 'user' field
+                    if user_profile.user:
                         logger.info(f"Attempting to send email to {user_profile.user.email}")
                         send_mail(
                             subject,
@@ -146,6 +212,22 @@ def send_newsletter(request):
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
+    """
+    Automatically creates or updates a user profile when a user account is created or modified.
+
+    This signal handler triggers on user creation or update. If the user is newly created and no
+    associated profile exists, it creates one. If the user is updated, it ensures an associated
+    profile exists and saves any updates. This helps to maintain a synchronized User and UserProfile
+    relationship.
+
+    Parameters:
+        sender (Model): The model class (User) that triggered the signal.
+        instance (User): The specific instance of the model being saved.
+        created (bool): Indicates whether the user was newly created or updated.
+
+    Returns:
+        None: The function is a signal handler and does not return a response.
+    """
     if created:
         if not UserProfile.objects.filter(user=instance).exists():
             UserProfile.objects.create(user=instance)
@@ -155,6 +237,19 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
         profile.save()
 
 def logout(request):
+    """
+    Logs out the current user and clears the session data.
+
+    This view handles the logout process by clearing the session data using `flush` and then
+    calling `auth_logout` to log out the user from the Django authentication system. After
+    logging out, the user is redirected to the home page.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponseRedirect: Redirects the user to the 'home' page after logout.
+    """
     request.session.flush()
     auth_logout(request)
     return redirect('home')
@@ -162,10 +257,24 @@ def logout(request):
 
 @login_required
 def profile(request):
+    """
+    Displays the user's profile along with their associated orders.
+
+    This view fetches the current user's profile and their associated orders. If no profile
+    exists, a default profile image is provided, and no orders are shown. It also ensures that
+    the profile image URL is secure (HTTPS) if necessary.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object containing the logged-in user.
+
+    Returns:
+        HttpResponse: Renders the 'custom_accounts/profile.html' template with profile, orders,
+                      and profile image URL context.
+    """
     try:
         profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
-        profile = None  # Handle case where the profile doesn't exist
+        profile = None
 
     # Fetch orders associated with the profile
     if profile:
@@ -188,40 +297,55 @@ def profile(request):
     # Pass the profile image URL and other data to the template
     return render(request, 'custom_accounts/profile.html', {
         'orders': orders,
-        'profile': profile,  # Pass the profile to the template
-        'profile_image_url': profile_image_url  # Pass the image URL
+        'profile': profile, 
+        'profile_image_url': profile_image_url 
     })
 
 
-def debug_view(request):
-    redirect_uri = 'https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net/accounts/google/login/callback/'
-    client_id = settings.SOCIALACCOUNT_PROVIDERS['google']['APP']['client_id']
-    client_secret = settings.SOCIALACCOUNT_PROVIDERS['google']['APP']['secret']
-
-    response = (
-        f"Redirect URI: {redirect_uri}\n"
-        f"Client ID: {client_id}\n"
-        f"Client Secret: {client_secret}"
-    )
-    return HttpResponse(response, content_type="text/plain")
-
 @login_required
 def admin_dashboard(request):
-    # Fetch pending reviews and comments
+    """
+    Displays pending reviews, comments, and chat conversations for administrative review.
+
+    The view fetches all reviews and comments with a 'pending' status and lists all chat
+    conversations. This allows administrators to review and moderate content before it is displayed
+    publicly. Each item can be approved, rejected, or deleted as per the available management views.
+
+    Parameters:
+        request (HttpRequest): The HTTP request, used to identify the user and request type.
+
+    Returns:
+        HttpResponse: Renders 'custom_accounts/admin_dashboard.html' with pending reviews, comments,
+                      and conversations for administrative actions.
+    """
+   
     pending_reviews = Review.objects.filter(status='pending')
     pending_comments = Comment.objects.filter(status='pending')
     
     # Fetch all chat conversations
-    conversations = ChatConversation.objects.all()  # Adjust filtering if needed
+    conversations = ChatConversation.objects.all() 
 
     context = {
         'pending_reviews': pending_reviews,
         'pending_comments': pending_comments,
-        'conversations': conversations,  # Add this line
+        'conversations': conversations,
     }
     return render(request, 'custom_accounts/admin_dashboard.html', context)
 
 def approve_review(request, id):
+    """
+    Approves a review by setting its status to 'approved'.
+
+    This view retrieves the review by ID, sets its status to 'approved', saves the changes, and
+    displays a success message. The admin is then redirected back to the admin dashboard.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+        id (int): The ID of the review to approve.
+
+    Returns:
+        HttpResponseRedirect: Redirects to the 'admin_dashboard' after approving the review.
+    """
     review = get_object_or_404(Review, id=id)
     review.status = 'approved'
     review.is_approved = True
@@ -230,6 +354,19 @@ def approve_review(request, id):
     return redirect('admin_dashboard')
 
 def reject_review(request, id):
+    """
+    Rejects a review by setting its status to 'rejected'.
+
+    This view retrieves the review by ID, sets its status to 'rejected', saves the changes, and
+    displays a success message. The admin is then redirected back to the admin dashboard.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+        id (int): The ID of the review to reject.
+
+    Returns:
+        HttpResponseRedirect: Redirects to the 'admin_dashboard' after rejecting the review.
+    """
     review = get_object_or_404(Review, id=id)
     review.status = 'rejected'
     review.is_approved = False
@@ -238,12 +375,38 @@ def reject_review(request, id):
     return redirect('admin_dashboard')
 
 def delete_review(request, id):
+    """
+    Deletes a review from the database.
+
+    This view retrieves the review by ID and deletes it. After deletion, a success message is
+    displayed, and the admin is redirected to the admin dashboard.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+        id (int): The ID of the review to delete.
+
+    Returns:
+        HttpResponseRedirect: Redirects to the 'admin_dashboard' after deleting the review.
+    """
     review = get_object_or_404(Review, id=id)
     review.delete()
     messages.success(request, "Review has been deleted.")
     return redirect('admin_dashboard')
 
 def approve_comment(request, id):
+    """
+    Approves a comment by setting its status to 'approved'.
+
+    This view retrieves the comment by ID, sets its status to 'approved', saves the changes,
+    and displays a success message. The admin is then redirected back to the admin dashboard.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+        id (int): The ID of the comment to approve.
+
+    Returns:
+        HttpResponseRedirect: Redirects to the 'admin_dashboard' after approving the comment.
+    """
     comment = get_object_or_404(Comment, id=id)
     comment.status = 'approved'
     comment.save()
@@ -251,6 +414,19 @@ def approve_comment(request, id):
     return redirect('admin_dashboard')
 
 def reject_comment(request, id):
+    """
+    Rejects a comment by setting its status to 'rejected'.
+
+    This view retrieves the comment by ID, sets its status to 'rejected', saves the changes,
+    and displays a success message. The admin is then redirected back to the admin dashboard.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+        id (int): The ID of the comment to reject.
+
+    Returns:
+        HttpResponseRedirect: Redirects to the 'admin_dashboard' after rejecting the comment.
+    """
     comment = get_object_or_404(Comment, id=id)
     comment.status = 'rejected'
     comment.save()
@@ -258,6 +434,19 @@ def reject_comment(request, id):
     return redirect('admin_dashboard')
 
 def delete_comment(request, id):
+    """
+    Deletes a comment from the database.
+
+    This view retrieves the comment by ID and deletes it. After deletion, a success message is
+    displayed, and the admin is redirected to the admin dashboard.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+        id (int): The ID of the comment to delete.
+
+    Returns:
+        HttpResponseRedirect: Redirects to the 'admin_dashboard' after deleting the comment.
+    """
     comment = get_object_or_404(Comment, id=id)
     comment.delete()
     messages.success(request, "Comment has been deleted.")
@@ -265,6 +454,20 @@ def delete_comment(request, id):
 
 
 def conversation_detail_view(request, conversation_id):
+    """
+    Displays the details of a chat conversation, including all related messages.
+
+    This view fetches the chat conversation by ID and retrieves all messages associated with it.
+    The conversation and its messages are then passed to the template for display.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+        conversation_id (int): The ID of the conversation to display.
+
+    Returns:
+        HttpResponse: Renders 'communications/conversation_detail.html' with conversation
+                      and messages context.
+    """
     conversation = get_object_or_404(ChatConversation, id=conversation_id)
     chat_messages = conversation.messages.all()  # Assuming you have a related name or reverse relationship
 

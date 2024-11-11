@@ -7,6 +7,13 @@ from custom_accounts.models import UserProfile
 import uuid
 
 class Order(models.Model):
+    """
+    Represents an order placed by a customer, including personal details, 
+    shipping information, and order totals. This model tracks the order's 
+    lifecycle, including order number, customer info, order items, delivery costs, 
+    and the final total cost (including any discounts or shipping fees).
+    """
+
     order_number = models.CharField(max_length=32, null=False, editable=False)
     user_profile = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, blank=True, related_name='orders')
     full_name = models.CharField(max_length=50, null=False, blank=False)
@@ -30,7 +37,15 @@ class Order(models.Model):
         return uuid.uuid4().hex.upper()
 
     def update_total(self):
-        """Update grand total each time a line item is added, accounting for delivery costs."""
+        """
+        Updates the grand total of the order, recalculating the order total (sum of the 
+        line items), delivery cost (based on threshold), and the final grand total.
+        The method also updates the delivery cost if the order total is below or above
+        the free delivery threshold.
+
+        It calls the aggregate function on the related OrderLineItem instances to 
+        calculate the sum of their lineitem_total.
+        """
         self.order_total = self.lineitems.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
         if self.order_total < settings.FREE_DELIVERY_THRESHOLD:
             self.delivery_cost = self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
@@ -49,6 +64,7 @@ class Order(models.Model):
         return self.order_number
 
 class OrderLineItem(models.Model):
+    
     order = models.ForeignKey(Order, null=False, blank=False, on_delete=models.CASCADE, related_name='lineitems')
     seed = models.ForeignKey(Seed, null=False, blank=False, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(null=False, blank=False, default=0)

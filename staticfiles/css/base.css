@@ -759,7 +759,21 @@ header .dropdown-item {
     /* Scale up by 10% */
 }
 
+.search-card{
 
+    margin: 0.5em;
+}
+.seed-card-body{
+
+    padding: 0.1em !important;
+}
+.search-item-img{
+    width: 200px;
+}
+.card-text-search{
+    font-size: 12px;
+    margin-bottom: 0 !important;
+}
 .search-wrapper {
     position: fixed;
     background: none;
@@ -768,7 +782,7 @@ header .dropdown-item {
     transform: translateX(-50%);
     padding: 20px;
     filter: drop-shadow(16px 4px 9px rgba(43, 54, 1, 0.6));
-    z-index: 1000;
+    z-index: 1005;
 }
 
 .search-container.show {

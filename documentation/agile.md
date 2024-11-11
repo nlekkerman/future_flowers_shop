@@ -1,4 +1,5 @@
 # Agile Project Management for Seed Shop
+![Agile Project Management](images/agile.png)
 
 This document outlines the epics, user stories, and tasks for the Seed Shop project. Each epic includes detailed user stories and tasks that contribute to achieving the epic's goals.
 

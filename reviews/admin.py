@@ -3,10 +3,24 @@ from .models import Review, Comment
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    # Removed 'seed' from list_display
+    """
+    Admin configuration for managing the Review model in the Django admin panel.
+
+    Attributes:
+        list_display (tuple): Specifies the fields to display in the review list view.
+        list_filter (tuple): Defines the fields by which the reviews can be filtered.
+        search_fields (tuple): Specifies the fields to be searched in the admin panel.
+        actions (list): A list of custom admin actions for handling reviews.
+
+    Methods:
+        approve_reviews(request, queryset): Approves the selected reviews by updating their status to 'approved'.
+        reject_reviews(request, queryset): Rejects the selected reviews by updating their status to 'rejected'.
+        delete_reviews(request, queryset): Deletes the selected reviews from the database.
+
+    """
+ 
     list_display = ('user', 'rating', 'status', 'created_at', 'updated_at')
     list_filter = ('status', 'created_at', 'rating')
-    # Removed 'seed__name' from search_fields
     search_fields = ('user__username', 'comment')
     actions = ['approve_reviews', 'reject_reviews', 'delete_reviews']
 
@@ -28,6 +42,21 @@ class ReviewAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for managing the Comment model in the Django admin panel.
+
+    Attributes:
+        list_display (tuple): Specifies the fields to display in the comment list view.
+        list_filter (tuple): Defines the fields by which the comments can be filtered.
+        search_fields (tuple): Specifies the fields to be searched in the admin panel.
+        actions (list): A list of custom admin actions for handling comments.
+
+    Methods:
+        approve_comments(request, queryset): Approves the selected comments by updating their status to 'approved'.
+        reject_comments(request, queryset): Rejects the selected comments by updating their status to 'rejected'.
+        delete_comments(request, queryset): Deletes the selected comments from the database.
+
+    """
     list_display = ('review', 'user', 'text', 'status', 'created_at', 'updated_at')
     list_filter = ('status', 'created_at')
     search_fields = ('user__username', 'text')

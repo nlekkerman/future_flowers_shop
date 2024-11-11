@@ -2,6 +2,13 @@ from django import forms
 from .models import Order
 
 class OrderForm(forms.ModelForm):
+    """
+    Form for creating and updating an order. This form is based on the `Order` model and 
+    handles customer information such as their name, contact details, and shipping address.
+    
+    The form also customizes widget attributes, adding CSS classes, placeholders, and 
+    removing auto-generated labels to ensure a user-friendly and styled input.
+    """
     class Meta:
         model = Order
         fields = (

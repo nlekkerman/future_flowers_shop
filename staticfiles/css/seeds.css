@@ -249,6 +249,9 @@ ul {
 .add-to-cart-button.scaled-up {
     animation: scale-up 0.3s ease;
 }
+.add-to-cart-button{
+    width: 150px;
+}
 
 /* Common Modal Content Styles */
 .modal-content {
