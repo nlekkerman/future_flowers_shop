@@ -248,7 +248,6 @@ function toggleSearchResults() {
             // Hide search container when close button is clicked
             searchContainer.classList.remove('focused');
             searchContainer.classList.remove('show');
-            searchContainer.style.display = 'none'; // Hides the search container
             searchIcon.style.opacity = '1'; // Show the icon again
         } else {
             // Show the results container

@@ -42,17 +42,17 @@ STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
 STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
-    '8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net',
+    '8000-nlekkerman-futureflower-s5m7wylmm2i.ws-eu117.gitpod.io',
     '.herokuapp.com'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://*.gitpod.io',
     'https://*.herokuapp.com',
-    'https://8000-nlekkerman-futureflower-v9397r1bhgn.ws.codeinstitute-ide.net'
+    'https://8000-nlekkerman-futureflower-s5m7wylmm2i.ws-eu117.gitpod.io'
 ]
 
 INSTALLED_APPS = [

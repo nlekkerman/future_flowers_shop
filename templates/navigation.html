@@ -1,88 +1,66 @@
 {% load static %}
 
-<nav class="menu">
-    <div class="nav-top-row">
-        <a href="{% url 'home' %}" class="nav-link-icon home-icon">
-            <img  src="{% static '/images/home-icon.png' %}" alt="Home Icon" class="icon-image">
-
-            
-            <p class="icon-text-style">Home</p>
-
-        </a>
-        <a class="nav-link-icon shop-icon" id="view-seeds-button" >
-            <img  src="{% static '/images/light-purple-flower-icon.png' %}" alt="Shopping Icon" class="icon-image">
-
-            <p class="icon-text-style">Shop</p>
-        </a>
-   
-        <a class="icon nav-link-icon reviews-icon" id="icon">
-            <img  src="{% static '/images/dark-purple-flower.png' %}" alt="Reviews Icon" class="icon-image">
-
-            
-            <p class="icon-text-style">Reviews</p>
-
-
-        </a>
-    </div>
-
-    <div id="menuIcon" class="menu-icon menu-icon-wrapper">
-        <span class="menu-icon-span outlined-text">MENU</span>
-    </div>
-
-    <div class="nav-bottom-row">
-        <a class="nav-link-icon reviews-icon" href="{% url 'communications:questions' %}">
-            <img  src="{% static '/images/flower-156608_640.png' %}" alt="Q&A Icon" class="icon-image">
-            <p class="icon-text-style">Q&A</p>
-
-        </a>
-        <a href="{% url 'communications:about' %}" class="nav-link-icon about-us-icon" data-category="about">
-            <img src="{% static '/images/purple-flower-icon.png' %}" alt="About Icon" class="icon-image">
-            <p class="icon-text-style">About</p>
-
-        </a>
-        <a href="{% url 'communications:contact' %}" class="nav-link-icon contact-us-icon" data-category="contact">
-            <img  src="{% static '/images/bordo-flower-icon.png' %}" alt="Contact Icon" class="icon-image">
-
-            
-            <p class="icon-text-style">Contact</p>
-
-        </a>
-    </div>
-</nav>
-
-
-
 <!-- Right-Aligned Navigation Column Container -->
 <div class="right-nav-column">
-  
-    <a href="{% url 'home' %}">
-        <img src="{% static '/images/home-icon.png' %}" alt="Home Icon" class="icon-img">
-        <p class="icon-label">Home</p>
-    </a>    
- 
-<a id="shop-icon">
-    <img src="{% static '/images/light-purple-flower-icon.png' %}" alt="Shopping Icon" class="icon-img">
+  <a href="{% url 'home:home' %}">
+    <img
+      src="{% static '/images/home-icon.png' %}"
+      alt="Home Icon"
+      class="icon-img"
+    />
+    <p class="icon-label">Home</p>
+  </a>
+
+  <a id="shop-icon">
+    <img
+      src="{% static '/images/light-purple-flower-icon.png' %}"
+      alt="Shopping Icon"
+      class="icon-img"
+    />
     <p class="icon-label">Shop</p>
-</a>
+  </a>
 
-<a id="reviews-icon" href="#">
-    <img src="{% static '/images/dark-purple-flower.png' %}" alt="Reviews Icon" class="icon-img">
+  <a id="reviews-icon" href="#">
+    <img
+      src="{% static '/images/dark-purple-flower.png' %}"
+      alt="Reviews Icon"
+      class="icon-img"
+    />
     <p class="icon-label">Reviews</p>
-</a>
+  </a>
 
-<a id="q-and-a-icon" href="{% url 'communications:questions' %}">
-    <img src="{% static '/images/flower-156608_640.png' %}" alt="Q&A Icon" class="icon-img">
+  <a id="q-and-a-icon" href="{% url 'communications:questions' %}">
+    <img
+      src="{% static '/images/flower-156608_640.png' %}"
+      alt="Q&A Icon"
+      class="icon-img"
+    />
     <p class="icon-label">Q&A</p>
-</a>
+  </a>
 
-<a id="about-icon" href="{% url 'communications:about' %}" data-category="about">
-    <img src="{% static '/images/purple-flower-icon.png' %}" alt="About Icon" class="icon-img">
+  <a
+    id="about-icon"
+    href="{% url 'communications:about' %}"
+    data-category="about"
+  >
+    <img
+      src="{% static '/images/purple-flower-icon.png' %}"
+      alt="About Icon"
+      class="icon-img"
+    />
     <p class="icon-label">About</p>
-</a>
+  </a>
 
-<a id="contact-icon" href="{% url 'communications:contact' %}" data-category="contact">
-    <img src="{% static '/images/bordo-flower-icon.png' %}" alt="Contact Icon" class="icon-img">
+  <a
+    id="contact-icon"
+    href="{% url 'communications:contact' %}"
+    data-category="contact"
+  >
+    <img
+      src="{% static '/images/bordo-flower-icon.png' %}"
+      alt="Contact Icon"
+      class="icon-img"
+    />
     <p class="icon-label">Contact</p>
-</a>
+  </a>
 </div>
-

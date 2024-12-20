@@ -966,3 +966,5 @@ function hideLoadingAnimation() {
         console.log("No loading overlay found to remove.");
     }
 }
+
+

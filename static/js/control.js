@@ -363,3 +363,77 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const slides = document.querySelectorAll('.seed-slide');
+    const totalSlides = slides.length;
+    let currentSlideIndex = 0;
+    const slider = document.querySelector('.seeds-slider');
+
+    console.log(`Total slides: ${totalSlides}`); // Log total slides found
+
+    // Check if slider container is found
+    if (!slider) {
+        console.error("Slider container '.seeds-slider' not found!");
+        return;
+    }
+
+    // Function to move to the next slide
+    function goToNextSlide() {
+        console.log('Moving to next slide...');
+        if (currentSlideIndex === totalSlides - 1) {
+            currentSlideIndex = 0;
+        } else {
+            currentSlideIndex++;
+        }
+        updateSliderPosition();
+    }
+
+    // Function to move to the previous slide
+    function goToPreviousSlide() {
+        console.log('Moving to previous slide...');
+        if (currentSlideIndex === 0) {
+            currentSlideIndex = totalSlides - 1;
+        } else {
+            currentSlideIndex--;
+        }
+        updateSliderPosition();
+    }
+
+    // Function to update the slider's position
+    function updateSliderPosition() {
+        console.log(`Current Slide Index: ${currentSlideIndex}`);
+        const offset = -currentSlideIndex * 100; // Move the slider by 100% of the current index
+        slider.style.transform = `translateX(${offset}%)`;
+    }
+
+    // Event listeners for controls
+    const nextButton = document.querySelector('.next-btn');
+    const prevButton = document.querySelector('.prev-btn');
+
+    if (nextButton) {
+        nextButton.addEventListener('click', goToNextSlide);
+    } else {
+        console.error("Next button '.next-btn' not found!");
+    }
+
+    if (prevButton) {
+        prevButton.addEventListener('click', goToPreviousSlide);
+    } else {
+        console.error("Previous button '.prev-btn' not found!");
+    }
+
+    // Set an interval for auto sliding (optional)
+    setInterval(goToNextSlide, 5000); // Change slide every 5 seconds
+
+    // Add event listeners to each seed item to redirect on click
+    const seedItems = document.querySelectorAll('.seed-item a');
+    console.log(`Found ${seedItems.length} seed items`);
+    seedItems.forEach(item => {
+        item.addEventListener('click', function (event) {
+            console.log('Redirecting to /seeds/?show_seeds=true');
+            window.location.href = '/seeds/?show_seeds=true';
+            event.preventDefault(); // Prevent the default link behavior
+        });
+    });
+});
