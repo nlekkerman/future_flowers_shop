@@ -1,0 +1,4 @@
+ports:
+  - name: database
+    port: 5432
+    onOpen: ignore

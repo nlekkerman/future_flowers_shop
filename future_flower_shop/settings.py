@@ -45,14 +45,14 @@ STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET', '')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '8000-nlekkerman-futureflower-s5m7wylmm2i.ws-eu117.gitpod.io',
+    '8000-nlekkerman-futureflower-aiawwvn6s6t.ws-eu117.gitpod.io',
     '.herokuapp.com'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://*.gitpod.io',
     'https://*.herokuapp.com',
-    'https://8000-nlekkerman-futureflower-s5m7wylmm2i.ws-eu117.gitpod.io'
+    'https://8000-nlekkerman-futureflower-aiawwvn6s6t.ws-eu117.gitpod.io'
 ]
 
 INSTALLED_APPS = [
