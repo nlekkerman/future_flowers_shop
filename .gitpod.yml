@@ -14,3 +14,8 @@ vscode:
     - ms-toolsai.jupyter
     - ms-toolsai.jupyter-keymap
     - ms-toolsai.jupyter-renderers
+ports:
+  - port: 5432
+    onOpen: open-preview
+    name: PostgreSQL
+    description: PostgreSQL Database
