@@ -45,14 +45,14 @@ STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET', '')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '8000-nlekkerman-futureflower-aiawwvn6s6t.ws-eu117.gitpod.io',
+    '8000-nlekkerman-futureflower-1hc6w6cgvfw.ws-eu117.gitpod.io',
     '.herokuapp.com'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://*.gitpod.io',
     'https://*.herokuapp.com',
-    'https://8000-nlekkerman-futureflower-aiawwvn6s6t.ws-eu117.gitpod.io'
+    'https://8000-nlekkerman-futureflower-1hc6w6cgvfw.ws-eu117.gitpod.io'
 ]
 
 INSTALLED_APPS = [
@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'whitenoise.runserver_nostatic',
     
     # Third-party apps
     'django.contrib.sites',            # Required for allauth
@@ -215,6 +216,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Allauth settings
