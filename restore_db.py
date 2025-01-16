@@ -1,9 +1,9 @@
 import os
-import psycopg2
+import subprocess
 from urllib.parse import urlparse
 
-# Set up environment variables
-os.environ['DATABASE_URL'] = 'postgresql://postgres:REo88YlpaTkgMWxw@usojunbxhshqqixpuerm.supabase.co:5432/future-flower-shop'
+# Set up environment variable for the database URL
+os.environ['DATABASE_URL'] = 'postgres://postgres.nukvcfrfdhthnewjewbl:T1LoObo8Zkq6Jbon@aws-0-eu-west-1.pooler.supabase.com:5432/postgres?sslmode=require'
 
 # Parse the DATABASE_URL to extract connection parameters
 url = urlparse(os.environ['DATABASE_URL'])
@@ -13,34 +13,12 @@ username = url.username
 password = url.password
 database = url.path[1:]
 
-# Initialize connection variable
-connection = None
+# Set the command for psql restore
+psql_command = f"psql -h {hostname} -p {port} -U {username} -d {database} -f /workspace/future_flowers_shop/dump.sql"
 
-# Establish a connection to the Supabase database
+# Use subprocess to call psql and restore the database
 try:
-    connection = psycopg2.connect(
-        host=hostname,
-        port=port,
-        user=username,
-        password=password,
-        database=database
-    )
-    cursor = connection.cursor()
-
-    # Read the SQL dump file
-    with open('dump.sql', 'r') as file:
-        sql = file.read()
-
-    # Execute the SQL commands
-    cursor.execute(sql)
-    connection.commit()
-
+    subprocess.run(psql_command, shell=True, check=True)
     print("Database restored successfully.")
-
-except Exception as e:
+except subprocess.CalledProcessError as e:
     print(f"An error occurred: {e}")
-
-finally:
-    if connection:
-        cursor.close()
-        connection.close()
