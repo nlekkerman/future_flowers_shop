@@ -1,12 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const menuIcon = document.getElementById("menuIcon");
     const fixedMenuIcon = document.querySelector(".fixed-menu-icon");
     const logoContainer = document.getElementById("logoContainer");
-    const topRow = document.querySelector(".nav-top-row");
-    const bottomRow = document.querySelector(".nav-bottom-row");
     const navigationContainer = document.querySelector('.navigation-container');
-    const body = document.body;
-    let isOpen = false;
+   
 
 
     const homeUrls = [
@@ -22,16 +18,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (isHome) {
 
-            menuIcon.style.display = "block";
             logoContainer.style.opacity = '1';
             logoContainer.style.visibility = 'visible';
             fixedMenuIcon.style.display = "none";
         } else {
 
             navigationContainer.style.width = '100%'
-            navigationContainer.style.height = '100%'
+            navigationContainer.style.height = '100px'
             fixedMenuIcon.style.display = "block";
-            menuIcon.style.display = "none";
             logoContainer.style.opacity = '0';
             logoContainer.style.visibility = 'hidden';
         }
@@ -40,45 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateMenuDisplay();
 
-    // Update menu display when clicking menu icon
-    menuIcon.addEventListener("click", function () {
-        isOpen = !isOpen;
-
-        if (isOpen) {
-            topRow.style.display = "flex";
-            bottomRow.style.display = "flex";
-            body.classList.add('active-blur');
-
-            const topIcons = topRow.querySelectorAll(".nav-link-icon");
-            topIcons.forEach((icon, index) => {
-                setTimeout(() => {
-                    icon.style.opacity = 1;
-                }, index * 300);
-            });
-
-            const bottomIcons = bottomRow.querySelectorAll(".nav-link-icon");
-            bottomIcons.forEach((icon, index) => {
-                setTimeout(() => {
-                    icon.style.opacity = 1;
-                }, (index + topIcons.length) * 300);
-            });
-        } else {
-            const icons = [...topRow.querySelectorAll(".nav-link-icon"), ...bottomRow.querySelectorAll(".nav-link-icon")];
-            icons.forEach((icon, index) => {
-                setTimeout(() => {
-                    icon.style.opacity = 0;
-                }, index * 300);
-            });
-
-            setTimeout(() => {
-                topRow.style.display = "none";
-                bottomRow.style.display = "none";
-                body.classList.remove('active-blur');
-                updateMenuDisplay();
-            }, icons.length * 300);
-        }
-    });
-
+ 
     // Listen for URL changes
     window.addEventListener('popstate', updateMenuDisplay);
 });
@@ -100,8 +56,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const loginContainer = document.querySelector('.form-container');
     const orderDetailsContainer = document.querySelector('.order-details-container');
     const checkoutSuccessContainer = document.querySelector('.checkout-success-container');
+    const header = document.querySelector('.header');
+    const searchContainer = document.querySelector('.search-wrapper');
+    const filterToggle = document.querySelector('.filter-toggle');
     
-
+    
     function setZIndex(element, zIndex) {
         if (element) {
             element.style.zIndex = zIndex;
@@ -125,13 +84,17 @@ document.addEventListener('DOMContentLoaded', function () {
             setZIndex(loginContainer, '1');
             setZIndex(orderDetailsContainer, '1');
             setZIndex(checkoutSuccessContainer, '1');
+            setZIndex(header, '1');
+            setZIndex(searchContainer, '1');
+            setZIndex(filterToggle, '1');
+          
 
 
             profileContainer.style.zIndex = '1';
         } else {
             console.log("Sidebar is now hidden.");
-            rightNavColumn.style.zIndex = '1';
-            navigationContainer.style.zIndex = '1';
+            rightNavColumn.style.zIndex = '12';
+            navigationContainer.style.zIndex = '12';
             setZIndex(adminContainer, '12');
             setZIndex(cartContainer, '12');
             setZIndex(profileContainer, '12');
@@ -141,16 +104,13 @@ document.addEventListener('DOMContentLoaded', function () {
             setZIndex(loginContainer, '12');
             setZIndex(orderDetailsContainer, '12');
             setZIndex(checkoutSuccessContainer, '12');
+            setZIndex(header, '1002');
+            setZIndex(searchContainer, '1002');
+            setZIndex(filterToggle, '1002');
+
 
         }
 
-        // Log the current z-index values for debugging
-        console.log("Z-index values updated:", {
-            rightNavColumnZIndex: rightNavColumn.style.zIndex,
-            navigationContainerZIndex: navigationContainer.style.zIndex,
-            adminContainerZIndex: adminContainer ? adminContainer.style.zIndex : 'N/A', // Handle null case
-            cartContainerZIndex: cartContainer.style.zIndex
-        });
     }
 
     // Toggle sidebar visibility on menu icon click
