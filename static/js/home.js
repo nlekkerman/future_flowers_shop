@@ -568,7 +568,7 @@ export function displayConversationsFromLocalStorage() {
         `;
 
         conversationDiv.addEventListener('click', async () => {
-            showLoadingAnimation(); 
+           
             conversationDiv.style.backgroundColor = 'transparent';
 
             // Gather the IDs of all unseen messages in this conversation
@@ -585,7 +585,7 @@ export function displayConversationsFromLocalStorage() {
             chatContainer.style.display = 'none'
             // Load conversation messages
             await loadConversationMessages(conversation.id, loggedInUsername);
-            hideLoadingAnimation(); 
+            
            
             await fetchMessageCounts();
         });
@@ -904,67 +904,6 @@ async function updateMessageStatus(messageIds, isSeen) {
     }
 }
 
-function createLoadingOverlay() {
-    loadingOverlay = document.createElement('div');
-    loadingOverlay.id = 'loading-overlay';
-    loadingOverlay.style.position = 'fixed'; // Fix position to overlay the entire screen
-    loadingOverlay.style.top = '50%'; // Center vertically
-    loadingOverlay.style.left = '50%'; // Center horizontally
-    loadingOverlay.style.width = '300px'; // Set width to 300px
-    loadingOverlay.style.height = '200px'; // Set height to 200px
-    loadingOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.9)'; // Semi-transparent background
-    loadingOverlay.style.display = 'flex'; // Use flexbox to center content
-    loadingOverlay.style.justifyContent = 'center'; // Center content horizontally
-    loadingOverlay.style.alignItems = 'center'; // Center content vertically
-    loadingOverlay.style.zIndex = '999999999999999999999'; // Ensure it appears on top of other elements
-    loadingOverlay.style.transform = 'translate(-50%, -50%)'; // Center the overlay
 
-    // Create the loading text
-    loadingText = document.createElement('div');
-    loadingText.id = 'loading-text';
-    loadingText.style.color = 'white'; // Set text color to white
-    loadingText.style.fontSize = '24px'; // Set font size
-    loadingText.style.textTransform = 'uppercase'; // Make text uppercase
-    loadingText.style.textAlign = 'center'; // Center the text
-    loadingText.style.margin = '0'; // Remove default margin
-
-    // Append loading text to the overlay
-    loadingOverlay.appendChild(loadingText);
-
-    // Append the overlay to the body
-    document.body.appendChild(loadingOverlay);
-}
-
-
-function showLoadingAnimation() {
-    createLoadingOverlay();
-
-    const text = "Loading";
-    let index = 0;
-
-    const intervalId = setInterval(() => {
-        loadingText.textContent = text.slice(0, index) + '.'.repeat(index % 4);
-        index++;
-
-        if (index > text.length) {
-            index = text.length; // Limit to the length of the text
-        }
-
-        // Stop the animation after the full text is displayed with dots
-        if (index === text.length && loadingText.textContent.endsWith('...')) {
-            clearInterval(intervalId);
-        }
-    }, 400);
-}
-
-function hideLoadingAnimation() {
-   
-    if (loadingOverlay) {
-        loadingOverlay = null; 
-        
-    } else {
-        console.log("No loading overlay found to remove.");
-    }
-}
 
 

@@ -829,11 +829,11 @@ StripeElement--webkit-autofill {
   }
 
   .search-container button[type="submit"] {
-    font-size: 5rem;
+    font-size: 2rem;
   }
 
   #seed-search-input {
-    font-size: 5rem;
+    font-size: 2rem;
   }
 
   #search-warning {

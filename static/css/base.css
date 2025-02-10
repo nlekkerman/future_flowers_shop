@@ -4,7 +4,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  background: url("/static/images/leaves-background.jpg") no-repeat center
+  background: url("/static/images/home-background-one.webp") no-repeat center
     center fixed;
   background-size: cover;
   transition: filter 0.3s ease;
@@ -625,11 +625,14 @@ header .dropdown-item {
   display: block;
   /* Display the modal */
 }
+button:focus {
+  outline: none;
+}
 
 .search-container {
   position: fixed;
-  top: 144px;
-  left: 50%;
+  flex-direction: column;
+  left: -10%;
   transform: translateX(-50%);
   margin: 0;
   background-color: rgba(0, 0, 0, 0.5);
@@ -788,7 +791,7 @@ header .dropdown-item {
   box-shadow: none !important;
   /* Ensure no shadow effect is applied */
   outline: none !important;
-  /* Remove default outline */
+  width: 150px;
 }
 
 /* Input fields focus state */
@@ -810,16 +813,12 @@ header .dropdown-item {
   border-bottom-right-radius: 15px;
   /* Text color */
   border: none;
-
-  /* Optional: Adds rounded corners */
   padding: 10px 20px;
-  /* Padding around the text */
   font-size: 16px;
-  /* Font size */
   cursor: pointer;
   /* Change cursor to pointer on hover */
   transition: background-color 0.3s ease;
-  /* Smooth transition on hover */
+  width: 20%;
 }
 
 /* Button hover and active state */
@@ -1244,7 +1243,10 @@ header .dropdown-item {
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
-  background-color: rgba(0, 0, 0, 0.5); /* Optional background for visibility */
+  background-color: rgba(0, 0, 0, 0.8);
+  position: fixed;
+  bottom: 0;
+  border-top: 2px solid white;
 }
 
 .marquee {
@@ -1269,10 +1271,14 @@ header .dropdown-item {
     transform: translateX(-100%); /* End off-screen to the left */
   }
 }
+
+.home-container-content {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-direction: column;
+}
 .round-home-container {
-  width: 17em;
-  height: 17em;
-  border-radius: 50%;
   margin-bottom: 2em;
   border: 2px solid transparent;
   display: flex;
@@ -1281,4 +1287,5 @@ header .dropdown-item {
 .round-home-container-background {
   display: flex;
   justify-content: center;
+  flex-direction: column;
 }

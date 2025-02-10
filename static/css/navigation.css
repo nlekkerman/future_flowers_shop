@@ -85,7 +85,7 @@ body.active-blur::before {
   /* Add a semi-transparent overlay */
   backdrop-filter: blur(8px);
   /* Apply blur effect */
-  z-index: 2;
+  z-index: 5;
   /* Make sure it's below the navigation but above other content */
   pointer-events: none;
   /* Allow interactions with the navigation menu */
@@ -138,7 +138,7 @@ body.active-blur::before {
 /* Right-aligned navigation column */
 .right-nav-column {
   position: relative;
-  top: 130px;
+  top: 90px;
   width: 100%;
   display: flex;
   flex-direction: row;

@@ -859,6 +859,9 @@
 
 /* Media Queries for larger screens */
 @media (min-width: 768px) {
+  .search-container {
+    top: 144px;
+  }
   #reviews-container {
     width: 700px;
     height: 700px;

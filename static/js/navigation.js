@@ -56,8 +56,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const loginContainer = document.querySelector('.form-container');
     const orderDetailsContainer = document.querySelector('.order-details-container');
     const checkoutSuccessContainer = document.querySelector('.checkout-success-container');
+    const header = document.querySelector('.header');
+    const searchContainer = document.querySelector('.search-wrapper');
+    const filterToggle = document.querySelector('.filter-toggle');
     
-
+    
     function setZIndex(element, zIndex) {
         if (element) {
             element.style.zIndex = zIndex;
@@ -81,13 +84,17 @@ document.addEventListener('DOMContentLoaded', function () {
             setZIndex(loginContainer, '1');
             setZIndex(orderDetailsContainer, '1');
             setZIndex(checkoutSuccessContainer, '1');
+            setZIndex(header, '1');
+            setZIndex(searchContainer, '1');
+            setZIndex(filterToggle, '1');
+          
 
 
             profileContainer.style.zIndex = '1';
         } else {
             console.log("Sidebar is now hidden.");
-            rightNavColumn.style.zIndex = '1';
-            navigationContainer.style.zIndex = '1';
+            rightNavColumn.style.zIndex = '12';
+            navigationContainer.style.zIndex = '12';
             setZIndex(adminContainer, '12');
             setZIndex(cartContainer, '12');
             setZIndex(profileContainer, '12');
@@ -97,6 +104,10 @@ document.addEventListener('DOMContentLoaded', function () {
             setZIndex(loginContainer, '12');
             setZIndex(orderDetailsContainer, '12');
             setZIndex(checkoutSuccessContainer, '12');
+            setZIndex(header, '1002');
+            setZIndex(searchContainer, '1002');
+            setZIndex(filterToggle, '1002');
+
 
         }
 

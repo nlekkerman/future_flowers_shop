@@ -20,61 +20,62 @@
     </a>
   </div>
   <div class="what-is-going-on"></div>
-  <div class="m-0">
-    <!-- Random Discounted Seed Section -->
-    <div class="m-0 round-home-container-background">
-      {% if random_discounted_seed %}
-
-      <div
-        id="random-discounted-seed"
-        class="random-discounted-seed overlay-container round-home-container"
-        style="background-image: url('{{ random_discounted_seed.image.url }}');"
-      >
-        <a href="/seeds/?show_seeds=true" class="overlay-link">
-          <div class="overlay">
-            <h2>DISCOUNTED</h2>
-            <div class="overlay-content">
-              <h3>{{ random_discounted_seed.name }}</h3>
-              <p class="original-price-text">
-                Original Price: ${{ random_discounted_seed.price }}
-              </p>
-              <p class="discounted-price-text">
-                Discounted Price: ${{ discounted_price }}
-              </p>
-              <span>View All Seeds</span>
-            </div>
-          </div>
-        </a>
-      </div>
-      {% else %}
-      <p>No discounted seeds available at the moment.</p>
-      {% endif %}
-    </div>
-
+  <div class="m-0 home-container-content">
     <!-- Latest Added Seed Section -->
     <div class="round-home-container-background">
-      {% if latest_seed %}
-      <div
-        class="new-seed overlay-container round-home-container round-home-container-background"
-        id="new-seed"
-        style="background-image: url('{{ latest_seed.image.url }}');"
-      >
-        <a href="/seeds/?show_seeds=true" class="overlay-link">
-          <div class="overlay">
-            <h2>NEW</h2>
-            <div class="overlay-content">
-              <h4>{{ latest_seed.name }}</h4>
-              <p>Price: ${{ latest_seed.price }}</p>
-              <span>View All Seeds</span>
+      <div class="home-container-background">
+        {% if random_discounted_seed %}
+
+        <div
+          id="random-discounted-seed"
+          class="random-discounted-seed overlay-container round-home-container"
+          style="background-image: url('{{ random_discounted_seed.image.url }}');"
+        >
+          <a href="/seeds/?show_seeds=true" class="overlay-link">
+            <div class="overlay">
+              <h2>DISCOUNTED</h2>
+              <div class="overlay-content">
+                <h3>{{ random_discounted_seed.name }}</h3>
+                <p class="original-price-text">
+                  Original Price: ${{ random_discounted_seed.price }}
+                </p>
+                <p class="discounted-price-text">
+                  Discounted Price: ${{ discounted_price }}
+                </p>
+                <span>View All Seeds</span>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
+        {% else %}
+        <p>No discounted seeds available at the moment.</p>
+        {% endif %}
       </div>
-      {% else %}
-      <p>No new seeds added yet.</p>
-      {% endif %}
+      <!-- Latest Added Seed Section -->
+      <div class="home-container-background">
+        {% if latest_seed %}
+        <div
+          class="new-seed overlay-container round-home-container"
+          id="new-seed"
+          style="background-image: url('{{ latest_seed.image.url }}');"
+        >
+          <a href="/seeds/?show_seeds=true" class="overlay-link">
+            <div class="overlay">
+              <h2>NEW</h2>
+              <div class="overlay-content">
+                <h4>{{ latest_seed.name }}</h4>
+                <p>Price: ${{ latest_seed.price }}</p>
+                <span>View All Seeds</span>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% else %}
+        <p>No new seeds added yet.</p>
+        {% endif %}
+      </div>
     </div>
   </div>
-</div>
 
-{% endblock %}
+  {% endblock %}
+</div>
