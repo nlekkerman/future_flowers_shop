@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
 
             navigationContainer.style.width = '100%'
-            navigationContainer.style.height = '100px'
             fixedMenuIcon.style.display = "block";
             logoContainer.style.opacity = '0';
             logoContainer.style.visibility = 'hidden';

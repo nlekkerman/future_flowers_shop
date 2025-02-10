@@ -260,7 +260,8 @@ StripeElement--webkit-autofill {
   }
 
   .right-nav-column .icon-img {
-    width: 70px;
+    width: 50px;
+    margin-top: 10px;
   }
 
   .fixed-menu-icon img {
@@ -413,7 +414,7 @@ StripeElement--webkit-autofill {
   }
 
   .right-nav-column .icon-img {
-    width: 70px;
+    width: 50px;
   }
 
   .fixed-menu-icon img {
@@ -464,10 +465,15 @@ StripeElement--webkit-autofill {
 }
 
 @media screen and (min-width: 1800px) {
+  .header.animate-herder .list-container ul {
+    top: 190px;
+  }
   .right-nav-column .icon-label {
     font-size: 1.7rem;
   }
-
+  #filter-toggle {
+    top: 190px;
+  }
   .right-nav-column .icon-img {
     width: 70px;
   }
@@ -878,7 +884,7 @@ StripeElement--webkit-autofill {
   }
 
   .right-nav-column .icon-img {
-    width: 150px;
+    width: 100px;
   }
 
   .fixed-menu-icon img {
