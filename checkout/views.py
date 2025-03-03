@@ -578,10 +578,10 @@ def send_order_confirmation_email(order):
         message += f"\nTotal Amount: ${total_amount:.2f}\n\n"
 
         message += "We hope you have a wonderful time"
-        "nurturing your seeds and watching them blossom"
-        " into beautiful plants!\n"
-        message += "If you have any questions or need assistance "
-        "along the way, please don't hesitate to reach out to us.\n\n"
+        message += " nurturing your seeds and watching them blossom"
+        message += " into beautiful plants!\n"
+        message += " If you have any questions or need assistance"
+        message += " along the way, please don't hesitate to reach out to us.\n\n"
 
         logger.debug(
             f"Email content built successfully for"
