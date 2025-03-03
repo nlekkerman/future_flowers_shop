@@ -118,7 +118,7 @@ form.addEventListener('submit', function (ev) {
                 $('#card-errors').html(`<span class="checkout-icon" role="alert"><i class="fas fa-times"></i></span><span>${result.error.message}</span>`);
                 card.update({'disabled': false});
                 $('#submit-button').attr('disabled', false);
-                closeModal();
+                
                 return;
             }
 
@@ -226,16 +226,28 @@ function clearCart() {
 }
 
 function showModal(message) {
-    // Modal HTML structure with a dynamic message and animation container
+    // Modal HTML structure with a dynamic message and animation container using Bootstrap
+    // Remove any existing modal and animation before creating a new one
+    $('#thankYouModal').remove();  // Remove any previously opened modal
+    $('#modalOverlay').remove();   // Remove any previous overlay
     const modalHTML = `
-        <div id="thankYouModal" class="modal" style="display: block;">
-            <div class="modal-content">
-                <h4>Thank You for Shopping with Us!</h4>
-                <div id="animationContainer" style="width: 100%; height: 200px;"></div>
-                <p>${message}</p>
-            </div>
-            <div class="modal-footer">
-                <button id="closeModalButton" class="btn">Close</button>
+        <div id="thankYouModal" class="modal d-block d-flex justify-content-center" tabindex="-1" role="dialog" aria-labelledby="thankYouModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content dark-rgba-background">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="thankYouModalLabel">Thank You for Shopping with Us!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body  dark-rgba-background">
+                        <div id="animationContainer" style="width: 100%; height: 300px;"></div>
+                        <p>${message}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="closeModalButton" class="btn btn-primary">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="modalOverlay" class="modal-overlay"></div>
@@ -258,14 +270,22 @@ function showModal(message) {
         console.error("Error loading animation:", error);
     }
 
+    // Make sure the modal remains visible
+    $('#thankYouModal').modal('show');  // This is an explicit command to show the modal.
+
     // Close modal on button click
-    $('#closeModalButton').on('click', closeModal);
+    $('#closeModalButton').on('click', function() {
+        closeModal();
+    });
 }
 
-// Function to close the modal
 function closeModal() {
-    $('#thankYouModal').remove(); // Remove modal
-    $('#modalOverlay').remove();  // Remove overlay
+    $('#thankYouModal').fadeOut(function() {
+        $(this).remove(); // Remove the modal from the DOM after fading out
+    });
+    $('#modalOverlay').fadeOut(function() {
+        $(this).remove(); // Remove overlay after fade out
+    });
 }
 
 

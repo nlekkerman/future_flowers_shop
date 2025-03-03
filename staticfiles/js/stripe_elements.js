@@ -86,7 +86,6 @@ $(document).ready(function() {
 var form = document.getElementById('payment-form');
 
 
-
 form.addEventListener('submit', function (ev) {
     ev.preventDefault();
 
@@ -111,87 +110,109 @@ form.addEventListener('submit', function (ev) {
 
     // Post data to cache checkout info
     $.post(url, postData).done(function () {
-        // Confirm card payment with Stripe
-        stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-                card: card,
-                billing_details: {
+        // Retrieve the PaymentIntent before confirming payment
+        stripe.retrievePaymentIntent(clientSecret).then(function (result) {
+            if (result.error) {
+                console.error('Error retrieving payment intent:', result.error.message);
+                alert(`Error retrieving payment intent: ${result.error.message}`);
+                $('#card-errors').html(`<span class="checkout-icon" role="alert"><i class="fas fa-times"></i></span><span>${result.error.message}</span>`);
+                card.update({'disabled': false});
+                $('#submit-button').attr('disabled', false);
+                
+                return;
+            }
+
+            if (result.paymentIntent.status === 'succeeded') {
+                // If payment is already successful, skip confirmation and submit the form
+                console.log('PaymentIntent has already been confirmed and succeeded.');
+                form.submit();
+                clearCart();
+                closeModal();
+                showModal("You're almost there! 🌱 Thank you for choosing us for your gardening journey. In just a moment, you’ll be nurturing your seeds and watching them blossom into vibrant plants. Prepare for the joy of cultivating life in your garden!");
+                return; // Skip the rest of the process if the payment is already successful
+            }
+
+            // If PaymentIntent has not succeeded, continue with the payment confirmation process
+            stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: card,
+                    billing_details: {
+                        name: $.trim(form.full_name.value),
+                        phone: $.trim(form.phone_number.value),
+                        email: $.trim(form.email.value),
+                        address: {
+                            line1: $.trim(form.street_address1.value),
+                            line2: $.trim(form.street_address2.value),
+                            city: $.trim(form.town_or_city.value),
+                            country: $.trim(form.country.value),
+                            state: $.trim(form.county.value),
+                        }
+                    }
+                },
+                shipping: {
                     name: $.trim(form.full_name.value),
                     phone: $.trim(form.phone_number.value),
-                    email: $.trim(form.email.value),
                     address: {
                         line1: $.trim(form.street_address1.value),
                         line2: $.trim(form.street_address2.value),
                         city: $.trim(form.town_or_city.value),
                         country: $.trim(form.country.value),
+                        postal_code: $.trim(form.postcode.value),
                         state: $.trim(form.county.value),
                     }
                 }
-            },
-           
-            shipping: {
-                name: $.trim(form.full_name.value),
-                phone: $.trim(form.phone_number.value),
-                address: {
-                    line1: $.trim(form.street_address1.value),
-                    line2: $.trim(form.street_address2.value),
-                    city: $.trim(form.town_or_city.value),
-                    country: $.trim(form.country.value),
-                    postal_code: $.trim(form.postcode.value),
-                    state: $.trim(form.county.value),
-                }
-            }
-        }).then(function (result) {
-            if (result.error) {
-                // Handle error in payment confirmation
-                console.error('Payment confirmation error:', result.error.message);
-                alert(`Payment error: ${result.error.message}`);
-                $('#card-errors').html(`<span class="checkout-icon" role="alert"><i class="fas fa-times"></i></span><span>${result.error.message}</span>`);
-                card.update({
-                    'disabled': false
-                });
-                $('#submit-button').attr('disabled', false);
-                closeModal();
-            } else if (result.paymentIntent.status === 'succeeded') {
-             
-                form.submit();
-                clearCart();
-                closeModal();
-                showModal("You're almost there! 🌱 Thank you for choosing us for your gardening journey. In just a moment, you’ll be nurturing your seeds and watching them blossom into vibrant plants. Prepare for the joy of cultivating life in your garden!");
-
-            } else if (result.paymentIntent.status === 'requires_action') {
-                // Handle 3D Secure authentication
-                stripe.handleCardAction(result.paymentIntent.client_secret).then(function (result) {
-                    if (result.error) {
-                        console.error('3D Secure authentication failed:', result.error.message);
-                        alert(`3D Secure authentication error: ${result.error.message}`); 
-                        closeModal();
-                    } else if (result.paymentIntent.status === 'succeeded') {
-                        clearCart(); 
-                       
-                        form.submit();
-                        closeModal();
-                    }
-                }).catch(function (error) {
-                    console.error('Error during 3D Secure authentication:', error);
-                    alert(`Error during 3D Secure authentication: ${error.message}`); 
+            }).then(function (result) {
+                if (result.error) {
+                    // Handle error in payment confirmation
+                    console.error('Payment confirmation error:', result.error.message);
+                    alert(`Payment error: ${result.error.message}`);
+                    $('#card-errors').html(`<span class="checkout-icon" role="alert"><i class="fas fa-times"></i></span><span>${result.error.message}</span>`);
+                    card.update({'disabled': false});
+                    $('#submit-button').attr('disabled', false);
                     closeModal();
-                });
-            } else {
-                console.warn('Unhandled payment status:', result.paymentIntent.status);
-                alert(`Unhandled payment status: ${result.paymentIntent.status}`); // Alert the user
-                closeModal();
-            }
+                } else if (result.paymentIntent.status === 'succeeded') {
+                    // Successful payment
+                    form.submit();
+                    clearCart();
+                    closeModal();
+                    showModal("You're almost there! 🌱 Thank you for choosing us for your gardening journey. In just a moment, you’ll be nurturing your seeds and watching them blossom into vibrant plants. Prepare for the joy of cultivating life in your garden!");
+                } else if (result.paymentIntent.status === 'requires_action') {
+                    // Handle 3D Secure authentication
+                    stripe.handleCardAction(result.paymentIntent.client_secret).then(function (result) {
+                        if (result.error) {
+                            console.error('3D Secure authentication failed:', result.error.message);
+                            alert(`3D Secure authentication error: ${result.error.message}`);
+                            closeModal();
+                        } else if (result.paymentIntent.status === 'succeeded') {
+                            clearCart();
+                            form.submit();
+                            closeModal();
+                        }
+                    }).catch(function (error) {
+                        console.error('Error during 3D Secure authentication:', error);
+                        alert(`Error during 3D Secure authentication: ${error.message}`);
+                        closeModal();
+                    });
+                } else {
+                    console.warn('Unhandled payment status:', result.paymentIntent.status);
+                    alert(`Unhandled payment status: ${result.paymentIntent.status}`);
+                    closeModal();
+                }
+            }).catch(function (error) {
+                console.error('Unexpected error:', error);
+                alert(`Unexpected error: ${error.message}`);
+            });
         }).catch(function (error) {
-            console.error('Unexpected error:', error);
-            alert(`Unexpected error: ${error.message}`); // Alert the user
+            console.error('Error retrieving payment intent:', error);
+            alert(`Error retrieving payment intent: ${error.message}`);
         });
     }).fail(function () {
         console.error('Failed to cache checkout data.');
-        alert('Failed to cache checkout data. Please try again.'); // Alert the user
+        alert('Failed to cache checkout data. Please try again.');
         location.reload();
     });
 });
+
 
 
 
@@ -205,16 +226,25 @@ function clearCart() {
 }
 
 function showModal(message) {
-    // Modal HTML structure with a dynamic message and animation container
+    // Modal HTML structure with a dynamic message and animation container using Bootstrap
     const modalHTML = `
-        <div id="thankYouModal" class="modal" style="display: block;">
-            <div class="modal-content">
-                <h4>Thank You for Shopping with Us!</h4>
-                <div id="animationContainer" style="width: 100%; height: 200px;"></div>
-                <p>${message}</p>
-            </div>
-            <div class="modal-footer">
-                <button id="closeModalButton" class="btn">Close</button>
+        <div id="thankYouModal" class="modal d-block d-flex justify-content-center" tabindex="-1" role="dialog" aria-labelledby="thankYouModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content dark-rgba-background">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="thankYouModalLabel">Thank You for Shopping with Us!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body  dark-rgba-background">
+                        <div id="animationContainer" style="width: 100%; height: 300px;"></div>
+                        <p>${message}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="closeModalButton" class="btn btn-primary">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="modalOverlay" class="modal-overlay"></div>
@@ -237,14 +267,22 @@ function showModal(message) {
         console.error("Error loading animation:", error);
     }
 
+    // Make sure the modal remains visible
+    $('#thankYouModal').modal('show');  // This is an explicit command to show the modal.
+
     // Close modal on button click
-    $('#closeModalButton').on('click', closeModal);
+    $('#closeModalButton').on('click', function() {
+        closeModal();
+    });
 }
 
-// Function to close the modal
 function closeModal() {
-    $('#thankYouModal').remove(); // Remove modal
-    $('#modalOverlay').remove();  // Remove overlay
+    $('#thankYouModal').fadeOut(function() {
+        $(this).remove(); // Remove the modal from the DOM after fading out
+    });
+    $('#modalOverlay').fadeOut(function() {
+        $(this).remove(); // Remove overlay after fade out
+    });
 }
 
 

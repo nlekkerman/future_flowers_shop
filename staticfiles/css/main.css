@@ -576,3 +576,49 @@ select.form-control option {
   color: white;
 }
 
+/* Center modal on the screen */
+#thankYouModal {
+  display: block; /* Ensure modal is visible */
+  position: fixed; /* Fix position on the screen */
+  top: 0;
+  left: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  z-index: 1050; /* Ensure it's on top of other elements */
+  padding-top: 50px; /* Add padding to give space on top */
+  overflow: hidden; /* Prevent scrolling */
+  backdrop-filter: blur(5px); /* Apply background blur */
+}
+
+.modal-dialog {
+  position: absolute;
+  top: 50%; /* Vertically center modal */
+  left: 50%; /* Horizontally center modal */
+  transform: translate(-50%, -50%) !important; /* Ensure perfect centering */
+  max-width: 90%; /* Set a max width for responsiveness */
+  width: auto;
+}
+
+.modal-content {
+ z-index: 2000 !important;
+  border-radius: 10px; /* Rounded corners */
+  padding: 20px; /* Padding inside the modal */
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow around modal */
+}
+
+.modal-backdrop {
+  display: none !important; /* Completely hide the backdrop */
+}
+
+#modalOverlay {
+  position: fixed; /* Fixed overlay */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent dark background */
+  z-index: 1040; /* Ensure it sits behind the modal */
+  display: block; /* Show the overlay */
+}
+
+

@@ -10,7 +10,7 @@
         <h2 class="text-white m-2 p-2 text-bold">Admin Dashboard</h2>
     </div>
     {% if messages %}
-    <ul class="modal-box-content list-unstyled d-flex justify-content-between">
+    <ul class="modal-box-content list-unstyled d-flex justify-content-between dark-rgba-background">
         {% for message in messages %}
             <li class="d-flex justify-content-between alert {% if message.tags %}alert-{{ message.tags }}{% endif %} vw-100">
                 {{ message }}
