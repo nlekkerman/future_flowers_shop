@@ -12,11 +12,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from reviews.models import Review, Comment 
+from seeds.models import Seed
 from checkout.models import Order
-from communications.models import ChatConversation, ChatMessage 
+from communications.models import Conversation, ChatMessage 
 from .forms import ProfileEditForm , CustomUserCreationForm
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 import os
 # Import logging module
 import logging
@@ -46,11 +47,12 @@ def edit_profile(request):
         if form.is_valid():
             form.save()  # Save the updated profile
             messages.success(request, 'Your profile has been updated successfully!')
-            return redirect('profile')  # Redirect to the profile page after saving changes
+            return redirect('custom_accounts:profile')  # Redirect to the profile page after saving changes
     else:
         form = ProfileEditForm(instance=profile)  # Pre-fill form with current profile data
 
     return render(request, 'custom_accounts/edit_profile.html', {'form': form})
+
 
 def register(request):
     """
@@ -86,7 +88,7 @@ def register(request):
                 logger.info(f"User {user.username} did not opt in for the newsletter.")
 
             
-            return redirect('home')
+            return redirect('home:home')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
@@ -94,40 +96,29 @@ def register(request):
 
     return render(request, 'custom_accounts/register.html', {'form': form})
 
-    
 def login(request):
     """
     Authenticates and logs in users, handling both valid and invalid form submissions.
-
-    When a POST request is made, the view attempts to authenticate the user with the provided
-    credentials. If successful, the user is logged in, and a JSON response indicates success.
-    If the user does not have an associated profile, a JSON response redirects to registration.
-    If the credentials are invalid, a JSON response with form errors is returned.
-
-    Parameters:
-        request (HttpRequest): The HTTP request object containing login credentials.
-
-    Returns:
-        JsonResponse: Contains success status and redirection URL based on login success or failure.
     """
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
-        if not form.is_valid():
-            print(f"Form errors: {form.errors}")
+        if form.is_valid():
+            user = form.get_user()
+            auth_login(request, user)  # Log the user in
+
+            # Check if the user has a profile (if you have a profile model)
+            if not hasattr(user, 'profile'):
+                return JsonResponse({'success': False, 'redirect': '/register'})  # Redirect to registration page if no profile
+
+            # Return a JSON response indicating success
+            return JsonResponse({'success': True, 'redirect': '/'} )  # Adjust this to your homepage URL name
+        else:
+            # If the form is invalid, return the form errors as a JSON response
             return JsonResponse({'success': False, 'errors': form.errors}, status=400)
 
-        user = form.get_user()
-        auth_login(request, user)  # Log the user in
-
-        if not hasattr(user, 'profile'):
-            return JsonResponse({'success': False, 'redirect': '/register'})  # Redirect if no profile
-
-        # Return a JSON response indicating success and redirect
-        return JsonResponse({'success': True, 'redirect': '/'})
-    
-    # For GET requests or other request methods, render the login page
+    # For GET requests, render the login page with an empty form
     form = AuthenticationForm()
-    return render(request, 'custom_accounts/login.html', {'form': form})
+    return render(request, 'custom_accounts/login.html', {'form': form})    
 
 
 def send_welcome_email(user):
@@ -206,9 +197,9 @@ def send_newsletter(request):
                 logger.error(f"Failed to send email to {user_profile.user.email if user_profile.user else 'Unknown User'}: {str(e)}")
                 messages.error(request, f"Failed to send email to {user_profile.user.email if user_profile.user else 'Unknown User'}: {str(e)}")
 
-        return redirect('admin_dashboard')
+        return redirect('custom_accounts:admin_dashboard')
 
-    return render(request, 'admin_dashboard')
+    return render(request, 'custom_accounts:admin_dashboard')
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
@@ -252,7 +243,7 @@ def logout(request):
     """
     request.session.flush()
     auth_logout(request)
-    return redirect('home')
+    return redirect('home:home')
 
 
 @login_required
@@ -321,14 +312,15 @@ def admin_dashboard(request):
    
     pending_reviews = Review.objects.filter(status='pending')
     pending_comments = Comment.objects.filter(status='pending')
-    
+    seeds = Seed.objects.all()
     # Fetch all chat conversations
-    conversations = ChatConversation.objects.all() 
+    conversations = Conversation.objects.all() 
 
     context = {
         'pending_reviews': pending_reviews,
         'pending_comments': pending_comments,
         'conversations': conversations,
+        'seeds': seeds,
     }
     return render(request, 'custom_accounts/admin_dashboard.html', context)
 
@@ -351,7 +343,7 @@ def approve_review(request, id):
     review.is_approved = True
     review.save()
     messages.success(request, "Review has been approved.")
-    return redirect('admin_dashboard')
+    return redirect('custom_accounts:admin_dashboard')
 
 def reject_review(request, id):
     """
@@ -372,7 +364,7 @@ def reject_review(request, id):
     review.is_approved = False
     review.save()
     messages.success(request, "Review has been rejected.")
-    return redirect('admin_dashboard')
+    return redirect('custom_accounts:admin_dashboard')
 
 def delete_review(request, id):
     """
@@ -391,7 +383,7 @@ def delete_review(request, id):
     review = get_object_or_404(Review, id=id)
     review.delete()
     messages.success(request, "Review has been deleted.")
-    return redirect('admin_dashboard')
+    return redirect('custom_accounts:admin_dashboard')
 
 def approve_comment(request, id):
     """
@@ -411,7 +403,7 @@ def approve_comment(request, id):
     comment.status = 'approved'
     comment.save()
     messages.success(request, "Comment has been approved.")
-    return redirect('admin_dashboard')
+    return redirect('custom_accounts:admin_dashboard')
 
 def reject_comment(request, id):
     """
@@ -431,7 +423,7 @@ def reject_comment(request, id):
     comment.status = 'rejected'
     comment.save()
     messages.success(request, "Comment has been rejected.")
-    return redirect('admin_dashboard')
+    return redirect('custom_accounts:admin_dashboard')
 
 def delete_comment(request, id):
     """
@@ -450,10 +442,10 @@ def delete_comment(request, id):
     comment = get_object_or_404(Comment, id=id)
     comment.delete()
     messages.success(request, "Comment has been deleted.")
-    return redirect('admin_dashboard')
+    return redirect('custom_accounts:admin_dashboard')
 
 
-def conversation_detail_view(request, conversation_id):
+
     """
     Displays the details of a chat conversation, including all related messages.
 
@@ -475,3 +467,6 @@ def conversation_detail_view(request, conversation_id):
         'conversation': conversation,
         'chat_messages': chat_messages
     })
+    
+def custom_404(request, exception):
+    return render(request, 'custom_accounts/404.html', {}, status=404)

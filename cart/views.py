@@ -5,200 +5,136 @@ The module supports both authenticated user sessions and guest sessions, using s
 carts for unauthenticated users. Errors are logged to assist with debugging in case of invalid data 
 or unexpected behavior.
 """
-from django.http import JsonResponse
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Cart, CartItem
 from seeds.models import Seed
-from decimal import Decimal
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.decorators.csrf import csrf_exempt
-import logging
-import json
-from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+def get_cart(request):
+    """Retrieve or create a cart for the user or session."""
+    try:
+        if request.user.is_authenticated:
+            # Try to get or create a cart for the authenticated user
+            cart, created = Cart.objects.get_or_create(user=request.user)
+        else:
+            # Get or create a cart based on the session id for unauthenticated users
+            session_id = request.session.session_key
+            if not session_id:
+                request.session.create()  # Create a session if none exists
+                session_id = request.session.session_key
+            cart, created = Cart.objects.get_or_create(session_id=session_id)
+        
+        return cart
+
+    except Exception as e:
+        # If something goes wrong, log the error and provide a message
+        messages.error(request, "There was an issue with retrieving your cart. Please try again later.")
+        print(f"Error retrieving or creating cart: {e}")
+        return None
 
 
 def cart_view(request):
-    """
-    Renders the cart view page.
-    This function serves the cart HTML template for the client, displaying items in the user's cart.
-    """
-    return render(request, "cart/cart.html")
+    cart = get_cart(request)  # Retrieve the cart (session-based or database)
+    cart_items = cart.items.all()  # Fetch all items in the cart
+    total_price = cart.get_total_price()  # Total before discounts
+    total_discount = cart.get_total_discount()  # Total discount applied
+    grand_total = cart.get_grand_total()  # Final total after discount
+    total_items = sum(item.quantity for item in cart_items)
+    total_unique_items = cart.items.count()
 
+    context = {
+        "cart": cart,
+        "cart_items": cart_items,
+        "total_price": total_price,
+        "total_discount": total_discount,
+        "grand_total": grand_total,
+        "total_items": total_items,
+        "total_unique_items": total_unique_items,
+    }
+    
+    return render(request, "cart/cart.html", context)
 
-logger = logging.getLogger(__name__)
-
-
-@csrf_exempt
-@require_POST
-def add_to_cart(request):
-    """
-    Adds an item to the user's cart.
-
-    This function accepts a POST request with JSON data containing the seed ID and quantity. It validates the input,
-    retrieves or creates a cart (depending on the user's authentication status), and adds the specified item to
-    the cart. If the item already exists, it updates the quantity instead. A JSON response with cart details is returned.
-
-    Parameters:
-        - request (HttpRequest): The HTTP request containing JSON data with seed ID and quantity.
-
-    Returns:
-        JsonResponse: A response containing the updated cart data if successful, or an error message if unsuccessful.
-    """
+def add_to_cart(request, seed_id):
+    """Add a seed to the cart or increase its quantity."""
     try:
-        data = json.loads(request.body)
-        seed_id = data.get("seed_id")
-        quantity = int(data.get("quantity", 1))
+        cart = get_cart(request)
+        seed = get_object_or_404(Seed, id=seed_id)
 
-        if not seed_id or quantity <= 0:
-            logger.error(
-                f"Invalid input: seed_id={seed_id}, quantity={quantity}"
-            )
-            return HttpResponseBadRequest("Invalid input")
-        # Get or create the cart for the user
-
-        if request.user.is_authenticated:
-            cart, created = Cart.objects.get_or_create(user=request.user)
-            
-        else:
-          
-            session_key = request.session.session_key
-            if not session_key:
-                request.session.save()  # Ensure a session is created
-                session_key = request.session.session_key
-            cart, created = Cart.objects.get_or_create(session_id=session_key)
-           
-        # Get the seed object
-
-        try:
-            seed = Seed.objects.get(id=seed_id)
-        except Seed.DoesNotExist:
-            logger.error(f"Seed with ID {seed_id} not found")
-            return JsonResponse({"error": "Seed not found"}, status=404)
-        # Get or create the cart item
-
-        cart_item, created = CartItem.objects.get_or_create(
-            cart=cart, seed=seed, defaults={"quantity": quantity}
-        )
-
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, seed=seed)
         if not created:
-            # Update the quantity of the existing cart item
-
-            cart_item.quantity += quantity
+            cart_item.quantity += 1
             cart_item.save()
-      
-        cart_data = {
-            "id": cart.id,
-            "total_price": float(cart.get_total_price()),
-            "total_discount": float(cart.get_total_discount()),
-            "delivery_cost": float(cart.get_delivery_cost()),
-            "grand_total": float(cart.get_grand_total()),
-            "items": [],
-        }
+            messages.success(request, f"{seed.name} quantity increased in your cart.")
+        else:
+            # If it's a new item in the cart
+            messages.success(request, f"{seed.name} added to your cart.")
 
-        for item in cart.items.all():
-            item_price = item.seed.price  # This is likely already a Decimal
-            item_discount = Decimal(item.seed.discount or 0)
-            discounted_price = item_price - (
-                item_price * (item_discount / Decimal(100))
-            )
-
-            item_data = {
-                "id": item.id,
-                "seed": {
-                    "id": item.seed.id,
-                    "name": item.seed.name,
-                    "price": float(discounted_price),
-                    "is_in_stock": item.seed.is_in_stock,
-                },
-                "quantity": item.quantity,
-                "total_price": float(item.get_total_price()),
-            }
-            cart_data["items"].append(item_data)
-        return JsonResponse(cart_data, status=200)
+    except Seed.DoesNotExist:
+        messages.error(request, "The seed you are trying to add does not exist.")
     except Exception as e:
-        logger.error(f"An error occurred: {str(e)}")
-        return JsonResponse({"error": str(e)}, status=500)
+        messages.error(request, "Something went wrong. Please try again later.")
+        # Log the error for debugging purposes
+        print(f"Error adding item to cart: {e}")
 
+    return redirect('cart:cart')
 
-@csrf_exempt
-def update_quantity(request):
-    """
-    Updates the quantity of an item in the user's cart.
+def remove_from_cart(request, item_id):
+    """Remove an item from the cart."""
+    try:
+        cart_item = get_object_or_404(CartItem, id=item_id)
+        cart_item.delete()
+        messages.success(request, f"Successfully deleted {cart_item.seed.name} from your cart.")
+    
+    except CartItem.DoesNotExist:
+        # In case the CartItem is not found (although get_object_or_404 should handle this)
+        messages.error(request, "The item you are trying to delete does not exist.")
+    
+    except Exception as e:
+        # Catch any unexpected errors
+        messages.error(request, "Can't remove the item now, please try again later.")
+        # Log the error for debugging (optional)
+        print(f"Error removing item from cart: {e}")
 
-    This function accepts a POST request with JSON data containing the cart ID, seed ID, and the new quantity.
-    It validates the input and updates the quantity of the specified item in the user's cart.
+    return redirect('cart:cart')
 
-    Parameters:
-        - request (HttpRequest): The HTTP request containing JSON data with cart ID, seed ID, and quantity.
+def update_cart(request, item_id):
+    """Update the quantity of an item in the cart."""
+    try:
+        cart_item = get_object_or_404(CartItem, id=item_id)
+        new_quantity = request.POST.get('quantity')
 
-    Returns:
-        JsonResponse: A response indicating success and the new quantity if successful, or an error message if unsuccessful.
-    """
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            cart_id = data.get("cart_id")
-            seed_id = data.get("seed_id")
-            new_quantity = data.get("quantity")
-
-            if not all([cart_id, seed_id, new_quantity]):
-                return JsonResponse(
-                    {"error": "Missing parameters"}, status=400
-                )
-            cart = get_object_or_404(Cart, id=cart_id)
-            cart_item, created = CartItem.objects.get_or_create(
-                cart=cart, seed_id=seed_id
-            )
-            cart_item.quantity = new_quantity
+        # Check if the quantity is a valid positive integer
+        if new_quantity and int(new_quantity) > 0:
+            cart_item.quantity = int(new_quantity)
             cart_item.save()
+            messages.success(request, f"Quantity updated in your cart to {cart_item.quantity}.")
+        else:
+            messages.error(request, "Please enter a valid quantity greater than zero.")
 
-            return JsonResponse(
-                {"success": True, "new_quantity": cart_item.quantity}
-            )
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
-    return JsonResponse({"error": "Only POST method allowed"}, status=405)
+    except Exception as e:
+        # Catch any unexpected errors
+        messages.error(request, "Can't update now, please try again later.")
+        # Log the error for debugging (optional)
+        print(f"Error updating cart: {e}")
+
+    return redirect('cart:cart')
 
 
-@csrf_exempt
-@require_POST
-def delete_item(request):
-    """
-    Deletes an item from the user's cart.
+def clear_cart(request):
+    """Clear all items from the cart."""
+    try:
+        # Get the user's cart
+        cart = get_cart(request)
+        
+        # Attempt to delete all items from the cart
+        cart.items.all().delete()
+        messages.success(request, "Your cart has been cleared.")
 
-    This function accepts a POST request with JSON data containing the cart ID and seed ID. 
-    It validates the input and removes the specified item from the user's cart.
+    except Exception as e:
+        # Catch any unexpected errors and provide a generic error message
+        messages.error(request, "There was an issue clearing your cart. Please try again later.")
+        print(f"Error while clearing cart: {e}")
+    
+    return redirect('cart:cart')
 
-    Parameters:
-        - request (HttpRequest): The HTTP request containing JSON data with cart ID and seed ID.
-
-    Returns:
-        JsonResponse: A response indicating success if successful, or an error message if unsuccessful.
-    """
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            cart_id = data.get("cart_id")
-            seed_id = data.get("seed_id")
-
-            if not cart_id or not seed_id:
-                return JsonResponse(
-                    {"error": "Missing parameters"}, status=400
-                )
-            cart = get_object_or_404(Cart, id=cart_id)
-            cart_item = CartItem.objects.filter(
-                cart=cart, seed_id=seed_id
-            ).first()
-
-            if not cart_item:
-                return JsonResponse(
-                    {"error": "Item not found in cart"}, status=404
-                )
-            cart_item.delete()
-
-            return JsonResponse({"success": True}, status=200)
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
-    return JsonResponse({"error": "Only POST method allowed"}, status=405)

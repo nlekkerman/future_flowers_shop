@@ -1,42 +1,37 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block title %}Contact Us - My Website{% endblock %}
-
 {% block content %}
-<div class="navigation-container">
-    {% include 'navigation.html' %}
-</div>
 
-<div class="contact-section">
-    <div class="contact-content">
-        <h1 class="contact-title">Contact Us</h1>
-        <div class="contact-info">
-            <p class="contact-item">
-                <strong class="contact-label">Phone:</strong> 
-                <a href="tel:+353830945102" class="contact-link">+353 83 094 5102</a>
-            </p>
-            <p class="contact-item">
-                <strong class="contact-label">Email:</strong> 
-                <a href="mailto:nlekkerman@gmail.com" class="contact-link">nlekkerman@gmail.com</a>
-            </p>
-            <p class="contact-item">
-                <strong class="contact-label">Address:</strong> 
-                31 Arbutus Grove, Killarney, Ireland
-            </p>
-        </div>
+<div class="contact-section vh-100 animate__animated animate__fadeIn animate__slower">
+  <div class="contact-container">
+    <div class="contact-content text-center">
+      <h1 class="contact-title display-4 mb-4">Contact Us</h1>
+      <div class="contact-info mb-4">
+        <p class="contact-item">
+          <strong class="contact-label">Phone:</strong>
+          <a href="tel:+353830945102" class="contact-link text-decoration-none">+353 83 094 5102</a>
+        </p>
+        <p class="contact-item">
+          <strong class="contact-label">Email:</strong>
+          <a href="mailto:nlekkerman@gmail.com" class="contact-link text-decoration-none">nlekkerman@gmail.com</a>
+        </p>
+        <p class="contact-item">
+          <strong class="contact-label">Address:</strong>
+          31 Arbutus Grove, Killarney, Ireland
+        </p>
+      </div>
 
-        <!-- Social Media Links -->
-        <div class="social-media-links mt-4">
-            <h2 class="social-media-title">Follow Us</h2>
-            <a href="https://www.facebook.com/profile.php?id=61568096746889" class="social-link" target="_blank">
-                <img src="{% static '/images/facebook-icon.png' %}" alt="Facebook" class="social-icon">
-            </a>
-          
-        </div>
+      <!-- Social Media Links -->
+      <div class="social-media-links mt-4">
+        <h2 class="social-media-title mb-3">Follow Us</h2>
+        <a href="https://www.facebook.com/profile.php?id=61568096746889" class="social-link" target="_blank">
+          <img src="{% static '/images/facebook-icon.png' %}" alt="Facebook" class="social-icon" width="40" height="40" />
+        </a>
+        <!-- Add more social media links here -->
+      </div>
     </div>
+  </div>
 </div>
-
-
 
 {% endblock %}

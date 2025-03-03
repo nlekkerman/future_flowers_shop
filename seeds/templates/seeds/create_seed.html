@@ -1,0 +1,122 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5 d-flex justify-content-center vw-100 flex-column align-items-center">
+  <h2 class="text-center mb-4">Create a New Seed</h2>
+
+  <!-- Centered Alert Messages -->
+  {% if messages %}
+  <div class="alert-container d-flex justify-content-center">
+    <div class="alert-box">
+      {% for message in messages %}
+      <div
+        class="alert alert-{{ message.tags }} alert-dismissible fade show text-center"
+        role="alert"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Seed Creation Form -->
+  <div class="dark-rgba-background d-flex shadow p-4 " style="max-width: 600px">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- Render form fields with Bootstrap styling -->
+      <div class="form-group">
+        <label for="id_name" class="custom-label">Seed Name</label>
+        {{ form.name }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_scientific_name" class="custom-label">Scientific Name</label>
+        {{ form.scientific_name }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_description" class="custom-label">Description</label>
+        {{ form.description }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_planting_months_from" class="custom-label">Planting Months From</label>
+        {{ form.planting_months_from }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_planting_months_to" class="custom-label">Planting Months To</label>
+        {{ form.planting_months_to }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_flowering_months_from" class="custom-label">Flowering Months From</label>
+        {{ form.flowering_months_from }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_flowering_months_to" class="custom-label">Flowering Months To</label>
+        {{ form.flowering_months_to }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_category" class="custom-label">Category</label>
+        {{ form.category }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_height_from" class="custom-label">Height From (cm)</label>
+        {{ form.height_from }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_height_to" class="custom-label">Height To (cm)</label>
+        {{ form.height_to }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_sun_preference" class="custom-label">Sun Preference</label>
+        {{ form.sun_preference }}
+      </div>
+
+      <div class="form-group" class="custom-label">
+        <label for="id_price">Price ($)</label>
+        {{ form.price }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_discount" class="custom-label">Discount (%)</label>
+        {{ form.discount }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_is_in_stock" class="text-white">In Stock?</label>
+        {{ form.is_in_stock }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_in_stock_number" class="text-white">In Stock Number</label>
+        {{ form.in_stock_number }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_image" class="text-white">Seed Image</label>
+        {{ form.image }}
+      </div>
+
+      <button type="submit" class="btn btn-success btn-block">
+        Create Seed
+      </button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

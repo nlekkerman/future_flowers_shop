@@ -12,20 +12,22 @@ var clientSecret = $('#id_client_secret').text().slice(1, -1);
 var stripe = Stripe(stripePublicKey);
 var elements = stripe.elements();
 
-var style = {
-    base: {
-        color: '#fff',
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-        fontSmoothing: 'antialiased',
-        fontSize: '16px',
-        '::placeholder': {
-            color: '#aab7c4'
-        }
+const style = {
+  base: {
+    color: "#000", // Text color
+    fontSize: "16px",
+    fontFamily: "Arial, sans-serif",
+    "::placeholder": {
+      color: "#aaa" // Placeholder color
     },
-    invalid: {
-        color: '#dc3545',
-        iconColor: '#dc3545'
-    }
+    backgroundColor: "white", // Background color
+    border: "1px solid #ccc", // Custom border (doesn't always work)
+    padding: "10px", // Padding inside input
+  },
+  invalid: {
+    color: "#ff0000", // Red text for invalid inputs
+    iconColor: "#ff0000"
+  }
 };
 
 var card = elements.create('card', {
@@ -126,8 +128,7 @@ form.addEventListener('submit', function (ev) {
                     }
                 }
             },
-            // Shipping details should be sent as part of the confirmCardPayment call, 
-            // but outside the payment_method object
+           
             shipping: {
                 name: $.trim(form.full_name.value),
                 phone: $.trim(form.phone_number.value),

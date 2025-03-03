@@ -5,9 +5,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import handler404
-from syncmanager.views import custom_404_view
+from custom_accounts.views import custom_404
 
-handler404 = 'syncmanager.views.custom_404_view'
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     
@@ -33,10 +34,11 @@ urlpatterns = [
     path('reviews/', include('reviews.urls')),  
 
     path('communications/', include('communications.urls')),
-    path('syncmanager/', include('syncmanager.urls')),
+
 
 ]
-    
+
+handler404 = 'custom_accounts.views.custom_404'   
 
 # Serve media files during development
 if settings.DEBUG:

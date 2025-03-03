@@ -1,49 +1,211 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+  <div class="text-center mb-3">
+    <h2 class="fw-bold dark-rgba-background p-2">🛒 Your Basket</h2>
+  </div>
+  <div class="mb-4">
+    <a href="{% url 'home:home' %}" class="btn btn-outline-primary dark-rgba-background"
+      >⏪ Continue Shopping</a
+    >
+  </div>
 
-{% block content %}
-<div class="navigation-container">
-    {% include 'navigation.html' %}
-</div>
-<!-- Seed List -->
-<div class="go-to-checkout-button btn" id="go-to-checkout-button">CHECKOUT</div>
-<div id="update-item-messages">
-    <button class="close-button-cart" aria-label="Close" id="close-update-item-messages">
-        <i class="fas fa-times"></i>
-    </button>
-    <div class="message-text"></div> <!-- The message text will be updated here -->
-</div>
-<div id="delete-item-messages">
-    <button class="close-button-cart" aria-label="Close" id="close-delete-item-messages">
-        <i class="fas fa-times"></i>
-    </button>
-    <div class="message-text"></div> <!-- The message text will be updated here -->
-</div>
+  {% if cart_items %}
+  <div class="row animate__animated animate__fadeIn animate__slower">
+    {% for item in cart_items %}
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card shadow-lg border-0 dark-rgba-background">
+        <img
+          src="{{ item.seed.image.url }}"
+          class="card-img-top"
+          alt="{{ item.seed.name }}"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ item.seed.name }}</h5>
+          <p class="card-text text-muted">
+            Price: <strong>${{ item.seed.calculate_discounted_price }}</strong>
+          </p>
 
+          <form
+            action="{% url 'cart:update_cart' item.id %}"
+            method="post"
+            class="d-flex align-items-center"
+          >
+            {% csrf_token %}
+            <input
+              type="number"
+              name="quantity"
+              value="{{ item.quantity }}"
+              min="1"
+              max="{{ item.seed.in_stock_number }}"
+              class="form-control w-50"
+            />
+            <div class="d-flex justify-content-center"> <button type="submit" class="btn btn-sm btn-primary ml-2">
+              Update
+            </button></div>
+           
+          </form>
 
-<div class="cart-container">
-    <h2 class="cart-title">Shopping Cart</h2>
-    <div class="container-cart-margin mt-4">
-        <!-- Cart items will be dynamically inserted here -->
-        <div id="cart-items-container" class="row">
-            <!-- Cart items will be rendered here dynamically via JS -->
+          <p class="mt-2">
+            <strong>Total: </strong>${{ item.get_total_price }}
+          </p>
+          <a
+            href="#"
+            class="btn btn-danger btn-sm w-100"
+            data-toggle="modal"
+            data-target="#removeModal{{ item.id }}"
+          >
+            🗑 Remove
+          </a>
         </div>
-        <div class="total-price-cart">
-            <p>Total:</p>
-            <p class="total-cart-price-value"></p>
+      </div>
+    </div>
+    <!-- Modal for Removal Confirmation -->
+    <div
+      class="modal fade"
+      id="removeModal{{ item.id }}"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="removeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="removeModalLabel">Confirm Removal</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to remove
+            <strong>{{ item.seed.name }}</strong> from your basket?
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <a
+              href="{% url 'cart:remove_from_cart' item.id %}"
+              class="btn btn-danger"
+              >Remove</a
+            >
+          </div>
         </div>
-
+      </div>
     </div>
+    {% endfor %}
+  </div>
 
-    <div class="empty-cart-message">
-        <p class="display-4 text-center">Your cart is empty.</p>
-        <div class="start-shopping-button-container">
-        <button id="viewSeedsButton" class="btn empty-cart-message-button">Start Shopping</button>
+  <div class="card shadow-lg mt-4 border-0 dark-rgba-background">
+    <div class="card-body text-center">
+      <h4 class="card-title">💰 Order Summary</h4>
+      <p class="mb-1"><strong>Subtotal:</strong> ${{ total_price }}</p>
+      <p class="mb-1"><strong>Discounts:</strong> ${{ total_discount }}</p>
+      <p class="mb-1">
+        <strong>Delivery Fee:</strong> ${{ delivery|floatformat:2 }}
+      </p>
+      <h4 class="mt-3"><strong>Grand Total:</strong> ${{ grand_total }}</h4>
 
-    </div>
+      <div class="d-flex justify-content-center gap-3 flex-column flex-md-row ">
+        <a href="#" class="btn btn-outline-danger btn-sm mx-2 mb-2 mb-md-0" data-toggle="modal" data-target="#clearCartModal">
+          ❌ Clear Basket
+        </a>        <a href="{% url 'checkout' %}" class="btn btn-success btn-sm mx-2">✅ Checkout Now</a>
     </div>
     
+    
+    
+    </div>
+  </div>
 
+  {% else %}
+  <div class="alert alert-info text-center">
+    🌱 Your basket is empty!
+    <a href="{% url 'home:home' %}" class="alert-link">Find Seeds Here</a>.
+  </div>
+  {% endif %}
 </div>
 
+<!-- Modal for Displaying Messages -->
+{% if messages %}
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" data-show-modal="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageModalLabel">Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="{% url 'home:home' %}" class="btn btn-primary">Go to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div
+  class="modal fade"
+  id="clearCartModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="clearCartModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="clearCartModalLabel">Confirm Clear Cart</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to clear your entire cart? This action cannot be undone.
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >
+          Cancel
+        </button>
+        <a
+          href="{% url 'cart:clear_cart' %}"
+          class="btn btn-danger"
+        >Clear Cart</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- JavaScript to Trigger Modal on Success -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Check if the modal should be shown using a data attribute (data-show-modal)
+    var modalElement = document.querySelector('#messageModal');
+    if (modalElement && modalElement.getAttribute('data-show-modal') === 'true') {
+      $('#messageModal').modal('show');
+    }
+  });
+</script>
 {% endblock %}

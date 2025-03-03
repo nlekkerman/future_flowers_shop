@@ -19,7 +19,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
     """
  
-    list_display = ('user', 'rating', 'status', 'created_at', 'updated_at')
+    list_display = ('user', 'rating', 'comment', 'status', 'created_at', 'updated_at', 'seed_name')
     list_filter = ('status', 'created_at', 'rating')
     search_fields = ('user__username', 'comment')
     actions = ['approve_reviews', 'reject_reviews', 'delete_reviews']
@@ -39,6 +39,11 @@ class ReviewAdmin(admin.ModelAdmin):
     approve_reviews.short_description = "Approve selected reviews"
     reject_reviews.short_description = "Reject selected reviews"
     delete_reviews.short_description = "Delete selected reviews"
+   
+    def seed_name(self, obj):
+        return obj.seed.name if obj.seed else 'No Seed'
+    seed_name.admin_order_field = 'seed' 
+    seed_name.short_description = 'Seed'
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):

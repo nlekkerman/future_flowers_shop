@@ -1,0 +1,232 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="container mt-5">
+  
+  <h1 class="text-center mb-4 dark-rgba-background">{{ seed.name }}</h1>
+
+  <!-- Seed Details -->
+  <div class="col p-0 d-flex justify-content-center align-items-center flex-column">
+    <div class="col-md-6 p-0">
+      {% if seed.image %}
+      <img
+        src="{{ seed.image.url }}"
+        class="img-fluid rounded shadow card-img-top"
+        alt="{{ seed.name }}"
+      />
+      {% else %}
+      <img
+        src="{% static 'images/default-seed.jpg' %}"
+        class="img-fluid rounded shadow"
+        alt="Default Seed Image"
+      />
+      {% endif %}
+    </div>
+
+    <div class="col-md-6 dark-rgba-background pb-3">
+      <h4>Scientific Name: {{ seed.scientific_name }}</h4>
+      <p><strong>Rating:</strong>
+        {% if seed.avg_rating %}
+          <span class="text-warning">
+            {% for _ in "12345"|slice:seed.avg_rating %}
+              ⭐
+            {% endfor %}
+          </span> ({{ seed.avg_rating|floatformat:1 }}/5)
+        {% else %}
+          <span class="text-muted">No ratings yet</span>
+        {% endif %}
+      </p>
+      <p><strong>Category:</strong> {{ seed.get_category_display }}</p>
+      <p>
+        <strong>Sun Preference:</strong> {{ seed.get_sun_preference_display }}
+      </p>
+      <h3 class="mt-3">
+        Price: {% if seed.has_discount %}
+        <span class="text-danger">${{ seed.calculate_discounted_price }}</span>
+        <del class="text-muted">${{ seed.price }}</del>
+        {% else %} ${{ seed.price }} {% endif %}
+      </h3>
+      {% if seed.is_in_stock %}
+      <span class="badge bg-success">In Stock</span>
+      <form
+        method="POST"
+        action="{% url 'cart:add_to_cart' seed.id %}"
+        class="mt-3"
+      >
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="quantity">Quantity:</label>
+          <input
+            type="number"
+            name="quantity"
+            id="quantity"
+            class="form-control w-50"
+            value="1"
+            min="1"
+            max="{{ seed.in_stock_number }}"
+            step="1"
+          />
+        </div>
+        <button type="submit" class="btn btn-success mt-2">
+          🛒 Add to Cart
+        </button>
+      </form>
+      {% else %}
+      <span class="badge bg-danger">Out of Stock</span>
+      {% endif %}
+      <div class="mt-3">
+        <a href="{% url 'home:home' %}" class="btn btn-outline-primary">
+          ⏪ Continue Shopping
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reviews Section -->
+  <div class="my-5 reviews-container p-2">
+    <h2>📝 Reviews & Comments</h2>
+
+    {% if reviews %}
+    <ul class="list-group list-unstyled pb-2">
+      {% for review in reviews %}
+      <li class="list-group-item dark-rgba-background">
+        <div class="d-flex justify-content-between ">
+          <strong>{{ review.user.username }}</strong>
+          <small class="text-muted">
+            {{ review.created_at|date:"F j, Y, g:i a" }}
+          </small>
+        </div>
+        <p>{{ review.comment }}</p>
+
+        <!-- Display the number of approved comments for this review -->
+        <small class="text-muted">
+          {{ review.approved_comments_count_display }}
+        </small>
+
+        {% if request.user == review.user %}
+        <div class="mt-2">
+          <a
+            href="{% url 'reviews:edit_review' review.id %}"
+            class="btn btn-sm btn-warning"
+            >✏ Edit</a
+          >
+          <a
+            href="{% url 'reviews:delete_review' review.id %}"
+            class="btn btn-sm btn-danger"
+            onclick="return confirm('Are you sure?');"
+            >🗑 Delete</a
+          >
+        </div>
+        {% endif %}
+
+        <!-- Display Comments under each Review -->
+        <ul class="list-group mt-2 list-unstyled">
+          {% if review.comments.count == 0 %}
+          <li class="text-white bg-info text-center">No comments yet.</li>
+          {% else %} {% for comment in approved_comments %}
+          <li class="list-group-item">
+            <strong>{{ comment.user.username }}</strong>: {{ comment.text }}
+            <small class="text-muted d-block">
+              {{ comment.created_at|date:"F j, Y, g:i a" }}
+            </small>
+
+            {% if request.user == comment.user %}
+            <div class="mt-1">
+              <a
+                href="{% url 'reviews:edit_comment' comment.id %}"
+                class="btn btn-sm btn-warning"
+                >✏ Edit</a
+              >
+              <a
+                href="{% url 'reviews:delete_comment' comment.id %}"
+                class="btn btn-sm btn-danger"
+                onclick="return confirm('Are you sure?');"
+                >🗑 Delete</a
+              >
+            </div>
+            {% endif %}
+          </li>
+          {% endfor %} {% endif %}
+        </ul>
+
+        <!-- Add a comment form under each review -->
+        {% if user.is_authenticated %}
+        <form method="POST" class="mt-2">
+          {% csrf_token %}
+          <input type="hidden" name="review_id" value="{{ review.id }}" />
+          <textarea
+            name="text"
+            class="form-control mb-2"
+            placeholder="Write a comment..."
+          ></textarea>
+          <button
+            type="submit"
+            name="comment_submit"
+            class="btn btn-sm btn-outline-primary"
+          >
+            💬 Add Comment
+          </button>
+        </form>
+        {% else %}
+        <p class="mt-2"><a href="{% url 'login' %}">Log in</a> to comment.</p>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="text-white bg-info text-center mb-3">
+      No reviews yet. Be the first to review this seed! 🌱
+    </p>
+    {% endif %}
+  </div>
+
+  <!-- Add a Review Form -->
+  {% if user.is_authenticated %}
+  <div class="mt-4 reviews-container">
+    <h3>💬 Leave a Review</h3>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">{{ review_form.as_p }}</div>
+      <button type="submit" name="review_submit" class="btn btn-primary">
+        Submit Review
+      </button>
+    </form>
+  </div>
+  {% else %}
+  <p class="mt-4"><a href="{% url 'login' %}">Log in</a> to leave a review.</p>
+  {% endif %}
+</div>
+<!-- Modal for Displaying Messages -->
+{% if messages %}
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" data-show-modal="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageModalLabel">Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="{% url 'home:home' %}" class="btn btn-primary">Go to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- JavaScript to Trigger Modal on Success -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Check if the modal should be shown using a data attribute (data-show-modal)
+    var modalElement = document.querySelector('#messageModal');
+    if (modalElement && modalElement.getAttribute('data-show-modal') === 'true') {
+      $('#messageModal').modal('show');
+    }
+  });
+</script>
+{% endblock %}

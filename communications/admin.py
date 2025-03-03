@@ -1,127 +1,39 @@
 from django.contrib import admin
-from django.utils import timezone
-from .models import ChatConversation, ChatMessage  # Updated import
+from .models import Conversation, ChatMessage
 
-class ChatConversationAdmin(admin.ModelAdmin):
-    """
-    Admin interface for managing ChatConversation objects.
+class MessageInline(admin.TabularInline):
+    model = ChatMessage
+    extra = 0  # No empty forms for new messages
 
-    This class customizes the display and behavior of ChatConversation models in the Django admin interface.
-    - `list_display`: Specifies which fields to display in the list view.
-    - `list_filter`: Adds filters to the right sidebar for filtering the list view.
-    - `search_fields`: Allows searching by specific fields (e.g., usernames of user and superuser).
-    - `readonly_fields`: Makes certain fields read-only in the admin interface.
-    
-    The `get_queryset` method restricts the visible conversations based on whether the user is an admin or a regular user. Admin users can see all conversations, while regular users can only see their own conversations.
-    
-    The `save_model` method customizes the saving behavior by setting the `started_at` timestamp when a new conversation is created.
-
-    Attributes:
-        - `list_display` (tuple): Specifies fields to display in the list view (user, superuser, started_at, is_active).
-        - `list_filter` (tuple): Filters for `is_active` and `started_at` fields.
-        - `search_fields` (tuple): Fields that can be searched (user's and superuser's usernames).
-        - `readonly_fields` (tuple): Fields that cannot be edited (started_at, created_at, updated_at).
-    """
-    list_display = ('user', 'superuser', 'started_at', 'is_active')
-    list_filter = ('is_active', 'started_at')
+class ConversationAdmin(admin.ModelAdmin):
+    list_display = ('user', 'superuser', 'created_at')
     search_fields = ('user__username', 'superuser__username')
-    readonly_fields = ('started_at', 'created_at', 'updated_at')
+    inlines = [MessageInline]  # Inline Message display within Conversation view
 
     def get_queryset(self, request):
-        """
-        Filters the queryset based on whether the user is a superuser or a regular user.
-        
-        For superusers, all conversations are visible. For regular users, only their own conversations
-        are displayed.
-
-        Parameters:
-            request (HttpRequest): The HTTP request object.
-
-        Returns:
-            queryset: A filtered queryset based on the user's permissions.
-        """
-        qs = super().get_queryset(request)
+        queryset = super().get_queryset(request)
         if request.user.is_superuser:
-            return qs
-        return qs.filter(user=request.user)  # or any other condition based on your requirements
-
-    def save_model(self, request, obj, form, change):
-        """
-        Custom save method to set the 'started_at' field when creating a new conversation.
-        
-        If the conversation is being created (not changed), set the 'started_at' timestamp to the current time.
-        Then call the parent save_model method to persist the object.
-
-        Parameters:
-            request (HttpRequest): The HTTP request object.
-            obj (ChatConversation): The instance of the model being saved.
-            form (ModelForm): The form instance with the model data.
-            change (bool): Indicates if the model is being updated or created.
-        """
-        if not change:  # Only set 'started_at' when creating a new instance
-            obj.started_at = timezone.now()
-        super().save_model(request, obj, form, change)
+            return queryset  # Superusers can see all conversations
+        else:
+            return queryset.filter(user=request.user)  # Normal users can see only their conversations
 
 class ChatMessageAdmin(admin.ModelAdmin):
-    """
-    Admin interface for managing ChatMessage objects.
+    list_display = ('sender', 'receiver', 'content', 'sent_at', 'is_read', 'is_deleted')
+    list_filter = ('is_read', 'is_deleted')
+    search_fields = ('sender__username', 'receiver__username', 'content')
+    actions = ['mark_as_read', 'delete_selected_messages']
 
-    This class customizes the display and behavior of ChatMessage models in the Django admin interface.
-    - `list_display`: Specifies which fields to display in the list view.
-    - `list_filter`: Adds filters for the `seen` and `sent_at` fields to filter messages by their visibility and time.
-    - `search_fields`: Allows searching by conversation ID, sender's username, and message content.
-    - `readonly_fields`: Makes certain fields read-only in the admin interface.
+    # Action to mark selected messages as read
+    def mark_as_read(self, request, queryset):
+        updated = queryset.update(is_read=True)
+        self.message_user(request, f"{updated} message(s) marked as read.")
+    mark_as_read.short_description = "Mark selected messages as read"
 
-    The `get_queryset` method restricts the visible messages based on whether the user is an admin or a regular user. Admin users can see all messages, while regular users can only see messages from conversations they are involved in.
+    # Action to delete selected messages (soft delete)
+    def delete_selected_messages(self, request, queryset):
+        updated = queryset.update(is_deleted=True)
+        self.message_user(request, f"{updated} message(s) marked as deleted (soft delete).")
+    delete_selected_messages.short_description = "Soft delete selected messages"
 
-    The `save_model` method customizes the saving behavior by setting the `sent_at` timestamp when a new message is created.
-
-    Attributes:
-        - `list_display` (tuple): Specifies fields to display in the list view (conversation, sender, sent_at, received_at, seen).
-        - `list_filter` (tuple): Filters for `seen` and `sent_at` fields.
-        - `search_fields` (tuple): Fields that can be searched (conversation ID, sender's username, content).
-        - `readonly_fields` (tuple): Fields that cannot be edited (sent_at, received_at, created_at, updated_at).
-    """
-    list_display = ('conversation', 'sender', 'sent_at', 'received_at', 'seen')
-    list_filter = ('seen', 'sent_at')
-    search_fields = ('conversation__id', 'sender__username', 'content')
-    readonly_fields = ('sent_at', 'received_at', 'created_at', 'updated_at')
-
-    def get_queryset(self, request):
-        """
-        Filters the queryset based on whether the user is a superuser or a regular user.
-        
-        For superusers, all messages are visible. For regular users, only messages from conversations
-        they are involved in (as user or superuser) are visible.
-
-        Parameters:
-            request (HttpRequest): The HTTP request object.
-
-        Returns:
-            queryset: A filtered queryset based on the user's permissions.
-        """
-        qs = super().get_queryset(request)
-        if request.user.is_superuser:
-            return qs
-        return qs.filter(conversation__user=request.user)  # Adjust based on your logic
-
-    def save_model(self, request, obj, form, change):
-        """
-        Custom save method to set the 'sent_at' field when creating a new message.
-        
-        If the message is being created (not changed), set the 'sent_at' timestamp to the current time.
-        Then call the parent save_model method to persist the object.
-
-        Parameters:
-            request (HttpRequest): The HTTP request object.
-            obj (ChatMessage): The instance of the model being saved.
-            form (ModelForm): The form instance with the model data.
-            change (bool): Indicates if the model is being updated or created.
-        """
-        if not change:
-            obj.sent_at = timezone.now()
-        super().save_model(request, obj, form, change)
-
-
-admin.site.register(ChatConversation, ChatConversationAdmin)
+admin.site.register(Conversation, ConversationAdmin)
 admin.site.register(ChatMessage, ChatMessageAdmin)

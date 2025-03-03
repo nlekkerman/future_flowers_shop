@@ -1,39 +1,94 @@
 {% extends "base.html" %}
 {% load socialaccount %}
 {% load static %}
-{% block content %}
+{% block content %} 
 
-<div class="navigation-container">
-    {% include 'navigation.html' %}
-    </div>
-<div class="form-container">
- 
- 
-
-    <h2 class="login-heading text-white">Login</h2>
+<div class="container d-flex justify-content-center align-items-center animate__animated animate__fadeIn animate__slower" style="height: 100vh; ">
+  <div class="form-container p-4 rounded shadow-lg dark-rgba-background" style="max-width: 400px; background-color: #f8f9fa;">
+    <h2 class="login-heading text-center text-primary mb-4">Login</h2>
+    
     <div class="form-login">
-       
-        <form method="post" id="login-form">
-            {% csrf_token %}
-            <input type="text" id="username" name="username" required>
-            <input type="password" id="password" name="password" required>
-            <div id="error-messages"></div>
-            <button type="submit" id="login-button" class="btn login-button">Login</button>
-        </form>
+      <form method="post" id="login-form">
+        {% csrf_token %}
         
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" id="username" name="username" class="form-control" required />
+        </div>
+        
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" id="password" name="password" class="form-control" required />
+        </div>
+        
+        <div id="error-messages" class="text-danger mb-3"></div>
+        
+        <button type="submit" id="login-button" class="btn send-button w-100">
+          Login
+        </button>
+      </form>
     </div>
-    <p class="registration-link">Don't have an account? <a href="{% url 'account_signup' %}">Register here</a></p>
-  
+    
+    <p class="text-center mt-3">
+      Don't have an account? 
+      <a href="{% url 'custom_accounts:account_signup' %}" class="text-primary">Register here</a>
+    </p>
+  </div>
 </div>
+
 <!-- Modal Structure -->
-
-<div id="login-modal" >
+<div id="login-modal" class="modal" tabindex="-1">
+  <div class="modal-dialog">
     <div class="modal-content">
-        <img id="modal-icon" src="{% static 'images/login-icon.png' %}" data-success-url="{% static 'images/login-success.png' %}">
-        <p id="modal-message"></p>
+      <div class="modal-header">
+        <h5 class="modal-title">Logging In</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="modal-icon" src="{% static 'images/login-icon.png' %}" class="mb-3" style="width: 80px; height: 80px;" />
+        <p id="modal-message">Please wait...</p>
+      </div>
     </div>
+  </div>
 </div>
 
+<script>
+  document.getElementById("login-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent default form submission
 
+    // Create a FormData object to send the form data
+    const formData = new FormData(this);
 
-    {% endblock %}
+    // Send the data using fetch (or AJAX)
+    fetch("/custom_accounts/login/", {
+        method: "POST",
+        body: formData,
+    })
+    .then(response => response.json()) // Parse the JSON response
+    .then(data => {
+        if (data.success) {
+            // Redirect to the provided URL
+            window.location.href = data.redirect;
+        } else {
+            // Display the form errors
+            const errorMessages = document.getElementById("error-messages");
+            errorMessages.innerHTML = ""; // Clear previous errors
+
+            // Iterate through the errors and display them
+            for (let [field, errors] of Object.entries(data.errors)) {
+                errors.forEach(error => {
+                    const errorMessage = document.createElement("div");
+                    errorMessage.textContent = `${field}: ${error}`;
+                    errorMessages.appendChild(errorMessage);
+                });
+            }
+        }
+    })
+    .catch(error => {
+        console.error("Error during login:", error);
+    });
+});
+
+</script>
+
+{% endblock %}

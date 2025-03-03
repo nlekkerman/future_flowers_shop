@@ -42,10 +42,10 @@ STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
 STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    '8000-nlekkerman-futureflower-1hc6w6cgvfw.ws-eu117.gitpod.io',
+    '8000-nlekkerman-futureflower-1hc6w6cgvfw.ws-eu118.gitpod.io',
     '.herokuapp.com'
 ]
 
@@ -65,11 +65,12 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     
     # Third-party apps
-    'django.contrib.sites',            # Required for allauth
-    'allauth',                         # Django allauth for authentication
-    'allauth.account',                 # Allauth for account management
-    'allauth.socialaccount',           # Allauth for social account management
-    'cloudinary',                      # Cloudinary for media management
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'widget_tweaks',
+    'allauth.socialaccount',
+    'cloudinary',
     'cloudinary_storage', 
     'crispy_forms',
     'crispy_bootstrap4',
@@ -81,7 +82,7 @@ INSTALLED_APPS = [
     'checkout',
     'reviews',                       # custom app for checkout management
     'communications',
-    'syncmanager',
+   
 ]
 
 
@@ -109,7 +110,8 @@ MESSAGE_TAGS = {
 }
 
 ROOT_URLCONF = 'future_flower_shop.urls'
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 
 TEMPLATES = [
@@ -128,7 +130,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart_context',
                 'seeds.context_processors.seed_data',
-                'communications.context_processors.chat_context',
+                'communications.context_processors.unread_messages',
+               
                 
             ],
             'builtins': [

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Review(models.Model):
     """
     A model representing a review submitted by a user for a product or service.
@@ -26,7 +27,8 @@ class Review(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)]) 
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    seed = models.ForeignKey('seeds.Seed', on_delete=models.CASCADE, related_name="reviews", null=True, blank=True )
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -35,7 +37,7 @@ class Review(models.Model):
     deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'Review by {self.user.username}'
+        return f'Review by {self.user.username} on {self.seed.name if self.seed else 'No Seed'}'
 
     def is_approved(self):
         return self.status == 'approved'

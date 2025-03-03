@@ -445,6 +445,7 @@ def checkout_success(request, order_number):
         email will be sent to {order.email}.",
     )
 
+    # Logic for authenticated users (unchanged)
     user_id = request.user.id if request.user.is_authenticated else None
 
     if user_id:
@@ -453,26 +454,54 @@ def checkout_success(request, order_number):
         if cart:
             cart.delete()
         else:
-            logger.info(
-                f"No cart found in database for user:"
-                " {user_id} during checkout success"
-                " for order number: {order_number}."
-            )
+            session_key = request.session.session_key
+            if session_key:
+                cart = Cart.objects.filter(session_id=session_key).first()
+                if cart:
+                    cart.delete()
+                request.session.pop("cart", None)
+
+                logger.info(
+                    f"No cart found in database for user:"
+                    f" {user_id} during checkout success"
+                    f" for order number: {order_number}."
+                )
     else:
         logger.warning("User not authenticated, cannot retrieve cart.")
+
+        # Logic for anonymous users (new)
+        session_key = request.session.session_key
+        if session_key:
+            cart = Cart.objects.filter(session_id=session_key).first()
+            if cart:
+                cart.delete()
+                request.session.pop("cart", None)
+            else:
+                logger.info(
+                    f"No cart found for anonymous user with session key {session_key} "
+                    f"during checkout success for order number: {order_number}."
+                )
+        else:
+            logger.warning("No session key found for anonymous user, cannot retrieve cart.")
+
+    # Clear other session data
     if "payment_intent_id" in request.session:
         del request.session["payment_intent_id"]
     if "save_info" in request.session:
         del request.session["save_info"]
+
+    # Send confirmation email
     try:
         send_order_confirmation_email(order)
-    except Exception as e:
+    except Exception:
         messages.warning(
             request,
             "Your order was successful,"
             " but we couldn't send the confirmation email."
             " Please contact support.",
         )
+
+    # Render the success page
     template = "checkout/checkout_success.html"
     context = {
         "order": order,

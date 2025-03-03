@@ -53,12 +53,26 @@ class CustomUserCreationForm(UserCreationForm):
             Returns:
                 User: The created or updated User instance.
     """
-    email = forms.EmailField(required=True, help_text="Required. Enter a valid email address.")
-    newsletter = forms.BooleanField(required=False, initial=False, label="Receive Newsletter")
+    email = forms.EmailField(
+        required=True,
+        help_text="Required. Enter a valid email address.",
+        widget=forms.EmailInput(attrs={"class": "form-control"})
+    )
+    newsletter = forms.BooleanField(
+        required=False, 
+        initial=False, 
+        label="Receive Newsletter",
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"})
+    )
 
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
+        widgets = {
+            "username": forms.TextInput(attrs={"class": "form-control"}),
+            "password1": forms.PasswordInput(attrs={"class": "form-control"}),
+            "password2": forms.PasswordInput(attrs={"class": "form-control"}),
+        }
 
     def save(self, commit=True):
         """
@@ -76,16 +90,16 @@ class CustomUserCreationForm(UserCreationForm):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"]
 
-
         newsletter_opt_in = self.cleaned_data.get("newsletter", False)
         logger.info(f"Newsletter checkbox value: {newsletter_opt_in}")
 
         if commit:
             user.save()
-            profile, created = UserProfile.objects.get_or_create(user=user)
+            profile, _ = UserProfile.objects.get_or_create(user=user, defaults={"email": user.email})
+            if not _:
+                profile.email = user.email  # Ensure email is updated
             profile.receives_newsletter = newsletter_opt_in
-            profile.email = self.cleaned_data["email"]
-            profile.save() 
+            profile.save()
 
         return user
 

@@ -2,276 +2,17 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Review, Comment
-from .forms import ReviewForm
+from .forms import ReviewForm, CommentForm
+from django.contrib import messages
 import json
 import logging
 logger = logging.getLogger(__name__)
 
 
-@login_required
-@require_POST
-def write_review(request):
-    """
-    Handles the submission of a new review. The review is saved with a 'pending' status until approved.
-
-    Parameters:
-        request (HttpRequest): The HTTP request containing the review data.
-
-    Returns:
-        JsonResponse: A JSON response with the success or failure message.
-    """
-    form = ReviewForm(request.POST)
-    if form.is_valid():
-        review = form.save(commit=False)
-        review.user = request.user
-        review.status = 'pending'
-        review.save()
-        return JsonResponse({
-            'success': True,
-            'message': 'Review submitted successfully and is pending approval.'
-        })
-    return JsonResponse({
-        'success': False,
-        'message': 'Invalid form submission',
-        'errors': form.errors
-    })
-
-
-@login_required
-def fetch_reviews(request):
-    """
-    Fetches all approved reviews along with their approved comments.
-
-    Parameters:
-        request (HttpRequest): The HTTP request to fetch reviews.
-
-    Returns:
-        JsonResponse: A JSON response containing the reviews and their associated comments.
-    """
-    reviews = Review.objects.filter(status='approved', deleted=False).prefetch_related('comments')
-
-    # Prepare the data in JSON format
-    data = []
-    for review in reviews:
-        comments = review.comments.filter(status='approved', deleted=False)
-        data.append({
-            'id': review.id,  # Add review ID
-            'user_id': review.user.id,  # Add user ID
-            'user': review.user.username,
-            'rating': review.rating,
-            'comment': review.comment,
-            'created_at': review.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            'comments': [
-                {   
-                    'id': comment.id,
-                    'user': comment.user.username,
-                    'text': comment.text,
-                    'created_at': comment.created_at.strftime('%Y-%m-%d %H:%M:%S')
-                } for comment in comments
-            ]
-        })
-
-    return JsonResponse({'reviews': data})
-
-
-@csrf_exempt 
-@login_required
-def update_review(request):
-    """
-    Updates an existing review submitted by the user. The review's rating, comment, and status are updated. 
-
-    If the review is successfully found, the rating and comment are modified, and the status is set to 'pending'. 
-    The updated review is then saved to the database.
-
-    Parameters:
-        request (HttpRequest): The HTTP request containing the review update data. 
-            This includes the 'review_id', 'rating', and 'comment' fields.
-
-    Returns:
-        JsonResponse: A JSON response indicating the success or failure of the update.
-            - If successful, returns a message confirming the review was updated.
-            - If the review does not exist, returns an error message with a 404 status.
-            - If the request method is not 'POST', returns an error with a 400 status.
-    """
-    if request.method == 'POST':
-        review_id = request.POST.get('review_id')
-        rating = request.POST.get('rating')
-        comment = request.POST.get('comment')
-
-        try:
-            review = Review.objects.get(id=review_id, user=request.user)
-            review.rating = rating
-            review.comment = comment
-            review.status = 'pending'
-            review.save()
-            return JsonResponse({'message': 'Review updated successfully.'}, status=200)
-        except Review.DoesNotExist:
-            return JsonResponse({'error': 'Review not found.'}, status=404)
-
-    return JsonResponse({'error': 'Invalid request method.'}, status=400)
-
-@csrf_exempt
-@login_required
-def delete_review(request, review_id):
-    """
-    Deletes a review submitted by the user.
-
-    Parameters:
-        request (HttpRequest): The HTTP request to delete the review.
-
-    Returns:
-        JsonResponse: A JSON response with the success or failure message.
-    """
-    try:
-        review = Review.objects.get(id=review_id, user=request.user)
-        review.delete()
-        return JsonResponse({'message': 'Review deleted successfully.'}, status=200)
-    except Review.DoesNotExist:
-        return JsonResponse({'error': 'Review not found.'}, status=404)
-
-
-@login_required
-def leave_comment(request, review_id):
-    """
-    Allows a user to leave a comment on a review.
-
-    Parameters:
-        request (HttpRequest): The HTTP request containing the comment data.
-        review_id (int): The ID of the review to which the comment is being added.
-
-    Returns:
-        JsonResponse: A JSON response with the success or failure message.
-    """
-    if request.method == 'POST':
-        try:
-           
-            data = json.loads(request.body)
-            comment_text = data.get('text')
-
-            # Validate comment text
-            if not comment_text:
-                return JsonResponse({'error': 'Comment text is required.'}, status=400)
-
-            # Fetch the review and create a comment
-            review = Review.objects.get(id=review_id)
-
-            # Create the comment
-            comment = Comment.objects.create(
-                review=review,
-                user=request.user,
-                text=comment_text
-            )
-
-            # Log the comment ID and associated user information
-            logger.info(f'Comment created successfully: ID={comment.id}, User={comment.user.username}, Review ID={review_id}')
-
-            # Create a response object with the comment data
-            response_data = {
-                'message': 'Comment added successfully.',
-                'comment': {
-                    'id': comment.id,
-                    'user': comment.user.username,  # Assuming user has a username field
-                    'text': comment.text,
-                    'created_at': comment.created_at.isoformat()  # Format for JSON response
-                }
-            }
-            return JsonResponse(response_data, status=201)
-
-        except Review.DoesNotExist:
-            logger.error(f'Review with id {review_id} does not exist.')
-            return JsonResponse({'error': 'Review not found.'}, status=404)
-
-        except json.JSONDecodeError:
-            logger.error('Invalid JSON received.')
-            return JsonResponse({'error': 'Invalid JSON data.'}, status=400)
-
-        except Exception as e:
-            logger.exception("An error occurred while leaving a comment.")
-            return JsonResponse({'error': str(e)}, status=500)
-
-    return JsonResponse({'error': 'Invalid request method.'}, status=405)
-
-
-
-
-@login_required
-def update_comment(request, review_id, comment_id):
-    """
-    Updates an existing comment on a review.
-
-    Parameters:
-        request (HttpRequest): The HTTP request containing the updated comment data.
-        review_id (int): The ID of the review the comment is associated with.
-        comment_id (int): The ID of the comment being updated.
-
-    Returns:
-        JsonResponse: A JSON response with the success or failure message.
-    """
-
-    if request.method == 'PUT': 
-        try:
-            #
-            data = json.loads(request.body)
-            logger.debug(f"Incoming data for updating comment ID {comment_id}: {data}")
-
-            comment_text = data.get('text')
-
-            # Validate comment text
-            if not comment_text:
-                logger.warning(f"Comment text is missing for comment ID: {comment_id}.")
-                return JsonResponse({'error': 'Comment text is required.'}, status=400)
-
-            # Fetch the comment and update its text
-            comment = Comment.objects.get(id=comment_id)
-            logger.info(f"Fetched comment: ID={comment.id}, Current text='{comment.text}'")
-
-            # Check if the user is the owner of the comment
-            if comment.user != request.user:
-                logger.error(f"User {request.user.username} is not authorized to edit comment ID: {comment_id}.")
-                return JsonResponse({'error': 'You are not authorized to edit this comment.'}, status=403)
-
-            # Optionally, you can also verify if the comment belongs to the review
-            if comment.review.id != review_id:
-                logger.error(f"Comment ID {comment_id} does not belong to Review ID {review_id}.")
-                return JsonResponse({'error': 'Comment does not belong to the specified review.'}, status=400)
-
-            # Update the comment text
-            comment.text = comment_text
-            comment.status = 'pending'
-            comment.save()
-            logger.info(f"Updated comment ID={comment.id}. New text='{comment.text}'")
-
-            # Create a response object with the updated comment data
-            response_data = {
-                'message': 'Comment updated successfully.',
-                'comment': {
-                    'id': comment.id,
-                    'user': comment.user.username,
-                    'text': comment.text,
-                    'created_at': comment.created_at.isoformat()  # Format for JSON response
-                }
-            }
-            return JsonResponse(response_data, status=200)
-
-        except Comment.DoesNotExist:
-            logger.error(f'Comment with ID {comment_id} does not exist.')
-            return JsonResponse({'error': 'Comment not found.'}, status=404)
-
-        except json.JSONDecodeError:
-            logger.error('Invalid JSON received.')
-            return JsonResponse({'error': 'Invalid JSON data.'}, status=400)
-
-        except Exception as e:
-            logger.exception("An error occurred while updating the comment.")
-            return JsonResponse({'error': str(e)}, status=500)
-
-    logger.warning(f"Invalid request method received: {request.method} for comment ID: {comment_id}.")
-    return JsonResponse({'error': 'Invalid request method.'}, status=405)
-
-
-@login_required
-def delete_comment(request, review_id, comment_id):
+def reviews(request):
+    return render(request, 'reviews/reviews.html')
     """
     Deletes an existing comment on a review.
 
@@ -309,3 +50,66 @@ def delete_comment(request, review_id, comment_id):
 
     logger.warning(f"Invalid request method: {request.method} for deleting comment ID {comment_id}.")
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+def edit_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    print(f"Review ID: {review.id}, Seed: {review.seed}")
+    if request.user != review.user:
+        messages.error(request, "You don't have permission to edit this review.")
+        return redirect('home:seed_detail', seed_id=review.seed.id)
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            updated_review = form.save(commit=False)
+            updated_review.status = "pending"
+            updated_review.save()
+            messages.success(request, "Review updated successfully and is now awaiting approval.")
+            return redirect('home:seed_detail', seed_id=review.seed.id)
+    else:
+        form = ReviewForm(instance=review)
+
+    return render(request, 'edit_review.html', {'form': form, 'review':review})
+
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+
+    if request.user != review.user:
+        messages.error(request, "You don't have permission to delete this review.")
+        return redirect('home:seed_detail', seed_id=review.seed.id)
+
+    review.delete()
+    messages.success(request, "Review deleted successfully.")
+    return redirect('home:seed_detail', seed_id=review.seed.id)
+
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if request.user != comment.user:
+        messages.error(request, "You don't have permission to edit this comment.")
+        return redirect('home:seed_detail', seed_id=comment.review.seed.id)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            comment.status = 'pending'
+            form.save()
+            messages.success(request, "Comment updated successfully.")
+            return redirect('home:seed_detail', seed_id=comment.review.seed.id)
+    else:
+        form = CommentForm(instance=comment)
+
+    return render(request, 'edit_comment.html', {'form': form,'comment': comment})
+
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if request.user != comment.user:
+        messages.error(request, "You don't have permission to delete this comment.")
+        return redirect('home:seed_detail', seed_id=comment.review.seed.id)
+
+    comment.delete()
+    messages.success(request, "Comment deleted successfully.")
+    return redirect('home:seed_detail', seed_id=comment.review.seed.id)
+
+

@@ -1,68 +1,187 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<div class="navigation-container">{% include 'navigation.html' %}</div>
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5 wh-100">
+  
 
-<div class="logo-container" id="logoContainer">
-  <img src="{% static 'images/logo-final-invert.png' %}" alt="Logo" />
-</div>
-
-<div class="home-container">
-  <div class="what-is-going-on"></div>
-  <div class="m-0 home-container-content">
-    <!-- Latest Added Seed Section -->
-    <div class="round-home-container-background">
-      <div class="home-container-background">
-        {% if random_discounted_seed %}
-
-        <div
-          id="random-discounted-seed"
-          class="random-discounted-seed overlay-container round-home-container"
-          style="background-image: url('{{ random_discounted_seed.image.url }}');"
-        >
-          <a href="/seeds/?show_seeds=true" class="overlay-link">
-            <div class="overlay">
-              <h2>DISCOUNTED</h2>
-              <div class="overlay-content">
-                <h3>{{ random_discounted_seed.name }}</h3>
-                <p class="original-price-text">
-                  Original Price: ${{ random_discounted_seed.price }}
-                </p>
-                <p class="discounted-price-text">
-                  Discounted Price: ${{ discounted_price }}
-                </p>
-                <span>View All Seeds</span>
-              </div>
-            </div>
-          </a>
+<div class="search-filter-container animate__animated animate__slideInDown">
+  <div class="row mb-4">
+    <div class="col-12 col-md-8 mx-auto">
+      <form method="GET" action="{% url 'home:home' %}">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search for seeds..."
+            name="search"
+            value="{{ request.GET.search }}"
+            aria-label="Search for seeds"
+          />
+          <div class="input-group-append">
+            <button class="search-button" type="submit">
+              <i class="fas fa-search"></i> Search
+            </button>
+          </div>
         </div>
-        {% else %}
-        <p>No discounted seeds available at the moment.</p>
-        {% endif %}
-      </div>
-      <!-- Latest Added Seed Section -->
-      <div class="home-container-background">
-        {% if latest_seed %}
-        <div
-          class="new-seed overlay-container round-home-container"
-          id="new-seed"
-          style="background-image: url('{{ latest_seed.image.url }}');"
-        >
-          <a href="/seeds/?show_seeds=true" class="overlay-link">
-            <div class="overlay">
-              <h2>NEW</h2>
-              <div class="overlay-content">
-                <h4>{{ latest_seed.name }}</h4>
-                <p>Price: ${{ latest_seed.price }}</p>
-                <span>View All Seeds</span>
-              </div>
-            </div>
-          </a>
-        </div>
-        {% else %}
-        <p>No new seeds added yet.</p>
-        {% endif %}
-      </div>
+      </form>
     </div>
   </div>
 
-  {% endblock %}
+ 
+  <div class="row mb-4">
+    <div class="col-md-8 mx-auto">
+      <form method="GET" action="{% url 'home:home' %}">
+        <div class="form-row">
+          <div class="col">
+            <select name="filter" class="form-control" onchange="this.form.submit()">
+              <option value="">Select Filter</option>
+              <option value="discounted" {% if request.GET.filter == 'discounted' %}selected{% endif %}>Discounted</option>
+              <option value="high_to_low" {% if request.GET.filter == 'high_to_low' %}selected{% endif %}>Price High to Low</option>
+              <option value="low_to_high" {% if request.GET.filter == 'low_to_high' %}selected{% endif %}>Price Low to High</option>
+              <option value="newest" {% if request.GET.filter == 'newest' %}selected{% endif %}>Newest</option>
+              <option value="oldest" {% if request.GET.filter == 'oldest' %}selected{% endif %}>Oldest</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
+  <!-- Seed Listings -->
+  <div class="row seed-container">
+    {% for seed in seeds %}
+    <div class="col-md-4 mb-4 animate__animated animate__fadeIn animate__slower">
+      <div class="card seed-item-card shadow-sm">
+        {% if seed.image %}
+        <img
+          src="{{ seed.image.url }}"
+          class="card-img-top seed-image"
+          alt="{{ seed.name }}"
+        />
+        {% else %}
+        <img
+          src="{% static 'images/default-seed.jpg' %}"
+          class="card-img-top"
+          alt="Default Seed Image"
+        />
+        {% endif %}
+        <div class="card-body">
+
+          <h5 class="card-title">{{ seed.name }}</h5>
+          <p><strong>Rating:</strong>
+            {% if seed.avg_rating %}
+              <span class="text-warning">
+                {% for _ in "12345"|slice:seed.avg_rating %}
+                  ⭐
+                {% endfor %}
+              </span> ({{ seed.avg_rating|floatformat:1 }}/5)
+            {% else %}
+              <span class="text-muted">No ratings yet</span>
+            {% endif %}
+          </p>
+          
+          <p class="card-text">{{ seed.description|truncatewords:20 }}</p>
+          <p><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>
+          <p><strong>Category:</strong> {{ seed.get_category_display }}</p>
+          <p>Sun Preference: {{ seed.get_sun_preference_display }}</p>
+          <p>
+            <strong>Price:</strong>
+            {% if seed.has_discount %}
+            <span class="text-danger">${{ seed.calculate_discounted_price }}</span>
+            <del class="text-muted">${{ seed.price }}</del>
+            {% else %}
+            ${{ seed.price }}
+            {% endif %}
+          </p>
+          {% if seed.is_in_stock %}
+          <span class="badge bg-success">In Stock</span>
+          <form method="POST" action="{% url 'cart:add_to_cart' seed.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="number" name="quantity" id="quantity" class="form-control" 
+               value="1" min="1" max="{{ seed.in_stock_number }}" step="1">
+            </div>
+            <div class="d-flex justify-content-center mb-4">
+              <button type="submit" class="btn btn-success ">Add to Cart</button>
+          </div>
+        </form>  
+          {% else %}
+          <span class="badge bg-danger">Out of Stock</span>
+          <form>
+            <div class="form-group">
+              <label for="quantity">Quantity:</label>
+              <input type="number" name="quantity" id="quantity" class="form-control" 
+                value="0" disabled>
+            </div>
+            <div class="d-flex justify-content-center mb-4">
+              <button class="btn btn-success" disabled>Add to Cart</button>
+            </div>
+          </form>
+          {% endif %}
+          <p>
+            <a href="{% url 'home:seed_detail' seed.id %}" class="btn btn-info btn-sm w-100">
+              🔍 View Details
+            </a>
+          </p>
+          
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-center">No seeds available.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Modal for Displaying Messages -->
+{% if messages %}
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" data-show-modal="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageModalLabel">Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- JavaScript to Trigger Modal on Success -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Check if the modal should be shown using a data attribute (data-show-modal)
+    var modalElement = document.querySelector('#messageModal');
+    if (modalElement && modalElement.getAttribute('data-show-modal') === 'true') {
+      $('#messageModal').modal('show');
+    }
+  });
+
+  // Trigger the shake animation when an item is added to the cart
+$(document).on('click', '.add-to-cart-button', function() {
+    // Get the cart icon element by id
+    const cartIcon = $('#cart-icon');
+    
+    // Add the shake animation class from Animate.css
+    cartIcon.addClass('animate__animated animate__shakeX');
+    
+    // Remove the animation class after it completes (after 1 second)
+    setTimeout(function() {
+        cartIcon.removeClass('animate__animated animate__shakeX');
+    }, 1000); // Duration of the shake animation
+});
+  
+</script>
+{% endblock %}

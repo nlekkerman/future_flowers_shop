@@ -1,0 +1,155 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-4">
+  <h2>Edit Seed</h2>
+  <hr />
+
+  <!-- Display success/error messages -->
+  {% if messages %}
+  <div class="alert alert-dismissible">
+    {% for message in messages %}
+    <div
+      class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}"
+    >
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Seed Edit Form -->
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="{{ form.name.id_for_label }}" class="form-label dark-rgba-background p-1"
+        >Seed Name</label
+      >
+      {{ form.name }}
+    </div>
+
+    <div class="mb-3">
+      <label for="{{ form.scientific_name.id_for_label }}" class="form-label dark-rgba-background p-1"
+        >Scientific Name</label
+      >
+      {{ form.scientific_name }}
+    </div>
+
+    <div class="mb-3">
+      <label for="{{ form.description.id_for_label }}" class="form-label rounde-sm dark-rgba-background p-1"
+        >Description</label
+      >
+      {{ form.description }}
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <label
+          for="{{ form.planting_months_from.id_for_label }}"
+          class="form-label dark-rgba-background p-1"
+          >Planting Months From</label
+        >
+        {{ form.planting_months_from }}
+      </div>
+      <div class="col-md-6">
+        <label
+          for="{{ form.planting_months_to.id_for_label }}"
+          class="form-label dark-rgba-background p-1"
+          >Planting Months To</label
+        >
+        {{ form.planting_months_to }}
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <label
+          for="{{ form.flowering_months_from.id_for_label }}"
+          class="form-label dark-rgba-background p-1"
+          >Flowering Months From</label
+        >
+        {{ form.flowering_months_from }}
+      </div>
+      <div class="col-md-6">
+        <label
+          for="{{ form.flowering_months_to.id_for_label }}"
+          class="form-label dark-rgba-background p-1"
+          >Flowering Months To</label
+        >
+        {{ form.flowering_months_to }}
+      </div>
+    </div>
+
+    <div class="mb-3 mt-3">
+      <label for="{{ form.category.id_for_label }}" class="form-label dark-rgba-background p-1" 
+        >Category</label
+      >
+      {{ form.category }}
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <label for="{{ form.height_from.id_for_label }}" class="form-label dark-rgba-background p-1"
+          >Height From (cm)</label
+        >
+        {{ form.height_from }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{ form.height_to.id_for_label }}" class="form-label dark-rgba-background p-1"
+          >Height To (cm)</label
+        >
+        {{ form.height_to }}
+      </div>
+    </div>
+
+    <div class="mb-3 mt-3">
+      <label for="{{ form.sun_preference.id_for_label }}" class="form-label dark-rgba-background p-1"
+        >Sun Preference</label
+      >
+      {{ form.sun_preference }}
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <label for="{{ form.price.id_for_label }}" class="form-label dark-rgba-background p-1"
+          >Price ($)</label
+        >
+        {{ form.price }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{ form.discount.id_for_label }}" class="form-label dark-rgba-background p-1"
+          >Discount (%)</label
+        >
+        {{ form.discount }}
+      </div>
+    </div>
+
+    <div class="mb-3 mt-3">
+      <label for="{{ form.in_stock_number.id_for_label }}" class="form-label dark-rgba-background p-1"
+        >Stock Quantity</label
+      >
+      {{ form.in_stock_number }}
+    </div>
+
+    <div class="form-check mb-3">
+      {{ form.is_in_stock }}
+      <label class="form-check-label dark-rgba-background p-1" for="{{ form.is_in_stock.id_for_label }}"
+        >In Stock?</label
+      >
+    </div>
+
+    <div class="mb-3">
+      <label for="{{ form.image.id_for_label }}" class="form-label dark-rgba-background p-1"
+        >Seed Image</label
+      >
+      {{ form.image }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Seed</button>
+    <a
+      href="{% url 'custom_accounts:admin_dashboard' %}"
+      class="btn btn-secondary"
+      >Cancel</a
+    >
+  </form>
+</div>
+{% endblock %}

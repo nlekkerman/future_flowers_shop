@@ -31,6 +31,7 @@ class SeedAdmin(admin.ModelAdmin):
         'price', 
         'discount', 
         'is_in_stock', 
+        'in_stock_number', 
         'calculate_discounted_price'
     )
 

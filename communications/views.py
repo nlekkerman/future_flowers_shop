@@ -7,223 +7,182 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.urls import reverse
-from .models import ChatConversation, ChatMessage
-from .forms import ChatMessageForm
+from .models import Conversation, ChatMessage
 from django.contrib.auth.models import User
+from .forms import ChatMessageForm
+from django.db.models import Max, Q
+import logging
 
+# Set up the logger
+logger = logging.getLogger(__name__)
 
-class NewMessagesCountAPIView(APIView):
-    """
-    Returns the count of new unread messages for the authenticated user.
-
-    This API view counts the number of new (unseen) messages in a user's
-    conversations.
-    - Admin users (superusers) will see the count
-    of all new messages across all conversations.
-    - Regular users will only see the count of new
-    messages in conversations they are part of,
-    filtered by whether the messages
-    are marked as seen or unseen.
-
-    The count is useful to update the UI with the number of unread
-    messages in a chat interface.
-
-    Parameters:
-        - request (HttpRequest): The HTTP request object containing
-        the authenticated user.
-
-    Returns:
-        JsonResponse: A response with a JSON object containing the
-        count of new unread messages.
-    """
-
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request):
-        user = request.user
-        if user.is_superuser:
-            count = ChatMessage.objects.filter(seen=False).count()
-        else:
-            count = ChatMessage.objects.filter(
-                conversation__user=user, seen=False
-            ).count()
-        return Response({"count": count})
-
-
-@require_POST
-@login_required
-def mark_as_seen(request):
-    """
-    Marks all unseen messages in a specific conversation as seen.
-
-    This view allows a user to mark all unread (unseen)
-    messages in a given conversation as seen.
-    The view expects a POST request with the conversation ID.
-    All messages related to that
-    conversation and marked as unseen will be updated to seen status.
-
-    Parameters:
-        - request (HttpRequest): The HTTP request containing
-        the conversation ID as POST data.
-
-    Returns:
-        JsonResponse: A response indicating success
-        or failure of the operation. If successful,
-                      it returns a JSON object with
-                      a 'success' key set to True.
-    """
-    conversation_id = request.POST.get("conversation_id")
-    conversation = get_object_or_404(ChatConversation, id=conversation_id)
-
-    # Mark all unseen messages as seen
-
-    ChatMessage.objects.filter(conversation=conversation, seen=False).update(
-        seen=True
-    )
-
-    return JsonResponse({"success": True})
 
 
 @login_required
-def user_chat_messages(request):
-    """
-    Retrieves and handles chat messages for the logged-in user.
-
-    This view checks if the user has an existing conversation
-    with an admin. If not, it creates a
-    new conversation. It allows the user to send new messages
-    and also displays the existing chat
-    messages in the conversation. The chat messages are
-    returned along with an HTML form for sending
-    new messages.
-
-    Parameters:
-        - request (HttpRequest): The HTTP request containing
-        the current user's details and message data.
-
-    Returns:
-        JsonResponse: A response containing a list of chat messages
-        in the conversation and the HTML
-                      form for sending a new message. The messages
-                      are returned as a list of dictionaries
-                      containing the message text, sender, and timestamp.
-    """
-    conversation = ChatConversation.objects.filter(
-        user=request.user, superuser__is_superuser=True
-    ).first()
-
-    if not conversation:
-        superuser = get_object_or_404(User, is_superuser=True)
-        conversation = ChatConversation.objects.create(
-            user=request.user, superuser=superuser
-        )
-    messages = ChatMessage.objects.filter(conversation=conversation).order_by(
-        "sent_at"
-    )
-
-    if request.method == "POST":
-        form = ChatMessageForm(
-            request.POST,
-            user=request.user,
-            superuser=conversation.superuser,
-        )
-        if form.is_valid():
-            new_message = form.save(commit=False)
-            new_message.conversation = conversation
-            new_message.sender = request.user
-            new_message.save()
-            return JsonResponse(
-                {
-                    "success": True,
-                    "message": new_message.message,
-                    "sender": new_message.sender.username,
-                }
-            )
-        else:
-            return JsonResponse({"success": False, "errors": form.errors})
-    else:
-        form = ChatMessageForm(
-            user=request.user, superuser=conversation.superuser
-        )
-    return JsonResponse(
-        {
-            "messages": list(
-                messages.values("message", "sender__username", "sent_at")
-            ),
-            "form": form.as_p(),
-        }
-    )
-
-
-@login_required
-def admin_user_chat_messages(request, conversation_id):
-    """
-    Retrieves and handles chat messages for an admin
-    user in a specific conversation.
-
-    This view is similar to `user_chat_messages`,
-    but intended for the admin user (superuser).
-    The admin can view the messages in a given conversation,
-    send new messages, and see all existing
-    messages in that conversation.
-    Only superusers are authorized to access this view.
-
-    Parameters:
-        - request (HttpRequest): The HTTP request containing
-        the admin user's details and message data.
-        - conversation_id (int): The ID of the conversation
-        for which messages need to be retrieved.
-
-    Returns:
-        JsonResponse: A response containing a list of chat
-        messages in the conversation and the HTML
-                      form for sending a new message.
-                      The messages are returned as a list of dictionaries
-                      containing the message text, sender, and timestamp.
-    """
+def conversations(request):
+    """Superuser sees all conversations with search."""
     if not request.user.is_superuser:
-        return JsonResponse(
-            {"success": False, "error": "Not authorized"}, status=403
+        return redirect("home")
+
+    search_query = request.GET.get("search", "").strip()
+    
+    # Calculate unread messages count
+    unread_messages_count = ChatMessage.objects.filter(
+        receiver=request.user, is_read=False, is_deleted=False
+    ).count()
+
+
+    # Fetch all conversations
+    conversations = Conversation.objects.all()
+
+    # Search filter
+    if search_query:
+        conversations = conversations.filter(
+            Q(user__username__icontains=search_query)
         )
-    conversation = get_object_or_404(
-        ChatConversation, id=conversation_id, superuser=request.user
-    )
-    messages = ChatMessage.objects.filter(conversation=conversation).order_by(
-        "sent_at"
+
+    # Get last message for each conversation
+    for conversation in conversations:
+        conversation.last_message = conversation.messages.order_by('-sent_at').first()
+
+   
+     # Sort conversations by latest message
+    conversations = sorted(
+        conversations,
+        key=lambda x: x.last_message.sent_at if x.last_message else x.created_at,
+        reverse=True
+    )    
+    # Handling conversation creation for the search result
+    if search_query:
+        user = request.user
+        searched_user = Conversation.objects.filter(user__username__icontains=search_query).first()
+
+        if searched_user:
+            # If a conversation exists with the user, redirect to that conversation
+            conversation = Conversation.objects.filter(user=searched_user, created_by=user).first()
+            if not conversation:
+                # If no conversation exists, create one
+                conversation = Conversation.objects.create(user=searched_user, created_by=user)
+            return redirect('communications:chat_with_user', user_id=searched_user.id)
+
+    return render(request, "communications/conversations.html", {
+        "conversations": conversations,
+        "unread_messages_count": unread_messages_count,
+        "search_query": search_query,
+    })
+
+@login_required
+def chat_with_user(request, user_id):
+    """Superusers can chat with users."""
+    if not request.user.is_superuser:
+        return redirect("home")
+
+  
+
+    # Get the selected user
+    selected_user = get_object_or_404(User, id=user_id)
+
+    # Get or create the conversation between the superuser and the selected user
+    active_conversation, created = Conversation.objects.get_or_create(
+        superuser=request.user, user=selected_user
     )
 
-    if request.method == "POST":
-        form = ChatMessageForm(
-            request.POST,
-            user=request.user,
-            superuser=conversation.superuser,
+    # Get all messages for this conversation
+    chat_messages = active_conversation.messages.all().order_by("sent_at")
+
+    # Mark messages as read if they're unread
+    active_conversation.messages.filter(is_read=False).update(is_read=True)
+    unread_messages_count = ChatMessage.objects.filter(
+            receiver=request.user, is_read=False, is_deleted=False
+        ).count()
+    return render(request, "communications/chat_with_user.html", {
+        "selected_user": selected_user,
+        "chat_messages": chat_messages,
+        "active_conversation": active_conversation,
+        "unread_messages_count": unread_messages_count,
+    })
+
+@login_required
+@require_POST
+def send_message_to_user(request, conversation_id):
+    """Superuser sends message to a selected user."""
+    if not request.user.is_superuser:
+        return redirect("communications:chat_with_admin")
+
+    conversation = get_object_or_404(Conversation, id=conversation_id)
+    form = ChatMessageForm(request.POST)
+
+    if form.is_valid():
+        message = ChatMessage.objects.create(
+            conversation=conversation,
+            sender=request.user,  # Superuser is the sender
+            receiver=conversation.user,  # Selected user is the receiver
+            content=form.cleaned_data["content"]
         )
-        if form.is_valid():
-            new_message = form.save(commit=False)
-            new_message.conversation = conversation
-            new_message.sender = request.user
-            new_message.save()
-            return JsonResponse(
-                {
-                    "success": True,
-                    "message": new_message.message,
-                    "sender": new_message.sender.username,
-                }
-            )
-        else:
-            return JsonResponse({"success": False, "errors": form.errors})
-    else:
-        form = ChatMessageForm(
-            user=request.user, superuser=conversation.superuser
-        )
-    return JsonResponse(
-        {
-            "messages": list(
-                messages.values("message", "sender__username", "sent_at")
-            ),
-            "form": form.as_p(),
+        # Return the new message as a JSON response
+        response_data = {
+            "message": message.content,
+            "sender": message.sender.username,
+            "sent_at": message.sent_at.strftime("%b %d, %Y %H:%M"),
         }
+        return JsonResponse(response_data)
+
+    return JsonResponse({"error": "Invalid message form"}, status=400)
+
+### USER CHATS WITH ADMIN ###
+@login_required
+def chat_with_admin(request):
+    """Regular user chats with the superuser (admin)."""
+    if request.user.is_superuser:
+        return redirect("communications:conversations")  # Admin should use chat_with_user
+
+    superuser = User.objects.filter(is_superuser=True).first()
+    if not superuser:
+        return render(request, "communications/chat_messages.html", {"error": "No admin available"})
+
+    conversation, created = Conversation.objects.get_or_create(
+        superuser=superuser,
+        user=request.user
     )
+    # Mark unread messages as read
+    unread_messages = conversation.messages.filter(is_read=False, receiver=request.user)
+    unread_messages.update(is_read=True)
+    chat_messages = conversation.messages.all().order_by("sent_at")
+
+    return render(request, "communications/chat_messages.html", {
+        "conversation": conversation,
+        "chat_messages": chat_messages,
+        "selected_user": superuser,
+    })
+
+@login_required
+@require_POST
+def send_message_to_admin(request, conversation_id):
+    """Regular user sends a message to superuser (admin)."""
+    conversation = get_object_or_404(Conversation, id=conversation_id)
+    form = ChatMessageForm(request.POST)
+
+    if form.is_valid():
+        # Create the new message
+        message = ChatMessage.objects.create(
+            conversation=conversation,
+            sender=request.user,  # Regular user is the sender
+            receiver=conversation.superuser,  # Superuser is the receiver
+            content=form.cleaned_data["content"]
+        )
+
+        # Prepare the response data
+        response_data = {
+            'sender': message.sender.username,
+            'message': message.content,
+            'sent_at': message.sent_at.strftime('%H:%M'),  # Format the time to display in "H:i"
+            'is_read': message.is_read,  # Show the read status
+        }
+
+        return JsonResponse(response_data)
+
+    # If form is not valid, return an error response
+    return JsonResponse({'error': 'Message not sent.'}, status=400)
 
 
 def contact_view(request):
@@ -329,3 +288,15 @@ def faq_view(request):
     ]
 
     return render(request, "communications/questions.html", {"faqs": faqs})
+
+
+def search_users(request):
+    """Fetch users based on search query for admin."""
+    query = request.GET.get("q", "").strip()
+    if not query:
+        return JsonResponse([], safe=False)
+
+    users = User.objects.filter(Q(username__icontains=query))[:10]
+    data = [{"id": user.id, "username": user.username} for user in users]
+
+    return JsonResponse(data, safe=False)

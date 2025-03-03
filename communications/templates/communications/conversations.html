@@ -1,0 +1,98 @@
+{% extends "base.html" %} {% block content %} {% load static %}
+
+<div class="container my-4 vh-100 mt-5">
+  <div class="row">
+   
+ 
+    
+     {% if user.is_superuser %}
+     <div class="dark-rgba-background animate__animated animate__fadeIn animate__slower vw-100  ">
+       <div class="list-group mb-3 ">
+         <h4 class="mb-3">Conversations</h4>
+ 
+         <!-- Search Form -->
+         <form class="mb-3  ">
+           <div class="input-group">
+             <span class="input-group-text bg-dark">
+               <i class="text-white fas fa-search"></i>
+             </span>
+             <input
+               type="text"
+               id="user-search"
+               class="form-control"
+               placeholder="Search users..."
+             />
+           </div>
+         </form>
+ 
+         <div id="search-results" class="list-group shadow-sm"></div>
+ 
+         <!-- Loop through conversations and add active class to the selected one -->
+         {% for item in conversations %}
+          <a href="{% url 'communications:chat_with_user' item.user.id %}" 
+            class="list-group-item-action 
+            {% if item.id == active_conversation.id %} active {% endif %}
+            {% if item.last_message and not item.last_message.is_read and item.last_message.receiver == request.user %} bg-info {% endif %}">
+              <div class="dark-rgba-background border-bottom p-2">
+                  <strong class="text-primary">{{ item.user.username }}</strong><br />
+                  <small class="text-white font-weight-bold font-italic">
+                      {% if item.last_message %} 
+                          {{ item.last_message.content }} <br />
+                          <small class="text-muted">{{ item.last_message.sent_at|date:"M d, Y H:i" }}</small>
+                      {% else %} 
+                          No messages yet 
+                      {% endif %}
+        </small>
+    </div>
+</a>
+{% endfor %}
+       </div>
+     </div>
+     {% endif %}
+ 
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("user-search");
+    const searchResults = document.getElementById("search-results");
+
+    searchInput.addEventListener("input", function () {
+      const query = searchInput.value.trim();
+
+      if (query.length < 1) {
+        searchResults.innerHTML = "";
+        return;
+      }
+
+      fetch(`/communications/search_users/?q=${query}`)
+        .then((response) => response.json())
+        .then((data) => {
+          searchResults.innerHTML = "";
+
+          if (data.length === 0) {
+            console.log("No users found");
+          }
+
+          data.forEach((user) => {
+            const resultItem = document.createElement("a");
+            resultItem.classList.add(
+              "list-group-item",
+              "list-group-item-action"
+            );
+            resultItem.href = `/communications/chat/${user.id}/`;
+            resultItem.innerHTML = `<strong>${user.username}</strong>`;
+            searchResults.appendChild(resultItem);
+          });
+        })
+        .catch((error) =>
+          console.error("Error fetching search results:", error)
+        );
+    });
+  });
+
+
+</script>
+
+{% endblock %}

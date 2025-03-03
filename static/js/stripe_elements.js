@@ -12,20 +12,22 @@ var clientSecret = $('#id_client_secret').text().slice(1, -1);
 var stripe = Stripe(stripePublicKey);
 var elements = stripe.elements();
 
-var style = {
-    base: {
-        color: '#fff',
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-        fontSmoothing: 'antialiased',
-        fontSize: '16px',
-        '::placeholder': {
-            color: '#aab7c4'
-        }
+const style = {
+  base: {
+    color: "#000", // Text color
+    fontSize: "16px",
+    fontFamily: "Arial, sans-serif",
+    "::placeholder": {
+      color: "#aaa" // Placeholder color
     },
-    invalid: {
-        color: '#dc3545',
-        iconColor: '#dc3545'
-    }
+    backgroundColor: "white", // Background color
+    border: "1px solid #ccc", // Custom border (doesn't always work)
+    padding: "10px", // Padding inside input
+  },
+  invalid: {
+    color: "#ff0000", // Red text for invalid inputs
+    iconColor: "#ff0000"
+  }
 };
 
 var card = elements.create('card', {
@@ -84,7 +86,6 @@ $(document).ready(function() {
 var form = document.getElementById('payment-form');
 
 
-
 form.addEventListener('submit', function (ev) {
     ev.preventDefault();
 
@@ -109,88 +110,109 @@ form.addEventListener('submit', function (ev) {
 
     // Post data to cache checkout info
     $.post(url, postData).done(function () {
-        // Confirm card payment with Stripe
-        stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-                card: card,
-                billing_details: {
+        // Retrieve the PaymentIntent before confirming payment
+        stripe.retrievePaymentIntent(clientSecret).then(function (result) {
+            if (result.error) {
+                console.error('Error retrieving payment intent:', result.error.message);
+                alert(`Error retrieving payment intent: ${result.error.message}`);
+                $('#card-errors').html(`<span class="checkout-icon" role="alert"><i class="fas fa-times"></i></span><span>${result.error.message}</span>`);
+                card.update({'disabled': false});
+                $('#submit-button').attr('disabled', false);
+                closeModal();
+                return;
+            }
+
+            if (result.paymentIntent.status === 'succeeded') {
+                // If payment is already successful, skip confirmation and submit the form
+                console.log('PaymentIntent has already been confirmed and succeeded.');
+                form.submit();
+                clearCart();
+                closeModal();
+                showModal("You're almost there! 🌱 Thank you for choosing us for your gardening journey. In just a moment, you’ll be nurturing your seeds and watching them blossom into vibrant plants. Prepare for the joy of cultivating life in your garden!");
+                return; // Skip the rest of the process if the payment is already successful
+            }
+
+            // If PaymentIntent has not succeeded, continue with the payment confirmation process
+            stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: card,
+                    billing_details: {
+                        name: $.trim(form.full_name.value),
+                        phone: $.trim(form.phone_number.value),
+                        email: $.trim(form.email.value),
+                        address: {
+                            line1: $.trim(form.street_address1.value),
+                            line2: $.trim(form.street_address2.value),
+                            city: $.trim(form.town_or_city.value),
+                            country: $.trim(form.country.value),
+                            state: $.trim(form.county.value),
+                        }
+                    }
+                },
+                shipping: {
                     name: $.trim(form.full_name.value),
                     phone: $.trim(form.phone_number.value),
-                    email: $.trim(form.email.value),
                     address: {
                         line1: $.trim(form.street_address1.value),
                         line2: $.trim(form.street_address2.value),
                         city: $.trim(form.town_or_city.value),
                         country: $.trim(form.country.value),
+                        postal_code: $.trim(form.postcode.value),
                         state: $.trim(form.county.value),
                     }
                 }
-            },
-            // Shipping details should be sent as part of the confirmCardPayment call, 
-            // but outside the payment_method object
-            shipping: {
-                name: $.trim(form.full_name.value),
-                phone: $.trim(form.phone_number.value),
-                address: {
-                    line1: $.trim(form.street_address1.value),
-                    line2: $.trim(form.street_address2.value),
-                    city: $.trim(form.town_or_city.value),
-                    country: $.trim(form.country.value),
-                    postal_code: $.trim(form.postcode.value),
-                    state: $.trim(form.county.value),
-                }
-            }
-        }).then(function (result) {
-            if (result.error) {
-                // Handle error in payment confirmation
-                console.error('Payment confirmation error:', result.error.message);
-                alert(`Payment error: ${result.error.message}`);
-                $('#card-errors').html(`<span class="checkout-icon" role="alert"><i class="fas fa-times"></i></span><span>${result.error.message}</span>`);
-                card.update({
-                    'disabled': false
-                });
-                $('#submit-button').attr('disabled', false);
-                closeModal();
-            } else if (result.paymentIntent.status === 'succeeded') {
-             
-                form.submit();
-                clearCart();
-                closeModal();
-                showModal("You're almost there! 🌱 Thank you for choosing us for your gardening journey. In just a moment, you’ll be nurturing your seeds and watching them blossom into vibrant plants. Prepare for the joy of cultivating life in your garden!");
-
-            } else if (result.paymentIntent.status === 'requires_action') {
-                // Handle 3D Secure authentication
-                stripe.handleCardAction(result.paymentIntent.client_secret).then(function (result) {
-                    if (result.error) {
-                        console.error('3D Secure authentication failed:', result.error.message);
-                        alert(`3D Secure authentication error: ${result.error.message}`); 
-                        closeModal();
-                    } else if (result.paymentIntent.status === 'succeeded') {
-                        clearCart(); 
-                       
-                        form.submit();
-                        closeModal();
-                    }
-                }).catch(function (error) {
-                    console.error('Error during 3D Secure authentication:', error);
-                    alert(`Error during 3D Secure authentication: ${error.message}`); 
+            }).then(function (result) {
+                if (result.error) {
+                    // Handle error in payment confirmation
+                    console.error('Payment confirmation error:', result.error.message);
+                    alert(`Payment error: ${result.error.message}`);
+                    $('#card-errors').html(`<span class="checkout-icon" role="alert"><i class="fas fa-times"></i></span><span>${result.error.message}</span>`);
+                    card.update({'disabled': false});
+                    $('#submit-button').attr('disabled', false);
                     closeModal();
-                });
-            } else {
-                console.warn('Unhandled payment status:', result.paymentIntent.status);
-                alert(`Unhandled payment status: ${result.paymentIntent.status}`); // Alert the user
-                closeModal();
-            }
+                } else if (result.paymentIntent.status === 'succeeded') {
+                    // Successful payment
+                    form.submit();
+                    clearCart();
+                    closeModal();
+                    showModal("You're almost there! 🌱 Thank you for choosing us for your gardening journey. In just a moment, you’ll be nurturing your seeds and watching them blossom into vibrant plants. Prepare for the joy of cultivating life in your garden!");
+                } else if (result.paymentIntent.status === 'requires_action') {
+                    // Handle 3D Secure authentication
+                    stripe.handleCardAction(result.paymentIntent.client_secret).then(function (result) {
+                        if (result.error) {
+                            console.error('3D Secure authentication failed:', result.error.message);
+                            alert(`3D Secure authentication error: ${result.error.message}`);
+                            closeModal();
+                        } else if (result.paymentIntent.status === 'succeeded') {
+                            clearCart();
+                            form.submit();
+                            closeModal();
+                        }
+                    }).catch(function (error) {
+                        console.error('Error during 3D Secure authentication:', error);
+                        alert(`Error during 3D Secure authentication: ${error.message}`);
+                        closeModal();
+                    });
+                } else {
+                    console.warn('Unhandled payment status:', result.paymentIntent.status);
+                    alert(`Unhandled payment status: ${result.paymentIntent.status}`);
+                    closeModal();
+                }
+            }).catch(function (error) {
+                console.error('Unexpected error:', error);
+                alert(`Unexpected error: ${error.message}`);
+            });
         }).catch(function (error) {
-            console.error('Unexpected error:', error);
-            alert(`Unexpected error: ${error.message}`); // Alert the user
+            console.error('Error retrieving payment intent:', error);
+            alert(`Error retrieving payment intent: ${error.message}`);
         });
     }).fail(function () {
         console.error('Failed to cache checkout data.');
-        alert('Failed to cache checkout data. Please try again.'); // Alert the user
+        alert('Failed to cache checkout data. Please try again.');
         location.reload();
     });
 });
+
 
 
 

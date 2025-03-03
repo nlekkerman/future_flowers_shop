@@ -2,27 +2,36 @@
 {% load static %}
 
 {% block content %}
-<div class="navigation-container">
-    {% include 'navigation.html' %}
+<div class="container mt-5 mb-5 animate__animated animate__fadeIn animate__slower">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <a href="{% url 'custom_accounts:profile' %}" class="btn bg-info text-white">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
     </div>
-<div class="order-details-container container mt-5">
-    <a href="{% url 'profile' %}" class="btn mt-10">Back to Orders</a>
-    
-    <h2 class="order-number">Order Number <strong class="order-number-strong ">{{ order.order_number }}</strong></h2>
-    <p><strong>Date:</strong> {{ order.date|date:"F j, Y" }}</p>
-    <p><strong>Total:</strong> ${{ order.grand_total }}</p>
-    <p><strong>Delivery Cost:</strong> ${{ order.delivery_cost }}</p>
-    
-    <h3>Order Items</h3>
-    <div class="row">
+
+    <!-- Order Summary -->
+    <div class="card shadow-lg border-0 p-4 dark-rgba-background">
+        <div class="card-body">
+            <h2 class="text-center text-uppercase mb-4">Order Details</h2>
+            <p><strong>Order Number:</strong> <span class="badge bg-dark text-white fs-5">{{ order.order_number }}</span></p>
+            <p><strong>Date:</strong> {{ order.date|date:"F j, Y" }}</p>
+            <p><strong>Total:</strong> <span class="fw-bold text-success">${{ order.grand_total }}</span></p>
+            <p><strong>Delivery Cost:</strong> <span class="text-muted">${{ order.delivery_cost }}</span></p>
+        </div>
+    </div>
+
+    <!-- Order Items Section -->
+    <h3 class="mt-5 text-center dark-rgba-background">Order Items</h3>
+    <div class="row mt-4">
         {% for item in order.lineitems.all %}
-        <div class="col-md-4 mb-4"> <!-- Adjust the number for desired column width -->
-            <div>
-                <img src="{{ item.seed.image.url }}" alt="{{ item.seed.name }}" class="card-img-top order-item-image">
-                <div class="card-body">
+        <div class="col-md-4 dark-rgba-background mr-2 p-0">
+            <div class="shadow-sm border-0" >
+                <img src="{{ item.seed.image.url }}" alt="{{ item.seed.name }}" class="card-img-top img-fluid rounded-top" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
                     <h5 class="card-title">{{ item.seed.name }}</h5>
                     <p class="card-text"><strong>Quantity:</strong> {{ item.quantity }}</p>
-                    <p class="card-text"><strong>Price:</strong> ${{ item.lineitem_total }}</p>
+                    <p class="card-text"><strong>Price:</strong> <span class="fw-bold text-primary">${{ item.lineitem_total }}</span></p>
                 </div>
             </div>
         </div>

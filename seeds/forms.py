@@ -52,11 +52,13 @@ class SeedForm(forms.ModelForm):
             'name', 'scientific_name', 'description', 'planting_months_from',
             'planting_months_to', 'flowering_months_from', 'flowering_months_to',
             'category', 'height_from', 'height_to', 'sun_preference', 'price',
-            'discount', 'is_in_stock', 'image'
+            'discount', 'is_in_stock', 'image','in_stock_number'
         ]
         
         # Custom widgets to add Bootstrap classes
         widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'scientific_name': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
             'planting_months_from': forms.NumberInput(attrs={'min': 1, 'max': 12, 'class': 'form-control'}),
             'planting_months_to': forms.NumberInput(attrs={'min': 1, 'max': 12, 'class': 'form-control'}),
@@ -67,6 +69,7 @@ class SeedForm(forms.ModelForm):
             'price': forms.NumberInput(attrs={'step': 0.01, 'class': 'form-control'}),
             'discount': forms.NumberInput(attrs={'step': 0.01, 'class': 'form-control'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'in_stock_number': forms.NumberInput(attrs={'min': 0, 'class': 'form-control'}),
         }
 
         # Labels for better form readability
@@ -86,6 +89,7 @@ class SeedForm(forms.ModelForm):
             'discount': 'Discount (%)',
             'is_in_stock': 'In Stock?',
             'image': 'Seed Image',
+            'in_stock_number': 'Stock Quantity',
         }
 
         # Error messages for form validation
@@ -97,7 +101,7 @@ class SeedForm(forms.ModelForm):
                 'required': 'Please enter a valid price.',
                 'invalid': 'Please enter a valid number.',
             },
-            # Add other field-specific error messages as needed
+            'in_stock_number': {'invalid': 'Please enter a valid stock number.'},
         }
 
 class SearchForm(forms.Form):

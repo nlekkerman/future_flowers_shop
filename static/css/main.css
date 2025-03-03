@@ -1,0 +1,578 @@
+html, body {
+  height: 100%; 
+  margin: 0; /* Removes any default margin applied by the browser */
+}
+
+body {
+  padding-top: 70px;
+  background-color: transparent;
+  background-image: url("/static/images/leaves-background-image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100%;
+}
+
+.about-section{
+  background-color: transparent;
+  background-image: url("/static/images/buzz-image.png");
+  background-size: cover;
+  width: 100vw;
+  color: white !important;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100%;
+}
+
+
+.vision-section{
+  background-color: transparent;
+  background-image: url("/static/images/buzz-image.png");
+  background-size: cover;
+  color: white;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.values-section{
+  background-color: transparent;
+  background-image: url("/static/images/buzz-image.png");
+  color: white !important;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.community-section{
+  background-color: transparent;
+  background-image: url("/static/images/buzz-image.png");
+  background-size: cover;
+  color: white;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.testimonials-section{
+  background-color: transparent;
+  background-image: url("/static/images/buzz-image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.testimonials-overlay, .vision-overlay, .community-overlay, .values-overlay, .community-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white !important;
+}
+.community-title{
+  color: greenyellow !important;
+}
+
+.search-filter-container {
+ 
+  background-size: contain;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 1rem;
+  background-position: center;
+  border-radius: 10px;
+  height: 10rem;  /* Optional: Set height to cover the whole viewport */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+
+nav{
+  background-color: rgba(202, 226, 163, 0.8) !important;
+  padding: 0.7em 0em;
+  border-bottom: 4px solid rgba(107, 110, 102, 0.8);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+}
+.navbar-toggler {
+  background-color: rgba(110, 143, 58, 0.8) !important; /* White background for the button */
+  border: none !important; 
+  padding: 15px 10px;
+  border-radius: 4px;
+ 
+}
+
+.nav-item-text{
+
+  color: rgb(0, 12, 5) !important;
+  font-weight: 700;
+  text-shadow: 0px 3px 4px rgba(2, 0, 0, 0.6);
+  position: relative;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.nav-item-text::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background-color: #004911;
+  left: 0;
+  bottom: 0;
+  transition: width 0.3s ease;
+}
+
+.nav-item-text:hover::after {
+  width: 100%;
+}
+
+.nav-item-text:hover {
+  color: #344436; 
+}
+button.navbar-toggler{
+  margin-right: 10px !important;
+}
+.navbar-brand{
+  margin-left: 0.4rem;
+}
+.navbar-toggler .custom-toggler-icon {
+  width: 25px;
+  height: 3px;
+  background-color: rgb(255, 255, 255);
+  display: block;
+  position: relative;
+}
+.navbar-toggler .custom-toggler-icon::before,
+  .navbar-toggler .custom-toggler-icon::after {
+    content: "";
+    width: 25px;
+    height: 3px;
+    background-color: rgb(255, 255, 255);
+    position: absolute;
+    left: 0;
+    transition: 0.3s;
+  }
+
+  .navbar-toggler .custom-toggler-icon::before {
+    top: -8px;
+  }
+
+  .navbar-toggler .custom-toggler-icon::after {
+    top: 8px;
+  }
+
+  footer {
+    background-color: rgba(202, 226, 163, 0.8) !important;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    padding: 10px 0; 
+    text-align: center;
+    z-index: 9999; 
+  }
+.checkout-item-card {
+  height: 100%; 
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-weight: 700;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+}
+
+.checkout-item-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.card-img-wrapper {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+
+  .seed-item-card{
+    height: 100%; 
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.8);
+    color:white;
+    font-weight: 700;
+  }
+  .seed-item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);}
+  
+    .card-img-top {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .checkout-item-image {
+    width: 100%;
+    object-fit: cover;
+  }
+  .checkout-container{
+    pad: 10px;
+  }
+
+  .checkout-card-body {
+    flex: 1; 
+    padding: 10px;
+    word-wrap: break-word;
+    overflow: hidden;
+  }
+
+  .summary-card{
+    background-color: rgba(0, 140, 49, 0.8) !important;
+    color: white !important;
+    width: 100%;
+    margin: 0 auto;
+    border-bottom: 0.3rem solid white;
+  }
+  
+  .card-body {
+   
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-body p {
+    flex-grow: 1;
+  }
+  
+  .btn {
+    margin-top: auto;
+  }
+.reviews-container{
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white !important;
+}
+
+.order-summary {
+  margin-bottom: 2px; /* Reduced bottom margin */
+}
+.card-body {
+  padding: 15px; /* Adjust padding */
+}
+.card-title {
+  margin-bottom: 5px;
+}
+
+.cart-checkout{
+  margin: 0 auto;
+  min-width: 100% !important;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.edit-cart-button{
+padding: 0.3rem !important;
+border: none;
+
+background-color: rgba(0, 140, 49, 0.8);
+color: white !important;
+}
+
+.update-cart-form{
+  justify-content: space-evenly !important;
+  align-items: normal !important;
+  background-color: aquamarine !important;
+}
+.cart-count {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  background: rgb(255, 0, 0);
+  color: rgb(255, 255, 255);
+  font-size: 12px;
+  font-weight: bold;
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* INPUT STYLES*/
+
+input.form-control , textarea, .form-control {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  border: 1px solid #ccc;
+  color: white !important;
+  transition: background-color 0.3s ease;
+  border-top-left-radius: 0.7rem;
+  border-bottom-left-radius: 0.7rem;
+}
+.form-control:disabled {
+  background-color: rgba(73, 69, 69, 0.6) !important;
+  border: 1px solid #787878;
+  color: white !important;
+  transition: background-color 0.3s ease;
+  border-top-left-radius: 0.7rem;
+  border-bottom-left-radius: 0.7rem;
+}
+/* General styles for all messages */
+.messages .alert {
+  border: 2px solid transparent; 
+  color: white !important;
+}
+
+/* Success message (Green) */
+.messages .alert-success {
+  background-color: rgba(40, 167, 69, 0.7) !important;
+  border-left: 2px solid rgba(40, 167, 69, 0.7);
+  color: white !important;
+}
+.alert-success {
+  background-color: rgba(40, 167, 69, 0.7) !important;
+  border-left: 2px solid rgba(40, 167, 69, 0.7);
+  color: white !important;
+}
+
+/* Error message (Red) */
+.messages .alert-danger, 
+.messages .alert-error {
+  background-color: rgba(255, 0, 25, 0.7) !important;
+  border-left: 2px solid rgba(255, 255, 255, 0.7);
+  color: white !important;
+}
+.alert-danger, .alert-error {
+  background-color: rgba(255, 0, 25, 0.7) !important;
+  border-left: 2px solid rgba(255, 255, 255, 0.7);
+  color: white !important;
+}
+/* Warning message (Yellow) */
+.messages .alert-warning {
+  background-color: rgba(255, 193, 7, 0.7) !important;
+  border-left: 2px solid rgba(255, 193, 7, 0.7);
+  color: white !important;
+}
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.7) !important;
+  border-left: 2px solid rgba(255, 193, 7, 0.7);
+  color: white !important;
+}
+/* Info message (Blue) */
+.messages .alert-info,.alert-info {
+  background-color: rgba(26, 23, 184, 0.7) !important; /* Blue with alpha */
+  color: white !important;
+  border-left: 2px solid rgba(216, 216, 216, 0.7); /* Blue border */
+}
+
+select[name="rating"] {
+  /* Add your styles here */
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 2px solid #ccc;
+  color: white;
+  padding: 8px;
+  font-size: 16px;
+}
+
+input.form-control:focus, .form-control:focus {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-color:  rgba(1, 97, 34, 0.8)
+
+}
+input.form-control::placeholder,.form-control::placeholder {
+  color: white !important; /* Placeholder text color */
+}
+
+
+.search-filter-container select {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+}
+
+.search-filter-container option {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+}
+
+
+.search-button {
+  background: linear-gradient(45deg, rgba(202, 226, 163, 0.8), rgba(100, 150, 80, 0.8));
+  border: none;
+  border-top-right-radius: 0.7rem;
+  border-bottom-right-radius: 0.7rem;
+  color: black;
+  font-weight: bold;
+  transition: color 0.3s ease, transform 0.3s ease;
+  background-position: 0% 50%; 
+  position: relative;
+  overflow: hidden;
+}
+
+.search-button:hover {
+  color: white;
+  background-position: 100% 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Optional: Adding a subtle underline on hover */
+.search-button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: width 0.3s ease; /* Animate underline */
+}
+
+.search-button:hover::after {
+  width: 100%; /* Fill the underline on hover */
+}
+
+
+select.form-control {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: 1px solid #ccc;
+}
+select.form-control:focus {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-color: rgba(25, 94, 1, 0.6);
+}
+
+/* Style for the dropdown options when the dropdown is opened */
+select.form-control option {
+  background-color: rgba(0, 0, 0, 0.6) !important;  
+  color: black !important;  /* Text color for options */
+}
+.form-control:focus{
+  background-color: rgba(100, 150, 80, 0.8);
+}
+
+.dark-rgba-background{
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  color: white !important;
+}
+.checkout-item{
+  margin: 5px;
+}
+
+/*CONTACT PAGE STYLES*/
+
+/* Style for Contact Section */
+.contact-section {
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+  color: white;
+  padding: 0;
+}
+
+
+
+/* Contact Info Styling */
+.contact-info .contact-item {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  
+}
+.contact-content {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 0.6rem;
+ 
+}
+.contact-link {
+  color: white;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.contact-link:hover {
+  color: #00aced;
+}
+
+/* Contact Title Styling */
+.contact-title {
+  font-weight: 700;
+  color: white;
+}
+
+/* Social Media Links */
+.social-media-links {
+  margin-top: 2rem;
+}
+
+.social-media-title {
+  font-weight: 600;
+  color: white;
+}
+
+.social-link {
+  margin-right: 20px;
+}
+
+.social-icon {
+  transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+  transform: scale(1.1);  /* Slight zoom effect on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .contact-title {
+    font-size: 2rem; 
+  }
+  
+  .contact-info .contact-item {
+    font-size: 1rem;
+  }
+
+  .social-icon {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* Chat widow scrol bar styles */
+/* Initially hide the scrollbar */
+#chat-window .card-body {
+  overflow-y: scroll; /* Allow scrolling */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: transparent transparent; /* For Firefox */
+}
+
+/* Show scrollbar when hovered */
+#chat-window .card-body:hover {
+  scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0); /* Customize scrollbar color */
+}
+
+/* For Webkit browsers (Chrome, Safari, Edge) */
+#chat-window .card-body::-webkit-scrollbar {
+  width: 0px; /* Hide scrollbar */
+}
+
+#chat-window .card-body:hover::-webkit-scrollbar {
+  width: 8px; /* Show scrollbar on hover */
+}
+
+#chat-window .card-body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5); /* Customize thumb color */
+  border-radius: 4px;
+}
+.send-button, .chat-header{
+  background: linear-gradient(45deg, rgba(202, 226, 163, 0.8), rgba(100, 150, 80, 0.8));
+  color: white;
+}
+

@@ -1,66 +1,93 @@
 {% load static %}
+<nav class="navbar navbar-expand-lg fixed-top vw-100 animate__animated animate__slideInDown ">
+    <div class="d-flex container-fluid vw-100 py-1 ">
+        {% if user.is_authenticated %}
+        <ul class="navbar-nav d-flex align-items-center mr-3 ">
+            <li class="nav-item d-flex flex-row align-items-center mb-1 mb-lg-0 nav-item-text">
+                <a class="nav-link text-capitalize text-dark " href="{% url 'custom_accounts:profile' %}">
+                    {{ user.username }}</a>
+                <img src="{% if user.profile.get_profile_image_url %}{{ user.profile.get_profile_image_url }}{% else %}{% static 'images/user-icon.png' %}{% endif %}"
+                    data-profile-url="{{ user.profile.get_profile_image_url }}" alt="Profile Image"
+                    class="user-icon" style="width: 40px; height: 40px;" id="profile-image">
+                
+            </li>
+        </ul>
+        {% endif %}
+        
+        <!-- Future Flower Shop logo and navigation -->
+        <a class="navbar-brand nav-item-text" href="/">Future Flower Shop</a>
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="custom-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav d-flex align-items-center ml-auto justify-content-end">
+                <li class="nav-item position-relative mb-1 mb-lg-0">
+                    <a class="nav-link nav-item-text" href="{% url 'home:home' %}">Home</a>
+                </li>
+                <li class="nav-item position-relative mb-1 mb-lg-0">
+                    <a class="nav-link nav-item-text" href="{% url 'communications:about' %}">About Us</a>
+                </li>
+                <li class="nav-item position-relative mb-1 mb-lg-0">
+                    <a class="nav-link nav-item-text" href="{% url 'communications:contact' %}">Contact</a>
+                </li>
 
-<!-- Right-Aligned Navigation Column Container -->
-<div class="right-nav-column">
-  <a href="{% url 'home:home' %}">
-    <img
-      src="{% static '/images/home-icon.png' %}"
-      alt="Home Icon"
-      class="icon-img"
-    />
-    <p class="icon-label">Home</p>
-  </a>
+                {% if user.is_authenticated %}
+                    <li class="nav-item position-relative mb-1 mb-lg-0 ">
+                        <a class="d-flex nav-link px-3 rounded-pill {% if unread_messages_count > 0 and request.path != '/communications/conversations/' %}nav-item-text{% else %}text-dark{% endif %}"
+                            href="{% if user.is_superuser %}{% url 'communications:conversations' %}{% else %}{% url 'communications:chat_with_admin' %}{% endif %}">
+                            <i class="fas fa-comments nav-item-text"></i><br>
+                            {% if unread_messages_count > 0 %}<span id="unread-messages-count" class="badge badge-info rounded-circle ml-1 d-flex justify-content-center align-items-center p-1">
+                                {{ unread_messages_count }}</span>{% endif %}
+                        </a>
+                    </li>
+                {% if user.is_staff %}
+                <li class="nav-item position-relative mb-1 mb-lg-0">
+                    <a class="nav-link nav-item-text" href="{% url 'custom_accounts:admin_dashboard' %}">Admin</a>
+                </li>
+                {% endif %}
+                <!-- Logout Button -->
+                <li class="nav-item position-relative mb-1 mb-lg-0">
+                    <a class="nav-link nav-item-text" href="javascript:void(0);" data-toggle="modal"
+                        data-target="#logoutModal">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item position-relative mb-1 mb-lg-0">
+                    <a class="nav-link nav-item-text" href="{% url 'custom_accounts:account_login' %}">Login</a>
+                </li>
+                {% endif %}
+                
+                <li class="nav-item position-relative mb-1 mb-lg-0 mr-1">
+                    <a class="nav-link nav-item-text rounded-pill" href="{% url 'cart:cart' %}"
+                        style="position: relative; display: inline-block;">
+                        <img src="{% static 'images/cart-icon.webp' %}"  style="width: 40px; height: 40px;" alt="Cart" />
+                        <span class="cart-count badge badge-pill badge-light">{{ total_unique_items }}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-  <a id="shop-icon">
-    <img
-      src="{% static '/images/light-purple-flower-icon.png' %}"
-      alt="Shopping Icon"
-      class="icon-img"
-    />
-    <p class="icon-label">Shop</p>
-  </a>
-
-  <a id="reviews-icon" href="#">
-    <img
-      src="{% static '/images/dark-purple-flower.png' %}"
-      alt="Reviews Icon"
-      class="icon-img"
-    />
-    <p class="icon-label">Reviews</p>
-  </a>
-
-  <a id="q-and-a-icon" href="{% url 'communications:questions' %}">
-    <img
-      src="{% static '/images/flower-156608_640.png' %}"
-      alt="Q&A Icon"
-      class="icon-img"
-    />
-    <p class="icon-label">Q&A</p>
-  </a>
-
-  <a
-    id="about-icon"
-    href="{% url 'communications:about' %}"
-    data-category="about"
-  >
-    <img
-      src="{% static '/images/purple-flower-icon.png' %}"
-      alt="About Icon"
-      class="icon-img"
-    />
-    <p class="icon-label">About</p>
-  </a>
-
-  <a
-    id="contact-icon"
-    href="{% url 'communications:contact' %}"
-    data-category="contact"
-  >
-    <img
-      src="{% static '/images/bordo-flower-icon.png' %}"
-      alt="Contact Icon"
-      class="icon-img"
-    />
-    <p class="icon-label">Contact</p>
-  </a>
+<!-- Modal for Logout Confirmation -->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Are you sure you want to log out?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                If you log out, you will be signed out of your account.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Stay Logged In</button>
+                <a href="{% url 'custom_accounts:account_logout' %}" class="btn btn-danger">Log Out</a>
+            </div>
+        </div>
+    </div>
 </div>

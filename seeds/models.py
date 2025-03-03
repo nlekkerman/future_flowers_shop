@@ -66,6 +66,8 @@ class Seed(models.Model):
 
     # Cloudinary image field
     image = CloudinaryField('image', blank=True, null=True, help_text="Upload an image of the seed")
+    
+    in_stock_number = models.PositiveIntegerField(default=0)
 
     def calculate_discounted_price(self):
         """Calculate the price after discount."""
@@ -81,3 +83,4 @@ class Seed(models.Model):
 
     def __str__(self):
         return self.name
+    

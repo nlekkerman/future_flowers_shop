@@ -4,39 +4,50 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-<div class="navigation-container">
-    {% include 'navigation.html' %}
-    </div>
-<div class="admin-dashboard-container">
+
+<div class="admin-dashboard-container p-1">
     <div class="admin-dashboard-header">
-        <h2>Admin Dashboard</h2>
+        <h2 class="text-white m-2 p-2 text-bold">Admin Dashboard</h2>
     </div>
-  
+    {% if messages %}
+    <ul class="modal-box-content list-unstyled d-flex justify-content-between">
+        {% for message in messages %}
+            <li class="d-flex justify-content-between alert {% if message.tags %}alert-{{ message.tags }}{% endif %} vw-100">
+                {{ message }}
+                <button class="close-message border-0 bg-transparent text-white" onclick="this.parentElement.style.display='none';">&times;</button>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
     <!-- Pending Reviews Section -->
     <section>
         <div class="admin-dashboard-section-title">
-            <h3>Pending Reviews</h3>
+            <h3 class="text-center  dark-rgba-background">Pending Reviews</h3>
         </div>
         <div class="row">
             {% for review in pending_reviews %}
                 <div class="col-md-4 mb-3">
-                    <div class="review-card">
+                    <div class="review-card dark-rgba-background">
                         <div class="card-body">
-                            <h5 class="card-title">{{ review.user.username }}</h5>
+                            <p class="card-text">
+                                <strong>Review for:</strong> {{ review.seed.name }}
+                            </p>
+                            <h5 class="card-title text-capitalize">{{ review.user.username }}</h5>
                             <p class="card-text font-italic">" {{ review.comment }} "</p>
                             <p class="card-text"><small class="text-muted">Created At: {{ review.created_at }}</small></p>
                             <p class="card-text"><small class="text-muted">Updated At: {{ review.updated_at }}</small></p>
                             <div class="d-flex justify-content-center">
-                                <a href="{% url 'approve_review' review.id %}" class="btn-success btn-sm mr-1">Approve</a>
-                                <a href="{% url 'reject_review' review.id %}" class=" btn-warning btn-sm mr-1">Reject</a>
-                                <a href="{% url 'delete_review' review.id %}" class=" btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
+                                <a href="{% url 'custom_accounts:approve_review' review.id %}" class="btn-success btn-sm mr-1">Approve</a>
+                                <a href="{% url 'custom_accounts:reject_review' review.id %}" class=" btn-warning btn-sm mr-1">Reject</a>
+                                <a href="{% url 'custom_accounts:delete_review' review.id %}" class=" btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
                             </div>
                         </div>
                     </div>
                 </div>
             {% empty %}
                 <div class="col-12">
-                    <div class="alert alert-info" role="alert">No pending reviews.</div>
+                    <div class="alert alert-info m-2" role="alert">No pending reviews.</div>
                 </div>
             {% endfor %}
         </div>
@@ -44,138 +55,105 @@
 
     <!-- Pending Comments Section -->
     <section>
-        <div class="admin-dashboard-section-title">
-            <h3>Pending Comments</h3>
+        <div class="admin-dashboard-section-title ">
+            <h3  class="dark-rgba-background">Pending Comments</h3>
         </div>
         <div class="row">
             {% for comment in pending_comments %}
                 <div class="col-md-4 mb-3">
                     <div class="review-card">
-                        <div class="card-body">
+                        <div class="card-body dark-rgba-background">
+                            <p class="card-text">
+                                <strong >Comment on <span class="text-capitalize">{{ comment.review.user.username }}'s </span>{{ review.seed.name }} review</strong> 
+                            </p>
                             <h5 class="card-title">{{ comment.user.username }}</h5>
                             <p class="card-text font-italic">" {{ comment.text }} "</p>
                             <p class="card-text"><small class="text-muted">Created At: {{ comment.created_at }}</small></p>
                             <p class="card-text"><small class="text-muted">Updated At: {{ comment.updated_at }}</small></p>
                             <div class="d-flex justify-content-center">
-                                <a href="{% url 'approve_comment' comment.id %}" class="btn-success btn-sm mr-1">Approve</a>
-                                <a href="{% url 'reject_comment' comment.id %}" class="btn-warning btn-sm mr-1">Reject</a>
-                                <a href="{% url 'delete_comment' comment.id %}" class="btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
+                                <a href="{% url 'custom_accounts:approve_comment' comment.id %}" class="btn-success btn-sm mr-1">Approve</a>
+                                <a href="{% url 'custom_accounts:reject_comment' comment.id %}" class="btn-warning btn-sm mr-1">Reject</a>
+                                <a href="{% url 'custom_accounts:delete_comment' comment.id %}" class="btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
                             </div>
                         </div>
                     </div>
                 </div>
             {% empty %}
                 <div class="col-12">
-                    <div class="alert alert-info" role="alert">No pending comments.</div>
+                    <div class="alert alert-info m-2" role="alert">No pending comments.</div>
                 </div>
             {% endfor %}
         </div>
     </section>
 
-    <!-- Seed Management Section -->
     <section>
-        <h3 class="admin-dashboard-section-title">Seed Management</h3>
-        <button id="add-seed-btn" class="btn btn-primary mb-3">Add New Seed</button>
-        <ul id="seed-list"></ul>
-    </section>
-    <section class="admin-dashboard-section-newsletter">
-        <h3 class="admin-dashboard-section-title">Send Newsletter</h3>
-        <form method="post" action="{% url 'send_newsletter' %}">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="newsletter-subject">Subject</label>
-                <input type="text" id="newsletter-subject" name="subject" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="newsletter-message">Message</label>
-                <textarea id="newsletter-message" name="message" class="form-control" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Send Newsletter</button>
-        </form>
-    </section>
-<!-- Add Seed Modal -->
-<div id="addSeedModal" class="edit-seed-modal" style="display: none; overflow-y: scroll;">
-    <div class="modal-content-admin seed-modal-content">
-        <span class="close seed-modal-close" onclick="document.getElementById('addSeedModal').style.display='none'">&times;</span>
-        <h3>Add New Seed</h3>
-        <form method="post" action="{% url 'seeds:create_seed' %}" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <label for="seed-name">Seed Name</label>
-                <input type="text" id="seed-name" name="name" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-                <label for="scientific-name">Scientific Name</label>
-                <input type="text" id="scientific-name" name="scientific_name" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="planting-months-from">Planting Months From</label>
-                <input type="number" id="planting-months-from" name="planting_months_from" class="form-control" min="1" max="12">
-            </div>
-
-            <div class="form-group">
-                <label for="planting-months-to">Planting Months To</label>
-                <input type="number" id="planting-months-to" name="planting_months_to" class="form-control" min="1" max="12">
-            </div>
-
-            <div class="form-group">
-                <label for="flowering-months-from">Flowering Months From</label>
-                <input type="number" id="flowering-months-from" name="flowering_months_from" class="form-control" min="1" max="12">
-            </div>
-
-            <div class="form-group">
-                <label for="flowering-months-to">Flowering Months To</label>
-                <input type="number" id="flowering-months-to" name="flowering_months_to" class="form-control" min="1" max="12">
-            </div>
-
-            <div class="form-group">
-                <label for="height-from">Height From (cm)</label>
-                <input type="number" id="height-from" name="height_from" step="0.01" class="form-control">
-            </div>
-
-            <div class="form-group">
-                <label for="height-to">Height To (cm)</label>
-                <input type="number" id="height-to" name="height_to" step="0.01" class="form-control">
-            </div>
-
-            <div class="form-group">
-                <label for="sun-preference">Sun Preference</label>
-                <input type="text" id="sun-preference" name="sun_preference" class="form-control">
-            </div>
-
-            <div class="form-group">
-                <label for="price">Price ($)</label>
-                <input type="number" id="price" name="price" step="0.01" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-                <label for="discount">Discount (%)</label>
-                <input type="number" id="discount" name="discount" step="0.01" class="form-control">
-            </div>
-
-            <div class="form-group">
-                <label for="in-stock">In Stock?</label>
-                <input type="checkbox" id="in-stock" name="is_in_stock" class="form-control">
-            </div>
-
-            <div class="form-group">
-                <label for="seed-image">Seed Image</label>
-                <input type="file" id="seed-image" name="image" class="form-control">
-                <small class="form-text text-muted">Upload an image for the seed.</small>
-            </div>
-
-            <button type="submit" class="btn btn-success">Add Seed</button>
-        </form>
+    <h3 class="admin-dashboard-section-title dark-rgba-background text-center p-2">Seed Management</h3>
+    <div class="d-flex justify-content-end mb-3 mr-2">
+        <a href="{% url 'seeds:create_seed' %}" class="btn btn-primary">
+            🌱 Add New Seed
+        </a>
     </div>
-</div>
+
+    <div class="container">
+        <div class="row">
+            {% for seed in seeds %}
+                <!-- Each Seed Item in Grid -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                    <div class="list-group-item d-flex flex-column justify-content-between align-items-center dark-rgba-background">
+                        <div class="d-flex flex-column align-items-center mb-4">
+                            {% if seed.image %}
+                            <img
+                              src="{{ seed.image.url }}"
+                              class="card-img-top seed-image"
+                              alt="{{ seed.name }}"
+                            />
+                            {% else %}
+                            <img
+                              src="{% static 'images/default-seed.jpg' %}"
+                              class="card-img-top"
+                              alt="Default Seed Image"
+                            />
+                            {% endif %}
+                            <strong>{{ seed.name }}</strong> - {{ seed.scientific_name }}
+                            <p class="mb-0 text-muted">Price: ${{ seed.calculate_discounted_price }}</p>
+                            <p class="mb-0 text-muted">Stock: {{ seed.in_stock_number }}</p>
+                        </div>
+                        <div>
+                            <a href="{% url 'seeds:edit_seed' seed.id %}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'seeds:delete_seed' seed.id %}" class="btn btn-sm btn-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="list-group-item text-muted">No seeds available.</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="admin-dashboard-section-newsletter dark-rgba-background pb-3">
+    <h3 class="admin-dashboard-section-title">Send Newsletter</h3>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6"> <!-- This will make the form half the width on medium screens and larger -->
+                <form method="post" action="{% url 'custom_accounts:send_newsletter' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="newsletter-subject">Subject</label>
+                        <input type="text" id="newsletter-subject" name="subject" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newsletter-message">Message</label>
+                        <textarea id="newsletter-message" name="message" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Newsletter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
 
  <!-- Edit Seed Modal -->
 <div id="editSeedModal" class="edit-seed-modal" style="display: none; overflow-y: scroll;">
@@ -262,16 +240,7 @@
     </div>
 </div>
 
-    {% if messages %}
-        <ul class="modal-box-content">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                    {{ message }}
-                    <button class="close-message" onclick="this.parentElement.style.display='none';">&times;</button>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+  
 </div>
 
 <script>

@@ -23,8 +23,11 @@ def cart_context(request):
     bag_items = []
     total = Decimal('0.00')
     product_count = 0
+    total_discount = Decimal('0.00')
     delivery = Decimal('0.00')
     free_delivery_delta = Decimal('0.00')
+    total_items = 0
+    total_unique_items = 0
 
     # Handle authenticated users
     if request.user.is_authenticated:
@@ -41,17 +44,24 @@ def cart_context(request):
     # Process cart contents if it exists
     if cart:
         cart_items = CartItem.objects.filter(cart=cart, deleted=False) 
+        total_unique_items = cart_items.count()
         for cart_item in cart_items:
             seed = cart_item.seed
             quantity = cart_item.quantity
-            item_total_price = cart_item.get_total_price()  
+            item_total_price = cart_item.get_total_price()
+            
+            original_price = quantity * seed.price
+            item_discount = original_price - item_total_price
+            total_discount += item_discount
+              
             total += item_total_price
-            product_count += quantity
+            total_items += quantity
             bag_items.append({
                 'item_id': seed.id,
                 'quantity': quantity,
                 'seed': seed,
                 'total_price': item_total_price,
+                'discount': item_discount,
             })
 
         # Calculate delivery cost and free delivery threshold
@@ -69,13 +79,20 @@ def cart_context(request):
             'cart': cart,
             'bag_items': bag_items,
             'total': total,
-            'product_count': product_count,
+            'total_items': total_items,
+            'total_unique_items': total_unique_items,
             'delivery': delivery,
             'free_delivery_delta': free_delivery_delta,
             'free_delivery_threshold': Decimal(settings.FREE_DELIVERY_THRESHOLD),
             'grand_total': grand_total,
         }
     else:
-        context = {'cart': cart}
+        context = {'cart': cart,
+                   'total_items': 0,
+                   'total_unique_items': 0,
+                   'total_discount': Decimal('0.00'),
+                    'delivery': Decimal('0.00'),
+                    'grand_total': Decimal('0.00'),
+                    }
 
     return context
