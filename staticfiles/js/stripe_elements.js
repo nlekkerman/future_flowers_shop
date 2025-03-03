@@ -227,6 +227,9 @@ function clearCart() {
 
 function showModal(message) {
     // Modal HTML structure with a dynamic message and animation container using Bootstrap
+    // Remove any existing modal and animation before creating a new one
+    $('#thankYouModal').remove();  // Remove any previously opened modal
+    $('#modalOverlay').remove();   // Remove any previous overlay
     const modalHTML = `
         <div id="thankYouModal" class="modal d-block d-flex justify-content-center" tabindex="-1" role="dialog" aria-labelledby="thankYouModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
