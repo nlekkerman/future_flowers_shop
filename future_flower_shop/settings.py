@@ -24,16 +24,11 @@ if os.path.exists('env.py'):
 
 # Define environment variables using python-decouple
 SECRET_KEY = config('SECRET_KEY')
-DATABASES = {
-    'default': dj_database_url.parse(config('DATABASE_URL')),
-    'ATOMIC_REQUESTS': True,
-}
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Load Stripe keys from environment variables
 STRIPE_CURRENCY = 'usd'
@@ -75,12 +70,12 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap4',
     # Custom apps
-    'home',                            # Custom app for home page
-    'seeds',                           # Custom app for seeds management
-    'cart',                            # Custom app for cart management
-    'custom_accounts',                 # Custom app for account management
+    'home',
+    'seeds',
+    'cart',
+    'custom_accounts',
     'checkout',
-    'reviews',                       # custom app for checkout management
+    'reviews',
     'communications',
    
 ]
@@ -175,8 +170,13 @@ WSGI_APPLICATION = 'future_flower_shop.wsgi.application'
 
 # Database configuration
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    'default': dj_database_url.parse(os.environ.get("DATABASE_URL")),
+   
+
 }
+
+ATOMIC_REQUESTS: True
+
 
 
 # Cloudinary configuration

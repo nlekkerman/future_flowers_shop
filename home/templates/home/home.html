@@ -94,7 +94,7 @@
             {% endif %}
           </p>
           {% if seed.is_in_stock %}
-          <span class="badge bg-success">In Stock</span>
+          <span class="badge bg-success">In Stock: {{ seed.in_stock_number }}</span>
           <form method="POST" action="{% url 'cart:add_to_cart' seed.id %}">
             {% csrf_token %}
             <div class="form-group">
@@ -132,6 +132,43 @@
     <p class="text-center">No seeds available.</p>
     {% endfor %}
   </div>
+ 
+<!-- Pagination Controls -->
+<div class="d-flex justify-content-center mt-4">
+  <ul class="pagination dark-rgba-background p-2">
+    {% if seeds.has_previous %}
+      <li class="page-item">
+        <a class="p-2" href="?page=1" aria-label="First">
+          <span aria-hidden="true">&laquo; First</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="p-2" href="?page={{ seeds.previous_page_number }}" aria-label="Previous">
+          <span aria-hidden="true">&lt; Previous</span>
+        </a>
+      </li>
+    {% endif %}
+
+    <li class="page-item disabled">
+      <span class="p-2">Page {{ seeds.number }} of {{ seeds.paginator.num_pages }}</span>
+    </li>
+
+    {% if seeds.has_next %}
+      <li class="page-item">
+        <a class="p-2" href="?page={{ seeds.next_page_number }}" aria-label="Next">
+          <span aria-hidden="true">Next &gt;</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="p-2" href="?page={{ seeds.paginator.num_pages }}" aria-label="Last">
+          <span aria-hidden="true">Last &raquo;</span>
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+</div>
+
+
 </div>
 
 <!-- Modal for Displaying Messages -->

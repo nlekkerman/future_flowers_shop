@@ -36,7 +36,7 @@
               name="quantity"
               value="{{ item.quantity }}"
               min="1"
-              max="{{ item.seed.in_stock_number }}"
+              max="{{ item.total_available_stock}}"
               class="form-control w-50"
             />
             <div class="d-flex justify-content-center"> <button type="submit" class="btn btn-sm btn-primary ml-2">
@@ -104,6 +104,43 @@
     </div>
     {% endfor %}
   </div>
+
+
+<!-- Pagination Controls -->
+<div class="d-flex justify-content-center mt-4 p-2">
+  <ul class="pagination dark-rgba-background p-2">
+    {% if cart_items.has_previous %}
+      <li class="page-item">
+        <a class="p-2" href="?page=1" aria-label="First">
+          <span aria-hidden="true">&laquo; First</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="p-2" href="?page={{ cart_items.previous_page_number }}" aria-label="Previous">
+          <span aria-hidden="true">&lt; Previous</span>
+        </a>
+      </li>
+    {% endif %}
+
+    <li class="page-item disabled">
+      <span class="p-2">Page {{ cart_items.number }} of {{ cart_items.paginator.num_pages }}</span>
+    </li>
+
+    {% if cart_items.has_next %}
+      <li class="page-item">
+        <a class="p-2" href="?page={{ cart_items.next_page_number }}" aria-label="Next">
+          <span aria-hidden="true">Next &gt;</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="p-2" href="?page={{ cart_items.paginator.num_pages }}" aria-label="Last">
+          <span aria-hidden="true">Last &raquo;</span>
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+</div>
+
 
   <div class="card shadow-lg mt-4 border-0 dark-rgba-background">
     <div class="card-body text-center">

@@ -6,7 +6,7 @@ from django.db.models import Q, Avg
 from django.contrib import messages
 from reviews.models import Review, Comment
 from reviews.forms import ReviewForm, CommentForm
-
+from django.core.paginator import Paginator
 
 # Configure the logger
 logger = logging.getLogger(__name__)
@@ -59,10 +59,14 @@ def home(request):
             seed.avg_rating = avg_rating  # Assign the average rating to the seed
         else:
             seed.avg_rating = None  # No rating if no reviews are present
+    # Pagination
+    paginator = Paginator(seeds, 6)  # Show 9 seeds per page
+    page_number = request.GET.get('page')  # Get the current page number from the GET request
+    page_obj = paginator.get_page(page_number)  # Get the page object
 
     # Return the sorted and filtered seeds to the template
     context = {
-        'seeds': seeds,
+        'seeds': page_obj,
         'search_query': search_query,
         'category': category,
         'filter_option': filter_option,
