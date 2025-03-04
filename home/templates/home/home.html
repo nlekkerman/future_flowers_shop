@@ -53,11 +53,9 @@
     <div class="col-md-4 mb-4 animate__animated animate__fadeIn animate__slower">
       <div class="card seed-item-card shadow-sm">
         {% if seed.image %}
-        <img
-          src="{{ seed.image.url }}"
-          class="card-img-top seed-image"
-          alt="{{ seed.name }}"
-        />
+       
+        <img src="{{ seed.image.url }}?f_auto,q_auto" class="card-img-top seed-image" alt="{{ seed.name }}">
+
         {% else %}
         <img
           src="{% static 'images/default-seed.jpg' %}"

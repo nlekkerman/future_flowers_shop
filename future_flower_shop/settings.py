@@ -181,6 +181,22 @@ ATOMIC_REQUESTS: True
 
 # Cloudinary configuration
 CLOUDINARY_URL = os.getenv('CLOUDINARY_URL')
+
+# Access the Cloudinary environment variables
+CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
+API_KEY = os.environ.get('CLOUDINARY_API_KEY')
+API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')
+
+# Configure Cloudinary
+import cloudinary
+cloudinary.config(
+    cloud_name=CLOUD_NAME,
+    api_key=API_KEY,
+    api_secret=API_SECRET,
+    secure=True,
+    image_optimization=True 
+)
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Password validation
@@ -206,7 +222,7 @@ USE_I18N = True
 USE_TZ = True
 
 # Media files (uploads)
-MEDIA_URL = '/media/'
+MEDIA_URL = 'https://res.cloudinary.com/dg0ssec7u/image/upload/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Static files (CSS, JavaScript, Images)
