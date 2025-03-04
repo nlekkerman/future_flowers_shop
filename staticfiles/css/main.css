@@ -14,65 +14,6 @@ body {
   min-height: 100%;
 }
 
-.about-section{
-  background-color: transparent;
-  background-image: url("/static/images/buzz-image.png");
-  background-size: cover;
-  width: 100vw;
-  color: white !important;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  min-height: 100%;
-}
-
-
-.vision-section{
-  background-color: transparent;
-  background-image: url("/static/images/buzz-image.png");
-  background-size: cover;
-  color: white;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-
-.values-section{
-  background-color: transparent;
-  background-image: url("/static/images/buzz-image.png");
-  color: white !important;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-
-.community-section{
-  background-color: transparent;
-  background-image: url("/static/images/buzz-image.png");
-  background-size: cover;
-  color: white;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-
-.testimonials-section{
-  background-color: transparent;
-  background-image: url("/static/images/buzz-image.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-
-.testimonials-overlay, .vision-overlay, .community-overlay, .values-overlay, .community-overlay {
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white !important;
-}
-.community-title{
-  color: greenyellow !important;
-}
 
 .search-filter-container {
  
