@@ -79,7 +79,7 @@ def register(request):
 
             
             auth_login(request, user)
-            messages.success(request, 'Registration successful.')
+            
 
             if newsletter_preference:
                 logger.info(f"User {user.username} opted in for the newsletter.")
