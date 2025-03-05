@@ -3,10 +3,30 @@
 
 {% block content %}
 
+<!--
+This is the registration page for the user to create a new account.
 
-<div class="navigation-container"></div>
-{% include 'navigation.html' %}
-</div>
+### Key Sections:
+1. **Registration Form**:
+   - **Username**: Input field to create a unique username.
+   - **Email**: Input field for the user's email address.
+   - **Password**: Input field to set the password for the account.
+   - **Confirm Password**: Input field to re-enter the password for verification.
+   - **Newsletter Subscription**: A checkbox for the user to opt into receiving newsletters.
+   - The form is submitted via POST with CSRF protection and is handled in the backend for account creation.
+
+2. **Account Link**:
+   - A link to redirect users who already have an account to the login page.
+
+3. **Modal for Displaying Messages**:
+   - If there are any messages (e.g., errors or success messages), they will be shown in a modal.
+   - The modal also displays form-specific error messages for any fields that failed validation.
+
+4. **JavaScript**:
+   - A small script that checks if the modal should be displayed and opens it automatically on page load.
+
+-->
+
 
 <div class="container py-5 justify-content-center align-items-center d-flex flex-column animate__animated animate__fadeIn animate__slower">
 
@@ -49,7 +69,7 @@
         
     </div>
 
-    <p class="text-center mt-3 text-white ">
+    <p class="text-center mt-3 text-white dark-rgba-background">
         Have an account? <a href="{% url 'custom_accounts:account_login' %}" class="text-primary">Login here</a>
     </p>
 

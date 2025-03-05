@@ -28,25 +28,36 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav d-flex align-items-center ml-auto justify-content-end">
+                
                 <li class="nav-item position-relative mb-1 mb-lg-0">
                     <a class="nav-link nav-item-text" href="{% url 'home:home' %}">Home</a>
                 </li>
+                
                 <li class="nav-item position-relative mb-1 mb-lg-0">
                     <a class="nav-link nav-item-text" href="{% url 'communications:about' %}">About Us</a>
                 </li>
+
+                <li class="nav-item position-relative mb-1 mb-lg-0">
+                    <a class="nav-link nav-item-text" href="{% url 'communications:faq' %}">FAQ</a>
+                </li>
+                
                 <li class="nav-item position-relative mb-1 mb-lg-0">
                     <a class="nav-link nav-item-text" href="{% url 'communications:contact' %}">Contact</a>
                 </li>
 
                 {% if user.is_authenticated %}
-                    <li class="nav-item position-relative mb-1 mb-lg-0 ">
-                        <a class="d-flex nav-link px-3 rounded-pill {% if unread_messages_count > 0 and request.path != '/communications/conversations/' %}nav-item-text{% else %}text-dark{% endif %}"
-                            href="{% if user.is_superuser %}{% url 'communications:conversations' %}{% else %}{% url 'communications:chat_with_admin' %}{% endif %}">
-                            <i class="fas fa-comments nav-item-text"></i><br>
-                            {% if unread_messages_count > 0 %}<span id="unread-messages-count" class="badge badge-info rounded-circle ml-1 d-flex justify-content-center align-items-center p-1">
-                                {{ unread_messages_count }}</span>{% endif %}
-                        </a>
-                    </li>
+                <li class="nav-item position-relative mb-1 mb-lg-0">
+                    <a class="d-flex nav-link px-3 rounded-pill position-relative 
+                        {% if unread_messages_count > 0 and request.path != '/communications/conversations/' %}{% else %}text-dark{% endif %}"
+                        href="{% if user.is_superuser %}{% url 'communications:conversations' %}{% else %}{% url 'communications:chat_with_admin' %}{% endif %}">
+                        <i class="fas fa-comments nav-item-text"></i>
+                        {% if unread_messages_count > 0 %}
+                            <span id="unread-messages-count" class="badge badge-info rounded-circle">
+                                {{ unread_messages_count }}
+                            </span>
+                        {% endif %}
+                    </a>
+                </li>
                 {% if user.is_staff %}
                 <li class="nav-item position-relative mb-1 mb-lg-0">
                     <a class="nav-link nav-item-text" href="{% url 'custom_accounts:admin_dashboard' %}">Admin</a>
@@ -59,7 +70,7 @@
                 </li>
                 {% else %}
                 <li class="nav-item position-relative mb-1 mb-lg-0">
-                    <a class="nav-link nav-item-text" href="{% url 'custom_accounts:account_login' %}">Login</a>
+                    <a class="nav-link nav-item-text" href="{% url 'custom_accounts:account_login' %}">Login/Register</a>
                 </li>
                 {% endif %}
                 

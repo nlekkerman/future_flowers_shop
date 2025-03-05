@@ -1,12 +1,25 @@
+
 {% extends "base.html" %}
 {% load static %}
+
+<!-- 
+  This template is for the "About Us" page of Future Flower Shop. It includes the following sections:
+
+  1. **About Us**: Introduction to the company, describing Future Flower Shop as a provider of premium seeds based in County Kerry, Ireland.
+  2. **Our Vision**: A statement of the company's mission to inspire people to reconnect with nature and create a greener world through gardening.
+  3. **Our Values**: Describes the core values of the company, focusing on sustainability, quality, and customer satisfaction.
+  4. **Join Our Community**: Encourages visitors to engage with the company’s gardening community through social media and sharing gardening experiences.
+  5. **Customer Testimonials**: A section showcasing customer reviews and positive experiences with Future Flower Shop.
+
+  This layout consists of a two-row grid layout, with each section displayed as a responsive, full-width container. 
+  The design uses Bootstrap grid and custom styling with dark background sections, rounded borders, and shadow effects to enhance the visual appeal.
+-->
 
 {% block content %}
 <!-- Main Container for all content -->
 <div class="about-container justify-content-center">
   <div class="container-fluid ">
 
- 
     <div class="row">
       
       <!-- About Us Section -->
@@ -63,7 +76,7 @@
     </div> <!-- End Row -->
 
     <!-- Customer Testimonials Section -->
-    <div class="row justify-content-center">
+    <div class="row justify-content-center my-3">
       <div class="col-12 col-md-10 col-lg-8 mt-4">
         <div class="testimonials-section p-5 rounded shadow-lg dark-rgba-background text-center h-100">
           <h3 class="testimonials-title text-danger">What Our Customers Say</h3>

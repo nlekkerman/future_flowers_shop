@@ -1,6 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Contact Us - My Website{% endblock %}
+
+<!-- 
+  This template is for the "Contact Us" page of the website. It includes:
+
+  1. **Contact Information**: Displays the phone number, email address, and physical address for users to get in touch.
+     - The phone number is clickable and will initiate a call on mobile devices.
+     - The email address is also clickable, allowing users to quickly open their default email client.
+  2. **Social Media Links**: Provides links to the website's social media profiles, currently only Facebook.
+     - Each social media icon is a clickable image that opens in a new tab.
+     - The Facebook icon is dynamically loaded using the `static` template tag.
+  3. **Responsive Design**: The page uses Bootstrap classes for responsiveness and animations.
+     - The content is wrapped in a container with a full viewport height (`vh-100`), and animations are applied for smooth page transitions (`animate__fadeIn`).
+  4. **User-Friendly Interface**: The page is designed with a clear and centered layout for easy access to contact information and social media links.
+
+  The page offers a clean and accessible way for users to contact the website administrators or follow the website's social media profiles.
+-->
+
 {% block content %}
 
 <div class="contact-section vh-100 animate__animated animate__fadeIn animate__slower">
@@ -28,7 +45,6 @@
         <a href="https://www.facebook.com/profile.php?id=61568096746889" class="social-link" target="_blank">
           <img src="{% static '/images/facebook-icon.png' %}" alt="Facebook" class="social-icon" width="40" height="40" />
         </a>
-        <!-- Add more social media links here -->
       </div>
     </div>
   </div>

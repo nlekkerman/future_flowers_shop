@@ -6,6 +6,7 @@ from seeds.models import Seed
 from custom_accounts.models import UserProfile 
 import uuid
 
+
 class Order(models.Model):
     """
     Represents an order placed by a customer, including personal details, 
@@ -32,9 +33,11 @@ class Order(models.Model):
     original_bag = models.TextField(null=False, blank=False, default='')
     stripe_pid = models.CharField(max_length=254, null=False, blank=False, default='')
 
+
     def _generate_order_number(self):
         """Generate a random, unique order number using UUID."""
         return uuid.uuid4().hex.upper()
+
 
     def update_total(self):
         """
@@ -54,16 +57,25 @@ class Order(models.Model):
         self.grand_total = self.order_total + self.delivery_cost
         self.save()
 
+
     def save(self, *args, **kwargs):
         """Override the original save method to set the order number if it hasn't been set already."""
         if not self.order_number:
             self.order_number = self._generate_order_number()
         super().save(*args, **kwargs)
 
+
     def __str__(self):
         return self.order_number
 
+
 class OrderLineItem(models.Model):
+    """
+    Represents a line item in an order, linking a specific seed product to an order with a quantity 
+    and calculated total price. It contains a reference to the associated order and seed, the quantity 
+    ordered, and the total cost for the line item, which is calculated based on the seed's discounted price 
+    and the quantity ordered. The total price is automatically updated when the line item is saved.
+    """
     
     order = models.ForeignKey(Order, null=False, blank=False, on_delete=models.CASCADE, related_name='lineitems')
     seed = models.ForeignKey(Seed, null=False, blank=False, on_delete=models.CASCADE)

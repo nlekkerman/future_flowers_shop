@@ -5,6 +5,35 @@
 
 {% block content %}
 
+<!--
+This page represents the Admin Dashboard where an administrator can manage various aspects of the website, such as approving/rejecting reviews and comments, managing seeds, and sending newsletters. It is divided into several sections, each with specific functionalities.
+
+Key Sections:
+1. **Admin Dashboard Header**:
+   - Contains the page title, which clearly indicates the page's purpose as the Admin Dashboard.
+
+2. **Messages Section**:
+   - Displays any messages that the admin needs to be aware of. These messages may contain notifications of various events and can be closed by clicking a close button.
+
+3. **Pending Reviews Section**:
+   - Displays all the reviews that are pending approval from the admin. Each review is listed with details including the reviewer's name, comment, and creation date. Admins can approve, reject, or delete reviews from here.
+
+4. **Pending Comments Section**:
+   - Similar to the pending reviews section, but this section handles comments left on reviews. Admins can approve, reject, or delete comments.
+
+5. **Seed Management Section**:
+   - Displays all seeds listed in the system. Admins can add new seeds, edit existing ones, or delete them. Each seed entry includes details like the seed's name, scientific name, price, stock level, and image.
+
+6. **Send Newsletter Section**:
+   - A form where the admin can send out newsletters. The admin can define the subject and message content, which will be sent to users.
+
+7. **Edit Seed Modal**:
+   - A modal that allows the admin to edit details of a seed, such as its name, scientific name, price, discount, planting months, and image.
+
+Each section contains relevant action buttons for the admin to perform tasks, including approve, reject, delete, edit, and add new entries.
+
+-->
+
 <div class="admin-dashboard-container p-1">
     <div class="admin-dashboard-header">
         <h2 class="text-white m-2 p-2 text-bold">Admin Dashboard</h2>
@@ -25,6 +54,7 @@
         <div class="admin-dashboard-section-title">
             <h3 class="text-center  dark-rgba-background">Pending Reviews</h3>
         </div>
+
         <div class="row">
             {% for review in pending_reviews %}
                 <div class="col-md-4 mb-3">
@@ -45,6 +75,7 @@
                         </div>
                     </div>
                 </div>
+
             {% empty %}
                 <div class="col-12">
                     <div class="alert alert-info m-2" role="alert">No pending reviews.</div>
@@ -58,6 +89,7 @@
         <div class="admin-dashboard-section-title ">
             <h3  class="dark-rgba-background">Pending Comments</h3>
         </div>
+
         <div class="row">
             {% for comment in pending_comments %}
                 <div class="col-md-4 mb-3">
@@ -88,6 +120,7 @@
 
     <section>
     <h3 class="admin-dashboard-section-title dark-rgba-background text-center p-2">Seed Management</h3>
+
     <div class="d-flex justify-content-end mb-3 mr-2">
         <a href="{% url 'seeds:create_seed' %}" class="btn btn-primary">
             🌱 Add New Seed
@@ -162,7 +195,7 @@
         <h3>Edit Seed</h3>
         <form method="post" action="" enctype="multipart/form-data" id="edit-seed-form">
             {% csrf_token %}
-            <input type="hidden" name="id" id="edit-seed-id"> <!-- Hidden input for seed ID -->
+            <input type="hidden" name="id" id="edit-seed-id">
 
             <div class="form-group">
                 <label for="edit-seed-name">Seed Name</label>

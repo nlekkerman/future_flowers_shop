@@ -1,7 +1,7 @@
 # custom_accounts/urls.py
 from django.urls import path
 
-from .views import (register,send_newsletter, login, logout, profile, admin_dashboard, approve_review, reject_review, delete_review,edit_profile, approve_comment, reject_comment, delete_comment )
+from .views import (register,send_newsletter, login,welcome_message, logout, profile, admin_dashboard, approve_review, reject_review, delete_review,edit_profile, approve_comment, reject_comment, delete_comment )
 app_name = 'custom_accounts'
 urlpatterns = [
     path('register/', register, name='account_signup'),
@@ -17,5 +17,6 @@ urlpatterns = [
     path('admin/comment/<int:id>/reject/', reject_comment, name='reject_comment'),
     path('admin/comment/<int:id>/delete/', delete_comment, name='delete_comment'),
     path('send-newsletter/', send_newsletter, name='send_newsletter'),
+    path('welcome_message/',welcome_message, name='welcome_message'),
 ]
 

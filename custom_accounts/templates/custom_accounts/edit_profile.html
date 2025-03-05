@@ -6,6 +6,24 @@
 {% endblock %}
 
 {% block content %}
+<!--
+This page allows the user to edit their profile information, including uploading a profile image and updating details like their name, email, and other fields. The page provides a form where the user can update their profile picture, and any changes made will be saved.
+
+Key Sections:
+1. **Profile Image Preview**:
+   - Displays the user's current profile image in a circular thumbnail. If the user has not uploaded an image, a default user icon will be shown instead.
+   - The user has the option to update the profile image by uploading a new one.
+
+2. **Profile Edit Form**:
+   - Contains input fields for the user to update their profile details, such as name, email, password, and any other relevant fields provided by the form.
+   - The form uses Django's form rendering with error handling, displaying validation messages if any input is incorrect.
+
+3. **Save Button**:
+   - A button that allows the user to save any changes made to their profile. The button uses a save icon to make it clear that this action will save the form data.
+
+The form is styled in a card layout to maintain a clean, user-friendly design, and utilizes Bootstrap for responsive design and easy form validation.
+-->
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -48,7 +66,7 @@
                     </form>
                 </div>
             </div>
-            <!-- End Card -->
+           
         </div>
     </div>
 </div>

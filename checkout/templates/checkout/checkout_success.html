@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
 
-
+<!--
+This template renders the order success page for the user after completing the checkout process.
+- It displays a "Thank You" message and shows detailed information about the order, including:
+  - Order number and date
+  - List of items in the order (product name, quantity, and price)
+  - Shipping information (Full name, Address, Town/City, County, Postal Code, Country, Phone number)
+  - Billing information (Order total, Delivery cost, and Grand total)
+- The page also includes a button to continue shopping after viewing the order summary.
+-->
 
 {% block page_header %}
 <div class="container header-container">
@@ -14,13 +22,15 @@
 {% block content %}
 
 <div class="checkout-success-container  d-flex flex-column vh-100 justify-content-center">
-    
 
 <div class="overlay"></div>
+
 <div class="container dark-rgba-background checkout-success-body animate__animated animate__fadeIn animate__slower">
+    
     <button class="close-order-success-button btn" id="close-order-success-button">
         Continue with Shopping
       </button>
+
     <div class="row">
         <div class="col">
             <hr>

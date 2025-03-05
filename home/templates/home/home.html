@@ -67,16 +67,18 @@
 
           <h5 class="card-title">{{ seed.name }}</h5>
           <p><strong>Rating:</strong>
-            {% if seed.avg_rating %}
-              <span class="text-warning">
-                {% for _ in "12345"|slice:seed.avg_rating %}
-                  ⭐
-                {% endfor %}
-              </span> ({{ seed.avg_rating|floatformat:1 }}/5)
-            {% else %}
-              <span class="text-muted">No ratings yet</span>
-            {% endif %}
+              {% if seed.avg_rating %}
+                  <span class="badge bg-success fs-6 px-3 py-2 rounded-pill">
+                      {{ seed.avg_rating|floatformat:1 }}/5
+                  </span>
+              {% else %}
+                  <span class="badge bg-secondary fs-6 px-3 py-2 rounded-pill">
+                      No ratings yet
+                  </span>
+              {% endif %}
           </p>
+          
+      
           
           <p class="card-text">{{ seed.description|truncatewords:20 }}</p>
           <p><strong>Scientific Name:</strong> {{ seed.scientific_name }}</p>

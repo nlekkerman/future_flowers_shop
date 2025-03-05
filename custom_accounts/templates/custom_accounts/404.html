@@ -8,19 +8,37 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
+    <!--
+    This is a custom 404 error page template that informs users when the page they are trying to access cannot be found.
+
+    **Key Features of this Page**:
+    - **Page Structure**:
+        - The page is centered within the browser window, with a visually appealing error container background image.
+        - It includes a heading that indicates the error (404 - Page Not Found) and a brief message explaining the issue (the page may have been moved or deleted).
+        - A button is provided to allow users to return to the homepage easily.
+    
+    - **Main Interaction**: A link is provided at the bottom of the container which redirects users back to the homepage when clicked.
+
+    Parameters: None
+
+    Returns: A well-styled, user-friendly 404 error page with a prominent call-to-action button for returning to the homepage.
+
+    -->
+
     <!-- Custom CSS -->
     <style>
-        /* Global Styles */
+       /* Body styling with background image */
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: url('/static/images/home-background-one.webp') no-repeat center center fixed;
-
+        padding-top: 70px;
+        background-color: transparent;
+        background-image: url("/static/images/leaves-background.webp");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
         }
 
         /* Main Container with Background Image */

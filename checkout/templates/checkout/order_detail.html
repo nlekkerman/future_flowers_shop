@@ -1,5 +1,17 @@
+
 {% extends "base.html" %}
 {% load static %}
+
+<!--
+    This template is responsible for displaying the order details and the items in the user's order.
+    It includes the following sections:
+
+    1. **Back Button**: A link that redirects the user back to their order profile page.
+    2. **Order Summary**: Displays key details of the order such as the order number, order date, total cost, and delivery cost.
+    3. **Order Items Section**: Displays a list of items included in the order. Each item shows the seed image, name, quantity, and total price for that item.
+
+    The design includes some animations and a responsive layout using Bootstrap classes.
+-->
 
 {% block content %}
 <div class="container mt-5 mb-5 animate__animated animate__fadeIn animate__slower">
@@ -26,7 +38,7 @@
     <div class="row mt-4">
         {% for item in order.lineitems.all %}
         <div class="col-md-4 dark-rgba-background mr-2 p-0">
-            <div class="shadow-sm border-0" >
+            <div class="shadow-sm border-0">
                 <img src="{{ item.seed.image.url }}" alt="{{ item.seed.name }}" class="card-img-top img-fluid rounded-top" style="height: 200px; object-fit: cover;">
                 <div class="card-body text-center">
                     <h5 class="card-title">{{ item.seed.name }}</h5>

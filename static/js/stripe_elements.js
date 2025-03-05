@@ -21,8 +21,8 @@ const style = {
       color: "#aaa" // Placeholder color
     },
     backgroundColor: "white", // Background color
-    border: "1px solid #ccc", // Custom border (doesn't always work)
-    padding: "10px", // Padding inside input
+    
+    
   },
   invalid: {
     color: "#ff0000", // Red text for invalid inputs

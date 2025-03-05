@@ -1,9 +1,19 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="welcome-message">
-    <h2 id="welcome-heading">Welcome to Future Flower Seed Shop!</h2>
-    <p id="welcome-text"></p>
-    <p>You will be redirected to the home page shortly.</p>
+<!-- 
+    This page displays a welcome message with a typing effect. 
+    After the welcome message is typed out, the user will be redirected to the home page.
+    The page utilizes a container with centered content and applies Bootstrap styling for a clean look.
+    The typing effect is implemented using JavaScript, and the user is redirected after 10 seconds.
+-->
+
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="text-center shadow-lg p-5 rounded dark-rgba-background">
+        <h2 id="welcome-heading" class="display-4 mb-4"></h2>
+        <p id="welcome-text" class="lead mb-3"></p>
+        <p class="text-muted">You will be redirected to the home page shortly.</p>
+    </div>
 </div>
 
 <script>
@@ -21,21 +31,20 @@
     }
 
     // Text to be typed
-    const headingText = 'Welcome to Future Flower Seed Shop!';
-    const paragraphText = 'Great {{ user.username }}! Your account has been created successfully. We wish you pleasant exploring and shopping!';
+    const headingText = 'Welcome to Future Flower Shop!';
+    const paragraphText = 'Dear {{ user.username }}! Your account has been created successfully. We wish you pleasant exploring and shopping!';
     
     // Type the heading and paragraph
     document.addEventListener("DOMContentLoaded", () => {
         typeText(document.getElementById('welcome-heading'), headingText, 100);
         setTimeout(() => {
             typeText(document.getElementById('welcome-text'), paragraphText, 50);
-        }, headingText.length * 100); // Delay to start typing paragraph after heading
+        }, headingText.length * 100);
     });
 
-    // Redirect after 5 seconds
+    // Redirect after 10 seconds
     setTimeout(function() {
-        window.location.href = "{% url 'home' %}";  // Change 'home' to your home page URL name
-    }, 10000); // Redirect after 5 seconds
+        window.location.href = "{% url 'home:home' %}";
+    }, 10000);
 </script>
-</div>
 {% endblock %}

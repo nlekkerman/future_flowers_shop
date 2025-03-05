@@ -3,10 +3,32 @@
 
 {% block content %}
 
+<!--
+This page represents the profile view for a logged-in user, displaying key information and recent orders.
+
+### Key Sections:
+1. **Profile Header**:
+   - Displays the user's profile image (with a default placeholder if not set).
+   - The user's **username** is prominently displayed, with a background color and rounded corners.
+   - The **about** section provides a short description of the user, with a default message if not provided.
+   - **Email, Address, and Phone Number** are displayed. If the user has provided this information, it is shown; otherwise, a default message appears.
+   - A button is provided to navigate to the **edit profile** page.
+
+2. **Recent Orders**:
+   - A section that lists recent orders placed by the user.
+   - Each order is shown with its **order date** and **total cost**.
+   - If available, an image of the first item in the order (e.g., a seed) is displayed alongside the order details.
+   - Clicking on an order item takes the user to the **order detail** page.
+   - If the user hasn't placed any orders, a message is displayed indicating there are no orders.
+
+-->
+
+
 <!-- Profile Page Main Container -->
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
+
             <!-- Profile Header Card -->
             <div class="shadow-lg border-0">
                 <div class="dark-rgba-background pb-4 text-center">

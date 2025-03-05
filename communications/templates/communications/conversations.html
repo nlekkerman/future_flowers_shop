@@ -1,10 +1,28 @@
-{% extends "base.html" %} {% block content %} {% load static %}
+{% extends "base.html" %} {% load static %}
 
+<!--
+  This template is for the "Conversations" page in the admin interface. It includes:
+
+  1. **Superuser Access**: Only superusers (admins) can view this page. It provides an overview of all conversations.
+  2. **Search Bar**: Allows the admin to search for users by name. The search input is dynamically handled with AJAX to update the results as the user types.
+     - When a search is performed, it fetches matching users from the server and displays them below the search input.
+  3. **Conversations List**: Displays a list of conversations the admin can join.
+     - Each conversation is represented as a list item with the username of the other participant.
+     - The list shows the last message in the conversation, if any, and marks unread messages for the admin with a background color (`bg-info`).
+     - Clicking on a conversation item will navigate the admin to the chat page with the corresponding user.
+  4. **Dynamic UI Updates**: The page dynamically updates the conversation list and highlights the active conversation.
+     - The active conversation is highlighted with an "active" class, making it stand out.
+     - The last message and the time of the message are displayed below the username.
+  5. **Responsive Design**: The layout is responsive and uses Bootstrap classes for mobile-friendly design. The entire page has smooth animation effects when loading.
+
+  The page is intended for admin users to manage and navigate through conversations with users on the platform.
+-->
+
+
+{% block content %}
 <div class="container my-4 vh-100 mt-5">
+
   <div class="row">
-   
- 
-    
      {% if user.is_superuser %}
      <div class="dark-rgba-background animate__animated animate__fadeIn animate__slower vw-100  ">
        <div class="list-group mb-3 ">
@@ -27,7 +45,6 @@
  
          <div id="search-results" class="list-group shadow-sm"></div>
  
-         <!-- Loop through conversations and add active class to the selected one -->
          {% for item in conversations %}
           <a href="{% url 'communications:chat_with_user' item.user.id %}" 
             class="list-group-item-action 
@@ -42,7 +59,7 @@
                       {% else %} 
                           No messages yet 
                       {% endif %}
-        </small>
+                  </small>
     </div>
 </a>
 {% endfor %}

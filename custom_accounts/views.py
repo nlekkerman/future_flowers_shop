@@ -88,7 +88,7 @@ def register(request):
                 logger.info(f"User {user.username} did not opt in for the newsletter.")
 
             
-            return redirect('home:home')
+            return redirect('custom_accounts:welcome_message')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
@@ -226,6 +226,7 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
         # Update the existing profile if needed
         profile, created = UserProfile.objects.get_or_create(user=instance)
         profile.save()
+
 
 def logout(request):
     """
@@ -470,3 +471,16 @@ def delete_comment(request, id):
     
 def custom_404(request, exception):
     return render(request, 'custom_accounts/404.html', {}, status=404)
+
+def welcome_message(request):
+    """
+    Displays a welcome message to the user after they successfully register.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: Renders 'custom_accounts/welcome_message.html' with a welcome message.
+    """
+    return render(request, 'custom_accounts/welcome_message.html')
+

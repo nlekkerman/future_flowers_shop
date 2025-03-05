@@ -603,7 +603,5 @@ def send_order_confirmation_email(order):
             "{order.email} for Order #{order.order_number}."
         )
     except Exception as e:
-        logger.error(
-            f"Failed to send order confirmation email to"
-            " {order.email} for Order #{order.order_number}. Error: {e}"
-        )
+        llogger.error(f"Failed to send order confirmation email to {order.email} for Order #{order.order_number}. Error: {str(e)}")
+

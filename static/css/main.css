@@ -1,12 +1,14 @@
+/* Global styles */
 html {
-  height: 100%; 
-  margin: 0; /* Removes any default margin applied by the browser */
+  height: 100%;
+  margin: 0;
 }
 
+/* Body styling with background image */
 body {
   padding-top: 70px;
   background-color: transparent;
-  background-image: url("/static/images/leaves-background-image.png");
+  background-image: url("/static/images/leaves-background.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -14,40 +16,38 @@ body {
   min-height: 100vh;
 }
 
-
+/* Search filter container styling */
 .search-filter-container {
- 
   background-size: contain;
   background-color: rgba(0, 0, 0, 0.5);
   margin-bottom: 1rem;
   background-position: center;
   border-radius: 10px;
-  height: 10rem;  /* Optional: Set height to cover the whole viewport */
+  height: 10rem;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-
-
-nav{
+/* Navbar styling */
+nav {
   background-color: rgba(202, 226, 163, 0.8) !important;
   padding: 0.7em 0em;
   border-bottom: 4px solid rgba(107, 110, 102, 0.8);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-
 }
+
+/* Navbar toggler button */
 .navbar-toggler {
-  background-color: rgba(110, 143, 58, 0.8) !important; /* White background for the button */
-  border: none !important; 
+  background-color: rgba(110, 143, 58, 0.8) !important;
+  border: none !important;
   padding: 15px 10px;
   border-radius: 4px;
- 
 }
 
-.nav-item-text{
-
+/* Navigation item text */
+.nav-item-text {
   color: rgb(0, 12, 5) !important;
   font-weight: 700;
   text-shadow: 0px 3px 4px rgba(2, 0, 0, 0.6);
@@ -56,6 +56,25 @@ nav{
   padding-bottom: 5px;
 }
 
+/* Unread messages badge */
+#unread-messages-count {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  transform: translate(50%, -50%);
+  font-size: 0.75rem;
+  min-width: 18px;
+  min-height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(1, 111, 157);
+  color: white;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+/* Underline effect for nav item text */
 .nav-item-text::after {
   content: '';
   position: absolute;
@@ -72,14 +91,20 @@ nav{
 }
 
 .nav-item-text:hover {
-  color: #344436; 
+  color: #344436;
 }
-button.navbar-toggler{
+
+/* Navbar toggler button margin */
+button.navbar-toggler {
   margin-right: 10px !important;
 }
-.navbar-brand{
+
+/* Navbar brand spacing */
+.navbar-brand {
   margin-left: 0.4rem;
 }
+
+/* Navbar toggler custom icon */
 .navbar-toggler .custom-toggler-icon {
   width: 25px;
   height: 3px;
@@ -87,37 +112,42 @@ button.navbar-toggler{
   display: block;
   position: relative;
 }
+
+/* Custom toggler icon lines */
 .navbar-toggler .custom-toggler-icon::before,
-  .navbar-toggler .custom-toggler-icon::after {
-    content: "";
-    width: 25px;
-    height: 3px;
-    background-color: rgb(255, 255, 255);
-    position: absolute;
-    left: 0;
-    transition: 0.3s;
-  }
+.navbar-toggler .custom-toggler-icon::after {
+  content: "";
+  width: 25px;
+  height: 3px;
+  background-color: rgb(255, 255, 255);
+  position: absolute;
+  left: 0;
+  transition: 0.3s;
+}
 
-  .navbar-toggler .custom-toggler-icon::before {
-    top: -8px;
-  }
+.navbar-toggler .custom-toggler-icon::before {
+  top: -8px;
+}
 
-  .navbar-toggler .custom-toggler-icon::after {
-    top: 8px;
-  }
+.navbar-toggler .custom-toggler-icon::after {
+  top: 8px;
+}
 
-  footer {
-    background-color: rgba(202, 226, 163, 0.8) !important;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    left: 0;
-    padding: 10px 0; 
-    text-align: center;
-    z-index: 9999; 
-  }
+/* Footer styling */
+footer {
+  background-color: rgba(202, 226, 163, 0.8) !important;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  padding: 10px 0;
+  text-align: center;
+  z-index: 9999;
+}
+
+/* Checkout item card styling */
 .checkout-item-card {
-  height: 100%; 
+  height: 100%;
   display: flex;
   flex-direction: column;
   background-color: rgba(0, 0, 0, 0.8);
@@ -132,6 +162,7 @@ button.navbar-toggler{
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);
 }
 
+/* Card image wrapper */
 .card-img-wrapper {
   width: 100%;
   height: 180px;
@@ -141,96 +172,114 @@ button.navbar-toggler{
   overflow: hidden;
 }
 
-
-  .seed-item-card{
-    height: 100%; 
-    display: flex;
-    flex-direction: column;
-    background-color: rgba(0, 0, 0, 0.8);
-    color:white;
-    font-weight: 700;
-  }
-  .seed-item-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);}
-  
-    .card-img-top {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-  }
-
-  .checkout-item-image {
-    width: 100%;
-    object-fit: cover;
-  }
-  .checkout-container{
-    pad: 10px;
-  }
-
-  .checkout-card-body {
-    flex: 1; 
-    padding: 10px;
-    word-wrap: break-word;
-    overflow: hidden;
-  }
-
-  .summary-card{
-    background-color: rgba(212, 212, 1, 0.8) !important;
-    color: white !important;
-    width: 100%;
-    margin: 0 auto;
-    border-bottom: 0.3rem solid white;
-  }
-  
-  .card-body {
-   
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .card-body p {
-    flex-grow: 1;
-  }
-  
-  .btn {
-    margin-top: auto;
-  }
-.reviews-container{
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white !important;
+/* Seed item card styling */
+.seed-item-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-weight: 700;
 }
 
-.order-summary {
-  margin-bottom: 2px; /* Reduced bottom margin */
+.seed-item-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);
 }
+
+/* Card image styling */
+.card-img-top {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* Checkout item image styling */
+.checkout-item-image {
+  width: 100%;
+  object-fit: cover;
+}
+
+/* Checkout container styling */
+.checkout-container {
+  padding: 10px;
+}
+
+/* Checkout card body styling */
+.checkout-card-body {
+  flex: 1;
+  padding: 10px;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+
+/* Summary card styling */
+.summary-card {
+  background-color: rgba(212, 212, 1, 0.8) !important;
+  color: white !important;
+  width: 100%;
+  margin: 0 auto;
+  border-bottom: 0.3rem solid white;
+}
+
+/* Card body styling */
 .card-body {
-  padding: 15px; /* Adjust padding */
+  display: flex;
+  flex-direction: column;
 }
+
+.card-body p {
+  flex-grow: 1;
+}
+
+.btn {
+  margin-top: auto;
+}
+
+/* Reviews container styling */
+.reviews-container {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white !important;
+}
+
+/* Order summary adjustments */
+.order-summary {
+  margin-bottom: 2px;
+}
+
+.card-body {
+  padding: 15px;
+}
+
 .card-title {
   margin-bottom: 5px;
 }
 
-.cart-checkout{
+/* Cart checkout styling */
+.cart-checkout {
   margin: 0 auto;
   min-width: 100% !important;
   display: flex;
   align-items: center;
   flex-direction: column;
 }
-.edit-cart-button{
-padding: 0.3rem !important;
-border: none;
 
-background-color: rgba(0, 140, 49, 0.8);
-color: white !important;
+/* Edit cart button styling */
+.edit-cart-button {
+  padding: 0.3rem !important;
+  border: none;
+  background-color: rgba(0, 140, 49, 0.8);
+  color: white !important;
 }
 
-.update-cart-form{
+/* Update cart form styling */
+.update-cart-form {
   justify-content: space-evenly !important;
   align-items: normal !important;
   background-color: aquamarine !important;
 }
+
+/* Cart count styling */
 .cart-count {
   position: absolute;
   top: 10px;
@@ -248,9 +297,8 @@ color: white !important;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-/* INPUT STYLES*/
-
-input.form-control , textarea, .form-control {
+/* INPUT STYLES */
+input.form-control, textarea, .form-control {
   background-color: rgba(0, 0, 0, 0.6) !important;
   border: 1px solid #ccc;
   color: white !important;
@@ -258,6 +306,7 @@ input.form-control , textarea, .form-control {
   border-top-left-radius: 0.7rem;
   border-bottom-left-radius: 0.7rem;
 }
+
 .form-control:disabled {
   background-color: rgba(73, 69, 69, 0.6) !important;
   border: 1px solid #787878;
@@ -266,9 +315,10 @@ input.form-control , textarea, .form-control {
   border-top-left-radius: 0.7rem;
   border-bottom-left-radius: 0.7rem;
 }
+
 /* General styles for all messages */
 .messages .alert {
-  border: 2px solid transparent; 
+  border: 2px solid transparent;
   color: white !important;
 }
 
@@ -278,6 +328,7 @@ input.form-control , textarea, .form-control {
   border-left: 2px solid rgba(40, 167, 69, 0.7);
   color: white !important;
 }
+
 .alert-success {
   background-color: rgba(40, 167, 69, 0.7) !important;
   border-left: 2px solid rgba(40, 167, 69, 0.7);
@@ -285,37 +336,41 @@ input.form-control , textarea, .form-control {
 }
 
 /* Error message (Red) */
-.messages .alert-danger, 
+.messages .alert-danger,
 .messages .alert-error {
   background-color: rgba(255, 0, 25, 0.7) !important;
   border-left: 2px solid rgba(255, 255, 255, 0.7);
   color: white !important;
 }
+
 .alert-danger, .alert-error {
   background-color: rgba(255, 0, 25, 0.7) !important;
   border-left: 2px solid rgba(255, 255, 255, 0.7);
   color: white !important;
 }
+
 /* Warning message (Yellow) */
 .messages .alert-warning {
   background-color: rgba(255, 193, 7, 0.7) !important;
   border-left: 2px solid rgba(255, 193, 7, 0.7);
   color: white !important;
 }
+
 .alert-warning {
   background-color: rgba(255, 193, 7, 0.7) !important;
   border-left: 2px solid rgba(255, 193, 7, 0.7);
   color: white !important;
 }
+
 /* Info message (Blue) */
-.messages .alert-info,.alert-info {
-  background-color: rgba(26, 23, 184, 0.7) !important; /* Blue with alpha */
+.messages .alert-info, .alert-info {
+  background-color: rgba(26, 23, 184, 0.7) !important;
   color: white !important;
-  border-left: 2px solid rgba(216, 216, 216, 0.7); /* Blue border */
+  border-left: 2px solid rgba(216, 216, 216, 0.7);
 }
 
+/* Select input (rating) styles */
 select[name="rating"] {
-  /* Add your styles here */
   background-color: rgba(0, 0, 0, 0.7);
   border: 2px solid #ccc;
   color: white;
@@ -323,27 +378,30 @@ select[name="rating"] {
   font-size: 16px;
 }
 
+/* Focused input styles */
 input.form-control:focus, .form-control:focus {
   background-color: rgba(0, 0, 0, 0.6);
-  border-color:  rgba(1, 97, 34, 0.8)
-
-}
-input.form-control::placeholder,.form-control::placeholder {
-  color: white !important; /* Placeholder text color */
+  border-color: rgba(1, 97, 34, 0.8);
 }
 
+/* Placeholder text styles */
+input.form-control::placeholder, .form-control::placeholder {
+  color: white !important;
+}
 
+/* Search filter container select styling */
 .search-filter-container select {
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
 }
 
+/* Search filter container option styling */
 .search-filter-container option {
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
 }
 
-
+/* Search button styling */
 .search-button {
   background: linear-gradient(45deg, rgba(202, 226, 163, 0.8), rgba(100, 150, 80, 0.8));
   border: none;
@@ -352,7 +410,7 @@ input.form-control::placeholder,.form-control::placeholder {
   color: black;
   font-weight: bold;
   transition: color 0.3s ease, transform 0.3s ease;
-  background-position: 0% 50%; 
+  background-position: 0% 50%;
   position: relative;
   overflow: hidden;
 }
@@ -363,7 +421,7 @@ input.form-control::placeholder,.form-control::placeholder {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* Optional: Adding a subtle underline on hover */
+/* Search button underline on hover */
 .search-button::after {
   content: '';
   position: absolute;
@@ -372,66 +430,75 @@ input.form-control::placeholder,.form-control::placeholder {
   width: 0;
   height: 2px;
   background-color: rgba(255, 255, 255, 0.8);
-  transition: width 0.3s ease; /* Animate underline */
+  transition: width 0.3s ease;
 }
 
 .search-button:hover::after {
-  width: 100%; /* Fill the underline on hover */
+  width: 100%;
 }
 
-
+/* Select form control styles */
 select.form-control {
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
   border: 1px solid #ccc;
 }
+
 select.form-control:focus {
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
   border-color: rgba(25, 94, 1, 0.6);
 }
 
-/* Style for the dropdown options when the dropdown is opened */
+/* Dropdown options styling */
 select.form-control option {
-  background-color: rgba(0, 0, 0, 0.6) !important;  
-  color: black !important;  /* Text color for options */
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  color: black !important;
 }
-.form-control:focus{
+
+/* Focused form control */
+.form-control:focus {
   background-color: rgba(100, 150, 80, 0.8);
 }
 
-.dark-rgba-background{
+/* Dark background class */
+.dark-rgba-background {
   background-color: rgba(0, 0, 0, 0.8) !important;
   color: white !important;
 }
-.checkout-item{
+/* Dark background class */
+.light-rgba-background {
+  background-color: rgba(0, 179, 255, 0.5) !important;
+  color: white !important;
+  
+}
+/* Checkout item styling */
+.checkout-item {
   margin: 5px;
 }
 
-/*CONTACT PAGE STYLES*/
+/* Contact Page Styles */
 
 /* Style for Contact Section */
 .contact-section {
- display: flex;
- flex-direction: column;
- justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   color: white;
   padding: 0;
 }
-
-
 
 /* Contact Info Styling */
 .contact-info .contact-item {
   font-size: 1.2rem;
   margin-bottom: 1rem;
-  
 }
+
 .contact-content {
   background-color: rgba(0, 0, 0, 0.7);
   padding: 0.6rem;
- 
 }
+
 .contact-link {
   color: white;
   font-weight: bold;
@@ -467,13 +534,88 @@ select.form-control option {
 }
 
 .social-icon:hover {
-  transform: scale(1.1);  /* Slight zoom effect on hover */
+  transform: scale(1.1);
+}
+
+/* Chat window scrollbar styles */
+#chat-window .card-body {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+#chat-window .card-body:hover {
+  scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0);
+}
+
+#chat-window .card-body::-webkit-scrollbar {
+  width: 0px;
+}
+
+#chat-window .card-body:hover::-webkit-scrollbar {
+  width: 8px;
+}
+
+#chat-window .card-body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+}
+
+/* Send button and chat header styling */
+.send-button, .chat-header {
+  background: linear-gradient(45deg, rgba(202, 226, 163, 0.8), rgba(100, 150, 80, 0.8));
+  color: white;
+}
+
+/* Center modal on the screen */
+#thankYouModal {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1050;
+  padding-top: 50px;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
+}
+
+.modal-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  max-width: 90%;
+  width: auto;
+}
+
+.modal-content {
+  z-index: 2000 !important;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.modal-backdrop {
+  display: none !important;
+}
+
+#modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1040;
+  display: block;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .contact-title {
-    font-size: 2rem; 
+    font-size: 2rem;
   }
   
   .contact-info .contact-item {
@@ -485,81 +627,3 @@ select.form-control option {
     height: 30px;
   }
 }
-
-/* Chat widow scrol bar styles */
-/* Initially hide the scrollbar */
-#chat-window .card-body {
-  overflow-y: scroll; /* Allow scrolling */
-  scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: transparent transparent; /* For Firefox */
-}
-
-/* Show scrollbar when hovered */
-#chat-window .card-body:hover {
-  scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0); /* Customize scrollbar color */
-}
-
-/* For Webkit browsers (Chrome, Safari, Edge) */
-#chat-window .card-body::-webkit-scrollbar {
-  width: 0px; /* Hide scrollbar */
-}
-
-#chat-window .card-body:hover::-webkit-scrollbar {
-  width: 8px; /* Show scrollbar on hover */
-}
-
-#chat-window .card-body::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.5); /* Customize thumb color */
-  border-radius: 4px;
-}
-.send-button, .chat-header{
-  background: linear-gradient(45deg, rgba(202, 226, 163, 0.8), rgba(100, 150, 80, 0.8));
-  color: white;
-}
-
-/* Center modal on the screen */
-#thankYouModal {
-  display: block; /* Ensure modal is visible */
-  position: fixed; /* Fix position on the screen */
-  top: 0;
-  left: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  z-index: 1050; /* Ensure it's on top of other elements */
-  padding-top: 50px; /* Add padding to give space on top */
-  overflow: hidden; /* Prevent scrolling */
-  backdrop-filter: blur(5px); /* Apply background blur */
-}
-
-.modal-dialog {
-  position: absolute;
-  top: 50%; /* Vertically center modal */
-  left: 50%; /* Horizontally center modal */
-  transform: translate(-50%, -50%) !important; /* Ensure perfect centering */
-  max-width: 90%; /* Set a max width for responsiveness */
-  width: auto;
-}
-
-.modal-content {
- z-index: 2000 !important;
-  border-radius: 10px; /* Rounded corners */
-  padding: 20px; /* Padding inside the modal */
-  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow around modal */
-}
-
-.modal-backdrop {
-  display: none !important; /* Completely hide the backdrop */
-}
-
-#modalOverlay {
-  position: fixed; /* Fixed overlay */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent dark background */
-  z-index: 1040; /* Ensure it sits behind the modal */
-  display: block; /* Show the overlay */
-}
-
-

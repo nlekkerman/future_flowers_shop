@@ -1,10 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
+
+<!-- 
+  This template handles the user-to-admin chat interface. It includes the following sections:
+
+  1. **Chat Header**: Displays the title of the chat conversation, showing the name of the user being chatted with.
+  2. **Messages Display**: A scrollable area that shows the chat history. Messages are styled differently based on the sender (current user or the selected user), and include time of sending, read status, and message content. 
+     - Messages from the current user are displayed with a blue background and white text, while others are displayed with a light background.
+     - A message can be marked as "Read" or "Sent," depending on its status.
+  3. **Message Input Form**: A form at the bottom of the chat window that allows the user to type and send new messages. It uses AJAX to send the message without reloading the page.
+     - On form submission, the message is sent asynchronously, and the new message is appended to the chat.
+  4. **AJAX Handling**: JavaScript listens for form submission, sends the message via a fetch API call, and updates the chat window with the new message in real-time.
+     - After sending, the new message is appended to the list, and the chat window automatically scrolls to the bottom to show the latest message.
+  
+  The design uses Bootstrap for the structure and layout, with additional custom styling for chat bubbles, animations, and a responsive layout.
+-->
+
 <div class="container mt-4" id="chat-window">
   <div class="shadow-lg">
-    <div class="card-header bg-primary text-white">
+
+    <div class="card-header send-button text-white">
       <h4 class="mb-0">Chat with {{ selected_user.username|capfirst }}</h4>
     </div>
+
     <div class="card-body">
       <div class="chat-box p-3 border rounded" style="height: 400px; overflow-y: auto" id="messages-list">
         {% for message in chat_messages %}
@@ -40,6 +58,7 @@
         </div>
       </form>
     </div>
+  
   </div>
 </div>
 
@@ -52,6 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
     });
+  
   document.addEventListener("DOMContentLoaded", function () {
     // Handle form submission via AJAX
     document.getElementById('message-form').addEventListener('submit', function(event) {
@@ -89,13 +109,11 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
           `;
 
-          // Append the new message to the list
           messagesList.appendChild(newMessage);
 
           // Scroll to the bottom of the chat
           messagesList.scrollTop = messagesList.scrollHeight;
 
-          // Optionally clear the input field
           document.querySelector('[name="content"]').value = '';
         }
       })

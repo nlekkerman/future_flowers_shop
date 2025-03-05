@@ -1,47 +1,52 @@
-{% extends "base.html" %}  
+{% extends "base.html" %}
 
-{% block content %} 
-<div class="navigation-container">
-    {% include 'navigation.html' %}
-    </div>
-<div class="faq-container">
-    <h1>Frequently Asked Questions</h1>
+{% block content %}
+<!--
+    FAQ Page - Frequently Asked Questions
 
-    {% for faq in faqs %}
-    <div class="faq-item">
-        <div class="faq-question">{{ faq.question }}</div>
-        <div class="faq-answer">
-            <p>{{ faq.answer }}</p>
+    This page provides users with answers to commonly asked questions regarding:
+    - Delivery policies
+    - Seed storage
+    - Return policies
+    - Planting instructions
+    - And more...
+
+    The FAQ section includes an accordion-style interface that allows users to 
+    click on each question to reveal its answer. The questions and answers are 
+    dynamically generated using Django's template language.
+
+    The page uses Bootstrap for layout and responsiveness, ensuring that 
+    users on different devices have an optimal experience.
+-->
+
+<div class="container my-4">
+    <h1 class="text-center mb-4 dark-rgba-background">Frequently Asked Questions</h1>
+
+    <div class="accordion" id="faqAccordion">
+        {% for faq in faqs %}
+        <div class="faq-card">
+            <div class="card-header dark-rgba-background" id="heading{{ forloop.counter }}">
+                <h2 class="mb-0">
+                    <button class="btn btn-link w-100 text-left" type="button" data-toggle="collapse"
+                        data-target="#collapse{{ forloop.counter }}" aria-expanded="true"
+                        aria-controls="collapse{{ forloop.counter }}">
+                        <strong>{{ faq.question }}</strong>
+                    </button>
+                </h2>
+            </div>
+
+            <div id="collapse{{ forloop.counter }}" class="collapse" aria-labelledby="heading{{ forloop.counter }}"
+                data-parent="#faqAccordion">
+                <div class="card-body dark-rgba-background">
+                    <p>{{ faq.answer }}</p>
+                </div>
+            </div>
         </div>
+        {% empty %}
+        <p>No questions available at the moment.</p>
+        {% endfor %}
     </div>
-    {% empty %}
-    <p>No questions available at the moment.</p>
-    {% endfor %}
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log("DOM fully loaded and parsed");
-        
-        const questions = document.querySelectorAll('.faq-question');
-        console.log(`Found ${questions.length} questions.`);
-
-        questions.forEach((question, index) => {
-            console.log(`Attaching click event to question ${index + 1}`);
-            question.addEventListener('click', () => {
-                console.log(`Question ${index + 1} clicked:`, question.textContent.trim());
-                question.classList.toggle('active');
-                
-                const answer = question.nextElementSibling;
-                if (answer) {
-                    answer.classList.toggle('show');
-                    console.log(`Answer visibility toggled for question ${index + 1}`);
-                } else {
-                    console.warn(`No answer found for question ${index + 1}`);
-                }
-            });
-        });
-    });
-</script>
-
 {% endblock %}
+

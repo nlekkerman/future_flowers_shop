@@ -2,6 +2,36 @@
 {% load socialaccount %}
 {% load static %}
 {% block content %} 
+<!--
+This page represents a login screen where users can enter their username and password to log into their account.
+
+### Key Sections:
+1. **Main Container**:
+   - The layout is centered both vertically and horizontally using flexbox, ensuring the login form appears in the middle of the screen.
+   - The container includes animations for smooth fading and making the user experience more dynamic.
+
+2. **Login Form**:
+   - The form allows users to input their **username** and **password**. It uses `POST` method to send the form data when the user submits.
+   - There are input fields for the username and password, with validation in place (the `required` attribute ensures that these fields cannot be left empty).
+   - Any error messages that appear during the login process (such as invalid credentials) are displayed in a dedicated area, which is updated dynamically.
+
+3. **Login Button**:
+   - The button is labeled "Login" and triggers the form submission. It is styled to take up the full width of the form.
+
+4. **Registration Link**:
+   - If the user does not have an account, they are given a link to the registration page where they can sign up.
+
+5. **Modal (Login Processing)**:
+   - A modal is displayed during the login process to inform the user that their login request is being processed.
+   - The modal shows a "Please wait..." message and an icon while the login request is sent in the background.
+   - The modal is hidden automatically once the login process is completed, either successfully or with errors.
+
+6. **JavaScript for Form Submission**:
+   - The form submission is handled asynchronously using JavaScript (with Fetch API), so the page doesn't need to reload.
+   - When the form is submitted, the data is sent to the server, and depending on the response, the page either redirects the user (on success) or shows error messages (on failure).
+   - The script also handles the modal display, so users know their request is being processed.
+
+-->
 
 <div class="container d-flex justify-content-center align-items-center animate__animated animate__fadeIn animate__slower" style="height: 100vh; ">
   <div class="form-container p-4 rounded shadow-lg dark-rgba-background" style="max-width: 400px; background-color: #f8f9fa;">
@@ -54,8 +84,8 @@
 
 <script>
   document.getElementById("login-form").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent default form submission
-
+    event.preventDefault();
+    
     // Create a FormData object to send the form data
     const formData = new FormData(this);
 
@@ -64,7 +94,7 @@
         method: "POST",
         body: formData,
     })
-    .then(response => response.json()) // Parse the JSON response
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
             // Redirect to the provided URL
@@ -72,7 +102,7 @@
         } else {
             // Display the form errors
             const errorMessages = document.getElementById("error-messages");
-            errorMessages.innerHTML = ""; // Clear previous errors
+            errorMessages.innerHTML = "";
 
             // Iterate through the errors and display them
             for (let [field, errors] of Object.entries(data.errors)) {

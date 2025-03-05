@@ -1,5 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
+
+<!-- 
+  This template is for the admin-to-user chat interface. It includes:
+
+  1. **Chat Header**: Displays the name of the user the current user is chatting with and provides a back button to return to the conversations list.
+  2. **Messages Display**: Shows the chat history in a scrollable area. The messages are differentiated by the sender (current user or selected user), with specific styling for each. 
+     - Messages from the current user have a blue background with white text, and those from the selected user have a dark background.
+     - Each message includes the sender's name, message content, timestamp, and read status.
+     - If there are no messages, a placeholder text is displayed prompting the user to start chatting.
+  3. **Message Input Form**: A form at the bottom for typing and submitting new messages. 
+     - The form uses AJAX to send the message without reloading the page.
+  4. **AJAX Functionality**: JavaScript is used to handle form submissions asynchronously.
+     - When the message is submitted, it's sent via the fetch API, and the response is used to dynamically append the new message to the chat window.
+     - The chat window automatically scrolls to the bottom when a new message is sent, ensuring the latest message is visible.
+     - New messages are animated into the chat using the Animate.css library, and their visibility is controlled for smooth transitions.
+
+  The page also provides a responsive, animated, and user-friendly design using Bootstrap and custom styles for the chat interface.
+-->
+
 <div class="container my-4 vh-100 mt-5 d-flex justify-content-center">
     <!-- Chat Box -->
     <div class="col-md-8 animate__animated animate__fadeIn animate__slower" id="chat-window-user">
@@ -10,8 +29,8 @@
             <a href="{% url 'communications:conversations' %}" class="btn send-button">
                 <i class="fas fa-arrow-right text-white " id="toggle-chat"></i> Back
             </a>
-            
           </div>
+
           <div class="card-body overflow-auto" style="height: 400px" id="messages-list">
             {% for message in chat_messages %}
             <div
@@ -62,7 +81,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Scroll to the bottom of the chat window when it loads
         const chatWindow = document.querySelector('#chat-window-user .card-body');
         if (chatWindow) {
             chatWindow.scrollTop = chatWindow.scrollHeight;
