@@ -125,8 +125,8 @@
           {% if review.comments.count == 0 %}
           <li class="text-white bg-info text-center">No comments yet.</li>
           {% else %} {% for comment in approved_comments %}
-          <li class="comment-body light-rgba-background rounded p-1">
-            <strong>{{ comment.user.username }}</strong><br> {{ comment.text }}
+          <li class="list-group-item">
+            <strong>{{ comment.user.username }}</strong>: {{ comment.text }}
             <small class="text-muted d-block">
               {{ comment.created_at|date:"F j, Y, g:i a" }}
             </small>

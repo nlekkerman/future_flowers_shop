@@ -78,6 +78,11 @@ def home(request):
 def seed_detail(request, seed_id):
     seed = get_object_or_404(Seed, id=seed_id)
     reviews = Review.objects.filter(seed=seed, status='approved').select_related('user')
+    
+    # Calculate average rating from approved reviews
+    seed.avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+    seed.avg_rating = round(seed.avg_rating, 1) if seed.avg_rating else None
+    
     # Get approved comments for each review
     approved_comments = Comment.objects.filter(review__in=reviews, status='approved')
     # Initialize the review form and comment form
@@ -135,6 +140,7 @@ def seed_detail(request, seed_id):
         'approved_comments': approved_comments,
         'review_form': review_form,
         'comment_form': comment_form,
+        
     })
     """
     Adds a seed to the cart. If the cart does not exist, it creates a new session cart.
