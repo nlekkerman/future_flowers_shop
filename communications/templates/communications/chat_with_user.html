@@ -25,7 +25,7 @@
         {% if selected_user %}
         <div class="dark-rgba-background">
           <div class="card-header chat-header text-white d-flex justify-content-between align-items-center">
-            <span>Chat with {{ selected_user.username }}</span>
+            <span>Chat with {{ selected_user.username|capfirst }}</span>
             <a href="{% url 'communications:conversations' %}" class="btn send-button">
                 <i class="fas fa-arrow-right text-white " id="toggle-chat"></i> Back
             </a>

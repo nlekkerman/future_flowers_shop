@@ -39,6 +39,8 @@
     </div>
 
     <div class="col-md-6 dark-rgba-background pb-3 d-flex flex-column justify-content-center">
+      <h4 class="card-title">{{ seed.name }}</h4>
+
       <h4>Scientific Name: {{ seed.scientific_name }}</h4>
       <p><strong>Rating:</strong>
         {% if seed.avg_rating %}
@@ -247,7 +249,7 @@
 {% if messages %}
 <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" data-show-modal="true">
     <div class="modal-dialog dark-rgba-background" role="document">
-        <div class="modal-content">
+        <div class="seed-detail-message">
             <div class="modal-header">
                 <h5 class="modal-title" id="messageModalLabel">Message</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">

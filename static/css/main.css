@@ -465,7 +465,8 @@ select.form-control option {
 
 /* Dark background class */
 .dark-rgba-background {
-  background-color: rgba(0, 0, 0, 0.8) !important;
+  background-color: rgba(0, 0, 0, 0.9) !important;
+  font-weight: bold;
   color: white !important;
 }
 /* Dark background class */
