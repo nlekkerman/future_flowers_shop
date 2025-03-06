@@ -1,8 +1,26 @@
 {% extends 'base.html' %} {% block content %}
+
+<!-- 
+This template extends the 'base.html' layout and is used to create a new seed entry in the database.
+
+It contains the following sections:
+1. **System Messages**: Displays any messages (e.g., success or error) from the backend.
+These messages are displayed dynamically based on the context and are shown in alert boxes,
+which can be dismissed by the user.
+2. **Seed Creation Form**: This form allows an admin or authorized user to input information about a new seed.
+   
+The form uses POST method and includes CSRF protection with the `{% csrf_token %}` tag. The layout is responsive and centered with styling applied for a clean presentation.
+-->
+
 <div class="container mt-5 d-flex justify-content-center vw-100 flex-column align-items-center">
   <h2 class="text-center mb-4 text-bold text-white">Create a New Seed</h2>
 
-  <!-- Centered Alert Messages -->
+  <!--
+  This section is responsible for displaying system messages (e.g., success, error) to the user.
+  - The messages are looped through and displayed inside alert boxes. 
+  - Each alert box is dismissible (can be closed) by the user.
+  - The alert's style changes dynamically based on the message type (e.g., success, error).
+  -->
   {% if messages %}
   <div class="alert-container d-flex justify-content-center">
     <div class="alert-box">
@@ -26,12 +44,33 @@
   </div>
   {% endif %}
 
-  <!-- Seed Creation Form -->
+  <!--
+  Seed Creation Form:
+  This form allows the admin or user with permissions to create a new seed entry in the database.
+  It contains the following fields for various seed properties, including basic information, growth preferences, and stock details:
+
+  1. Seed Name: Name of the seed (common name).
+  2. Scientific Name: The scientific name of the seed.
+  3. Description: Detailed description of the seed.
+  4. Planting Months From: The month in which planting should start.
+  5. Planting Months To: The month in which planting should end.
+  6. Flowering Months From: The month in which flowering begins.
+  7. Flowering Months To: The month in which flowering ends.
+  8. Category: The category of the seed (e.g., vegetable, herb, flower).
+  9. Height From (cm): The minimum height the plant can grow in centimeters.
+  10. Height To (cm): The maximum height the plant can grow in centimeters.
+  11. Sun Preference: The seed's sun exposure preference (e.g., full sun, partial shade).
+  12. Price ($): The price of the seed in dollars.
+  13. Discount (%): The discount percentage on the seed.
+  14. In Stock?: A field to specify if the seed is available in stock.
+  15. In Stock Number: The quantity of seeds available in stock.
+  16. Seed Image: An image of the seed for visual representation.
+
+  -->
   <div class="dark-rgba-background d-flex shadow p-4 " style="max-width: 600px">
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
 
-      <!-- Render form fields with Bootstrap styling -->
       <div class="form-group">
         <label for="id_name" class="custom-label">Seed Name</label>
         {{ form.name }}

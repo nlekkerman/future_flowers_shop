@@ -470,6 +470,20 @@ def delete_comment(request, id):
     })
     
 def custom_404(request, exception):
+    """
+    Custom 404 error handler.
+
+    This function handles requests that result in a 'Page Not Found' (404) error.
+    It renders a custom 404 error page (`404.html`) located in the `custom_accounts` folder
+    and returns a response with a 404 status code.
+    
+    Args:
+    - request: The HTTP request object that triggered the 404 error.
+    - exception: The exception raised when the page is not found (not used here, but included for compatibility).
+    
+    Returns:
+    - A rendered 404 error page with a 404 HTTP status.
+    """
     return render(request, 'custom_accounts/404.html', {}, status=404)
 
 def welcome_message(request):

@@ -26,15 +26,15 @@
 
   {% if cart_items %}
   <!-- 
-  This section displays all the items currently in the user's cart.
-  For each item, a card is shown with:
-  - The seed image, name, price (with discount), and quantity.
-  - A form to update the quantity of the item in the cart.
-  - The total price for that item based on the quantity selected.
-  - A button to remove the item from the cart, which opens a modal for confirmation.
-  
-  Below each item card, there is a modal to confirm the removal of the item from the cart.
--->
+    This section displays all the items currently in the user's cart.
+    For each item, a card is shown with:
+    - The seed image, name, price (with discount), and quantity.
+    - A form to update the quantity of the item in the cart.
+    - The total price for that item based on the quantity selected.
+    - A button to remove the item from the cart, which opens a modal for confirmation.
+    
+    Below each item card, there is a modal to confirm the removal of the item from the cart.
+  -->
   <div class="row animate__animated animate__fadeIn animate__slower">
     {% for item in cart_items %}
     <div class="col-md-6 col-lg-4 mb-4">
@@ -55,7 +55,21 @@
         </div>
       </div>
     </div>
-    <!-- Modal for Removal Confirmation -->
+    
+    <!-- 
+    Bootstrap modal for confirming item removal from the basket.
+
+    1. **Modal Container**: Identified by `id="removeModal{{ item.id }}"`, with `fade` for smooth transition.
+    2. **Dialog & Content**: Holds the modal structure with a custom background.
+    3. **Header**: Displays "Confirm Removal" and includes a close button.
+    4. **Body**: Shows a message with `{{ item.seed.name }}` to confirm item removal.
+    5. **Footer**: 
+      - "Cancel" button closes the modal.
+      - "Remove" button links to `{% url 'cart:remove_from_cart' item.id %}` to delete the item.
+
+    Triggered by a UI event, this modal ensures user confirmation before removing an item. 
+    -->
+
     <div class="modal fade" id="removeModal{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content dark-rgba-background">
@@ -78,7 +92,19 @@
     {% endfor %}
   </div>
 
-  <!-- Pagination Controls 3 items per page -->
+  <!-- 
+  Pagination controls for displaying 3 items per page.
+
+  1. **Container**: `d-flex justify-content-center mt-4 p-2` centers the pagination.
+  2. **Pagination List**: `pagination dark-rgba-background p-2` styles the controls.
+  3. **Navigation**:
+    - "First" and "Previous" links appear if there are previous pages.
+    - Displays the current page and total pages.
+    - "Next" and "Last" links appear if there are more pages.
+
+  Allows users to navigate through paginated cart items. 
+  -->
+
   <div class="d-flex justify-content-center mt-4 p-2">
     <ul class="pagination dark-rgba-background p-2">
       {% if cart_items.has_previous %}
@@ -92,7 +118,20 @@
       {% endif %}
     </ul>
   </div>
-  <!-- Order Summary card -->  
+  <!-- 
+  Order Summary Card displaying pricing details and actions.
+
+  1. **Container**: `card shadow-lg mt-4 border-0 dark-rgba-background` for styling.
+  2. **Card Body**:
+      - Title: "💰 Order Summary".
+      - Displays `Subtotal`, `Discounts`, `Delivery Fee`, and `Grand Total`.
+  3. **Actions**:
+      - "❌ Clear Basket" button opens a modal.
+      - "✅ Checkout Now" button redirects to checkout.
+
+   Provides a concise order summary with checkout options. 
+  -->
+
   <div class="card shadow-lg mt-4 border-0 dark-rgba-background">
     <div class="card-body text-center">
       <h4 class="card-title">💰 Order Summary</h4>
@@ -112,7 +151,21 @@
   {% endif %}
 </div>
 
-<!-- Modal for Displaying Messages -->
+<!-- 
+Modal for displaying messages and cart item details.
+1. **Container**: `modal fade` with `id="messageModal"`, triggered when messages exist.
+2. **Header**: Displays "Message" with a close button.
+3. **Body**:
+    - Loops through `messages` to display them.
+    - If `cart_items` exist, it lists items with images and quantities.
+4. **Footer**:
+    - "Close" button dismisses the modal.
+    - "Go to Home" button redirects to the homepage.
+
+Used for displaying notifications and cart updates.
+ 
+-->
+
 {% if messages %}
 <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" data-show-modal="true">
   <div class="modal-dialog" role="document">
@@ -147,7 +200,19 @@
 </div>
 {% endif %}
 
-<!-- Modal for ask user if he want to clear complete Cart -->
+<!-- 
+Modal to confirm clearing the entire cart.
+
+1. **Container**: `modal fade` with `id="clearCartModal"` for smooth transition.
+2. **Header**: Displays "Confirm Clear Cart" with a close button.
+3. **Body**: Warning message about irreversible cart clearing.
+4. **Footer**:
+   - "Cancel" button to dismiss the modal.
+   - "Clear Cart" button links to `{% url 'cart:clear_cart' %}`.
+
+Ensures user confirmation before deleting all cart items. 
+-->
+
 <div class="modal fade" id="clearCartModal" tabindex="-1" role="dialog" aria-labelledby="clearCartModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content dark-rgba-background">

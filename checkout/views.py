@@ -103,8 +103,8 @@ def cache_checkout_data(request):
 
 def checkout(request):
     """
-    The `checkout` view function handles the entire checkou
-    t process for the user.
+    The `checkout` view function handles the entire checkout
+    process for the user.
     This process includes collecting form data
     (such as shipping details), validating
     the cart, creating an order, and integrating
@@ -551,6 +551,32 @@ def order_detail(request, order_number):
 def send_order_confirmation_email(order):
     """
     Sends an order confirmation email to the user with order details.
+
+    This function constructs an email containing:
+    
+    1. **Email Subject**:
+       - Includes the order number for easy reference.
+    
+    2. **Sender and Recipient**:
+       - Uses the default email sender from settings.
+       - Sends the email to the customer's provided email address.
+
+    3. **Email Body**:
+       - Greets the customer by name.
+       - Confirms their purchase from Future Flower Shop.
+       - Provides order details including:
+         - Order number.
+         - Order date.
+         - List of purchased items with their quantity and price.
+         - Grand total of the order.
+       - Includes a friendly message encouraging customers to enjoy their purchase and reach out for support if needed.
+
+    4. **Logging and Error Handling**:
+       - Logs debugging messages to track the email-building process.
+       - Catches exceptions if the email fails to construct or send.
+       - Logs errors with relevant details to assist in troubleshooting.
+
+    Ensures that customers receive timely confirmation and details about their order.
     """
 
     subject = f"Order Confirmation - Order #{order.order_number}"

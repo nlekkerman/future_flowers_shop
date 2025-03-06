@@ -3,7 +3,39 @@
 {% block content %}
 <div class="container mt-5 wh-100">
   
+<!-- 
+  This template is for displaying the home page of a seed shop. It includes several key sections:
 
+  1. **Search and Filter Section**: 
+     - This section enables users to search for seeds using a search bar and filter the available seeds by various criteria (e.g., discounted, price high to low, newest, etc.).
+     - The search bar allows users to input text, and the filter dropdown enables sorting options that update the seed list based on the chosen filter.
+     - The form uses the GET method to submit the search or filter query, and the results are dynamically updated based on the user's input.
+
+  2. **Seed Listings Section**: 
+     - This section displays a grid of seed items, each with an image (or default image if none is provided), seed name, rating, description, scientific name, category, and price.
+     - For each seed, it also shows the stock availability (whether it is in stock or out of stock). If the seed is in stock, a form is displayed allowing the user to select a quantity and add it to their shopping cart.
+     - The price section adjusts dynamically based on whether the seed has a discount applied. If there is a discount, the original price is shown with a strikethrough and the discounted price is highlighted.
+     - The seed details are shown in a card layout with a responsive grid that adjusts to different screen sizes.
+
+  3. **Pagination Section**: 
+     - If the seed list is long, pagination is included at the bottom to allow users to navigate between pages of seed listings.
+     - It includes buttons for going to the first page, previous page, next page, and last page. 
+     - The current page number is displayed, along with the total number of pages, giving the user an overview of how many pages of seeds are available.
+
+  4. **Message Modal Section**:
+     - If any messages are present (such as success or error messages), they are displayed in a modal dialog.
+     - The modal shows the messages inside a scrollable container, and the user can close the modal once they’ve read the message. This is useful for displaying alerts or notifications to the user without leaving the page.
+
+  5. **AJAX and JavaScript Section**:
+     - JavaScript is used to control dynamic interactions on the page. When adding a seed to the cart, AJAX is used to handle the submission of the quantity and the addition to the cart without reloading the page.
+     - The page includes custom JavaScript functionality to trigger the message modal on page load if there are any messages, and to smoothly handle user interactions such as adding seeds to the cart.
+
+  6. **Responsive Design**:
+     - The page uses Bootstrap classes for a responsive layout, ensuring the content adjusts properly to different screen sizes. This makes the page mobile-friendly and usable on both small and large devices.
+     - Animations using Animate.css are incorporated for smooth transitions, such as when a seed item is added to the cart.
+
+  In summary, this template provides a user-friendly, interactive, and visually appealing interface for browsing and purchasing seeds with various filtering and sorting options.
+-->
 <div class="search-filter-container animate__animated animate__slideInDown">
   <div class="row mb-4">
     <div class="col-12 col-md-8 mx-auto">
@@ -50,8 +82,8 @@
   <!-- Seed Listings -->
   <div class="row seed-container">
     {% for seed in seeds %}
-    <div class="col-md-4 mb-4 animate__animated animate__fadeIn animate__slower">
-      <div class="card seed-item-card shadow-sm">
+    <div class="col-md-4 mb-4 animate__animated animate__fadeIn animate__slower ">
+      <div class="seed-item-card custom-border">
         {% if seed.image %}
        
         <img src="{{ seed.image.url }}?f_auto,q_auto" class="card-img-top seed-image" alt="{{ seed.name }}">

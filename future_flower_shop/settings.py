@@ -22,6 +22,7 @@ logging.basicConfig(level=logging.DEBUG)
 if os.path.exists('env.py'):
     import env
 
+
 # Define environment variables using python-decouple
 SECRET_KEY = config('SECRET_KEY')
 
@@ -36,19 +37,23 @@ STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY', '')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
 STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET', '')
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+
 
 ALLOWED_HOSTS = [
     '8000-nlekkerman-futureflower-1hc6w6cgvfw.ws-eu118.gitpod.io',
     '.herokuapp.com'
 ]
 
+
 CSRF_TRUSTED_ORIGINS = [
     'https://*.gitpod.io',
     'https://*.herokuapp.com',
     'https://8000-nlekkerman-futureflower-1hc6w6cgvfw.ws-eu117.gitpod.io'
 ]
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -91,7 +96,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # Ensure allauth middleware is included
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 
@@ -103,6 +108,7 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'error',
 }
+
 
 ROOT_URLCONF = 'future_flower_shop.urls'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
@@ -137,6 +143,7 @@ TEMPLATES = [
     },
 ]
 
+
 # Social Account Providers Configuration
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -155,10 +162,14 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
+
+
 # settings.py
 FREE_DELIVERY_THRESHOLD = 50
 STANDARD_DELIVERY_PERCENTAGE = 10

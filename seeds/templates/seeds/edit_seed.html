@@ -1,9 +1,24 @@
 {% extends 'base.html' %} {% block content %}
+<!-- 
+This template extends the 'base.html' layout and is used for editing an existing seed entry.
+
+It contains the following sections:
+
+1. **System Messages**: Displays success or error messages.
+
+2. **Seed Edit Form**
+
+The form uses the POST method and includes CSRF protection (`{% csrf_token %}`). The layout is responsive and the form fields are arranged to be visually clean and user-friendly. The form also includes 'Update' and 'Cancel' buttons for saving changes or returning to the previous page.
+-->
+
+
 <div class="container mt-4">
   <h2>Edit Seed</h2>
   <hr />
 
-  <!-- Display success/error messages -->
+  <!-- Display success/error messages  if any, after the form submission.
+  The messages are dynamically styled (success or error) and can be dismissed by the user.
+  -->
   {% if messages %}
   <div class="alert alert-dismissible">
     {% for message in messages %}
@@ -16,7 +31,18 @@
   </div>
   {% endif %}
 
-  <!-- Seed Edit Form -->
+  <!-- Seed Edit Form: A form for editing an existing seed, pre-populated with current seed data. This form allows the user to modify various seed attributes such as:
+   - Seed Name
+   - Scientific Name
+   - Description
+   - Planting and Flowering Months (From and To)
+   - Category
+   - Height (Minimum and Maximum)
+   - Sun Preference
+   - Price and Discount
+   - Stock Quantity and Stock Status
+   - Seed Image (for visual representation)
+ -->
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 

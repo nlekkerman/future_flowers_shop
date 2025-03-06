@@ -23,13 +23,26 @@ from django.http import JsonResponse
 from .models import Seed
 
 def seed_list(request):
-    print("🌱 seed_list view was called!")  # Debugging statement
+    """
+    View to display a list of available seeds that are in stock.
 
-    seeds = Seed.objects.filter(is_in_stock=True)  # Fetch only seeds in stock
-    print("Seeds found:", seeds)  # Check if seeds are being fetched
+    This view retrieves all seeds from the database that are marked as in stock 
+    (i.e., `is_in_stock=True`). If seeds are found, they will be displayed to the 
+    user. If no seeds are available, a message indicating "No seeds found!" 
+    will be returned as a plain text response.
+
+    Attributes:
+        request (HttpRequest): The request object containing the details of the HTTP request.
+
+    Returns:
+        HttpResponse: 
+            - A plain text message if no seeds are found.
+            - A list of available seeds (additional logic may follow to render them).
+    """
+    seeds = Seed.objects.filter(is_in_stock=True)
 
     if not seeds.exists():
-        return HttpResponse("No seeds found!", content_type="text/plain")  # Debugging response
+        return HttpResponse("No seeds found!", content_type="text/plain")
 
     return render(request, 'seeds/seeds.html', {'seeds': seeds})
 
@@ -63,6 +76,7 @@ def create_seed_view(request):
 
     return render(request, 'seeds/create_seed.html', {'form': form})
 
+
 # Edit Seed View
 def edit_seed_view(request, id):
     """
@@ -95,6 +109,7 @@ def edit_seed_view(request, id):
         form = SeedForm(instance=seed)  # Pre-fill form with existing seed data
 
     return render(request, 'seeds/edit_seed.html', {'form': form, 'seed': seed})
+
 
 # Delete Seed View
 def delete_seed_view(request, id):

@@ -1,13 +1,25 @@
 {% extends "base.html" %} {% load static %} {% block content %}
 <div class="container mt-5">
   
+  <!--Seed Name Header-->
   <h1 class="text-center mb-4 dark-rgba-background">{{ seed.name }}</h1>
+  
+   <!-- 
+    Continue Shopping Button:
+    A button that redirects the user to the homepage of the shop, allowing them to continue browsing other seeds.
+    It uses the `home:home` URL to go back to the seed listings page.
+  -->
   <div class="mt-3 mb-3">
-    <a href="{% url 'home:home' %}" class="btn send-button">
+    <a href="{% url 'home:home' %}" class="btn custom-button">
       ⏪ Continue Shopping
     </a>
   </div>
-  <!-- Seed Details -->
+  <!-- 
+    Seed Details Section:
+    Displays detailed information about the seed, including its image,
+    scientific name, category, sun preference,
+    price, stock status, and the option to add it to the cart.
+  -->
   <div class="col p-0 d-flex justify-content-center align-items-center flex-column">
     <div class="col-md-6 p-0">
       {% if seed.image %}
@@ -83,7 +95,41 @@
     </div>
   </div>
 
-  <!-- Reviews Section -->
+  <!-- 
+    Reviews Section:
+    This section displays a list of reviews associated with the seed product. 
+    Each review includes the following details:
+    
+    1. **Reviewer Username**: The username of the person who left the review, displayed as a bold text in the header of the review.
+    2. **Review Date**: The date and time the review was created, formatted as "Month Day, Year, Hour:Minute AM/PM".
+    3. **Review Comment**: The actual text of the review left by the reviewer, providing their opinion or feedback about the seed product.
+    4. **Approved Comments Count**: Displays the number of approved comments for the review. This allows users to see how much interaction the review has received.
+
+    Conditional actions for the review:
+    - If the user viewing the page is the same user who created the review, additional options are available:
+      - **Edit**: A button that directs the user to an editing page for the review. This allows the reviewer to modify their review if needed.
+      - **Delete**: A button that lets the reviewer delete their review from the system. This action is confirmed with a prompt to avoid accidental deletions.
+
+    **Display Comments Under Each Review**:
+    Each review can have associated comments, which are displayed in the list. These comments are shown below the review comment, providing further feedback from other users.
+    - If no comments are present, a message "No comments yet" is shown.
+    - If comments exist, each comment includes:
+      - The username of the commenter.
+      - The text content of the comment.
+      - The date and time when the comment was created, formatted similarly to the review date.
+    
+    Conditional actions for the comments:
+    - If the user viewing the page is the same user who wrote the comment, they have the ability to:
+      - **Edit**: Allows the commenter to modify their comment.
+      - **Delete**: Allows the commenter to delete their comment with a confirmation prompt.
+
+    **Add a Comment Form**:
+    If the user is logged in, they are provided with a form to add their own comment to a review. The comment form includes:
+    - A **textarea** for writing the comment.
+    - A **submit button** to submit the comment.
+    If the user is not logged in, they are prompted to log in before being able to comment, providing a link to the login page.
+-->
+
   <div class="my-5 reviews-container p-2">
     <h2>📝 Reviews & Comments</h2>
 

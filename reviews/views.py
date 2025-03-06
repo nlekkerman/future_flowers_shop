@@ -52,8 +52,20 @@ def reviews(request):
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 def edit_review(request, review_id):
+    """
+    Edits an existing review submitted by the user.
+
+    Parameters:
+        request (HttpRequest): The HTTP request containing the form data.
+        review_id (int): The ID of the review to be edited.
+
+    Returns:
+        HttpResponse: A response rendering the edit review form if the request method is GET,
+                      or redirecting to the seed detail page if the review is successfully updated.
+    """
+    
     review = get_object_or_404(Review, id=review_id)
-    print(f"Review ID: {review.id}, Seed: {review.seed}")
+
     if request.user != review.user:
         messages.error(request, "You don't have permission to edit this review.")
         return redirect('home:seed_detail', seed_id=review.seed.id)
@@ -71,7 +83,20 @@ def edit_review(request, review_id):
 
     return render(request, 'edit_review.html', {'form': form, 'review':review})
 
+
 def delete_review(request, review_id):
+    """
+    Deletes an existing review submitted by the user.
+
+    Parameters:
+        request (HttpRequest): The HTTP request to delete the review.
+        review_id (int): The ID of the review to be deleted.
+
+    Returns:
+        HttpResponse: A redirect to the seed detail page after the review is deleted,
+                      or a message if the user does not have permission to delete the review.
+    """
+    
     review = get_object_or_404(Review, id=review_id)
 
     if request.user != review.user:
@@ -82,7 +107,20 @@ def delete_review(request, review_id):
     messages.success(request, "Review deleted successfully.")
     return redirect('home:seed_detail', seed_id=review.seed.id)
 
+
 def edit_comment(request, comment_id):
+    """
+    Edits an existing comment on a review.
+
+    Parameters:
+        request (HttpRequest): The HTTP request to edit the comment.
+        comment_id (int): The ID of the comment to be edited.
+
+    Returns:
+        HttpResponse: A redirect to the seed detail page after the comment is updated,
+                      or a message if the user does not have permission to edit the comment.
+    """
+    
     comment = get_object_or_404(Comment, id=comment_id)
 
     if request.user != comment.user:
@@ -101,7 +139,20 @@ def edit_comment(request, comment_id):
 
     return render(request, 'edit_comment.html', {'form': form,'comment': comment})
 
+
 def delete_comment(request, comment_id):
+    """
+    Deletes an existing comment on a review.
+
+    Parameters:
+        request (HttpRequest): The HTTP request to delete the comment.
+        comment_id (int): The ID of the comment to be deleted.
+
+    Returns:
+        HttpResponse: A redirect to the seed detail page after the comment is deleted,
+                      or a message if the user does not have permission to delete the comment.
+    """
+    
     comment = get_object_or_404(Comment, id=comment_id)
 
     if request.user != comment.user:

@@ -1,4 +1,17 @@
 {% extends "base.html" %} {% block content %}
+
+<!--
+This template is used to render a page where users can edit an existing review on a seed.
+- The page is part of a larger base layout, which is extended by `{% extends "base.html" %}`.
+- The content block `{% block content %}` defines the content specific to this page.
+- Displays a heading "Edit Your Review" to inform the user about the page's purpose.
+- The form uses the POST method to submit the updated review.
+- `{% csrf_token %}` ensures protection against Cross-Site Request Forgery (CSRF) attacks.
+- The form fields are rendered as paragraph tags using `{{ form.as_p }}`.
+- A "Save Changes" button allows the user to submit the changes.
+- A "Cancel" button links to the seed detail page for the specific seed associated with the review, redirecting the user without saving the changes.
+-->
+
 <div class="container mt-5">
   <h2>Edit Your Review</h2>
   <form method="post">

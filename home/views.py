@@ -13,16 +13,26 @@ logger = logging.getLogger(__name__)
 
 
 def home(request):
+    """
+    Handles displaying the home page with a list of seeds. 
+    It allows users to filter, search, and sort seeds.
+    - Retrieves search query, category, and filter option from the GET request.
+    - Filters seeds based on the search query, category, and any other selected filter option.
+    - Displays seeds with their details such as name, price, and description.
+    - Allows sorting seeds by price, discount, or date based on the selected filter.
+    - Includes pagination to display a limited number of seeds per page.
+    - Calculates and displays average ratings for each seed based on user reviews.
+    """
+    
     # Get filters from GET request
-    search_query = request.GET.get('search', '')  # Search query
-    category = request.GET.get('category', '')  # Category filter
-    filter_option = request.GET.get('filter', '')  # Sorting/filtering option
+    search_query = request.GET.get('search', '')
+    category = request.GET.get('category', '')
+    filter_option = request.GET.get('filter', '')
 
     # Start with all seeds
     seeds = Seed.objects.all()
 
     for seed in seeds:
-        # Add a range from 1 to the in_stock_number for each seed
         seed.range = range(1, seed.in_stock_number + 1)
     
     # Apply search filter if provided
@@ -42,13 +52,13 @@ def home(request):
     if filter_option == 'discounted':
         seeds = seeds.filter(discount__gt=0)
     elif filter_option == 'high_to_low':
-        seeds = seeds.order_by('-price')  # Sort by price, descending (high to low)
+        seeds = seeds.order_by('-price')
     elif filter_option == 'low_to_high':
-        seeds = seeds.order_by('price')  # Sort by price, ascending (low to high)
+        seeds = seeds.order_by('price')
     elif filter_option == 'newest':
-        seeds = seeds.order_by('-created_at')  # Sort by creation date, descending (newest first)
+        seeds = seeds.order_by('-created_at')
     elif filter_option == 'oldest':
-        seeds = seeds.order_by('created_at')  # Sort by creation date, ascending (oldest first)
+        seeds = seeds.order_by('created_at')
         
      # Add average rating to each seed
     for seed in seeds:
@@ -56,13 +66,14 @@ def home(request):
         if reviews.exists():
             # Calculate the average rating for each seed
             avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
-            seed.avg_rating = avg_rating  # Assign the average rating to the seed
+            seed.avg_rating = avg_rating
         else:
-            seed.avg_rating = None  # No rating if no reviews are present
+            seed.avg_rating = None
+
     # Pagination
-    paginator = Paginator(seeds, 6)  # Show 9 seeds per page
-    page_number = request.GET.get('page')  # Get the current page number from the GET request
-    page_obj = paginator.get_page(page_number)  # Get the page object
+    paginator = Paginator(seeds, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     # Return the sorted and filtered seeds to the template
     context = {
@@ -76,6 +87,17 @@ def home(request):
 
 
 def seed_detail(request, seed_id):
+    """
+    Handles displaying the details of a specific seed, including its reviews and comments.
+    - Retrieves the seed object based on the seed ID.
+    - Fetches approved reviews related to the seed and calculates the average rating.
+    - Retrieves approved comments for each review.
+    - Displays the review form and comment form for user submissions.
+    - Handles comment and review submission via POST requests.
+    - Provides success and error messages based on the submission results.
+    - Displays the list of reviews, comments, and the average rating for the seed.
+    """
+
     seed = get_object_or_404(Seed, id=seed_id)
     reviews = Review.objects.filter(seed=seed, status='approved').select_related('user')
     

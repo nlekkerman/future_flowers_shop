@@ -32,9 +32,10 @@ body {
 
 /* Navbar styling */
 nav {
-  background-color: rgba(202, 226, 163, 0.8) !important;
+  background-color: rgba(212, 212, 212, 0.8) !important;
+  border-bottom:5px solid rgba(7, 37, 1, 0.3) !important;
+
   padding: 0.7em 0em;
-  border-bottom: 4px solid rgba(107, 110, 102, 0.8);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
@@ -135,7 +136,8 @@ button.navbar-toggler {
 
 /* Footer styling */
 footer {
-  background-color: rgba(202, 226, 163, 0.8) !important;
+  background-color: rgba(212, 212, 212, 0.8) !important;
+  border-top:5px solid rgba(7, 37, 1, 0.3) !important;
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -561,8 +563,9 @@ select.form-control option {
   border-radius: 4px;
 }
 
+
 /* Send button and chat header styling */
-.send-button, .chat-header {
+.send-button, .chat-header, .custom-button {
   background: linear-gradient(45deg, rgba(202, 226, 163, 0.8), rgba(100, 150, 80, 0.8));
   color: white;
 }
@@ -611,6 +614,12 @@ select.form-control option {
   z-index: 1040;
   display: block;
 }
+
+.custom-border {
+  border: 3px solid transparent;
+  border-radius: 5px;
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
