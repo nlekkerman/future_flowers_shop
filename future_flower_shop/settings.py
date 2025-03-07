@@ -100,6 +100,9 @@ MIDDLEWARE = [
 ]
 
 
+X_FRAME_OPTIONS = "ALLOWALL"
+
+
 # Message tags
 MESSAGE_TAGS = {
     messages.DEBUG: 'debug',
