@@ -39,7 +39,7 @@ STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET', '')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 
 ALLOWED_HOSTS = [
@@ -99,8 +99,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-
-X_FRAME_OPTIONS = "ALLOWALL"
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 
 # Message tags

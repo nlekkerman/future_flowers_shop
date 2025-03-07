@@ -465,7 +465,8 @@ select.form-control option {
 
 /* Dark background class */
 .dark-rgba-background {
-  background-color: rgba(0, 0, 0, 0.8) !important;
+  background-color: rgba(0, 0, 0, 0.9) !important;
+  font-weight: bold;
   color: white !important;
 }
 /* Dark background class */
@@ -589,8 +590,8 @@ select.form-control option {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) !important;
-  max-width: 90%;
-  width: auto;
+  max-width: 80%;
+  width: 100%;
 }
 
 .modal-content {

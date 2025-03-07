@@ -138,14 +138,14 @@
     {% if reviews %}
     <ul class="list-group list-unstyled pb-2">
       {% for review in reviews %}
-      <li class="list-group-item dark-rgba-background">
+      <li class=" dark-rgba-background">
         <div class="d-flex justify-content-between ">
           <strong>{{ review.user.username }}</strong>
           <small class="text-muted">
             {{ review.created_at|date:"F j, Y, g:i a" }}
           </small>
         </div>
-        <p>{{ review.comment }}</p>
+        <p class="dark-rgba-background mb-1 p-2">{{ review.comment }}</p>
 
         <!-- Display the number of approved comments for this review -->
         <small class="text-muted">
@@ -173,9 +173,9 @@
           {% if review.comments.count == 0 %}
           <li class="text-white bg-info text-center">No comments yet.</li>
           {% else %} {% for comment in approved_comments %}
-          <li class="list-group-item">
-            <strong>{{ comment.user.username }}</strong>: {{ comment.text }}
-            <small class="text-muted d-block">
+          <li class="bg-dark mb-1 p-2">
+            <strong>{{ comment.user.username }}</strong>: <span class="dark-rgba-background rounded p-1"> {{ comment.text }}</span>
+            <small class="text-white d-block p-1 text-small">
               {{ comment.created_at|date:"F j, Y, g:i a" }}
             </small>
 
