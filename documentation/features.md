@@ -384,10 +384,6 @@ The system leverages **AJAX** for asynchronous communication, providing a seamle
 - The chat window updates in real-time as new messages are sent and received.
 - The admin can mark messages as "Read" or "Sent" based on the message's status.
 
-#### Screenshot:
-
-![Admin-to-User Chat Interface](path/to/your/image1.png)
-
 ---
 
 #### 6.2 User-to-Admin Chat Interface
@@ -521,6 +517,8 @@ Key Features:
 
 ---
 
+![Checkout Page](images/features/checkout-one.webp) ![Checkout Page](images/features/checkout-two.webp)
+
 ### 8.2 Template Breakdown
 
 #### 8.2.1 Cart Items
@@ -568,7 +566,7 @@ This template should be used in conjunction with appropriate view logic and back
 
 ---
 
-### 8. Order Success Page Template
+### 8. Checkout Success Page Template
 
 #### 8.1 Overview
 
@@ -582,6 +580,8 @@ Key Features:
 - Billing Information: Shows the order total, delivery costs, and grand total.
 
 ---
+
+![Checkout Page](images/features/checkout-success.webp)
 
 #### 8.2 Template Breakdown
 
@@ -651,7 +651,7 @@ The **About Us** section introduces **Future Flower Shop** as an online store pr
 - **Mission and Vision**: A statement about the company’s goals to inspire individuals to reconnect with nature and create a greener world.
 - **Core Values**: The company’s commitment to sustainability, quality, and customer satisfaction.
 
-![About Us Page Image](path/to/your/image/about-us.jpg)
+![About Us Page Image](images/features/about-us.webp)
 
 ##### 10.2.2 Our Vision Section
 
@@ -681,7 +681,7 @@ The **Contact Us** section provides users with clear ways to get in touch with t
 - **Email**: A clickable link to open the default email client and send a message.
 - **Physical Address**: Provides the company’s physical address in Killarney, Ireland.
 
-![Contact  Us Page Image](path/to/your/image/about-us.jpg)
+![Contact  Us Page Image](images/features/contact-us.webp)
 
 ##### 10.3.2 Social Media Links
 
