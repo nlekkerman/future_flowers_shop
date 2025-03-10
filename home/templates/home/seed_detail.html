@@ -41,7 +41,10 @@
     <div class="col-md-6 dark-rgba-background pb-3 d-flex flex-column justify-content-center">
       <h4 class="card-title">{{ seed.name }}</h4>
 
-      <h4>Scientific Name: {{ seed.scientific_name }}</h4>
+      <p>Scientific Name: {{ seed.scientific_name }}</p>
+      <p class="card-text">Description: {{ seed.description }}</p>
+
+
       <p><strong>Rating:</strong>
         {% if seed.avg_rating %}
             <span class="badge bg-success fs-6 px-3 py-2 rounded-pill">
@@ -138,7 +141,7 @@
     {% if reviews %}
     <ul class="list-group list-unstyled pb-2">
       {% for review in reviews %}
-      <li class=" dark-rgba-background">
+      <li class=" dark-rgba-background p-3">
         <div class="d-flex justify-content-between ">
           <strong>{{ review.user.username }}</strong>
           <small class="text-muted">
@@ -148,49 +151,49 @@
         <p class="dark-rgba-background mb-1 p-2">{{ review.comment }}</p>
 
         <!-- Display the number of approved comments for this review -->
-        <small class="text-muted">
+        <small class="text-info ml-1">
           {{ review.approved_comments_count_display }}
         </small>
 
         {% if request.user == review.user %}
-        <div class="mt-2">
+        <div class="mt-2 d-flex justify-content-end">
           <a
             href="{% url 'reviews:edit_review' review.id %}"
             class="btn btn-sm btn-warning"
-            >✏ Edit</a
+            >✏</a
           >
           <a
             href="{% url 'reviews:delete_review' review.id %}"
-            class="btn btn-sm btn-danger"
+            class="btn btn-sm btn-danger mx-1"
             onclick="return confirm('Are you sure?');"
-            >🗑 Delete</a
+            >🗑</a
           >
         </div>
         {% endif %}
 
         <!-- Display Comments under each Review -->
-        <ul class="list-group mt-2 list-unstyled">
+        <ul class="list-group mt-2 list-unstyled mt-5">
           {% if review.comments.count == 0 %}
           <li class="text-white bg-info text-center">No comments yet.</li>
           {% else %} {% for comment in approved_comments %}
-          <li class="bg-dark mb-1 p-2">
+          <li class="bg-dark mb-1 p-2 rounded mx-2">
             <strong>{{ comment.user.username }}</strong>: <span class="dark-rgba-background rounded p-1"> {{ comment.text }}</span>
             <small class="text-white d-block p-1 text-small">
               {{ comment.created_at|date:"F j, Y, g:i a" }}
             </small>
 
             {% if request.user == comment.user %}
-            <div class="mt-1">
+            <div class="mt-1 ">
               <a
                 href="{% url 'reviews:edit_comment' comment.id %}"
                 class="btn btn-sm btn-warning"
-                >✏ Edit</a
+                >✏</a
               >
               <a
                 href="{% url 'reviews:delete_comment' comment.id %}"
                 class="btn btn-sm btn-danger"
                 onclick="return confirm('Are you sure?');"
-                >🗑 Delete</a
+                >🗑</a
               >
             </div>
             {% endif %}
@@ -205,7 +208,7 @@
           <input type="hidden" name="review_id" value="{{ review.id }}" />
           <textarea
             name="text"
-            class="form-control mb-2"
+            class="form-control mb-2 ml-1"
             placeholder="Write a comment..."
           ></textarea>
           <button
@@ -236,7 +239,7 @@
     <form method="POST">
       {% csrf_token %}
       <div class="form-group">{{ review_form.as_p }}</div>
-      <button type="submit" name="review_submit" class="btn send-button mb-3 ml-1">
+      <button type="submit" name="review_submit" class="btn send-button mb-3 ml-1 pl-2">
         ✍️ Submit Review
       </button>
     </form>
@@ -263,8 +266,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a href="{% url 'home:home' %}" class="btn send-button">Go to Home</a>
-            </div>
+          
+              </div>
         </div>
     </div>
 </div>

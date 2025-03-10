@@ -272,8 +272,7 @@ footer {
 .edit-cart-button {
   padding: 0.3rem !important;
   border: none;
-  background-color: rgba(0, 140, 49, 0.8);
-  color: white !important;
+  
 }
 
 /* Update cart form styling */
@@ -309,6 +308,7 @@ input.form-control, textarea, .form-control {
   transition: background-color 0.3s ease;
   border-top-left-radius: 0.7rem;
   border-bottom-left-radius: 0.7rem;
+  margin-left: 5px;
 }
 
 .form-control:disabled {
@@ -568,8 +568,8 @@ select.form-control option {
 
 
 /* Send button and chat header styling */
-.send-button, .chat-header, .custom-button {
-  background: linear-gradient(45deg, rgba(202, 226, 163, 0.8), rgba(100, 150, 80, 0.8));
+.send-button, .chat-header, .custom-button, .edit-cart-button {
+  background: linear-gradient(45deg, rgba(65, 91, 23, 0.8), rgba(100, 150, 80, 0.8));
   color: white;
 }
 
