@@ -69,7 +69,7 @@ This page represents a login screen where users can enter their username and pas
 <!-- Modal Structure -->
 <div id="login-modal" class="modal" tabindex="-1">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content dark-rgba-background">
       <div class="modal-header">
         <h5 class="modal-title">Logging In</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -86,6 +86,9 @@ This page represents a login screen where users can enter their username and pas
   document.getElementById("login-form").addEventListener("submit", function(event) {
     event.preventDefault();
     
+    // Show the modal to indicate login processing
+    const modal = new bootstrap.Modal(document.getElementById("login-modal"));
+    modal.show();
     // Create a FormData object to send the form data
     const formData = new FormData(this);
 
@@ -96,6 +99,7 @@ This page represents a login screen where users can enter their username and pas
     })
     .then(response => response.json())
     .then(data => {
+        modal.hide();
         if (data.success) {
             // Redirect to the provided URL
             window.location.href = data.redirect;
@@ -103,6 +107,13 @@ This page represents a login screen where users can enter their username and pas
             // Display the form errors
             const errorMessages = document.getElementById("error-messages");
             errorMessages.innerHTML = "";
+
+             // Handle general error (if any)
+            if (data.general_error) {
+                const generalErrorMessage = document.createElement("div");
+                generalErrorMessage.textContent = data.general_error;
+                errorMessages.appendChild(generalErrorMessage);
+            }
 
             // Iterate through the errors and display them
             for (let [field, errors] of Object.entries(data.errors)) {

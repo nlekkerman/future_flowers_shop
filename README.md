@@ -6,16 +6,28 @@
 
 1. [Project Overview](#project-overview)
 2. [Goals](#goals)
-   - [User Goals](#user-goals)
-   - [Owner Goals](#owner-goals)
+   1. [User Goals](#user-goals)
+   2. [Owner Goals](#owner-goals)
 3. [Features Overview](#features-overview)
 4. [Possible Future Features](#possible-future-features)
 5. [Marketing Strategy for Future Flower Shop](#marketing-strategy-for-future-flower-shop)
 6. [Testing and Limitations](#testing-and-limitations)
+   1. [Social Media Presence](#social-media-presence)
+   2. [SEO Optimization](#seo-optimization)
+   3. [Promotions & Special Offers](#promotions-special-offers)
+   4. [Customer Engagement](#customer-engagement)
+   5. [Future Marketing Goals](#future-marketing-goals)
 7. [Agile Methodology Overview](#agile-methodology-overview)
-8. [Technologies Used](#technologies-used)
-9. [Credits](#credits)
-10. [Image and Icon Attributions](#image-and-icon-attributions)
+8. [Project Structure](#project-structure)
+9. [Labels for Navigation](#labels-for-navigation)
+10. [Design & Aesthetic](#design-aesthetic)
+11. [Color Palette](#color-palette)
+12. [Technologies Used](#technologies-used)
+13. [Deployment of the Future Flower Shop Project on Heroku](#deployment-of-the-future-flower-shop-project-on-heroku)
+14. [What I Have Done](#what-i-have-done)
+15. [Conclusion](#conclusion)
+16. [Credits](#credits)
+17. [Image and Icon Attributions](#image-and-icon-attributions)
 
 ## Project Overview
 
@@ -207,17 +219,19 @@ Refer to the [Agile Documentation](documentation/agile.md) for a comprehensive o
 
 Our color palette reflects the natural, earthy tones of nature:
 
-- **Primary Color**: ![#4CAF50](https://www.colorhexa.com/4caf50.png) `#4CAF50` (Green) - Representing growth and nature.
-- **Secondary Color**: ![#FFC107](https://www.colorhexa.com/ffc107.png) `#FFC107` (Yellow) - Adding warmth and energy.
-- **Accent Color**: ![#795548](https://www.colorhexa.com/795548.png) `#795548` (Brown) - A neutral tone for balance.
+### Gradient Colors:
 
-Our website's **navigation and homepage** have been designed with creativity and innovation in mind. The **interactive navigation system** and **dynamic homepage** provide a unique and engaging experience for users. The use of modern animations, seamless transitions, and an intuitive layout creates an engaging and visually appealing platform that makes browsing and shopping an enjoyable experience.
+- **Primary Color**: ![#415b17](https://www.colorhexa.com/415b17.png) `#415b17` (Dark Olive Green) - A deep, earthy green that evokes nature and rustic environments.  
+  [View on ColorHexa](https://www.colorhexa.com/415b17)
 
-![Homepage Design](link_to_homepage_image.png)
-_An example of the homepage design showcasing its creativity and modern layout._
+- **Secondary Color**: ![#649650](https://www.colorhexa.com/649650.png) `#649650` (Olive Green) - A soft, natural green that complements the deeper tones, adding balance and harmony.  
+  [View on ColorHexa](https://www.colorhexa.com/649650)
 
-![Navigation Design](link_to_navigation_image.png)
-_An example of the innovative and interactive navigation system._
+- **Text Color**: ![#FFFFFF](https://www.colorhexa.com/ffffff.png) `#FFFFFF` (White) - Used for all text elements, ensuring clarity and readability against darker backgrounds.  
+  [View on ColorHexa](https://www.colorhexa.com/ffffff)
+
+- **ErrorColor**: ![#DC3545](https://www.colorhexa.com/dc3545.png) `#DC3545` (Bootstrap Red) - Used for error messages to alert users of issues or incorrect input.  
+  [View on ColorHexa](https://www.colorhexa.com/dc3545)
 
 ---
 
@@ -229,6 +243,54 @@ _An example of the innovative and interactive navigation system._
 - **Heroku**: Hosting platform for scalability.
 - **Photoshop**: Graphic design and image editing for marketing and branding materials.
 - **ChatGPT**: AI-powered chatbot integrated for customer support and personalized recommendations.
+
+## Deployment of the **Future Flower Shop** Project on Heroku
+
+### What I Have Done
+
+I have successfully deployed the **Future Flower Shop** project to **Heroku** using the **Heroku Dashboard**. Here’s an overview of the steps I followed to get the project running live on Heroku without using the terminal:
+
+#### 1. **Created a Heroku Account**
+
+First, I created an account on Heroku by visiting [Heroku’s official website](https://www.heroku.com/). This allowed me to access the Heroku Dashboard and start managing my applications.
+
+#### 2. **Cloned the Project Repository**
+
+I cloned the **Future Flower Shop** project repository from GitHub to my local machine using Git, just like before. This gave me the project files, but all the deployment setup was done through the Heroku Dashboard instead of the terminal.
+
+#### 3. **Created a New Heroku Application**
+
+In the **Heroku Dashboard**, I clicked on **Create New App**. I gave my app a name, and Heroku automatically assigned a unique URL for it. I chose a name for the app and selected the region (default is fine for most use cases).
+
+#### 4. **Connected My GitHub Repository to Heroku**
+
+In the Heroku Dashboard, under the **Deploy** tab, I connected my GitHub repository to the Heroku app. By doing this, I allowed Heroku to directly access my GitHub repository for deployment.
+
+#### 5. **Enabled Automatic Deploys**
+
+I configured Heroku to automatically deploy my app whenever I pushed updates to the GitHub repository. This was done by enabling **Automatic Deploys** in the **Deploy** tab, ensuring my app is always up-to-date with the latest changes on GitHub.
+
+#### 6. **Set Environment Variables**
+
+I went to the **Settings** tab on the Heroku Dashboard and added the necessary environment variables in the **Config Vars** section. These variables included secret keys, API keys, and any other sensitive data the project required to run properly.
+
+#### 7. **Manually Deployed the Code**
+
+After linking my GitHub repository to Heroku and configuring automatic deploys, I manually triggered the first deployment by clicking on **Deploy Branch**. This allowed Heroku to pull the latest code from my GitHub repository and deploy the app to the web.
+
+#### 8. **Monitored the Application**
+
+Once the deployment was complete, I could monitor the app directly from the **Heroku Dashboard**. I accessed the app's logs through the **Logs** section in the dashboard, which helped me ensure that everything was running smoothly and gave me the ability to troubleshoot any issues that arose.
+
+#### 9. **Opened the Application**
+
+Finally, after the successful deployment, I opened the application in the browser directly from the Heroku Dashboard by clicking on the **Open App** button.
+
+---
+
+### Conclusion
+
+By using the **Heroku Dashboard**, I was able to easily deploy the **Future Flower Shop** project without using the terminal. The Heroku Dashboard provided a user-friendly interface to manage the application, set up environment variables, connect to GitHub, and monitor the app. Now, the project is live and can be accessed by anyone via its Heroku-provided URL.
 
 ## Credits
 
@@ -243,13 +305,19 @@ _An example of the innovative and interactive navigation system._
 
 The following images and icons were used in the production of this project. Their work was integral to the final product:
 
-- **Image by [KamranAydinov on Freepik](https://www.freepik.com/free-photo/top-view-white-flowers-dark-floor_8729700.htm#fromView=search&page=2&position=26&uuid=0ce9be0f-9a1e-415b-90a7-743ba3e4b784)**
-- **Image by [freepik on Freepik](https://www.freepik.com/free-photo/black-background-with-leaves-vegetation-texture_38662424.htm#fromView=search&page=2&position=45&uuid=0ce9be0f-9a1e-415b-90a7-743ba3e4b784)**
-- **Image by [inksyndromeartwork on Freepik](https://www.freepik.com/free-vector/red-rose-flower_13446428.htm#fromView=search&page=1&position=3&uuid=1b81219f-cb90-43e8-a38e-18b0276aa7aa)**
-- **Image by [rawpixel.com on Freepik](https://www.freepik.com/free-vector/anemones-vintage-illustration_3529859.htm#fromView=search&page=2&position=22&uuid=544fb7c4-5672-4258-96d1-7dfbce00daa7)**
-- **Image by [rawpixel.com on Freepik](https://www.freepik.com/free-photo/faqs-customer-service-icon-concept_17076730.htm#fromView=search&page=2&position=30&uuid=0654e9f9-9aab-4ff3-a8ac-48459ebd620b)**
-- **Image by [freepik on Freepik](https://www.freepik.com/free-vector/hand-drawn-oak-tree-silhouette_45191035.htm#fromView=search&page=1&position=18&uuid=199a2498-ed2b-4884-83bf-427371f170fd)**
-- **Image by [pch.vector on Freepik](https://www.freepik.com/free-vector/company-employees-sharing-thoughts-ideas_8270975.htm#fromView=search&page=1&position=46&uuid=0e60ea70-3f56-488f-b52e-fdbcaadd4a8c)**
+# Credits
+
+- **Image by [Oleksandr K](https://pixabay.com/users/gidlark01-45195753/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=8940207)** from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=8940207)
+- **Image by [NoPixelZone](https://pixabay.com/users/nopixelzone-6025194/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=7386611)** from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=7386611)
+- [Nasturtium icons created by iconixar - Flaticon](https://www.flaticon.com/free-icons/nasturtium)
+- **Image by [NoName_13](https://pixabay.com/users/noname_13-2364555/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=1420050)** from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=1420050)
+- **Image by [👀 Mabel Amber, who will one day](https://pixabay.com/users/mabelamber-1377835/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4116159)** from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4116159)
+- **Image by [Marjon Besteman](https://pixabay.com/users/marjonhorn-3698690/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5741798)** from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5741798)
+- **Image by [🌼Christel🌼](https://pixabay.com/users/chiemseherin-1425977/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4411108)** from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4411108)
+- **Image by [Angeles Balaguer](https://pixabay.com/users/angeleses-4701261/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3469744)** from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3469744)
+- **Image by [Nicky ❤️🌿🐞🌿❤️](https://pixabay.com/users/nickype-10327513/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=7155187)** from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=7155187)
+- **Image by [hartono subagio](https://pixabay.com/users/ignartonosbg-21428489/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=6784088)** from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=6784088)
+- **Image by [Helga Kattinger](https://pixabay.com/users/helgaka-2849566/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=6279832)** from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=6279832)
 - **Image by [juicy_fish on Freepik](https://www.freepik.com/free-vector/cart-add-remove_234683649.htm#fromView=search&page=1&position=10&uuid=3b93ed89-db7c-423b-bad4-38c91464e546)**
 - **Image by [wirestock on Freepik](https://www.freepik.com/free-photo/selective-focus-shot-two-raspberries-bush_17244076.htm#fromView=search&page=1&position=3&uuid=0b252e7b-ad7b-447f-b23b-86e1c6c4d698)**
 - **Image by [freepik on Freepik](https://www.freepik.com/free-photo/yellow-citrus-lemon-fruits-tree-branch-with-green-leaves-garden-closeup_36152681.htm#fromView=search&page=1&position=5&uuid=457ba5d8-0153-4206-b70b-e5ad8bb096da)**
@@ -261,8 +329,4 @@ The following images and icons were used in the production of this project. Thei
 - **Image by [Inna on Pixabay](https://pixabay.com/users/salgir-10800086/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=7395624)**
 - **Image by [hartono subagio on Pixabay](https://pixabay.com/users/ignartonosbg-21428489/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=7878583)**
 - **Image by [Leopictures on Pixabay](https://pixabay.com/users/ulleo-1834854/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=1627193)**
-- **Image by [Johnathon Horner on Pixabay](https://pixabay.com/users/beatmekanik-14584889/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=8976749)**
 - **Image by [Marion Zanger on Pixabay](https://pixabay.com/users/est-manag-concept-18603496/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5633474)**
-- **Image by [chandlervid85 on Freepik](https://www.freepik.com/free-photo/assorted-flowers-collection-multicolored-flowers-yellow-background-ai-generative_41368255.htm#fromView=search&page=1&position=48&uuid=7afe1497-7204-44f9-9562-726e6cfcfec6)**
-- **Image by [qalebstudio on Freepik](https://www.freepik.com/free-psd/envelope-back-side_26048779.htm#fromView=search&page=2&position=45&uuid=00c8d812-01a8-4c34-8278-e649a4691861)**
-- **Image by [rawpixel.com on Freepik](https://www.freepik.com/free-vector/heart-logo-design-vector-minimal-style_18246200.htm#fromView=search&page=2&position=51&uuid=2f223f68-736f-4d31-b0c1-65d4b3bca1d1)**

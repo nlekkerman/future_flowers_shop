@@ -1,89 +1,48 @@
 # Test Scenarios Documentation
 
-## 1. **Empty Fields in Admin Section**
-   - **Scenario**: When the admin tries to submit a new record or entry without filling in all required fields.
-   - **Expected Result**: A validation message appears indicating that certain fields are empty, preventing submission.
-   - **Image**: ![Seeds Empty Fields](images/testing/add-seeds-empty-fields.png)
+## Table of Contents
 
-## 2. **Admin Cannot Send New Newspaper Without Text**
-   - **Scenario**: The admin attempts to send a new newspaper but forgets to input the text for the newspaper.
-   - **Expected Result**: The system will prevent submission and show an error stating "Text field is required."
-   - **Image**: ![Admin Cannot Send New Newspaper Without Text](images/testing/admin-cannot-send-newapaper-without-text.png)
-
-## 3. **Admin Sends New Newspapers**
-   - **Scenario**: The admin successfully sends out a new newspaper.
-   - **Expected Result**: The newspaper should be sent, and the system confirms the action with a success message.
-   - **Image**: ![Admin Sent Newspapers](images/testing/admin-sent-newspapers.png)
-
-## 4. **Admin Review - Approved**
-   - **Scenario**: The admin reviews and approves a submitted article or content.
-   - **Expected Result**: The content is marked as "approved" in the admin panel.
-   - **Image**: ![Admin Review Approved](images/testing/admin-review-approved.png)
-
-## 5. **Submit Empty Comment**
-   - **Scenario**: The usertries to submit a comment but leaves it empty.
-   - **Expected Result**: The system prevents submission and prompts the admin to fill in the comment field.
-   - **Image**: ![Submit Empty Comment](images/testing/submit-empty-comment.png)
-
-## 6. **Login with Incorrect Password**
-   - **Scenario**: A user attempts to log in with an incorrect password.
-   - **Expected Result**: The system displays an error indicating the password is wrong.
-   - **Image**: ![Login Wrong Password](images/testing/login-wrong-password.png)
-
-## 7. **Login with Incorrect Username**
-   - **Scenario**: A user attempts to log in with an incorrect username.
-   - **Expected Result**: The system displays an error message indicating the username is not recognized.
-   - **Image**: ![Login Wrong Username](images/testing/login-wrong-username.png)
-
-## 8. **Registration Without Name**
-   - **Scenario**: A user attempts to register without filling in the "name" field.
-   - **Expected Result**: The registration form should show an error asking the user to provide their name.
-   - **Image**: ![Register Without Name](images/testing/register-without-name.png)
-
-## 9. **Registration with Invalid Email**
-   - **Scenario**: A user attempts to register with an invalid email format.
-   - **Expected Result**: The system should prompt the user with an error message asking for a valid email address.
-   - **Image**: ![Register Wrong Email](images/testing/register-wrong-email.png)
-
-## 10. **Registration with Invalid Password**
-   - **Scenario**: A user attempts to register with a password that doesn't meet the required criteria (e.g., too short).
-   - **Expected Result**: The system should prompt the user with an error indicating the password does not meet the security requirements.
-   - **Image**: ![Register Wrong Password](images/testing/register-wrong-password.png)
-
-## 11. **Registration with Invalid Username**
-   - **Scenario**: A user attempts to register with an invalid username (e.g., already taken).
-   - **Expected Result**: The system should inform the user that the username is already taken and prompt them to choose a different one.
-   - **Image**: ![Register Wrong Username](images/testing/register-wrong-username.png)
-
-## 12. **Send Newspaper Without Text**
-   - **Scenario**: The admin attempts to send out a newspaper without adding any text.
-   - **Expected Result**: The system will prevent the action and prompt for the text to be added.
-   - **Image**: ![Send Newspapers No Text](images/testing/send-newspapers-no-text.png)
-
-## 13. **Shopping Cart with Valid Card Details**
-   - **Scenario**: A user attempts to checkout with valid card details.
-   - **Expected Result**: The system processes the payment and completes the checkout successfully.
-   - **Image**: ![Shopping Cart Valid Card Details](images/testing/shoping-card-valid-card-details.png)
-
-## 14. **Shopping Cart with Wrong Card Details**
-   - **Scenario**: A user attempts to checkout with incorrect card details (e.g., expired card, incorrect number).
-   - **Expected Result**: The system will display an error about invalid card details.
-   - **Image**: ![Shopping Cart Wrong Card Details](images/testing/shopping-card-wrong-card-details.png)
-
-## 15. **Shopping Cart with Wrong Email**
-   - **Scenario**: A user attempts to checkout with an incorrect email address.
-   - **Expected Result**: The system should display an error stating that the email is invalid.
-   - **Image**: ![Shopping Cart Wrong Email](images/testing/shoping-card-wrong-email.png)
+1. [404 Error Page](#1-404-error-page)
+2. [Exciting Username Register](#2-exciting-username-register)
+3. [Missing Field Registration](#3-missing-field-registration)
+4. [Quantity Number Out of Stock](#4-quantity-number-out-of-stock)
+5. [Wrong Card Details](#5-wrong-card-details)
+6. [Wrong Credentials Login](#6-wrong-credentials-login)
 
 ---
-## Validation
 
-Due to illness, I was unable to complete the validation of all files as planned. The validation process for **HTML**, **JavaScript**, and **Python** files has not been fully carried out yet. However, you can find further details in the respective validation files.
+## 1. **404 Error Page**
 
-- [HTML Validation](images/html-validation.png)
-- [JavaScript cart Validation](images/cart-script-validation.png)
-- [JavaScript base Validation](images/base-script-valiation.png)
-- [CSS  Validation](images/css-validation.png)
-- [Python Validation](images/checkout-python-validatio.png)
+- **Scenario**: When the user attempts to access a page that doesn't exist.
+- **Expected Result**: A 404 error page is displayed indicating that the page was not found.
+- **Image**: ![404 Error](documentation/images/testing/404.webp)
 
-Please refer to these links for the pending validation results.
+## 2. **Exciting Username Register**
+
+- **Scenario**: A user attempts to register with an exciting username.
+- **Expected Result**: The registration form should process the username correctly or display an error if not valid.
+- **Image**: ![Exciting Username Register](documentation/images/testing/exiting-username-register.webp)
+
+## 3. **Missing Field Registration**
+
+- **Scenario**: A user attempts to submit the registration form without filling in required fields.
+- **Expected Result**: The system will prompt the user to fill in the missing fields.
+- **Image**: ![Missing Field Registration](documentation/images/testing/missing-field-registration.webp)
+
+## 4. **Quantity Number Out of Stock**
+
+- **Scenario**: A user tries to select a quantity of a product that is no longer in stock.
+- **Expected Result**: The system will notify the user that the item is out of stock.
+- **Image**: ![Quantity Number Out of Stock](documentation/images/testing/quantity-number-out-of-stock.webp)
+
+## 5. **Wrong Card Details**
+
+- **Scenario**: A user attempts to complete a purchase with incorrect card details.
+- **Expected Result**: The system will show an error about the invalid card information.
+- **Image**: ![Wrong Card Details](documentation/images/testing/wrong-card-details.webp)
+
+## 6. **Wrong Credentials Login**
+
+- **Scenario**: A user attempts to log in with incorrect credentials (username or password).
+- **Expected Result**: The system will display an error message indicating the wrong credentials.
+- **Image**: ![Wrong Credentials Login](documentation/images/testing/wrong-credentials-login.webp)

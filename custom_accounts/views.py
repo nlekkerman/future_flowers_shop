@@ -104,17 +104,25 @@ def login(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            auth_login(request, user)  # Log the user in
+            auth_login(request, user)
 
             # Check if the user has a profile (if you have a profile model)
             if not hasattr(user, 'profile'):
-                return JsonResponse({'success': False, 'redirect': '/register'})  # Redirect to registration page if no profile
+                return JsonResponse({'success': False, 'redirect': '/register'})
 
             # Return a JSON response indicating success
-            return JsonResponse({'success': True, 'redirect': '/'} )  # Adjust this to your homepage URL name
+            return JsonResponse({'success': True, 'redirect': '/'} )
         else:
-            # If the form is invalid, return the form errors as a JSON response
-            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+             # If the form is invalid, filter out the __all__ errors and return others
+            errors = form.errors.as_json()
+            general_error = form.non_field_errors()  # Get non-field errors (if any)
+
+            # Return the JSON response with errors, without including '__all__' key
+            return JsonResponse({
+                'success': False,
+                'general_error': general_error[0] if general_error else None,  # Only send the first general error
+                'errors': errors
+            }, status=400)
 
     # For GET requests, render the login page with an empty form
     form = AuthenticationForm()
