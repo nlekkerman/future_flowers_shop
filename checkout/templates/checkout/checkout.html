@@ -48,7 +48,7 @@
     <div class="row checkout-row m-0">
 
     <div class="cart-checkout">
-        <p class="text-muted ml-2 order-summary text-white">Order Summary (<span id="cart-count">{{ total_items }}</span>) items.</p>
+        <p class="ml-2 order-summary text-white">Order Summary (<span id="cart-count">{{ total_items }}</span>) items.</p>
     
         <div id="checkout-items-container" class="container">
             {% for item in cart.items.all %}
@@ -148,7 +148,7 @@
                       <input type="hidden" value="{{ client_secret }}" name="client_secret">
                 </fieldset>
 
-                <div class="submit-button text-right mt-5 mb-2">                    
+                <div class="submit-button text-center mt-5 mb-2">                    
                     <a href="{% url 'cart:cart' %}" class="btn btn-danger rounded-0">
                         <span class="checkout-icon">
                             <i class="fas fa-chevron-left"></i>

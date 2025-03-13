@@ -473,7 +473,7 @@ select.form-control option {
 }
 /* Dark background class */
 .light-rgba-background {
-  background-color: rgba(0, 179, 255, 0.5) !important;
+  background-color: rgba(4, 10, 87, 0.95) !important;
   color: white !important;
   
 }
@@ -588,12 +588,10 @@ select.form-control option {
 }
 
 .modal-dialog {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) !important;
+  position: relative;
+  top: 7em;
   max-width: 350px;
-  width: 100%;
+  
 }
 
 .modal-content {
@@ -621,6 +619,31 @@ select.form-control option {
 .custom-border {
   border: 3px solid transparent;
   border-radius: 5px;
+}
+
+.chat-list-container {
+  max-height: 400px; /* Adjust height as needed */
+  overflow-y: auto;
+  border-radius: 10px; /* Rounded corners */
+}
+
+/* Custom scrollbar */
+.chat-list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-list-container::-webkit-scrollbar-track {
+  background: #333; /* Dark background */
+  border-radius: 10px;
+}
+
+.chat-list-container::-webkit-scrollbar-thumb {
+  background: #555; /* Darker thumb */
+  border-radius: 10px;
+}
+
+.chat-list-container::-webkit-scrollbar-thumb:hover {
+  background: #777; /* Slightly lighter on hover */
 }
 
 

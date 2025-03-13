@@ -24,12 +24,12 @@
 
   <div class="row">
      {% if user.is_superuser %}
-     <div class="dark-rgba-background animate__animated animate__fadeIn animate__slower vw-100  ">
+     <div class="dark-rgba-background animate__animated animate__fadeIn animate__slower vw-100">
        <div class="list-group mb-3 ">
          <h4 class="mb-3">Conversations</h4>
  
          <!-- Search Form -->
-         <form class="mb-3  ">
+         <form class="mb-3 m-2">
            <div class="input-group">
              <span class="input-group-text bg-dark">
                <i class="text-white fas fa-search"></i>
@@ -45,24 +45,28 @@
  
          <div id="search-results" class="list-group shadow-sm"></div>
  
-         {% for item in conversations %}
-          <a href="{% url 'communications:chat_with_user' item.user.id %}" 
-            class="list-group-item-action 
-            {% if item.id == active_conversation.id %} active {% endif %}
-            {% if item.last_message and not item.last_message.is_read and item.last_message.receiver == request.user %} bg-info {% endif %}">
-              <div class="dark-rgba-background border-bottom p-2">
-                  <strong class="text-primary">{{ item.user.username }}</strong><br />
-                  <small class="text-white font-weight-bold font-italic">
-                      {% if item.last_message %} 
-                          {{ item.last_message.content }} <br />
-                          <small class="text-muted">{{ item.last_message.sent_at|date:"M d, Y H:i" }}</small>
-                      {% else %} 
-                          No messages yet 
-                      {% endif %}
-                  </small>
-    </div>
-</a>
-{% endfor %}
+         <div class="chat-list-container">
+          <div class="chat-list">
+              {% for item in conversations %}
+              <a href="{% url 'communications:chat_with_user' item.user.id %}" 
+                  class="list-group-item-action 
+                  {% if item.id == active_conversation.id %} active {% endif %}
+                  {% if item.last_message and not item.last_message.is_read and item.last_message.receiver == request.user %} bg-info {% endif %}">
+                  <div class="dark-rgba-background border-bottom p-2">
+                      <strong class="text-primary">{{ item.user.username }}</strong><br />
+                      <small class="text-white font-weight-bold font-italic">
+                          {% if item.last_message %} 
+                              {{ item.last_message.content }} <br />
+                              <small class="text-muted">{{ item.last_message.sent_at|date:"M d, Y H:i" }}</small>
+                          {% else %} 
+                              No messages yet 
+                          {% endif %}
+                      </small>
+                  </div>
+              </a>
+              {% endfor %}
+          </div>
+      </div>
        </div>
      </div>
      {% endif %}

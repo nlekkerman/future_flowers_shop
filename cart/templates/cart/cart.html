@@ -12,7 +12,7 @@
 -->
 
 
-<div class="container mt-5 mb-3">
+<div class="container mt-5 mb-3 {%if not cart_items%}vh-100{%endif%} pt-3">
 
     <!-- Header section for the basket -->
   <div class="text-center mb-3">
@@ -72,18 +72,18 @@
 
     <div class="modal fade" id="removeModal{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
-        <div class="modal-content dark-rgba-background">
+        <div class="modal-content light-rgba-background">
           <div class="modal-header">
             <h5 class="modal-title" id="removeModalLabel">Confirm Removal</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="btn text-white" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
             Are you sure you want to remove <strong>{{ item.seed.name }}</strong> from your basket?
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <div class="modal-footer d-flex justify-content-center">
+            <button type="button" class="btn send-button" data-dismiss="modal">Cancel</button>
             <a href="{% url 'cart:remove_from_cart' item.id %}" class="btn btn-danger">Remove</a>
           </div>
         </div>
@@ -147,7 +147,7 @@
   </div>
 
   {% else %}
-  <div class="alert alert-info text-center">🌱 Your basket is empty! <a href="{% url 'home:home' %}" class="alert-link">Find Seeds Here</a>.</div>
+  <div class="alert alert-info text-center">🌱 Your basket is empty! <a href="{% url 'home:home' %}" class="alert-link text-warning">Find Seeds Here</a>.</div>
   {% endif %}
 </div>
 
@@ -169,10 +169,10 @@ Used for displaying notifications and cart updates.
 {% if messages %}
 <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" data-show-modal="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content dark-rgba-background">
+    <div class="modal-content light-rgba-background">
       <div class="modal-header">
         <h5 class="modal-title" id="messageModalLabel">Message</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="btn dark-rgba-background" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -192,7 +192,7 @@ Used for displaying notifications and cart updates.
         {% endif %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn send-button" data-dismiss="modal">Close</button>
         <a href="{% url 'home:home' %}" class="btn send-button">Back to Shopping</a>
       </div>
     </div>
@@ -215,7 +215,7 @@ Ensures user confirmation before deleting all cart items.
 
 <div class="modal fade" id="clearCartModal" tabindex="-1" role="dialog" aria-labelledby="clearCartModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content dark-rgba-background">
+    <div class="modal-content light-rgba-background">
       <div class="modal-header">
         <h5 class="modal-title" id="clearCartModalLabel">Confirm Clear Cart</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
