@@ -43,7 +43,7 @@ DEBUG = False
 
 
 ALLOWED_HOSTS = [
-    '8000-nlekkerman-futureflower-1hc6w6cgvfw.ws-eu118.gitpod.io',
+    '8000-nlekkerman-futureflower-1kcbab1zaqb.ws-eu118.gitpod.io',
     '.herokuapp.com'
 ]
 
